@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/navigation"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.checkListApp.ui.main.MainFragment"
+        android:label="MainFragment" >
+        <action
+            android:id="@+id/action_mainFragment_to_fileListFragment"
+            app:destination="@id/fileListFragment" />
+        <argument
+            android:name="loadJsonData"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/fileListFragment"
+        android:name="com.example.checkListApp.management.FileListFragment"
+        android:label="FileListFragment" >
+        <action
+            android:id="@+id/action_fileListFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+        <argument
+            android:name="jsonData"
+            app:argType="string" />
+    </fragment>
+    <argument
+        android:name="loadJsonData" />
+</navigation>
