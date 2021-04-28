@@ -1,5 +1,6 @@
 package com.example.checkListApp.management;
 
+import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -7,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,7 +38,6 @@ public class FileListFragment extends Fragment {
 
     static EditText editText;
     static Button buttonSave;
-
 
     public FileListFragment() {
         // Required empty public constructor
@@ -74,7 +75,6 @@ public class FileListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-
         fileManager = new FileManager(view.getContext());
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
@@ -98,14 +98,14 @@ public class FileListFragment extends Fragment {
 
         Log.d("test","m: "+args.getJsonData());
 
-        binding.goToMainList.setOnClickListener(view1 -> {
-
-            //action_fileListFragment_to_mainFragment
-
-            Navigation.findNavController(view).navigate(R.id.action_fileListFragment_to_mainFragment);
-
-
-        });
+//        binding.goToMainList.setOnClickListener(view1 -> {
+//
+//            //action_fileListFragment_to_mainFragment
+//
+//            Navigation.findNavController(view).navigate(R.id.action_fileListFragment_to_mainFragment);
+//
+//
+//        });
 
 
         binding.saveAsBtn.setOnClickListener(view1 -> {
@@ -133,6 +133,19 @@ public class FileListFragment extends Fragment {
 
 
     }
+
+
+    public static void transitionToList(View view){
+
+        Navigation.findNavController(view).navigate(R.id.action_fileListFragment_to_mainFragment);
+
+    }
+
+    public static void transitionToList(Activity activity){
+
+        Navigation.findNavController(activity,R.id.fragment).navigate(R.id.action_fileListFragment_to_mainFragment);
+    }
+
 
     static void updateEditText(String fileNameTxt){
 

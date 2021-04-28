@@ -1,6 +1,7 @@
 package com.example.checkListApp.ui.main;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,7 +25,9 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.checkListApp.MainActivity;
 import com.example.checkListApp.R;
+import com.example.checkListApp.databinding.MainActivityBinding;
 import com.example.checkListApp.databinding.MainFragmentBinding;
 import com.example.checkListApp.management.FileListFragment;
 import com.example.checkListApp.ui.main.EntryManagement.ButtonPanel;
@@ -36,6 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.tabs.TabLayout;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
@@ -74,10 +79,14 @@ public class MainFragment extends Fragment {
 
     private MainViewModel mViewModel;
     private MainFragmentBinding binding;
+    private MainActivityBinding mainActivityBinding;
 
     private RecyclerView recyclerView;
     private RecyclerAdapter adapter;
     private Context context;
+
+
+    public static View test;
 
     public static float recyclerScrollCompute,itemHeightPx, ratioOffset;
 
@@ -85,17 +94,24 @@ public class MainFragment extends Fragment {
 
     private static String jsonCheckArrayList;
 
+    public static String getJsonCheckArrayList() {
+        return jsonCheckArrayList;
+    }
 
     Operator operator;
     ButtonPanel buttonPanel;
     ButtonPanelToggle buttonPanelToggle;
     EntryItemManager entryItemManager;
 
+
+
     public static ArrayList<Entry> getCheckList(){ return checkList;}
 
     //initialize
     public void initialize() {
 
+
+        test = getView();
 
         recyclerView.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -120,7 +136,6 @@ public class MainFragment extends Fragment {
 
 
                         itemHeightPx = px; // converted to px 262.5
-
 
                     }
                 });
@@ -156,6 +171,7 @@ public class MainFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
+        Log.d("testFrag",""+this.getTag());
 
         // TODO: Use the ViewModel
 
@@ -241,6 +257,57 @@ public class MainFragment extends Fragment {
 
     }
 
+
+    public static void transitionToFile(View view){
+
+
+        MainFragmentDirections.ActionMainFragmentToFileListFragment action =
+                MainFragmentDirections.actionMainFragmentToFileListFragment(jsonCheckArrayList);
+
+        Navigation.findNavController(view).navigate(action);
+
+
+    }
+
+    public static void transitionToFile(Activity activity){
+
+        MainFragmentDirections.ActionMainFragmentToFileListFragment action =
+                MainFragmentDirections.actionMainFragmentToFileListFragment(jsonCheckArrayList);
+
+
+        Navigation.findNavController(activity, R.id.fragment).navigate(action);
+
+
+    }
+    public static void forceTry(Activity activity, MainFragmentDirections.ActionMainFragmentToFileListFragment action){
+
+        for(int i = 1_000_000; i < 1_010_000; i++){
+
+
+            try {
+
+                Navigation.findNavController(activity, i).navigate(action);
+                System.out.println(i);
+            }
+            catch (IllegalArgumentException e){
+                e.printStackTrace();
+            }
+
+        }
+
+
+    }
+
+    public static void transitionToFile(){
+
+        MainFragmentDirections.ActionMainFragmentToFileListFragment action =
+                MainFragmentDirections.actionMainFragmentToFileListFragment(jsonCheckArrayList);
+
+        Navigation.findNavController(test).navigate(action);
+
+    }
+
+
 @SuppressLint("ClickableViewAccessibility")
 public void assignButtonListeners(){
 
@@ -249,14 +316,21 @@ public void assignButtonListeners(){
     buttonPanel.addButton(binding.addDeleteBtn, view -> entryItemManager.add(), view -> entryItemManager.delete());
     buttonPanel.addButton(binding.editMoveBtn, view -> entryItemManager.edit(), view -> entryItemManager.move());
 
-    binding.fileMenuBtn.setOnClickListener(view -> {
+//    binding.fileMenuBtn.setOnClickListener(view -> {
+//
+//        MainFragmentDirections.ActionMainFragmentToFileListFragment action =
+//                MainFragmentDirections.actionMainFragmentToFileListFragment(jsonCheckArrayList);
+//
+//        Log.d("testView",""+view);
+//
+//        Navigation.findNavController(view).navigate(action);
+//
+//
+//
+//    });
 
-        MainFragmentDirections.ActionMainFragmentToFileListFragment action =
-                MainFragmentDirections.actionMainFragmentToFileListFragment(jsonCheckArrayList);
 
-        Navigation.findNavController(view).navigate(action);
 
-    });
 
     binding.ScrollView.setOnScrollChangeListener(   (v, i, i1, i2, i3) -> {
 

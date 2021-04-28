@@ -5,10 +5,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-
-    app:navGraph="@navigation/navigation"
-    app:defaultNavHost="true"
-
     >
 
     <data>
@@ -37,31 +33,12 @@
 
 <!--scrollSize: 250-->
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                >
-
-                <Button
-                    android:id="@+id/fileMenuBtn"
-                    android:layout_width="76dp"
-                    android:layout_height="52dp"
-                    android:text="File"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="1.0" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/ScrollView"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/scrollSize"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="50dp"
                 android:layout_marginBottom="0dp"
                 android:overScrollMode="always"
                 android:background="#4600BCD4"
@@ -73,7 +50,7 @@
                 android:id="@+id/buttonPanel"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="80dp"
                 android:layout_marginBottom="10dp"
                 android:layout_weight="8"
                 android:layout_gravity="bottom"

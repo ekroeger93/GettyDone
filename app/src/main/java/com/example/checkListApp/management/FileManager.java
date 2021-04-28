@@ -2,6 +2,7 @@ package com.example.checkListApp.management;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.View;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -24,6 +25,7 @@ public class FileManager {
         listOfFiles = context.getFilesDir().listFiles();
 
     }
+
 
     public void saveFile(String fileName, String suffix, Object inputData){
 
