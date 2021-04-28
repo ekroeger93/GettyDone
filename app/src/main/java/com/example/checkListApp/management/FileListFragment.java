@@ -21,11 +21,17 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.checkListApp.MainActivity;
 import com.example.checkListApp.databinding.FragmentFileListBinding;
 
 
 import com.example.checkListApp.R;
+import com.example.checkListApp.databinding.MainActivityBinding;
+import com.example.checkListApp.ui.main.MainFragment;
+
 import org.jetbrains.annotations.NotNull;
+
+import com.example.checkListApp.databinding.MainActivityBinding;
 
 
 public class FileListFragment extends Fragment {
@@ -124,10 +130,18 @@ public class FileListFragment extends Fragment {
 
         binding.loadFileBtn.setOnClickListener(view1 -> {
 
+
+
+
             FileListFragmentDirections.ActionFileListFragmentToMainFragment action  =
                     FileListFragmentDirections.actionFileListFragmentToMainFragment(fileManager.loadFile(fileListAdapter.getFileSelection()));
 
             Navigation.findNavController(view).navigate(action);
+
+
+            MainActivity.visualSelect = true;
+            MainActivity.activityBinding.tabs.getTabAt(0).select();
+                  //  (MainActivity.activityBinding.tabs.getTabAt(0));
 
         });
 
@@ -135,11 +149,7 @@ public class FileListFragment extends Fragment {
     }
 
 
-    public static void transitionToList(View view){
 
-        Navigation.findNavController(view).navigate(R.id.action_fileListFragment_to_mainFragment);
-
-    }
 
     public static void transitionToList(Activity activity){
 

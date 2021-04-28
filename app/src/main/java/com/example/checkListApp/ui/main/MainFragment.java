@@ -53,18 +53,12 @@ Objectives
 
 -order consistent, save index in Json and load in proper order, use Entry ID
 
--? add in thread handler for moving items, delay timer?
-
 -image button checkBox
 -change buttons into icons
 -animate entry on move and delete
 -fix up the file manager, add transitions
 
--make tabs
-https://www.tutlane.com/tutorial/android/android-tabs-with-fragments-and-viewpager
-
 -delete multiple, delete on hover reveal multiple, all actions above it
-
 
 -? Timer / schedule implementation
 

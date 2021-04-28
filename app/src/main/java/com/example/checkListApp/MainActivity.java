@@ -38,14 +38,12 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity
         implements FileListFragment.OnFragmentInteractionListener{
 
-    public MainActivityBinding activityBinding;
+    static public MainActivityBinding activityBinding;
 
     TabLayout tabLayout;
 
     int navPosition = 0;
-
-    View navToFileList;
-    View navToEntryList;
+   public static boolean visualSelect = false;
 
 
     @Override
@@ -64,35 +62,37 @@ public class MainActivity extends AppCompatActivity
         Log.d("testT",""+activityBinding.getMMainActivity());
 
 
-
-
         tabLayout = findViewById(R.id.tabs);
-
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 
-                if(tab.getPosition() == 0
-                        && tab.getPosition() != navPosition
-                ){
+                if(!visualSelect) {
+                    if (tab.getPosition() == 0
+                            && tab.getPosition() != navPosition
+                    ) {
 
 
-                    FileListFragment.transitionToList(activityBinding.getMMainActivity());
+                        FileListFragment.transitionToList(activityBinding.getMMainActivity());
 
-                }
+                    }
 
 
-                if (tab.getPosition() == 1
-                        && tab.getPosition() != navPosition
-                ){
+                    if (tab.getPosition() == 1
+                            && tab.getPosition() != navPosition
+                    ) {
 
-                    MainFragment.transitionToFile(activityBinding.getMMainActivity());
+                        MainFragment.transitionToFile(activityBinding.getMMainActivity());
 
+                    }
+
+
+                }else {
+                    visualSelect = false;
                 }
 
                 navPosition = tab.getPosition();
-
 
             }
 
