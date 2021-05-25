@@ -2,4 +2,9 @@
 <resources>
     <dimen name="scrollSize" >250dp</dimen>
 
+    <dimen name="entryHeight">80dp</dimen>
+    <dimen name="entryMarginTop">10dp</dimen>
+    <dimen name="entryMarginBottom">10dp</dimen>
+
+
 </resources>

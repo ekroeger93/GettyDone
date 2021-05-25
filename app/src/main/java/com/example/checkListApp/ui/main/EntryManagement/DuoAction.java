@@ -3,7 +3,10 @@ package com.example.checkListApp.ui.main.EntryManagement;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class DuoAction{
+public class DuoAction implements iButtonComponent{
+
+    public boolean hasLeaf;
+    public LeafButton leaf;
 
     public Button button;
     public boolean toggle = false;
@@ -20,6 +23,19 @@ public class DuoAction{
         setListener();
     }
 
+    public DuoAction(Button button, OnClickListener primary, OnClickListener alternative, LeafButton leaf){
+
+        this.button = button;
+        this.primary = primary;
+        this.alternative = alternative;
+        setListener();
+
+        this.hasLeaf = true;
+        this.leaf = leaf;
+
+
+    }
+
     public void setInitialization(){
 
         int[] location = new int[2];
@@ -29,10 +45,15 @@ public class DuoAction{
         Button_Width = button.getWidth();
         Button_Height = button.getHeight();
 
+        if(hasLeaf){
+            leaf.button.setX(Button_X);
+            leaf.button.setY(Button_Y - (leaf.button.getHeight()*2.5f));
+            leaf.setInitialization();
+        }
 
     }
 
-    void setListener(){
+    public void setListener(){
 
         if (inBound) {
             button.setOnClickListener(alternative);

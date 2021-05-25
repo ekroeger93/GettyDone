@@ -38,7 +38,11 @@ public class Entry {
     public MutableLiveData<Boolean> checked = new MutableLiveData<>(false);
 
     @Ignore
-    private RecyclerAdapter.ViewHolder viewHolder;
+    private MutableLiveData<RecyclerAdapter.ViewHolder> mViewHolder = new MutableLiveData<>();
+    @Ignore
+     private RecyclerAdapter.ViewHolder viewHolder;
+    @Ignore
+    public boolean swappable = true;
 
     public Entry(){
     }
@@ -46,6 +50,11 @@ public class Entry {
     public Entry(String text,boolean check){
         textEntry.setValue(text);
         checked.setValue(check);
+    }
+
+    public Entry(Entry entry) {
+        textEntry.postValue(entry.textEntry.getValue());
+        checked.postValue(entry.checked.getValue());
     }
 
     public int getEntryID() {
@@ -58,11 +67,13 @@ public class Entry {
 
     public void setViewHolder(RecyclerAdapter.ViewHolder viewHolder) {
         this.viewHolder = viewHolder;
+      //  mViewHolder.setValue(viewHolder);
     }
 
     public RecyclerAdapter.ViewHolder getViewHolder() {
         return viewHolder;
     }
+
 
 
 

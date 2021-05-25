@@ -18,9 +18,9 @@
             android:id="@+id/entry"
             tools:context="ui.main.MainFragment"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_height="@dimen/entryHeight"
+            android:layout_marginTop="@dimen/entryMarginTop"
+            android:layout_marginBottom="@dimen/entryMarginBottom"
             android:orientation="horizontal"
             android:background="#95FF8D"
             >

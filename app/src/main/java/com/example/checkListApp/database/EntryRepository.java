@@ -150,7 +150,7 @@ public static class TaskInsertSpace{
         entry = e;
     }
 
-    public  void executeAsync() {
+    public void executeAsync() {
         executor.execute(() -> {
             long id;
             id = asyncDao.insertEntry(entry);

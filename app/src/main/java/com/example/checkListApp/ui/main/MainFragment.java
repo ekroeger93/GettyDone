@@ -11,38 +11,41 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.Button;
+import android.widget.ListAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.selection.SelectionTracker;
+import androidx.recyclerview.selection.StorageStrategy;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.checkListApp.MainActivity;
 import com.example.checkListApp.R;
-import com.example.checkListApp.databinding.MainActivityBinding;
 import com.example.checkListApp.databinding.MainFragmentBinding;
-import com.example.checkListApp.management.FileListFragment;
 import com.example.checkListApp.ui.main.EntryManagement.ButtonPanel;
 import com.example.checkListApp.ui.main.EntryManagement.ButtonPanelToggle;
 import com.example.checkListApp.ui.main.EntryManagement.EntryItemManager;
+import com.example.checkListApp.ui.main.EntryManagement.LeafButton;
 import com.example.checkListApp.ui.main.EntryManagement.Operator;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.tabs.TabLayout;
-import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
 
 
 /*
@@ -58,13 +61,48 @@ Objectives
 -animate entry on move and delete
 -fix up the file manager, add transitions
 
--delete multiple, delete on hover reveal multiple, all actions above it
+
+TaDone Prototype
+--------------------------------------------------------------
+
+-submit on complete when all are checked
+
+    -record number checked
+    -show finish button
+
+    -log number of finished and date
+
+-record complete goals and show in progress (calender) completed/date
+    -date Time java api
+    -record time completed and goals met
+
+-? add reminder notification
+
+-? save as pdf/rich text file -> print appMobilityPrint
+
+-------------------------------------------------------------
 
 -? Timer / schedule implementation
 
 
--? add image picture to entry camera/gallery
-    -do in separate fragment
+Collaboration
+Tags
+Calendar Sync
+File Attachments
+Smart Lists
+Widgets
+Natural Language Parsing
+Repeatable Tasks
+Reminders
+Smart Assistant Support
+Folders / Groups
+Subtasks
+
+graphing show progress
+https://github.com/PhilJay/MPAndroidChart
+
+calender schedule
+
 
  */
 
@@ -72,19 +110,17 @@ Objectives
 public class MainFragment extends Fragment {
 
     private MainViewModel mViewModel;
-    private MainFragmentBinding binding;
-    private MainActivityBinding mainActivityBinding;
+    protected MainFragmentBinding binding;
 
     private RecyclerView recyclerView;
-    private RecyclerAdapter adapter;
+    private static RecyclerAdapter adapter;
     private Context context;
-
-
-    public static View test;
 
     public static float recyclerScrollCompute,itemHeightPx, ratioOffset;
 
-    private static ArrayList<Entry> checkList;
+    private static ArrayList<Entry> checkList = new ArrayList<>();
+
+    SelectionTracker<Long> selectionTracker;
 
     private static String jsonCheckArrayList;
 
@@ -92,46 +128,43 @@ public class MainFragment extends Fragment {
         return jsonCheckArrayList;
     }
 
+
     Operator operator;
     ButtonPanel buttonPanel;
     ButtonPanelToggle buttonPanelToggle;
     EntryItemManager entryItemManager;
 
+    static public ToggleSwitchOrdering toggleSwitchOrdering;
+
+    static public boolean isSorting = false;
 
 
     public static ArrayList<Entry> getCheckList(){ return checkList;}
+
 
     //initialize
     public void initialize() {
 
 
-        test = getView();
 
         recyclerView.getViewTreeObserver().addOnGlobalLayoutListener(
-                new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
+                () -> {
 
-                        ratioOffset = 1.75f;
+                    ratioOffset = 1.75f;
 
-                        //adjusted so that selection is in middle of recyclerList
-                        recyclerScrollCompute = recyclerView.getHeight() / ratioOffset;
+                    //adjusted so that selection is in middle of recyclerList
+                    recyclerScrollCompute = recyclerView.getHeight() / ratioOffset;
 
-                        // the dp height of item_entry
-                        itemHeightPx = 100;
+                    itemHeightPx = 100;
 
-                        // Converts dip into its equivalent px
-                        float dip = itemHeightPx;
-                        Resources r = getResources();
-                        float px = TypedValue.applyDimension(
-                                TypedValue.COMPLEX_UNIT_DIP,
-                                dip,
-                                r.getDisplayMetrics());
+                    // Converts dip into its equivalent px
+                    float dip = itemHeightPx;
+                    Resources r = getResources();
+                    itemHeightPx = TypedValue.applyDimension(
+                            TypedValue.COMPLEX_UNIT_DIP,
+                            dip,
+                            r.getDisplayMetrics()); // converted to px 262.5
 
-
-                        itemHeightPx = px; // converted to px 262.5
-
-                    }
                 });
     }
 
@@ -165,8 +198,6 @@ public class MainFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
-        Log.d("testFrag",""+this.getTag());
-
         // TODO: Use the ViewModel
 
       //  RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
@@ -181,8 +212,9 @@ public class MainFragment extends Fragment {
 
         assignObservers();
 
-    }
+        toggleSwitchOrdering = new ToggleSwitchOrdering();
 
+    }
 
 
 
@@ -215,11 +247,8 @@ public class MainFragment extends Fragment {
 
             }
 
-            Log.d("test",args.getLoadJsonData());
-
         }catch (IllegalArgumentException e){
             e.printStackTrace();
-            Log.d("test","no Data");
         }
 
 
@@ -234,31 +263,39 @@ public class MainFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        adapter.setRecyclerView(recyclerView);
+        recyclerView.setHasFixedSize(false);
         adapter.setOwner(getViewLifecycleOwner());
         adapter.setRepository(mViewModel.getRepository());
-        adapter.setMainViewModel(mViewModel);
+
+//        checkList.add(new Spacer());
+//        checkList.add(new Entry("a",false));
+//       checkList.add(new Entry("b",false));
+
+
+
         adapter.setList(checkList);
         adapter.notifyDataSetChanged();
 
+        selectionTracker = new SelectionTracker.Builder<>(
+                "selection",
+                recyclerView,
+                adapter.trackerHelper().keyProvider,
+                adapter.trackerHelper().itemDetailsLookup,
+                StorageStrategy.createLongStorage())
+                .withSelectionPredicate( adapter.trackerHelper.predicate)
+                .build();
+
+
+
+        adapter.setTracker(selectionTracker);
+        adapter.trackerOn(false);
+
         operator = new Operator(recyclerView,adapter);
         entryItemManager = new EntryItemManager(context,mViewModel,operator);
-        buttonPanel = new ButtonPanel(getContext());
+        buttonPanel = new ButtonPanel(getContext(), binding);
+        buttonPanelToggle  = buttonPanel.buttonPanelToggle;
 
-        buttonPanelToggle = new ButtonPanelToggle(binding,getContext(),entryItemManager);
         entryItemManager.setButtonPanelToggle(buttonPanelToggle);
-
-
-    }
-
-
-    public static void transitionToFile(View view){
-
-
-        MainFragmentDirections.ActionMainFragmentToFileListFragment action =
-                MainFragmentDirections.actionMainFragmentToFileListFragment(jsonCheckArrayList);
-
-        Navigation.findNavController(view).navigate(action);
 
 
     }
@@ -273,33 +310,8 @@ public class MainFragment extends Fragment {
 
 
     }
-    public static void forceTry(Activity activity, MainFragmentDirections.ActionMainFragmentToFileListFragment action){
-
-        for(int i = 1_000_000; i < 1_010_000; i++){
 
 
-            try {
-
-                Navigation.findNavController(activity, i).navigate(action);
-                System.out.println(i);
-            }
-            catch (IllegalArgumentException e){
-                e.printStackTrace();
-            }
-
-        }
-
-
-    }
-
-    public static void transitionToFile(){
-
-        MainFragmentDirections.ActionMainFragmentToFileListFragment action =
-                MainFragmentDirections.actionMainFragmentToFileListFragment(jsonCheckArrayList);
-
-        Navigation.findNavController(test).navigate(action);
-
-    }
 
 
 @SuppressLint("ClickableViewAccessibility")
@@ -307,22 +319,65 @@ public void assignButtonListeners(){
 
 
 
-    buttonPanel.addButton(binding.addDeleteBtn, view -> entryItemManager.add(), view -> entryItemManager.delete());
-    buttonPanel.addButton(binding.editMoveBtn, view -> entryItemManager.edit(), view -> entryItemManager.move());
+                buttonPanel.addButtonWithLeaf(
+            binding.addDeleteBtn
+            , view -> entryItemManager.add()
+            , view -> entryItemManager.delete(),
+            new LeafButton(getContext())
+                    .setViewGroup(binding.main)
+                    .assignListener(view -> {
+                        buttonPanelToggle.setOnClickListener(view1 -> {
+                            entryItemManager.deleteSelected(selectionTracker);
+                            buttonPanelToggle.toggleDisableToButton();
+                            adapter.trackerOn(false);
+                        });
+                        adapter.trackerOn(true);
+                        buttonPanelToggle.toggleDisableToButton();
+                    }).create()
 
-//    binding.fileMenuBtn.setOnClickListener(view -> {
-//
-//        MainFragmentDirections.ActionMainFragmentToFileListFragment action =
-//                MainFragmentDirections.actionMainFragmentToFileListFragment(jsonCheckArrayList);
-//
-//        Log.d("testView",""+view);
-//
-//        Navigation.findNavController(view).navigate(action);
-//
-//
-//
-//    });
+    );
 
+                buttonPanel.addButtonWithLeaf(
+                        binding.editMoveBtn,
+                        view -> entryItemManager.edit(),
+                        view -> entryItemManager.move(),
+                        new LeafButton(getContext())
+                                .setViewGroup(binding.main)
+                        .assignListener(view ->{
+
+                            //I'm having a tough time with the recyclerView
+                            //for some reason the object references (viewHolders) are disorganized
+                            //until you scroll the entirety of the list so
+                            //I'm starting it on 0 and setting setHasFixedSize here
+
+                            recyclerView.scrollToPosition(0);
+                            recyclerView.setHasFixedSize(true);
+
+                            buttonPanelToggle.setOnClickListener(view1 -> {
+
+                                isSorting = true;
+                                entryItemManager.sortSelected(selectionTracker);
+                                buttonPanelToggle.toggleDisableToButton();
+                                adapter.trackerOn(false);
+
+                                selectionTracker.clearSelection();
+                                MainFragment.reInitializeAllSelection();
+
+                            });
+
+                            //thread may still be running!!!
+                            selectionTracker.clearSelection();
+                            MainFragment.reInitializeAllSelection();
+
+
+                            isSorting = false;
+
+                            adapter.trackerOn(true);
+                            buttonPanelToggle.toggleDisableToButton();
+
+
+                        }).create()
+                );
 
 
 
@@ -331,14 +386,13 @@ public void assignButtonListeners(){
         try {
             operator.getSelection();
         }catch (NullPointerException e){
-
+            e.printStackTrace();
         }
 
         if(operator.isMovingItem)
         operator.moveItem(operator.movingItem);
 
     });
-
 
     binding.touchExpander.setOnTouchListener((view, motionEvent) -> {
 
@@ -368,14 +422,17 @@ public void assignButtonListeners(){
 
 
         //We only need to check this once so lets do it on UP
-        if (motionEvent.getAction() == MotionEvent.ACTION_UP){
+
         buttonPanel.setButtons();
         buttonPanel.checkWithinButtonBoundary(touch_X,touch_Y);
+
+        if(motionEvent.getAction() == MotionEvent.ACTION_UP){
+
         buttonPanel.executeAlternative();
+
         }
 
         buttonPanel.animationHandler(motionEvent.getAction(),touch_X,binding);
-
 
         return  true;
 
@@ -391,16 +448,23 @@ public void assignObservers(){
         public void onChanged(@Nullable final List<Entry> entries) {
 
             //makes sure we keeps those spacers at the ends
-
-
             if(checkList == null || checkList.size()-2 != entries.size()) {
                 checkList = (ArrayList<Entry>) entries;
 
                 checkList.add(0, new Spacer());
+
                 checkList.add(checkList.size(), new Spacer());
                 adapter.setList(checkList);
 
 
+
+                if(!isSorting)
+                updateToggleOrdering();
+
+                if(isSorting) {
+               //     toggleSwitchOrdering.showNumberList();
+                    MainFragment.updateAllSelection();
+                }
 
                 buildJson(checkList);
             }
@@ -411,7 +475,201 @@ public void assignObservers(){
     });
 
 
+
+
+
+
+    selectionTracker.addObserver( new SelectionTracker.SelectionObserver<Long>(){
+
+        @Override
+        public void onSelectionRefresh() {
+            super.onSelectionRefresh();
+        }
+
+        @Override
+        public void onItemStateChanged(@NonNull Long key, boolean selected) {
+            super.onItemStateChanged(key, selected);
+
+            if(adapter.toggleTracker && !isSorting) {
+                RecyclerAdapter.ViewHolder entryCurrent = null;
+            Entry entrySelected = null;
+            int index = 0;
+
+            for (Entry entry : getCheckList()) {
+                try {
+                    if (entry instanceof Spacer) {} else {
+
+                        if (key.equals(entry.getViewHolder().getKey())) {
+
+                            entryCurrent = entry.getViewHolder();
+                            index = getCheckList().indexOf(entry) - 1;
+
+                            //I need the adapter to re-realize the list size
+                            //due to the adapter erroneous size prior to cleaning
+                            adapter.getItemCount();//this is why its called
+
+                            System.out.println("index: "+index);
+                           // entryCurrent.isSelected.setValue(!entryCurrent.isSelected.getValue());
+
+                            /*
+                            ultimately the holder.orderInt should reflect the toggleSwitchOrdering.list
+
+                            * */
+
+                            toggleSwitchOrdering.toggleNum(index);
+
+                            entryCurrent.isSelected.setValue(toggleSwitchOrdering.listToOrder.get(index).toggle);
+                            entryCurrent.orderInt.setValue(toggleSwitchOrdering.listToOrder.get(index).number);
+
+                            entryCurrent.selectOrder =toggleSwitchOrdering.listToOrder.get(index).number;
+
+                            MainFragment.updateAllSelection();
+
+                           break;
+                                }
+
+                            }
+
+                        } catch (NullPointerException e) {
+                        }
+                    }
+
+                       //updateToggleOrdering();
+
+
+
+
+            try {
+
+
+                System.out.println("");
+
+                try{
+                    for(Entry entry : getCheckList()){
+                        //   entry.getViewHolder().selectionUpdate();
+                        RecyclerAdapter.ViewHolder viewHolder = entry.getViewHolder();
+                        if(entry instanceof Spacer){}else{
+                            if(viewHolder.isSelected.getValue()) {
+                                System.out.print("{" + viewHolder.orderInt.getValue() + "}");
+                            }else{
+                                System.out.print("{'" + viewHolder.orderInt.getValue() + "'}");
+                            }}
+                    }}catch (NullPointerException e){ }
+
+//                entryCurrent.isSelected.postValue(toggleSwitchOrdering.listToOrder.get(index).toggle);
+//                entryCurrent.orderInt.postValue(toggleSwitchOrdering.listToOrder.get(index).number);
+
+
+                    }catch(NullPointerException e){ }
+
+
+
+
+                }
+
+        }
+
+
+
+
+
+
+
+
+        @Override
+        public void onSelectionChanged() {
+            super.onSelectionChanged();
+
+        }
+
+    });
+
+
 }
+
+    static public void updateToggleOrdering(){
+
+        toggleSwitchOrdering.listToOrder.clear();
+
+        int count = 0;
+        for(Entry entry : getCheckList()) {
+            int index = getCheckList().indexOf(entry);
+
+
+            if(entry instanceof Spacer) {}else {
+                count++;
+                toggleSwitchOrdering.listToOrder
+                        .add(new ToggleSwitchOrdering.tNumber(
+                                count, false));
+            }
+        }
+
+    }
+
+    public static void updateAllSelection(){
+
+
+        for(Entry entry : getCheckList()){
+            try {
+                if (entry instanceof Spacer) {
+                } else {
+                    int index= getCheckList().indexOf(entry);
+
+                    for(ToggleSwitchOrdering.tNumber tNumber : MainFragment.toggleSwitchOrdering.listToOrder) {
+                        int indexOf = MainFragment.toggleSwitchOrdering.listToOrder.indexOf(tNumber);
+                        if(indexOf == index-1){
+                        entry.getViewHolder().isSelected.postValue(tNumber.toggle);
+                        entry.getViewHolder().orderInt.postValue(tNumber.number);
+                       break;
+                       }
+
+
+                    }
+                   entry.getViewHolder().selectionUpdate();
+                }
+            }catch (NullPointerException | IndexOutOfBoundsException e){
+
+            }
+      }
+
+
+
+
+
+
+    }
+
+    public static void reInitializeAllSelection(){
+
+        System.out.println("clearing...");
+
+        for(Entry entry : getCheckList()){
+            try {
+                if (entry instanceof Spacer) {
+                } else {
+
+                    entry.getViewHolder().orderInt.postValue(-1);
+                    entry.getViewHolder().isSelected.postValue(false);
+                    entry.getViewHolder().selectOrder=0;
+                    entry.swappable = true;
+                    entry.getViewHolder().selectionUpdate();
+
+                //    System.out.print("["+entry.getViewHolder().orderInt.getValue()+']');
+                }
+            }catch (NullPointerException | IndexOutOfBoundsException e){
+
+            }
+
+        }
+
+
+        toggleSwitchOrdering.listToOrder.clear();
+        updateToggleOrdering();
+        updateAllSelection();
+
+
+    }
+
 
 static public void buildJson(ArrayList<Entry> checkList){
 
@@ -438,20 +696,7 @@ static public void buildJson(ArrayList<Entry> checkList){
 
     jsonCheckArrayList = String.valueOf(jsonCheckList);
 
-//    Log.d("test", jsonCheckList.toString());
-
-//    Type userListType = new TypeToken<ArrayList<Entry>>(){}.getType();
-//
-//    if(test.length()>1){
-//    ArrayList<Entry> userArray = gson.fromJson(String.valueOf(test), userListType);
-//
-//    for(Entry user : userArray) {
-//       Log.d("test",""+user);
-//    }
-//    }
-
 }
-
 
 public ArrayList<Entry> getJsonGeneratedArray(String json){
 

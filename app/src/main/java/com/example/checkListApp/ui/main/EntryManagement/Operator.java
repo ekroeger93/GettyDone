@@ -1,30 +1,17 @@
 package com.example.checkListApp.ui.main.EntryManagement;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.Adapter;
 
-import com.example.checkListApp.R;
-import com.example.checkListApp.databinding.MainFragmentBinding;
 import com.example.checkListApp.ui.main.Entry;
 import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.RecyclerAdapter;
-import com.google.gson.internal.$Gson$Preconditions;
 
-import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.Objects;
 
 public class Operator {
 
@@ -62,14 +49,12 @@ public class Operator {
         solveForPos = (int) Math.round((currentScroll - ((int) recyclerScrollCompute - (itemHeightPx / 2f))) / (itemHeightPx));
         selection  = Math.max(1,Math.min(solveForPos,MainFragment.getCheckList().size()-1));
 
-
-
         for (Entry e : MainFragment.getCheckList()) {
 
             try{
                 if(!e.checked.getValue()){
 
-                if (e.getViewHolder().getLayoutPosition() == selection - 1) {
+                if (e.getViewHolder().getBindingAdapterPosition() == selection - 1) {
                     e.getViewHolder().itemView.setBackgroundColor(Color.RED);
                 } else {
                     e.getViewHolder().itemView.setBackgroundColor(Color.parseColor("#95FF8D"));
@@ -77,14 +62,23 @@ public class Operator {
                 }
 
 
+                //e.getViewHolder().selectionUpdate();
+
+//                MainFragment.updateAllSelection();
+
+                if (e.getViewHolder().getBindingAdapterPosition() == selection - 1) {
+
+                  //  if(e.getViewHolder().isSelected.getValue()){
+                    MainFragment.updateAllSelection();
+               //}
+
+                }
+
             }catch (NullPointerException a){
                 a.printStackTrace();
             }
 
         }
-
-
-
 
 
         if(isMovingItem) moveItem(movingItem);
@@ -114,13 +108,12 @@ public class Operator {
         currentViewHolder = recyclerView.findViewHolderForLayoutPosition(lastSelection-1);
         selection = lastSelection;
 
-        adapter.setSelectedView(currentViewHolder);
+        //adapter.setSelectedView(currentViewHolder);
         adapter.highlightSelected(currentViewHolder);
 
 
-        ;
-    }
 
+    }
 
 
     public void moveItem(Entry movingItem){
@@ -130,7 +123,6 @@ public class Operator {
                     && selection > 0
                     && selection < MainFragment.getCheckList().size()
             ) {
-
 
 
                 MainFragment.getCheckList().remove(movingItem);
@@ -150,6 +142,72 @@ public class Operator {
     }
 
 
+    static StringBuilder memorySwap = new StringBuilder();
+    static StringBuilder memorySwap2= new StringBuilder();
+
+    static public class TaskSortItem2 implements Runnable{
+
+        Entry copyEntry, copyEntrySwap, refEntry, refEntrySwap;
+        Adapter adapter;
+
+        TaskSortItem2(Adapter adapter, Entry swap1, Entry swap2, Entry entry1, Entry refEntrySwap){
+            this.adapter = adapter;
+            this.copyEntry = swap1;
+            this.copyEntrySwap = swap2;
+            this.refEntry = entry1;
+            this.refEntrySwap = refEntrySwap;
+
+        }
+
+        @Override
+        public void run() {
+
+            final String textEntryOne = Objects.requireNonNull(copyEntry.textEntry.getValue());
+            final String textEntryTwo = copyEntrySwap.textEntry.getValue();
+
+            final Boolean isCheckOne = copyEntry.checked.getValue();
+            final Boolean isCheckTwo = copyEntrySwap.checked.getValue();
+
+
+//            if (!refEntrySwap.swappable){
+//                refEntrySwap.textEntry.postValue(memorySwap.toString());
+//                memorySwap = new StringBuilder();;
+//            }
+
+
+          if(refEntry.swappable && refEntrySwap.swappable)
+           {
+              // memorySwap = new StringBuilder();;
+
+               refEntry.textEntry.postValue(textEntryTwo.toString());
+               refEntrySwap.textEntry.postValue(textEntryOne.toString());
+
+               refEntry.checked.postValue(isCheckTwo);
+               refEntrySwap.checked.postValue(isCheckOne);
+
+           refEntry.swappable = false;
+           refEntrySwap.swappable = false;
+
+           memorySwap.append(textEntryTwo);
+
+           }
+
+
+
+//            memorySwap.append(textEntryOne);
+//            memorySwap2.append(textEntryTwo);
+
+
+    }
+
+
+
+
+    }
+
 
 
 }
+
+
+

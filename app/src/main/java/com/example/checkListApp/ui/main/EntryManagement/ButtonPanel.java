@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.checkListApp.R;
+import com.example.checkListApp.databinding.MainActivityBinding;
 import com.example.checkListApp.databinding.MainFragmentBinding;
 import com.example.checkListApp.ui.main.MainFragment;
 
@@ -27,21 +28,32 @@ public class ButtonPanel {
     boolean hasSetButtons = false;
 
     Button activeButton;
+    MainFragmentBinding binding;
 
     List<DuoAction> actionList = new ArrayList<>();
+
+    public ButtonPanelToggle buttonPanelToggle;
 
     private final int mWidth;
     Context context;
 
-    public ButtonPanel(Context context){
+    public ButtonPanel(Context context, MainFragmentBinding binding){
         this.context = context;
+        this.binding = binding;
         mWidth = context.getResources().getDisplayMetrics().widthPixels;
 
+        buttonPanelToggle = new ButtonPanelToggle(context,binding);
     }
 
     public void addButton(Button button, View.OnClickListener primary, View.OnClickListener alternative){
         actionList.add(new DuoAction(button, primary ,alternative));
     }
+
+
+    public void addButtonWithLeaf(Button button, View.OnClickListener primary, View.OnClickListener alternative, LeafButton leafButton) {
+        actionList.add(new DuoAction(button, primary, alternative,leafButton));
+    }
+
 
     public void setButtons(){
 
@@ -54,21 +66,49 @@ public class ButtonPanel {
         hasSetButtons = true;
     }
 
-    public void checkWithinButtonBoundary(float touch_X , float touch_Y){
+    public void checkWithinButtonBoundary(float touch_X, float touch_Y){
 
         for(DuoAction duoAction : actionList){
             duoAction.inBound = duoAction.withinBoundary(touch_X,touch_Y);
             duoAction.setListener();
-            if(duoAction.inBound) activeButton = duoAction.button;
+
+            if(duoAction.inBound) {activeButton = duoAction.button;}
+
+            if(duoAction.hasLeaf){
+
+                if(duoAction.inBound){
+                duoAction.leaf.toggleLeaf(true);
+                duoAction.setInitialization();}else{
+                   // duoAction.leaf.toggleLeaf(false);
+                }
+
+                duoAction.leaf.inBound = duoAction.leaf.withinBoundary(touch_X,touch_Y);
+                duoAction.leaf.setListener();
+
+                if(duoAction.leaf.inBound) {
+                    activeButton = duoAction.leaf.button;
+                }
+
+            }
         }
 
+
     }
+
+
 
     public void revertListeners(){
 
         for(DuoAction duoAction : actionList){
             duoAction.inBound = false;
             duoAction.setListener();
+
+            if(duoAction.hasLeaf){
+                duoAction.leaf.inBound = false;
+                duoAction.leaf.setListener();
+                duoAction.leaf.toggleLeaf(false);
+            }
+
         }
 
         activeButton = null;
@@ -76,11 +116,24 @@ public class ButtonPanel {
     }
 
 
-    public void executeAlternative( ){
+    public void executeAlternative(){
 
         if (activeButton != null// && motionEvent == MotionEvent.ACTION_UP
-        ){ 
-            activeButton.callOnClick();
+        ){
+            for(DuoAction duoAction : actionList) {
+
+                if (duoAction.inBound && duoAction.button == activeButton)
+                    activeButton.callOnClick();
+
+                if(duoAction.hasLeaf){
+
+                if (duoAction.leaf.inBound && duoAction.leaf.button == activeButton)
+                    activeButton.callOnClick();
+                }
+
+            }
+
+
             revertListeners();
         }
 
@@ -98,6 +151,8 @@ public class ButtonPanel {
         return 1 + ((touchDistance / mWidth) * 12);
 
     }
+
+
 
 
     public void animationHandler(int motionEvent, float touch_x, MainFragmentBinding binding) {

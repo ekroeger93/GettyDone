@@ -3,49 +3,46 @@ package com.example.checkListApp.ui.main.EntryManagement;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ToggleButton;
+import android.view.View.OnClickListener;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import com.example.checkListApp.R;
 import com.example.checkListApp.databinding.MainFragmentBinding;
-import com.example.checkListApp.ui.main.MainFragment;
 
-public class ButtonPanelToggle {
+public class ButtonPanelToggle{
 
 
     Context context;
-    private final EntryItemManager entryItemManager;
-    private final MainFragmentBinding binding;
+    private MainFragmentBinding binding;
     private boolean isDisabled = false;
 
     public ToggleButton toggleButton;
 
 
-    public ButtonPanelToggle(MainFragmentBinding binding, Context context, EntryItemManager entryItemManager){
 
-        this.binding =binding;
-        this.context =context;
-        this.entryItemManager = entryItemManager;
+    public ButtonPanelToggle(Context context, MainFragmentBinding binding){
 
         toggleButton = new ToggleButton(context);
 
+        this.binding = binding;
+
         toggleButton
-                .setEntryItemManager(entryItemManager)
                 .setBinding(binding)
-                .commitCreate();//Im sure im breaking some principle here but I like!!!
+                .commitCreate();
 
         toggleButton.setVisibility(View.GONE);
 
     }
 
 
+    public void setOnClickListener(OnClickListener onClickListener){
+        toggleButton.setListener(onClickListener).setBinding(binding).commitCreate();
+    }
 
-    public void toggleDisableWithPlace(){
 
+    public void toggleDisableToButton(){
 
         this.isDisabled = !this.isDisabled;
 
@@ -87,72 +84,64 @@ public class ButtonPanelToggle {
 
     }
 
-     static void createButton(AppCompatButton button, MainFragmentBinding binding, EntryItemManager entryItemManager){
+     static void createButton(AppCompatButton button,
+                              MainFragmentBinding binding,
+                              OnClickListener onClickListener){
 
-       // AppCompatButton button = ToggleButton.getToggleButton(context);
+         if(button.getParent() ==null) {
+             button.setId(R.id.my_Id);
+             button.setText("place");
 
-        button.setId(R.id.my_Id);
-        button.setText("place");
+             button.setWidth(200);
+             button.setHeight(100);
 
-        button.setWidth(200);
-        button.setHeight(100);
-
-        ConstraintSet set = new ConstraintSet();
-        set.constrainHeight(button.getId(),
-                ConstraintSet.WRAP_CONTENT);
-        set.constrainWidth(button.getId(),
-                ConstraintSet.WRAP_CONTENT);
-        set.connect(button.getId(), ConstraintSet.START,
-                ConstraintSet.PARENT_ID, ConstraintSet.START, 0);
-        set.connect(button.getId(), ConstraintSet.END,
-                ConstraintSet.PARENT_ID, ConstraintSet.END, 0);
-        set.connect(button.getId(), ConstraintSet.TOP,
-                ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
-        set.connect(button.getId(), ConstraintSet.BOTTOM,
-                ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0);
-
-        binding.buttonPanel.addView(button);
-
-
-        set.applyTo(binding.buttonPanel);
+             ConstraintSet set = new ConstraintSet();
+             set.constrainHeight(button.getId(),
+                     ConstraintSet.WRAP_CONTENT);
+             set.constrainWidth(button.getId(),
+                     ConstraintSet.WRAP_CONTENT);
+             set.connect(button.getId(), ConstraintSet.START,
+                     ConstraintSet.PARENT_ID, ConstraintSet.START, 0);
+             set.connect(button.getId(), ConstraintSet.END,
+                     ConstraintSet.PARENT_ID, ConstraintSet.END, 0);
+             set.connect(button.getId(), ConstraintSet.TOP,
+                     ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
+             set.connect(button.getId(), ConstraintSet.BOTTOM,
+                     ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0);
 
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                entryItemManager.move();
-            }
-        });
+             binding.buttonPanel.addView(button);
 
+
+             set.applyTo(binding.buttonPanel);
+         }
+
+
+        button.setOnClickListener(onClickListener);
 
     }
+
+
 
     @SuppressLint("ViewConstructor")
     static
     class ToggleButton extends AppCompatButton{
 
         MainFragmentBinding binding;
-        EntryItemManager entryItemManager;
-
-        private boolean created = false;
-
-        public ToggleButton setEntryItemManager(EntryItemManager entryItemManager) {
-            if(!created) this.entryItemManager = entryItemManager;
-
-        return this;
-        }
+        OnClickListener onClickListener;
 
         public  ToggleButton setBinding(MainFragmentBinding binding) {
-            if(!created) this.binding = binding;
-
+             this.binding = binding;
             return this;
         }
 
-        public ToggleButton commitCreate(){
-         if(!created) createButton(this,binding,entryItemManager);
-         created = true;
+        public ToggleButton setListener(OnClickListener clickListener){
+            this.onClickListener = clickListener;
+            return  this;
+        }
 
-            return this;
+        public void commitCreate(){
+             createButton(this,binding,onClickListener);
         }
 
 

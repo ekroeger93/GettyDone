@@ -14,7 +14,11 @@ import android.view.animation.AnticipateOvershootInterpolator;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.view.animation.TranslateAnimation;
+import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.recyclerview.selection.SelectionTracker;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.checkListApp.R;
 import com.example.checkListApp.databinding.MainFragmentBinding;
@@ -23,15 +27,26 @@ import com.example.checkListApp.input.DetectKeyboardBack;
 import com.example.checkListApp.ui.main.Entry;
 import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.MainViewModel;
+import com.example.checkListApp.ui.main.RecyclerAdapter;
+import com.example.checkListApp.ui.main.Spacer;
+import com.example.checkListApp.ui.main.ToggleSwitchOrdering;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class EntryItemManager {
 
 
-    private Context context;
-    private MainViewModel mViewModel;
-    private Operator operator;
+    private final Context context;
+    private final MainViewModel mViewModel;
+    private final Operator operator;
 
     ButtonPanelToggle buttonPanelToggle;
 
@@ -62,30 +77,150 @@ public class EntryItemManager {
 
     }
 
+    public void deleteSelected(SelectionTracker tracker){
+
+        for(Entry entry : MainFragment.getCheckList()){
+
+            try{
+
+
+            if(tracker.isSelected(entry.getViewHolder().getKey()
+            )){
+
+                int position = entry.getViewHolder().getBindingAdapterPosition();
+
+                mViewModel.deleteEntry(entry);
+                operator.adapter.notifyItemRemoved(position);
+                operator.adapter.notifyItemChanged(MainFragment.getCheckList().size());
+
+            }
+            }catch (NullPointerException e){
+                e.printStackTrace();
+            }
+
+
+        }
+        tracker.clearSelection();
+    }
+
+
+    static ArrayList<String> swapEntries;
+    static ArrayList<Boolean> swapChecks;
+
+    public void sortSelected(SelectionTracker<Long> tracker){
+
+        MainFragment.updateAllSelection();
+
+        initializeSwapArrays();
+        swapping();
+        assignSorted();
+
+    }
+
+    void initializeSwapArrays(){
+
+        int size = MainFragment.getCheckList().size();
+
+        swapEntries = new ArrayList<>(size);
+        swapChecks = new ArrayList<>(size);
+
+        while(swapEntries.size() < size)swapEntries.add(null);
+        while(swapChecks.size() < size)swapChecks.add(Boolean.FALSE);
+
+        for(ToggleSwitchOrdering.tNumber tNumber : MainFragment.toggleSwitchOrdering.listToOrder){
+
+
+            int indexOf = MainFragment.toggleSwitchOrdering.listToOrder.indexOf(tNumber);
+            Entry entry = MainFragment.getCheckList().get(indexOf+1);
+
+            if(entry.textEntry.getValue() != null)
+                swapEntries.set(indexOf, entry.textEntry.getValue());
+
+            if(entry.checked.getValue() != null){
+                swapChecks.set(indexOf, entry.checked.getValue());
+            }
+
+                     System.out.println(entry.checked.getValue());
+
+        }
+
+    }
+
+    void swapping(){
+        int size =  MainFragment.getCheckList().size();
+        ArrayList<Boolean> swappable = new ArrayList<>();
+        while(swappable.size() < size)swappable.add(false);
+
+        for(ToggleSwitchOrdering.tNumber tNumber : MainFragment.toggleSwitchOrdering.listToOrder){
+
+            try {
+
+                int indexOf = MainFragment.toggleSwitchOrdering.listToOrder.indexOf(tNumber);
+                int swapper = tNumber.number-1;//entry.getViewHolder().orderInt.getValue();
+
+                swappable.set(indexOf,true);
+
+                String entry1 = swapEntries.get(indexOf);
+                String entry2 = swapEntries.get(swapper);
+
+                Boolean check1 = swapChecks.get(indexOf);
+                Boolean check2 = swapChecks.get(swapper);
+                 System.out.println(indexOf+"  swap  "+swapper + " swappable?: "+swappable.get(swapper));
+
+                if(entry1 != null && entry2 != null && swappable.get(swapper)){
+                    swapEntries.set(swapper, entry1);
+                    swapEntries.set(indexOf, entry2);
+
+                    swapChecks.set(swapper,check1);
+                    swapChecks.set(indexOf,check2);
+                }
+
+
+
+
+            }catch (NullPointerException | ArrayIndexOutOfBoundsException e ){
+
+            }
+
+
+        }
+
+
+    }
+
+    void assignSorted(){
+
+        //Merge
+        for(String s : swapEntries){
+
+            Entry entry = MainFragment.getCheckList().get(swapEntries.indexOf(s)+1);
+
+            if(s != null && !s.isEmpty())
+                entry.textEntry.postValue(s);
+
+            // System.out.println(s);
+        }
+
+        for(Boolean b : swapChecks){
+
+
+            Entry entry = MainFragment.getCheckList().get(swapChecks.indexOf(b)+1);
+
+            if(b != null)
+            entry.checked.postValue(b);
+
+            System.out.println(b);
+
+        }
+
+    }
+
+
     public void delete(){
 
         if(MainFragment.getCheckList().get(operator.selection-1).getClass() == Entry.class){
 
             View view = MainFragment.getCheckList().get(operator.selection-1).getViewHolder().itemView;
-
-//            ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(
-//                    view,
-//                    "translationX",
-//                    1000);
-//            objectAnimator.setDuration(300);
-//            objectAnimator.setInterpolator(new OvershootInterpolator());
-//            objectAnimator.addListener(new AnimatorListenerAdapter() {
-//                @Override
-//                public void onAnimationEnd(Animator animation) {
-//                    super.onAnimationEnd(animation);
-//
-//                     mViewModel.deleteEntry(MainFragment.getCheckList().get(operator.selection-1));
-//                      operator.adapter.notifyItemRemoved(operator.selection - 1);
-//                      operator.adapter.notifyItemChanged(MainFragment.getCheckList().size());
-//
-//                }
-//            });
-//            objectAnimator.start();
 
 
             view.setZ(-10f);
@@ -96,8 +231,6 @@ public class EntryItemManager {
                     .setDuration(300)
                     .setInterpolator(new AccelerateDecelerateInterpolator())
                     .setListener(new AnimatorListenerAdapter() {
-
-
                         @Override
                         public void onAnimationStart(Animator animation) {
                             super.onAnimationStart(animation);
@@ -120,17 +253,6 @@ public class EntryItemManager {
 
 
 
-
-            // mViewModel.deleteEntry(MainFragment.getCheckList().get(operator.selection-1));
-            //  operator.adapter.notifyItemRemoved(operator.selection - 1);
-            //  operator.adapter.notifyItemChanged(MainFragment.getCheckList().size());
-
-
-           // operator.adapter.notifyItemChanged(MainFragment.getCheckList().size());
-
-
-
-
     }}
 
     public void move(){
@@ -139,6 +261,13 @@ public class EntryItemManager {
         int selection = operator.selection;
        // int oldMovePosition = operator.oldMovePosition;
 
+        buttonPanelToggle.setOnClickListener(    new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                move();
+            }
+        });
+
 
         if (!isMovingItem) {
             operator.movingItem = MainFragment.getCheckList().get(selection - 1);
@@ -146,13 +275,13 @@ public class EntryItemManager {
             operator.movingItem.setViewHolder(MainFragment.getCheckList().get(selection - 1).getViewHolder());
             operator.movingItem.getViewHolder().itemView.setBackgroundColor(Color.BLUE);
             operator.moveItem(operator.movingItem);
-            buttonPanelToggle.toggleDisableWithPlace();
+            buttonPanelToggle.toggleDisableToButton();
             ;
 
         }else{
             operator.adapter.notifyItemChanged(selection-1);
             operator.movingItem = null;
-            buttonPanelToggle.toggleDisableWithPlace();
+            buttonPanelToggle.toggleDisableToButton();
         }
 
         operator.isMovingItem = !isMovingItem;
