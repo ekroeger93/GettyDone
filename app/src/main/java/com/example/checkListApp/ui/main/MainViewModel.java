@@ -14,8 +14,8 @@ public class MainViewModel extends AndroidViewModel {
     // TODO: Implement the ViewModel
 
 
-    private EntryRepository repository;
-    private LiveData<List<Entry>> allProducts;
+    private final EntryRepository repository;
+    private final LiveData<List<Entry>> allProducts;
 
     public EntryRepository getRepository() {
         return repository;

@@ -1,4 +1,4 @@
-package com.example.checkListApp.ui.main;
+package com.example.checkListApp.ui.main.EntryManagement.ListComponent;
 
 import android.view.MotionEvent;
 import android.view.View;
@@ -10,15 +10,15 @@ import androidx.recyclerview.selection.ItemKeyProvider;
 import androidx.recyclerview.selection.SelectionTracker;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.function.Predicate;
+import com.example.checkListApp.ui.main.EntryManagement.ListComponent.RecyclerAdapter;
 
 public class TrackerHelper {
 
 
-    Details details;
-    ItemDetailsLookup<Long> itemDetailsLookup;
-    KeyProvider keyProvider;
-    Predicate predicate;
+   public Details details;
+   public ItemDetailsLookup<Long> itemDetailsLookup;
+   public KeyProvider keyProvider;
+   public Predicate predicate;
 
 
     public TrackerHelper(RecyclerView recyclerView, RecyclerView.Adapter  adapter){

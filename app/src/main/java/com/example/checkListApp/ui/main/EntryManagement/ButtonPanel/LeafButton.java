@@ -1,4 +1,4 @@
-package com.example.checkListApp.ui.main.EntryManagement;
+package com.example.checkListApp.ui.main.EntryManagement.ButtonPanel;
 
 import android.content.Context;
 import android.view.View;
@@ -7,7 +7,7 @@ import android.widget.Button;
 
 import androidx.annotation.NonNull;
 
-public class LeafButton implements iButtonComponent{
+public class LeafButton implements iButtonComponent {
 
     float Button_X, Button_Y;
     float Button_Width, Button_Height;

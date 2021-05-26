@@ -1,7 +1,6 @@
 package com.example.checkListApp.ui.main;
 
 import android.graphics.Color;
-import android.view.View;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -13,17 +12,8 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.example.checkListApp.database.EntryRepository;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
+import com.example.checkListApp.ui.main.EntryManagement.ListComponent.RecyclerAdapter;
 
-import org.json.JSONObject;
-
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 @Entity(tableName = "Entries")
@@ -38,9 +28,7 @@ public class Entry {
     public MutableLiveData<Boolean> checked = new MutableLiveData<>(false);
 
     @Ignore
-    private MutableLiveData<RecyclerAdapter.ViewHolder> mViewHolder = new MutableLiveData<>();
-    @Ignore
-     private RecyclerAdapter.ViewHolder viewHolder;
+    private RecyclerAdapter.ViewHolder viewHolder;
     @Ignore
     public boolean swappable = true;
 
@@ -57,6 +45,20 @@ public class Entry {
         checked.postValue(entry.checked.getValue());
     }
 
+    public void setEntry(Entry entry){
+
+        textEntry.setValue(entry.textEntry.getValue());
+        checked.setValue(entry.checked.getValue());
+    }
+
+    public void postEntry(Entry entry){
+
+        textEntry.postValue(entry.textEntry.getValue());
+        checked.postValue(entry.checked.getValue());
+
+    }
+
+
     public int getEntryID() {
         return this.entryID;
     }
@@ -67,69 +69,10 @@ public class Entry {
 
     public void setViewHolder(RecyclerAdapter.ViewHolder viewHolder) {
         this.viewHolder = viewHolder;
-      //  mViewHolder.setValue(viewHolder);
     }
 
     public RecyclerAdapter.ViewHolder getViewHolder() {
         return viewHolder;
-    }
-
-
-
-
-    public void setObservers(EntryRepository repository, ArrayList<Entry> mList){
-
-        TextView textView = viewHolder.textView;
-        TableRow tEntryViewRow = viewHolder.tEntryViewRow;
-        Entry entry  = this;
-
-
-        Observer<String> observer = new Observer() {
-            @Override
-            public void onChanged(Object o) {
-
-
-                textView.setText(o.toString());
-
-
-                //getMainViewModel().updateEntry(getEntry());
-                repository.updateEntry(entry);
-                MainFragment.buildJson((ArrayList<Entry>) mList);
-
-
-
-            }
-        };
-
-        Observer<Boolean> checkObs = new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-
-                textView.setBackgroundColor( checked.getValue() ?
-                        Color.GRAY:
-                        Color.parseColor("#FFF7B4")
-                );
-
-                tEntryViewRow.setBackgroundColor( checked.getValue() ?
-                        Color.GRAY:
-                        Color.parseColor("#95FF8D")
-                );
-
-
-                //  getMainViewModel().updateEntry(getEntry());
-                repository.updateEntry(entry);
-                MainFragment.buildJson((ArrayList<Entry>) mList);
-
-
-            }
-        };
-
-
-
-//        getEntry().textEntry.observe(owner,observer);
-//        getEntry().checked.observe(owner,checkObs);
-
-
     }
 
 

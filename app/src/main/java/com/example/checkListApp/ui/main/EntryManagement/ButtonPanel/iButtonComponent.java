@@ -1,4 +1,4 @@
-package com.example.checkListApp.ui.main.EntryManagement;
+package com.example.checkListApp.ui.main.EntryManagement.ButtonPanel;
 
 public interface iButtonComponent {
 

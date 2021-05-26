@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/fileListFragment"
-        android:name="com.example.checkListApp.management.FileListFragment"
+        android:name="com.example.checkListApp.file_management.FileListFragment"
         android:label="FileListFragment" >
         <action
             android:id="@+id/action_fileListFragment_to_mainFragment"

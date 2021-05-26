@@ -1,4 +1,4 @@
-package com.example.checkListApp.management.dummy;
+package com.example.checkListApp.file_management.dummy;
 
 import java.util.ArrayList;
 import java.util.HashMap;

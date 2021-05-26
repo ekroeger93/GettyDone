@@ -1,4 +1,4 @@
-package com.example.checkListApp.ui.main;
+package com.example.checkListApp.ui.main.EntryManagement.ListComponent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,7 +13,7 @@ public class ToggleSwitchOrdering {
         public int number;
         public boolean toggle;
 
-        tNumber(int number, boolean toggle){
+        public tNumber(int number, boolean toggle){
             this.number = number; this.toggle = toggle;
         }
     }

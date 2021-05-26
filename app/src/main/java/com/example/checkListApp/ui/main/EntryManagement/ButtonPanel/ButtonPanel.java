@@ -1,24 +1,15 @@
-package com.example.checkListApp.ui.main.EntryManagement;
+package com.example.checkListApp.ui.main.EntryManagement.ButtonPanel;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.BounceInterpolator;
 import android.widget.Button;
 
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
-
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.checkListApp.R;
-import com.example.checkListApp.databinding.MainActivityBinding;
 import com.example.checkListApp.databinding.MainFragmentBinding;
-import com.example.checkListApp.ui.main.MainFragment;
 
 
 public class ButtonPanel {

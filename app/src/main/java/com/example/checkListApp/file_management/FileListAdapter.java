@@ -1,4 +1,4 @@
-package com.example.checkListApp.management;
+package com.example.checkListApp.file_management;
 
 import android.graphics.Color;
 import android.view.LayoutInflater;

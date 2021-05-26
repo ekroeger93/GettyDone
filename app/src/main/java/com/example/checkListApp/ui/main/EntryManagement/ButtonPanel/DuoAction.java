@@ -1,9 +1,12 @@
-package com.example.checkListApp.ui.main.EntryManagement;
+package com.example.checkListApp.ui.main.EntryManagement.ButtonPanel;
 
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class DuoAction implements iButtonComponent{
+import com.example.checkListApp.ui.main.EntryManagement.ButtonPanel.LeafButton;
+import com.example.checkListApp.ui.main.EntryManagement.ButtonPanel.iButtonComponent;
+
+public class DuoAction implements iButtonComponent {
 
     public boolean hasLeaf;
     public LeafButton leaf;

@@ -1,9 +1,8 @@
-package com.example.checkListApp.ui.main;
+package com.example.checkListApp.ui.main.EntryManagement.ListComponent;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -14,12 +13,9 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
-import androidx.recyclerview.selection.ItemDetailsLookup;
-import androidx.recyclerview.selection.ItemKeyProvider;
 import androidx.recyclerview.selection.SelectionTracker;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,6 +24,9 @@ import com.example.checkListApp.database.EntryRepository;
 import com.example.checkListApp.databinding.EntryBinding;
 import com.example.checkListApp.input.CustomEditText;
 import com.example.checkListApp.input.DetectKeyboardBack;
+import com.example.checkListApp.ui.main.Entry;
+import com.example.checkListApp.ui.main.MainFragment;
+import com.example.checkListApp.ui.main.Spacer;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -45,14 +44,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     private LifecycleOwner owner;
     private EntryRepository repository;
     GestureDetector.SimpleOnGestureListener gestureDetector;
-
-    public int previousSelectionSize=0;
-
     private RecyclerView recyclerView;
 
     public boolean toggleTracker = true;
 
-    TrackerHelper trackerHelper;
+    public TrackerHelper trackerHelper;
 
 
     public List<ViewHolder> getViewHolderList() {
@@ -70,12 +66,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     public void trackerOn(boolean turnOnTracker){
         toggleTracker = turnOnTracker;
-
-//        if(turnOnTracker){
-//            this.selectionTracker = savedSelectionTracker;
-//        }else{
-//            this.selectionTracker = null;
-//        }
 
         notifyDataSetChanged();
     }
@@ -285,13 +275,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
                 void checkSelected(int position){
 
+                    if(toggleTracker){
                        binding.executePendingBindings();
 
                  //   selectionUpdate();
 
-           //           if(toggleTracker){
-
                        details.position = position;
+
 
 
                         if (selectionTracker.isSelected(details.getSelectionKey())) {
@@ -300,7 +290,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                             button.setBackgroundColor(Color.BLUE);
                         }
 
-           //      }
+                 }
 
 
 

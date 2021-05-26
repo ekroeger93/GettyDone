@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,10 +26,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.checkListApp.R;
 import com.example.checkListApp.databinding.MainFragmentBinding;
-import com.example.checkListApp.ui.main.EntryManagement.ButtonPanel;
-import com.example.checkListApp.ui.main.EntryManagement.ButtonPanelToggle;
+import com.example.checkListApp.ui.main.EntryManagement.ButtonPanel.ButtonPanel;
+import com.example.checkListApp.ui.main.EntryManagement.ButtonPanel.ButtonPanelToggle;
 import com.example.checkListApp.ui.main.EntryManagement.EntryItemManager;
-import com.example.checkListApp.ui.main.EntryManagement.LeafButton;
+import com.example.checkListApp.ui.main.EntryManagement.ButtonPanel.LeafButton;
+import com.example.checkListApp.ui.main.EntryManagement.ListComponent.RecyclerAdapter;
+import com.example.checkListApp.ui.main.EntryManagement.ListComponent.ToggleSwitchOrdering;
 import com.example.checkListApp.ui.main.EntryManagement.Operator;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -358,10 +359,11 @@ public void assignButtonListeners(){
                                 isSorting = true;
                                 entryItemManager.sortSelected(selectionTracker);
                                 buttonPanelToggle.toggleDisableToButton();
-                                adapter.trackerOn(false);
+
 
                                 selectionTracker.clearSelection();
                                 MainFragment.reInitializeAllSelection();
+                                adapter.trackerOn(false);
 
                             });
 
