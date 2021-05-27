@@ -42,6 +42,7 @@
                 android:layout_marginBottom="0dp"
                 android:overScrollMode="always"
                 android:background="#4600BCD4"
+                tools:listitem="@layout/entry"
                 >
 
             </androidx.recyclerview.widget.RecyclerView>
@@ -104,6 +105,12 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_begin="450dp" />
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="300dp" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

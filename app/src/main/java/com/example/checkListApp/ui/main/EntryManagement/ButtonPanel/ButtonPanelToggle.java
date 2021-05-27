@@ -89,7 +89,7 @@ public class ButtonPanelToggle{
                               OnClickListener onClickListener){
 
          if(button.getParent() ==null) {
-             button.setId(R.id.my_Id);
+             button.setId(R.id.buttonPanelID);
              button.setText("place");
 
              button.setWidth(200);

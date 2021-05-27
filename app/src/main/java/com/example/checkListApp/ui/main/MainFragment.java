@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.icu.text.AlphabeticIndex;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -33,6 +34,7 @@ import com.example.checkListApp.ui.main.EntryManagement.ButtonPanel.LeafButton;
 import com.example.checkListApp.ui.main.EntryManagement.ListComponent.RecyclerAdapter;
 import com.example.checkListApp.ui.main.EntryManagement.ListComponent.ToggleSwitchOrdering;
 import com.example.checkListApp.ui.main.EntryManagement.Operator;
+import com.example.checkListApp.ui.main.EntryManagement.Record.RecordHelper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -68,7 +70,8 @@ TaDone Prototype
 
 -submit on complete when all are checked
 
-    -record number checked
+https://github.com/PhilJay/MPAndroidChart
+
     -show finish button
 
     -log number of finished and date
@@ -83,7 +86,14 @@ TaDone Prototype
 
 -------------------------------------------------------------
 
--? Timer / schedule implementation
+Type Entries
+- Timer
+    -checks when expired
+    -has delay period
+    -proceeds to next timer
+- Counter
+    -checks when at zero
+
 
 
 Collaboration
@@ -124,6 +134,8 @@ public class MainFragment extends Fragment {
     SelectionTracker<Long> selectionTracker;
 
     private static String jsonCheckArrayList;
+
+    public RecordHelper recordHelper;
 
     public static String getJsonCheckArrayList() {
         return jsonCheckArrayList;
@@ -203,6 +215,7 @@ public class MainFragment extends Fragment {
 
       //  RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
 
+
         loadFile();
 
         setUpAdapter();
@@ -215,6 +228,7 @@ public class MainFragment extends Fragment {
 
         toggleSwitchOrdering = new ToggleSwitchOrdering();
 
+        RecordHelper.createButton(getContext(),binding);
     }
 
 
@@ -301,14 +315,18 @@ public class MainFragment extends Fragment {
 
     }
 
-    public static void transitionToFile(Activity activity){
+    public static void transitionToFileFromMain(Activity activity){
 
         MainFragmentDirections.ActionMainFragmentToFileListFragment action =
                 MainFragmentDirections.actionMainFragmentToFileListFragment(jsonCheckArrayList);
 
-
         Navigation.findNavController(activity, R.id.fragment).navigate(action);
 
+    }
+
+    public static void transitionToProgressFromMain(Activity activity){
+
+        Navigation.findNavController(activity, R.id.fragment).navigate(  MainFragmentDirections.actionMainFragmentToProgressFragment());
 
     }
 
@@ -458,13 +476,12 @@ public void assignObservers(){
                 checkList.add(checkList.size(), new Spacer());
                 adapter.setList(checkList);
 
-
+                RecordHelper.update();
 
                 if(!isSorting)
                 updateToggleOrdering();
 
                 if(isSorting) {
-               //     toggleSwitchOrdering.showNumberList();
                     MainFragment.updateAllSelection();
                 }
 

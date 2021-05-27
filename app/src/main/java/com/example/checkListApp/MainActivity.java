@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import com.example.checkListApp.file_management.FileListFragment;
 import com.example.checkListApp.databinding.MainActivityBinding;
 import com.example.checkListApp.ui.main.MainFragment;
+import com.example.checkListApp.ui.main.ProgressFragment;
 import com.google.android.material.tabs.TabLayout;
 
 public class MainActivity extends AppCompatActivity
@@ -46,22 +47,46 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 
+
+                //THIS WAS TOTALLY NOT CONFUSING AND MADE COMPLETE SENSE!
+
                 if(!visualSelect) {
-                    if (tab.getPosition() == 0
+                    if (tab.getPosition() == 0 //CLICKS LIST
                             && tab.getPosition() != navPosition
                     ) {
 
+                        if(navPosition == 1)//IF IN FILE
+                        FileListFragment.transitionToMainFromFile(activityBinding.getMMainActivity());
 
-                        FileListFragment.transitionToList(activityBinding.getMMainActivity());
+                        if(navPosition == 2) //IF IN PROGRESS
+                            ProgressFragment.transitionFromProgressToMain(activityBinding.getMMainActivity());
 
                     }
 
 
-                    if (tab.getPosition() == 1
+                    if (tab.getPosition() == 1 //CLICKS FILE
                             && tab.getPosition() != navPosition
                     ) {
 
-                        MainFragment.transitionToFile(activityBinding.getMMainActivity());
+                        if(navPosition == 0)//IF In LIST
+                        MainFragment.transitionToFileFromMain(activityBinding.getMMainActivity());
+
+                        if(navPosition == 2)//IF in PROGRESS
+                         ProgressFragment.transitionFromProgressToFile(activityBinding.getMMainActivity());
+                            //  FileListFragment.transitionToProgressFromFile(activityBinding.getMMainActivity());
+
+                    }
+
+
+                    if (tab.getPosition() == 2 //CLICKS PROGRESS
+                            && tab.getPosition() != navPosition){
+
+                        if(navPosition == 0)//IF IN LIST
+                        MainFragment.transitionToProgressFromMain(activityBinding.getMMainActivity());
+
+                        if(navPosition == 1)//IF IN FILE
+                        FileListFragment.transitionToProgressFromFile(activityBinding.getMMainActivity());
+                          //  ProgressFragment.transitionFromProgressToFile(activityBinding.getMMainActivity());
 
                     }
 

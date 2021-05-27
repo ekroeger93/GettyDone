@@ -25,6 +25,7 @@ import com.example.checkListApp.databinding.EntryBinding;
 import com.example.checkListApp.input.CustomEditText;
 import com.example.checkListApp.input.DetectKeyboardBack;
 import com.example.checkListApp.ui.main.Entry;
+import com.example.checkListApp.ui.main.EntryManagement.Record.RecordHelper;
 import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.Spacer;
 
@@ -376,6 +377,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                                 Color.GRAY:
                                 Color.parseColor("#95FF8D")
                         );
+
+                        RecordHelper.update();
+
+                        /*
+
+                        show completed button here
+
+                         */
 
 
                         repository.updateEntry(entry);

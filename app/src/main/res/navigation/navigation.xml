@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/navigation"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
     app:startDestination="@id/mainFragment">
 
     <fragment
@@ -14,6 +16,9 @@
             android:name="loadJsonData"
             app:argType="string"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_mainFragment_to_progressFragment"
+            app:destination="@id/progressFragment" />
     </fragment>
     <fragment
         android:id="@+id/fileListFragment"
@@ -25,7 +30,22 @@
         <argument
             android:name="jsonData"
             app:argType="string" />
+        <action
+            android:id="@+id/action_fileListFragment_to_progressFragment"
+            app:destination="@id/progressFragment" />
     </fragment>
     <argument
         android:name="loadJsonData" />
+    <fragment
+        android:id="@+id/progressFragment"
+        android:name="com.example.checkListApp.ui.main.ProgressFragment"
+        android:label="FragmentProgress"
+        tools:layout="@layout/fragment_progress" >
+        <action
+            android:id="@+id/action_progressFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/action_progressFragment_to_fileListFragment"
+            app:destination="@id/fileListFragment" />
+    </fragment>
 </navigation>

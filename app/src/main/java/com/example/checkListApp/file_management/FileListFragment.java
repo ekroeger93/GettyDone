@@ -145,9 +145,12 @@ public class FileListFragment extends Fragment {
 
 
 
-    public static void transitionToList(Activity activity){
-
+    public static void transitionToMainFromFile(Activity activity){
         Navigation.findNavController(activity,R.id.fragment).navigate(R.id.action_fileListFragment_to_mainFragment);
+    }
+
+    public static void transitionToProgressFromFile(Activity activity){
+        Navigation.findNavController(activity,R.id.fragment).navigate(R.id.action_fileListFragment_to_progressFragment);
     }
 
 
