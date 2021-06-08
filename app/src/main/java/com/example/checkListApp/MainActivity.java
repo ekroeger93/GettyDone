@@ -38,9 +38,6 @@ public class MainActivity extends AppCompatActivity
 
         activityBinding.setMMainActivity(this);
 
-        Log.d("testT",""+activityBinding.getMMainActivity());
-
-
         tabLayout = findViewById(R.id.tabs);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

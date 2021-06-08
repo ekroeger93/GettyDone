@@ -12,13 +12,17 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import com.example.checkListApp.R;
 import com.example.checkListApp.databinding.MainFragmentBinding;
 import com.example.checkListApp.ui.main.MainFragment;
+import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class RecordFinishButtonToggle {
 
     static FinishButton finishButton;
-
 
 
     static public void toggleHideButton( boolean hide){
@@ -64,6 +68,21 @@ public class RecordFinishButtonToggle {
             set.applyTo(binding.main);
 
             finishButton.setVisibility(View.GONE);
+
+
+            finishButton.setOnClickListener( view -> {
+
+                RecordHelper.recordArrayList.add(
+                        new Record(RecordHelper.numOfEntries)
+                );
+
+                RecordHelper.buildRecordListJson();
+
+                ProgressProvider.saveProgress(RecordHelper.recordListJson,context);
+
+
+            });
+
         }
 
     }

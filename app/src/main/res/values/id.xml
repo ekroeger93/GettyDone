@@ -4,5 +4,7 @@
     <item name="buttonPanelID" type="id"/>
     <item name="finishButtonID" type="id"/>
 
+    <item name="dates" type="id"/>
+
 
 </resources>

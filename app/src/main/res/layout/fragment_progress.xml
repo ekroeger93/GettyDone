@@ -6,7 +6,18 @@
     tools:context=".ui.main.ProgressFragment">
 
 
-    <com.github.mikephil.charting.charts.LineChart
+    <TextView
+        android:id="@+id/dateChartValue"
+        android:layout_width="204dp"
+        android:layout_height="50dp"
+        android:text="select for date"
+        android:textAlignment="center"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/chart"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

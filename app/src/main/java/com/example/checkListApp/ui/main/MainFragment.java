@@ -34,6 +34,7 @@ import com.example.checkListApp.ui.main.EntryManagement.ButtonPanel.LeafButton;
 import com.example.checkListApp.ui.main.EntryManagement.ListComponent.RecyclerAdapter;
 import com.example.checkListApp.ui.main.EntryManagement.ListComponent.ToggleSwitchOrdering;
 import com.example.checkListApp.ui.main.EntryManagement.Operator;
+import com.example.checkListApp.ui.main.EntryManagement.Record.RecordFinishButtonToggle;
 import com.example.checkListApp.ui.main.EntryManagement.Record.RecordHelper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -58,7 +59,7 @@ Objectives
     -use anchor points when dragging
 
 -order consistent, save index in Json and load in proper order, use Entry ID
-
+//cd /data/user/0/com.example.myfileio/files
 -image button checkBox
 -change buttons into icons
 -animate entry on move and delete
@@ -68,17 +69,17 @@ Objectives
 TaDone Prototype
 --------------------------------------------------------------
 
--submit on complete when all are checked
 
 https://github.com/PhilJay/MPAndroidChart
 
-    -show finish button
-
-    -log number of finished and date
 
 -record complete goals and show in progress (calender) completed/date
     -date Time java api
     -record time completed and goals met
+
+-add gestures
+    -swipe right to delete
+    -swipe left (toggle) move button
 
 -? add reminder notification
 
@@ -229,6 +230,7 @@ public class MainFragment extends Fragment {
         toggleSwitchOrdering = new ToggleSwitchOrdering();
 
         RecordHelper.createButton(getContext(),binding);
+
     }
 
 
@@ -549,7 +551,7 @@ public void assignObservers(){
 
                             }
 
-                        } catch (NullPointerException e) {
+                        } catch (NullPointerException  | IndexOutOfBoundsException a) {
                         }
                     }
 
