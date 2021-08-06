@@ -7,10 +7,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -47,8 +49,14 @@ import com.github.mikephil.charting.utils.Utils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -126,6 +134,7 @@ public class ProgressFragment extends Fragment {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -147,18 +156,35 @@ public class ProgressFragment extends Fragment {
         int index = 0;
         String prevCheckDate="";
 
-        for (Record record : listRecord) {
-            String date =  record.getCurrentDate().replaceAll("[^0-9 .]", "");
+        Calendar cal = Calendar.getInstance();
 
-            if(!date.equals(prevCheckDate) && !prevCheckDate.isEmpty()){
+        for (Record record : listRecord) {
+
+            StringBuilder date =  new StringBuilder(
+                    record.getCurrentDate().replaceAll("[^0-9 .]", ""));
+
+
+            String[] holdDate;
+            holdDate = date.toString().split("\\.");
+
+            int year = Integer.parseInt(holdDate[0]);
+            int month = Integer.parseInt(holdDate[1]);
+            int day = Integer.parseInt(holdDate[2]);
+
+
+            date.append(" : "+  LocalDate.of(year,month,day).getDayOfWeek());
+
+            if(!date.toString().equals(prevCheckDate) && !prevCheckDate.isEmpty()){
                 index++;
             }
+
+
 
             BarEntry barEntry = new BarEntry(
                     index
                     , record.getNumberOfGoals(), date);
 
-            prevCheckDate = date;
+            prevCheckDate = date.toString();
 
             someEntries.add(barEntry);
 
@@ -175,11 +201,17 @@ public class ProgressFragment extends Fragment {
             BarData barData = new BarData(dataSet);
             barChart.setData(barData);
 
+
+            /*
+            * update date via get scroll X to bar position, detect with gesture
+            * */
+
+         //   barChart.getScrollX();
+
             barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
                 @Override
                 public void onValueSelected(Entry e, Highlight h) {
 
-                    Log.d("touchTest","yep");
                     textView.setText((CharSequence) e.getData().toString());
                 }
 

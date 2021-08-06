@@ -361,6 +361,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     Observer<String> observer = o -> {
 
                         textView.setText(o);
+                        entry.textTemp = o;
                         repository.updateEntry(entry);
                         MainFragment.buildJson((ArrayList<Entry>) mList);
 
@@ -377,6 +378,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                                 Color.GRAY:
                                 Color.parseColor("#95FF8D")
                         );
+
+                        entry.checkTemp = aBoolean.booleanValue();
 
                         RecordHelper.update();
 

@@ -32,6 +32,11 @@ public class Entry {
     @Ignore
     public boolean swappable = true;
 
+    @Ignore
+    public String textTemp;
+    @Ignore
+    public boolean checkTemp;
+
     public Entry(){
     }
 
@@ -51,11 +56,23 @@ public class Entry {
         checked.setValue(entry.checked.getValue());
     }
 
-    public void postEntry(Entry entry){
+    public void setEntryOptimized(String text, Boolean check){
 
+        textEntry.setValue(text);
+        checked.setValue(check);
+
+    }
+
+    public void postEntryOptimized(String text, Boolean check){
+
+        textEntry.postValue(text);
+        checked.postValue(check);
+
+    }
+
+    public void postEntry(Entry entry){
         textEntry.postValue(entry.textEntry.getValue());
         checked.postValue(entry.checked.getValue());
-
     }
 
 

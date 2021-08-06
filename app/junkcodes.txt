@@ -1,0 +1,57 @@
+
+    void initialize(){
+
+        int size = MainFragment.getCheckList().size();
+
+        swapEntry.clear();
+
+        while(swapEntry.size() < size)swapEntry.add(new Entry());
+
+
+        for(ToggleSwitchOrdering.tNumber tNumber : MainFragment.toggleSwitchOrdering.listToOrder){
+
+
+            int indexOf = MainFragment.toggleSwitchOrdering.listToOrder.indexOf(tNumber);
+            Entry entry = MainFragment.getCheckList().get(indexOf+1);
+
+            swapEntry.get(indexOf).postEntry(entry);
+
+                   //  System.out.println(entry.checked.getValue());
+
+        }
+
+    }
+    void swapping(){
+        int size =  MainFragment.getCheckList().size();
+        ArrayList<Boolean> swappable = new ArrayList<>();
+
+        while(swappable.size() < size)swappable.add(false);
+
+        for(ToggleSwitchOrdering.tNumber tNumber : MainFragment.toggleSwitchOrdering.listToOrder){
+
+            try {
+                int indexOf = MainFragment.toggleSwitchOrdering.listToOrder.indexOf(tNumber);
+                int swapper = tNumber.number-1;//entry.getViewHolder().orderInt.getValue();
+
+                swappable.set(indexOf,true);
+
+                Entry entry1 = swapEntry.get(indexOf);
+                Entry entry2 = swapEntry.get(swapper);
+
+                if(entry1 != null && entry2 != null && swappable.get(swapper)){
+
+                    swapEntry.set(swapper, entry1);
+                    swapEntry.set(indexOf, entry2);
+
+                }
+
+
+            }catch (NullPointerException | ArrayIndexOutOfBoundsException e ){
+
+            }
+
+
+        }
+
+
+    }

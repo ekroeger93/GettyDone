@@ -7,13 +7,16 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.TextView;
 
+import androidx.collection.ArraySet;
 import androidx.recyclerview.selection.SelectionTracker;
 
 import com.example.checkListApp.R;
+import com.example.checkListApp.database.EntryDao;
 import com.example.checkListApp.input.CustomEditText;
 import com.example.checkListApp.input.DetectKeyboardBack;
 import com.example.checkListApp.ui.main.Entry;
@@ -26,6 +29,7 @@ import java.util.ArrayList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Stream;
 
 public class EntryItemManager {
 
@@ -91,107 +95,58 @@ public class EntryItemManager {
 
 
 
-    private final ArrayList<Entry> swapEntry = new ArrayList<>();
+//TODO: fix memory leak here:
 
     public void sortSelected(SelectionTracker<Long> tracker){
 
-        MainFragment.updateAllSelection();
-
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
-
-        executorService.execute(() -> {
+     //   MainFragment.updateAllSelection();
+//        assignSorted(outputSort());
+        TaskSortEntries.executeAsync();
 
 
-//            initialize();
-//            swapping();
 
-            initializeAndSwap();
+    }
 
-            new Handler(Looper.getMainLooper()).post(new Runnable () {
-                @Override
-                public void run () {
-                    assignSorted();
-                }
+    public static final class TaskSortEntries {
+
+        private final static Executor executor = Executors.newSingleThreadExecutor(); // change according to your requirements
+
+
+        public static void executeAsync() {
+            executor.execute(() -> {
+
+                MainFragment.updateAllSelection();
+                assignSorted(outputSort());
+
+                //Handle at main thread
+//                new Handler(Looper.getMainLooper()).post(new Runnable () {
+//                    @Override
+//                    public void run () {
+//                       assignSorted(initializeAndSwap());
+//                    }
+//                });
+
             });
-
-        });
-
-        executorService.shutdown();
-
-
-    }
-
-    void initialize(){
-
-        int size = MainFragment.getCheckList().size();
-
-        swapEntry.clear();
-
-        while(swapEntry.size() < size)swapEntry.add(new Entry());
-
-
-        for(ToggleSwitchOrdering.tNumber tNumber : MainFragment.toggleSwitchOrdering.listToOrder){
-
-
-            int indexOf = MainFragment.toggleSwitchOrdering.listToOrder.indexOf(tNumber);
-            Entry entry = MainFragment.getCheckList().get(indexOf+1);
-
-            swapEntry.get(indexOf).postEntry(entry);
-
-                   //  System.out.println(entry.checked.getValue());
-
-        }
-
-    }
-
-    void swapping(){
-        int size =  MainFragment.getCheckList().size();
-        ArrayList<Boolean> swappable = new ArrayList<>();
-
-        while(swappable.size() < size)swappable.add(false);
-
-        for(ToggleSwitchOrdering.tNumber tNumber : MainFragment.toggleSwitchOrdering.listToOrder){
-
-            try {
-                int indexOf = MainFragment.toggleSwitchOrdering.listToOrder.indexOf(tNumber);
-                int swapper = tNumber.number-1;//entry.getViewHolder().orderInt.getValue();
-
-                swappable.set(indexOf,true);
-
-                Entry entry1 = swapEntry.get(indexOf);
-                Entry entry2 = swapEntry.get(swapper);
-
-//              System.out.println(indexOf+"  swap  "+swapper + " swappable?: "+swappable.get(swapper));
-
-                if(entry1 != null && entry2 != null && swappable.get(swapper)){
-
-                    swapEntry.set(swapper, entry1);
-                    swapEntry.set(indexOf, entry2);
-
-                }
-
-
-
-
-            }catch (NullPointerException | ArrayIndexOutOfBoundsException e ){
-
-            }
-
-
         }
 
 
     }
 
-
-    void initializeAndSwap(){
+    static ArrayList<Entry> outputSort(){
 
         int size =  MainFragment.getCheckList().size();
-        ArrayList<Boolean> swappable = new ArrayList<>();
 
-        swapEntry.clear();
+        ArrayList<Boolean> swappable = new ArrayList<>(size);
+        ArrayList<Entry>swapList = new ArrayList<>(size);
 
-        while(swappable.size() < size){swappable.add(false); swapEntry.add(new Entry());}
+       // swapEntry.clear();
+        while(swappable.size() < size){
+
+       // swapEntry.add(new Entry());
+            swapList.add(new Entry());
+            swappable.add(false);
+        }
+
 
         for(ToggleSwitchOrdering.tNumber tNumber : MainFragment.toggleSwitchOrdering.listToOrder){
 
@@ -200,19 +155,18 @@ public class EntryItemManager {
                 int swapper = tNumber.number-1;//entry.getViewHolder().orderInt.getValue();
 
                 Entry entry = MainFragment.getCheckList().get(indexOf+1);
-                swapEntry.get(indexOf).postEntry(entry);
 
+                swapList.set(indexOf,entry);
                 swappable.set(indexOf,true);
 
-                Entry entry1 = swapEntry.get(indexOf);
-                Entry entry2 = swapEntry.get(swapper);
+                Entry entry1 = swapList.get(indexOf);
+                Entry entry2 = swapList.get(swapper);
 
                 if(entry1 != null && entry2 != null && swappable.get(swapper)){
-
-                    swapEntry.set(swapper, entry1);
-                    swapEntry.set(indexOf, entry2);
-
+                    swapList.set(swapper, entry1);
+                    swapList.set(indexOf, entry2);
                 }
+
 
 
 
@@ -225,28 +179,35 @@ public class EntryItemManager {
         }
 
 
+
+        return swapList;
+
     }
 
+    static void assignSorted(ArrayList<Entry> entries){
 
-    void assignSorted(){
+        for(Entry entry : entries){
+            System.out.println(entry.textEntry.getValue());
+        }
 
-        //Merge
 
-        for(Entry entry : swapEntry){
+        for(Entry entry : entries){
+
+            Log.d("arrayTest",entry.textEntry.getValue());
 
             try{
-                int index = swapEntry.indexOf(entry)+1;
-                Entry entryRef = MainFragment.getCheckList().get(index);
-                entryRef.setEntry(entry);
+                int index = entries.indexOf(entry)+1;
 
+                //Post seems to cause GC issues?
+                MainFragment.getCheckList().get(index).postEntryOptimized(entry.textTemp,entry.checkTemp);
 
             }catch (IndexOutOfBoundsException | NullPointerException e){
 
             }
 
-
         }
 
+        System.gc();
     }
 
 

@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainViewModel extends AndroidViewModel {
-    // TODO: Implement the ViewModel
 
 
     private final EntryRepository repository;

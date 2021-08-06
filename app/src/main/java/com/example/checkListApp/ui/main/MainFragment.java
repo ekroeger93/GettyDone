@@ -68,14 +68,7 @@ Objectives
 
 TaDone Prototype
 --------------------------------------------------------------
-
-
 https://github.com/PhilJay/MPAndroidChart
-
-
--record complete goals and show in progress (calender) completed/date
-    -date Time java api
-    -record time completed and goals met
 
 -add gestures
     -swipe right to delete
@@ -90,8 +83,8 @@ https://github.com/PhilJay/MPAndroidChart
 Type Entries
 - Timer
     -checks when expired
-    -has delay period
-    -proceeds to next timer
+    -has delay start period
+    -proceeds to next timer (chained)
 - Counter
     -checks when at zero
 
@@ -152,13 +145,11 @@ public class MainFragment extends Fragment {
 
     static public boolean isSorting = false;
 
-
     public static ArrayList<Entry> getCheckList(){ return checkList;}
 
 
     //initialize
     public void initialize() {
-
 
 
         recyclerView.getViewTreeObserver().addOnGlobalLayoutListener(
@@ -212,7 +203,6 @@ public class MainFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
-        // TODO: Use the ViewModel
 
       //  RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
 
