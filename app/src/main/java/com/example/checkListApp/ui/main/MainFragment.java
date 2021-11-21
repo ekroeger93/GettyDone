@@ -10,11 +10,14 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.view.menu.MenuView;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -70,12 +73,7 @@ TaDone Prototype
 --------------------------------------------------------------
 https://github.com/PhilJay/MPAndroidChart
 
--add gestures
-    -swipe right to delete
-    -swipe left (toggle) move button
-
 -? add reminder notification
-
 -? save as pdf/rich text file -> print appMobilityPrint
 
 -------------------------------------------------------------
@@ -85,7 +83,8 @@ Type Entries
     -checks when expired
     -has delay start period
     -proceeds to next timer (chained)
-- Counter
+- Counter.0
+
     -checks when at zero
 
 
@@ -114,38 +113,31 @@ calender schedule
 
 public class MainFragment extends Fragment {
 
-    private MainViewModel mViewModel;
+
     protected MainFragmentBinding binding;
 
-    private RecyclerView recyclerView;
-    private static RecyclerAdapter adapter;
     private Context context;
+    private MainViewModel mViewModel;
+    private RecyclerView recyclerView;
 
-    public static float recyclerScrollCompute,itemHeightPx, ratioOffset;
-
+    private static RecyclerAdapter adapter;
+    private static CustomGridLayoutManager customGridLayoutManager;
+    private static String jsonCheckArrayList;
     private static ArrayList<Entry> checkList = new ArrayList<>();
 
-    SelectionTracker<Long> selectionTracker;
-
-    private static String jsonCheckArrayList;
-
-    public RecordHelper recordHelper;
-
+    public static float recyclerScrollCompute,itemHeightPx, ratioOffset;
+    static public ToggleSwitchOrdering toggleSwitchOrdering;
+    static public boolean isSorting = false;
+    public static ArrayList<Entry> getCheckList(){ return checkList;}
     public static String getJsonCheckArrayList() {
         return jsonCheckArrayList;
     }
 
-
+    SelectionTracker<Long> selectionTracker;
     Operator operator;
     ButtonPanel buttonPanel;
     ButtonPanelToggle buttonPanelToggle;
     EntryItemManager entryItemManager;
-
-    static public ToggleSwitchOrdering toggleSwitchOrdering;
-
-    static public boolean isSorting = false;
-
-    public static ArrayList<Entry> getCheckList(){ return checkList;}
 
 
     //initialize
@@ -173,7 +165,6 @@ public class MainFragment extends Fragment {
                 });
     }
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -195,8 +186,6 @@ public class MainFragment extends Fragment {
         return binding.getRoot();
 
     }
-
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -222,8 +211,6 @@ public class MainFragment extends Fragment {
         RecordHelper.createButton(getContext(),binding);
 
     }
-
-
 
     public void loadFile(){
 
@@ -268,11 +255,13 @@ public class MainFragment extends Fragment {
         adapter = new RecyclerAdapter();
 
         recyclerView.setAdapter(adapter);
+        customGridLayoutManager = new CustomGridLayoutManager(context);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        recyclerView.setLayoutManager(customGridLayoutManager);
         recyclerView.setHasFixedSize(false);
         adapter.setOwner(getViewLifecycleOwner());
         adapter.setRepository(mViewModel.getRepository());
+
 
 //        checkList.add(new Spacer());
 //        checkList.add(new Entry("a",false));
@@ -305,6 +294,10 @@ public class MainFragment extends Fragment {
         entryItemManager.setButtonPanelToggle(buttonPanelToggle);
 
 
+    }
+
+    public static void toggleDisableScroll(boolean flag){
+        customGridLayoutManager.setScrollEnabled(flag);
     }
 
     public static void transitionToFileFromMain(Activity activity){
@@ -411,32 +404,38 @@ public void assignButtonListeners(){
         float touch_X = motionEvent.getRawX();
         float touch_Y = motionEvent.getRawY();
 
-//        VelocityTracker velocityTracker = VelocityTracker.obtain();
-//        velocityTracker.addMovement(motionEvent);
-//        velocityTracker.computeCurrentVelocity(1);
-//
-//        Log.d("track", ""+velocityTracker.getXVelocity());
-//
-//        operator.currentViewHolder.itemView.setX( operator.currentViewHolder.itemView.getX() + (velocityTracker.getXVelocity()*40) );
-//
-//        velocityTracker.recycle();
-//
-//        if (motionEvent.getAction() == MotionEvent.ACTION_UP ||
-//                motionEvent.getAction() == MotionEvent.ACTION_CANCEL
-//        ){
-//            operator.currentViewHolder.itemView.animate()
-//                    .translationX(0)
-//                    .setDuration(500)
-//                    .setInterpolator( new OvershootInterpolator())
-//                    .start();
-//
-//        }
+        buttonPanel.setButtons();
+        boolean onButton= buttonPanel.checkWithinButtonBoundary(touch_X,touch_Y);
 
 
+        VelocityTracker velocityTracker = VelocityTracker.obtain();
+        velocityTracker.addMovement(motionEvent);
+        velocityTracker.computeCurrentVelocity(1);
+        operator.refreshSelection(false);
+
+        float xMove = operator.currentViewHolder.itemView.getX() + (velocityTracker.getXVelocity()*40);
+
+        operator.currentViewHolder.itemView.setTranslationX(xMove);
+        velocityTracker.recycle();
+
+        if (motionEvent.getAction() == MotionEvent.ACTION_UP ||
+                motionEvent.getAction() == MotionEvent.ACTION_CANCEL
+        ){
+            if(!onButton){
+
+           // operator.currentViewHolder.itemView.setTranslationX(0);
+            operator.currentViewHolder.itemView.animate()
+                    .translationX(0)
+                    .setDuration(500)
+                    .setInterpolator( new OvershootInterpolator())
+                    .start();
+
+        }}
+
+//------------------------------
         //We only need to check this once so lets do it on UP
 
-        buttonPanel.setButtons();
-        buttonPanel.checkWithinButtonBoundary(touch_X,touch_Y);
+
 
         if(motionEvent.getAction() == MotionEvent.ACTION_UP){
 

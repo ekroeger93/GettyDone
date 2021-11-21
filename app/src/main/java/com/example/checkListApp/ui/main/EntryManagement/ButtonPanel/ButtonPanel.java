@@ -57,7 +57,9 @@ public class ButtonPanel {
         hasSetButtons = true;
     }
 
-    public void checkWithinButtonBoundary(float touch_X, float touch_Y){
+    public boolean checkWithinButtonBoundary(float touch_X, float touch_Y){
+
+        boolean flag =false;
 
         for(DuoAction duoAction : actionList){
             duoAction.inBound = duoAction.withinBoundary(touch_X,touch_Y);
@@ -68,8 +70,10 @@ public class ButtonPanel {
             if(duoAction.hasLeaf){
 
                 if(duoAction.inBound){
+                    flag = true;
                 duoAction.leaf.toggleLeaf(true);
                 duoAction.setInitialization();}else{
+                    flag  = false;
                    // duoAction.leaf.toggleLeaf(false);
                 }
 
@@ -83,6 +87,7 @@ public class ButtonPanel {
             }
         }
 
+        return flag;
 
     }
 

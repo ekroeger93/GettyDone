@@ -31,7 +31,7 @@ public class Operator {
 
      public boolean isMovingItem = false;
 
-    public void getSelection(){
+    public int getSelection(){
 
         int currentScroll;
 
@@ -74,6 +74,7 @@ public class Operator {
         if(isMovingItem) moveItem(movingItem);
 
 
+        return selection;
     }
 
     public void refreshSelection(boolean decremented){
@@ -127,6 +128,12 @@ public class Operator {
         catch (NullPointerException e){
             Log.d("Error","error");
         }
+
+    }
+
+    public void setXItemView(float x){
+
+        currentViewHolder.itemView.setX(x);
 
     }
 

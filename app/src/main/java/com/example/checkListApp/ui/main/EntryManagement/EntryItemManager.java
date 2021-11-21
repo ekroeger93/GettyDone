@@ -217,10 +217,11 @@ public class EntryItemManager {
 
             View view = MainFragment.getCheckList().get(operator.selection-1).getViewHolder().itemView;
 
+            view.clearAnimation();
 
             view.setZ(-10f);
             view.animate()
-                    .translationYBy(1000)
+                    .translationX(1000)
                     .scaleX(.5f)
                     .scaleY(.5f)
                     .setDuration(300)

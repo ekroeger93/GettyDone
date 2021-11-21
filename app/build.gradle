@@ -22,7 +22,7 @@ android {
     }
 
     testOptions {
-        animationsDisabled = false
+        animationsDisabled  false
     }
 
     buildFeatures{

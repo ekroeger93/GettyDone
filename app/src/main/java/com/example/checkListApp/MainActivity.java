@@ -22,7 +22,8 @@ public class MainActivity extends AppCompatActivity
     TabLayout tabLayout;
 
     int navPosition = 0;
-   public static boolean visualSelect = false;
+
+    public static boolean visualSelect = false;
 
 
     @Override
@@ -116,8 +117,8 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public void onBackPressed() {
 
-
-
-
+    }
 }

@@ -3,11 +3,14 @@ package com.example.checkListApp.ui.main.EntryManagement.ListComponent;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -24,6 +27,7 @@ import com.example.checkListApp.database.EntryRepository;
 import com.example.checkListApp.databinding.EntryBinding;
 import com.example.checkListApp.input.CustomEditText;
 import com.example.checkListApp.input.DetectKeyboardBack;
+import com.example.checkListApp.ui.main.CustomGridLayoutManager;
 import com.example.checkListApp.ui.main.Entry;
 import com.example.checkListApp.ui.main.EntryManagement.Record.RecordHelper;
 import com.example.checkListApp.ui.main.MainFragment;
@@ -223,6 +227,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 //                holder.orderInt.getValue()
 //        );
 
+
+
     }
 
 
@@ -314,7 +320,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
 
 
-
+                @SuppressLint("ClickableViewAccessibility")
                 public void setListeners(View itemView ){
 
 
