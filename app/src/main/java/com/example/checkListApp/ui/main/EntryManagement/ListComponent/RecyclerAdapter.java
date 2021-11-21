@@ -32,7 +32,6 @@ import com.example.checkListApp.databinding.EntryBinding;
 import com.example.checkListApp.input.CustomEditText;
 import com.example.checkListApp.input.DetectKeyboardBack;
 import com.example.checkListApp.timemanagement.TimeParcelBuilder;
-import com.example.checkListApp.ui.main.CustomGridLayoutManager;
 import com.example.checkListApp.ui.main.Entry;
 import com.example.checkListApp.ui.main.EntryManagement.Record.RecordHelper;
 import com.example.checkListApp.ui.main.MainFragment;
@@ -440,15 +439,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     } ;
 
 
-
-
-
                     orderInt.observe(owner,selectOrderObs);
                     isSelected.observe(owner,selectCheckObs);
 
-                    getEntry().textEntry.observe(owner,observer);
-                    getEntry().checked.observe(owner,checkObs);
-                    getEntry().countDownTimer.observe(owner,changeTimeValue);
+                    getEntry().textEntry.observe(owner, observer);
+                    getEntry().checked.observe(owner, checkObs);
+                    getEntry().countDownTimer.observe(owner, changeTimeValue);
 
                 }
 

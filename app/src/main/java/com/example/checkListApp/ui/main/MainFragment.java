@@ -21,12 +21,15 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.selection.SelectionTracker;
 import androidx.recyclerview.selection.StorageStrategy;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.LayoutManager;
 
 import com.example.checkListApp.MainActivity;
 import com.example.checkListApp.R;
@@ -126,7 +129,7 @@ public class MainFragment extends Fragment {
     private RecyclerView recyclerView;
 
     private static RecyclerAdapter adapter;
-    private static CustomGridLayoutManager customGridLayoutManager;
+    private static CustomLayoutManager customLayoutManager;
     private static String jsonCheckArrayList;
     private static volatile ArrayList<Entry> checkList = new ArrayList<>();
 
@@ -253,15 +256,13 @@ public class MainFragment extends Fragment {
 
         try{
             MainFragmentArgs args = MainFragmentArgs.fromBundle(getArguments());
-
-           if (args.getJsonData().contains("[")){
-
             ArrayList<Entry> loadedCheckList = getJsonGeneratedArray(args.getJsonData());
 
             if(loadedCheckList != null){
 
                 for(Entry entry : loadedCheckList){
                     entry.textEntry.setValue(entry.textEntry.getValue().replaceAll("\"" , ""));
+                    entry.countDownTimer.setValue(entry.countDownTimer.getValue().replaceAll("\"",""));
                 }
 
                 if(checkList.size() > 0){
@@ -279,7 +280,7 @@ public class MainFragment extends Fragment {
 
 
             }
-           }
+
 
         }catch (IllegalArgumentException e){
             e.printStackTrace();
@@ -295,12 +296,11 @@ public class MainFragment extends Fragment {
         adapter = new RecyclerAdapter();
 
         recyclerView.setAdapter(adapter);
-        customGridLayoutManager = new CustomGridLayoutManager(context);
+        customLayoutManager = new CustomLayoutManager(context);
 
 
 
-
-        recyclerView.setLayoutManager(customGridLayoutManager);
+        recyclerView.setLayoutManager(customLayoutManager);
         recyclerView.setHasFixedSize(false);
         adapter.setOwner(getViewLifecycleOwner());
         adapter.setRepository(mViewModel.getRepository());
@@ -309,8 +309,6 @@ public class MainFragment extends Fragment {
 //        checkList.add(new Spacer());
 //        checkList.add(new Entry("a",false));
 //       checkList.add(new Entry("b",false));
-
-
 
         adapter.setList(checkList);
         adapter.notifyDataSetChanged();
@@ -337,11 +335,17 @@ public class MainFragment extends Fragment {
 
         entryItemManager.setButtonPanelToggle(buttonPanelToggle);
 
+      //  enableScroll(false);
+
 
     }
 
-    public static void toggleDisableScroll(boolean flag){
-        customGridLayoutManager.setScrollEnabled(flag);
+    public static void enableScroll(boolean flag){
+        customLayoutManager.setScrollEnabled(flag);
+    }
+
+    public static void scrollToPosition(RecyclerView recyclerView,int position){
+        recyclerView.scrollToPosition(position);
     }
 
     public static void transitionToFileFromMain(Activity activity){
@@ -480,12 +484,8 @@ public void assignButtonListeners(){
 //------------------------------
         //We only need to check this once so lets do it on UP
 
-
-
-        if(motionEvent.getAction() == MotionEvent.ACTION_UP){
-
-        buttonPanel.executeAlternative();
-
+        if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+            buttonPanel.executeAlternative();
         }
 
         buttonPanel.animationHandler(motionEvent.getAction(),touch_X,binding);
@@ -504,11 +504,10 @@ public void assignObservers(){
         public void onChanged(@Nullable final List<Entry> entries) {
 
             //makes sure we keeps those spacers at the ends
-            if(checkList == null || checkList.size()-2 != entries.size()) {
+            if( checkList == null || checkList.size()-2 != entries.size()
+            ) {
                 checkList = (ArrayList<Entry>) entries;
-
                 checkList.add(0, new Spacer());
-
                 checkList.add(checkList.size(), new Spacer());
                 adapter.setList(checkList);
 
@@ -522,7 +521,9 @@ public void assignObservers(){
                 }
 
                 buildJson(checkList);
+
             }
+
 
 
 
@@ -546,9 +547,8 @@ public void assignObservers(){
             super.onItemStateChanged(key, selected);
 
             if(adapter.toggleTracker && !isSorting) {
-                RecyclerAdapter.ViewHolder entryCurrent = null;
-            Entry entrySelected = null;
-            int index = 0;
+                RecyclerAdapter.ViewHolder entryCurrent;
+                int index;
 
             for (Entry entry : getCheckList()) {
                 try {
@@ -563,12 +563,10 @@ public void assignObservers(){
                             //due to the adapter erroneous size prior to cleaning
                             adapter.getItemCount();//this is why its called
 
-                            System.out.println("index: "+index);
                            // entryCurrent.isSelected.setValue(!entryCurrent.isSelected.getValue());
 
                             /*
                             ultimately the holder.orderInt should reflect the toggleSwitchOrdering.list
-
                             * */
 
                             toggleSwitchOrdering.toggleNum(index);
@@ -589,7 +587,6 @@ public void assignObservers(){
                         }
                     }
 
-                       //updateToggleOrdering();
 
 
 
@@ -749,6 +746,7 @@ static public void buildJson(ArrayList<Entry> checkList){
 
 public ArrayList<Entry> getJsonGeneratedArray(String json){
 
+
         Gson gson = new GsonBuilder()
                 .excludeFieldsWithoutExposeAnnotation()
                 .registerTypeAdapter(Entry.class, new SerializeEntryToJson())
@@ -798,7 +796,7 @@ public ArrayList<Entry> getJsonGeneratedArray(String json){
             timeText = jsonObject.get("timerLabel").toString();
 
 
-            return new Entry(textEntry,isChecked,timeText.substring(1,9));
+            return new Entry(textEntry,isChecked,timeText);
 
 
         }

@@ -4,10 +4,10 @@ import android.content.Context;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-public final class  CustomGridLayoutManager extends LinearLayoutManager {
+public final class  CustomLayoutManager extends LinearLayoutManager {
     private boolean isScrollEnabled = true;
 
-    public CustomGridLayoutManager(Context context) {
+    public CustomLayoutManager(Context context) {
         super(context);
     }
 
