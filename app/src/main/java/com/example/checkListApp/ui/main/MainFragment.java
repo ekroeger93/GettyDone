@@ -4,8 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
-import android.icu.text.AlphabeticIndex;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -14,22 +14,27 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.view.menu.MenuView;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.selection.SelectionTracker;
 import androidx.recyclerview.selection.StorageStrategy;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.checkListApp.MainActivity;
 import com.example.checkListApp.R;
 import com.example.checkListApp.databinding.MainFragmentBinding;
+import com.example.checkListApp.file_management.FileListFragmentArgs;
+import com.example.checkListApp.settimer.SetTimerFragmentArgs;
+import com.example.checkListApp.timemanagement.TimeParcel;
+import com.example.checkListApp.timemanagement.TimeParcelBuilder;
 import com.example.checkListApp.ui.main.EntryManagement.ButtonPanel.ButtonPanel;
 import com.example.checkListApp.ui.main.EntryManagement.ButtonPanel.ButtonPanelToggle;
 import com.example.checkListApp.ui.main.EntryManagement.EntryItemManager;
@@ -37,7 +42,6 @@ import com.example.checkListApp.ui.main.EntryManagement.ButtonPanel.LeafButton;
 import com.example.checkListApp.ui.main.EntryManagement.ListComponent.RecyclerAdapter;
 import com.example.checkListApp.ui.main.EntryManagement.ListComponent.ToggleSwitchOrdering;
 import com.example.checkListApp.ui.main.EntryManagement.Operator;
-import com.example.checkListApp.ui.main.EntryManagement.Record.RecordFinishButtonToggle;
 import com.example.checkListApp.ui.main.EntryManagement.Record.RecordHelper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -116,6 +120,7 @@ public class MainFragment extends Fragment {
 
     protected MainFragmentBinding binding;
 
+
     private Context context;
     private MainViewModel mViewModel;
     private RecyclerView recyclerView;
@@ -138,6 +143,8 @@ public class MainFragment extends Fragment {
     ButtonPanel buttonPanel;
     ButtonPanelToggle buttonPanelToggle;
     EntryItemManager entryItemManager;
+
+    TimeParcel timeParcel;
 
 
     //initialize
@@ -163,13 +170,14 @@ public class MainFragment extends Fragment {
                             r.getDisplayMetrics()); // converted to px 262.5
 
                 });
+
+
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this.getContext();
-
 
     }
 
@@ -179,10 +187,11 @@ public class MainFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
 
+
         binding = DataBindingUtil.inflate(inflater,R.layout.main_fragment,container,false);
         binding.setLifecycleOwner(this);
 
-        setRetainInstance(true);
+        //setRetainInstance(true);
         return binding.getRoot();
 
     }
@@ -193,10 +202,10 @@ public class MainFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
 
-      //  RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
-
 
         loadFile();
+
+        getParcelTime();
 
         setUpAdapter();
 
@@ -206,9 +215,35 @@ public class MainFragment extends Fragment {
 
         assignObservers();
 
+
+
         toggleSwitchOrdering = new ToggleSwitchOrdering();
 
         RecordHelper.createButton(getContext(),binding);
+
+
+    }
+
+
+
+    private void getParcelTime() {
+
+        try {
+            SetTimerFragmentArgs args = SetTimerFragmentArgs.fromBundle(getArguments());
+            timeParcel = args.getTimeParcel();
+            loadParcelTime();
+        }catch (NullPointerException e){
+            Log.d("timeParcel","error");
+        }
+
+    }
+
+    private void loadParcelTime(){
+
+
+        checkList.get(timeParcel.getTimeIndex()).countDownTimer.postValue(timeParcel.getTimeStringVal());
+
+        Log.d("timeParcel",":: " + checkList.get(timeParcel.getTimeIndex()).countDownTimer.getValue());
 
     }
 
@@ -217,7 +252,9 @@ public class MainFragment extends Fragment {
         try{
             MainFragmentArgs args = MainFragmentArgs.fromBundle(getArguments());
 
-            ArrayList<Entry> loadedCheckList = getJsonGeneratedArray(args.getLoadJsonData());
+           if (args.getJsonData().contains("[")){
+
+            ArrayList<Entry> loadedCheckList = getJsonGeneratedArray(args.getJsonData());
 
             if(loadedCheckList != null){
 
@@ -240,6 +277,7 @@ public class MainFragment extends Fragment {
 
 
             }
+           }
 
         }catch (IllegalArgumentException e){
             e.printStackTrace();
@@ -257,11 +295,14 @@ public class MainFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         customGridLayoutManager = new CustomGridLayoutManager(context);
 
+
+
+
         recyclerView.setLayoutManager(customGridLayoutManager);
         recyclerView.setHasFixedSize(false);
         adapter.setOwner(getViewLifecycleOwner());
         adapter.setRepository(mViewModel.getRepository());
-
+        adapter.setActivity(getActivity());
 
 //        checkList.add(new Spacer());
 //        checkList.add(new Entry("a",false));
@@ -271,6 +312,7 @@ public class MainFragment extends Fragment {
 
         adapter.setList(checkList);
         adapter.notifyDataSetChanged();
+
 
         selectionTracker = new SelectionTracker.Builder<>(
                 "selection",
@@ -305,23 +347,24 @@ public class MainFragment extends Fragment {
         MainFragmentDirections.ActionMainFragmentToFileListFragment action =
                 MainFragmentDirections.actionMainFragmentToFileListFragment(jsonCheckArrayList);
 
-        Navigation.findNavController(activity, R.id.fragment).navigate(action);
+        Navigation.findNavController(activity, R.id.entryListFragment).navigate(action);
 
     }
 
     public static void transitionToProgressFromMain(Activity activity){
 
-        Navigation.findNavController(activity, R.id.fragment).navigate(  MainFragmentDirections.actionMainFragmentToProgressFragment());
+        Navigation.findNavController(activity, R.id.entryListFragment).navigate(  MainFragmentDirections.actionMainFragmentToProgressFragment());
 
     }
+
+
+
 
 
 
 
 @SuppressLint("ClickableViewAccessibility")
 public void assignButtonListeners(){
-
-
 
                 buttonPanel.addButtonWithLeaf(
             binding.addDeleteBtn
@@ -551,10 +594,6 @@ public void assignObservers(){
 
             try {
 
-
-                System.out.println("");
-
-                try{
                     for(Entry entry : getCheckList()){
                         //   entry.getViewHolder().selectionUpdate();
                         RecyclerAdapter.ViewHolder viewHolder = entry.getViewHolder();
@@ -564,11 +603,7 @@ public void assignObservers(){
                             }else{
                                 System.out.print("{'" + viewHolder.orderInt.getValue() + "'}");
                             }}
-                    }}catch (NullPointerException e){ }
-
-//                entryCurrent.isSelected.postValue(toggleSwitchOrdering.listToOrder.get(index).toggle);
-//                entryCurrent.orderInt.postValue(toggleSwitchOrdering.listToOrder.get(index).number);
-
+                    }
 
                     }catch(NullPointerException e){ }
 

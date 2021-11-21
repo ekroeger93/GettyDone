@@ -1,5 +1,6 @@
 package com.example.checkListApp.ui.main;
 
+import android.app.Activity;
 import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
@@ -15,6 +16,7 @@ public class MainViewModel extends AndroidViewModel {
 
     private final EntryRepository repository;
     private final LiveData<List<Entry>> allProducts;
+
 
     public EntryRepository getRepository() {
         return repository;
@@ -44,6 +46,7 @@ public class MainViewModel extends AndroidViewModel {
     public void loadEntry(Entry entry){ repository.loadEntry(entry);}
 
     public void updateEntry(Entry n){repository.updateEntry(n);}
+
 
 
 }

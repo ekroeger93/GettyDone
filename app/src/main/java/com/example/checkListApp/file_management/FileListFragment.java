@@ -125,8 +125,6 @@ public class FileListFragment extends Fragment {
         binding.loadFileBtn.setOnClickListener(view1 -> {
 
 
-
-
             FileListFragmentDirections.ActionFileListFragmentToMainFragment action  =
                     FileListFragmentDirections.actionFileListFragmentToMainFragment(fileManager.loadFile(fileListAdapter.getFileSelection()));
 
@@ -134,7 +132,7 @@ public class FileListFragment extends Fragment {
 
 
             MainActivity.visualSelect = true;
-            MainActivity.activityBinding.tabs.getTabAt(0).select();
+            MainActivity.tabLayout.getTabAt(0).select();
                   //  (MainActivity.activityBinding.tabs.getTabAt(0));
 
         });
@@ -146,11 +144,11 @@ public class FileListFragment extends Fragment {
 
 
     public static void transitionToMainFromFile(Activity activity){
-        Navigation.findNavController(activity,R.id.fragment).navigate(R.id.action_fileListFragment_to_mainFragment);
+        Navigation.findNavController(activity,R.id.entryListFragment).navigate(R.id.action_fileListFragment_to_mainFragment);
     }
 
     public static void transitionToProgressFromFile(Activity activity){
-        Navigation.findNavController(activity,R.id.fragment).navigate(R.id.action_fileListFragment_to_progressFragment);
+        Navigation.findNavController(activity,R.id.entryListFragment).navigate(R.id.action_fileListFragment_to_progressFragment);
     }
 
 

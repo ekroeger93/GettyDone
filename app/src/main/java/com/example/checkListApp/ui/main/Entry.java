@@ -26,6 +26,9 @@ public class Entry {
     public MutableLiveData<String> textEntry = new MutableLiveData<String>("o") ;
     @ColumnInfo(name = "isChecked")
     public MutableLiveData<Boolean> checked = new MutableLiveData<>(false);
+    @ColumnInfo(name = "timerLabel")
+    public MutableLiveData<String> countDownTimer = new MutableLiveData<>("00:00:00");
+
 
     @Ignore
     private RecyclerAdapter.ViewHolder viewHolder;
@@ -48,6 +51,7 @@ public class Entry {
     public Entry(Entry entry) {
         textEntry.postValue(entry.textEntry.getValue());
         checked.postValue(entry.checked.getValue());
+        countDownTimer.postValue(entry.countDownTimer.getValue());
     }
 
     public void setEntry(Entry entry){
@@ -56,12 +60,6 @@ public class Entry {
         checked.setValue(entry.checked.getValue());
     }
 
-    public void setEntryOptimized(String text, Boolean check){
-
-        textEntry.setValue(text);
-        checked.setValue(check);
-
-    }
 
     public void postEntryOptimized(String text, Boolean check){
 
@@ -69,6 +67,7 @@ public class Entry {
         checked.postValue(check);
 
     }
+
 
     public void postEntry(Entry entry){
         textEntry.postValue(entry.textEntry.getValue());
@@ -88,9 +87,12 @@ public class Entry {
         this.viewHolder = viewHolder;
     }
 
+
+
     public RecyclerAdapter.ViewHolder getViewHolder() {
         return viewHolder;
     }
+
 
 
 

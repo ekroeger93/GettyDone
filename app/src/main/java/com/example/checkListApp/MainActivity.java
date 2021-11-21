@@ -2,7 +2,10 @@ package com.example.checkListApp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.navigation.Navigation;
 
+import android.app.Activity;
+import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,18 +13,20 @@ import android.view.WindowManager;
 
 import com.example.checkListApp.file_management.FileListFragment;
 import com.example.checkListApp.databinding.MainActivityBinding;
+import com.example.checkListApp.timemanagement.TimeParcelBuilder;
 import com.example.checkListApp.ui.main.MainFragment;
+import com.example.checkListApp.ui.main.MainFragmentDirections;
 import com.example.checkListApp.ui.main.ProgressFragment;
 import com.google.android.material.tabs.TabLayout;
 
-public class MainActivity extends AppCompatActivity
-        implements FileListFragment.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements FileListFragment.OnFragmentInteractionListener{
 
-    static public MainActivityBinding activityBinding;
+    public MainActivityBinding activityBinding;
 
-    TabLayout tabLayout;
-
+    static public TabLayout tabLayout;
     int navPosition = 0;
+
+    public static final String ACTIVITY_KEY = "ACTIVITY_KEY";
 
     public static boolean visualSelect = false;
 
@@ -97,6 +102,7 @@ public class MainActivity extends AppCompatActivity
 
             }
 
+
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
 
@@ -109,8 +115,17 @@ public class MainActivity extends AppCompatActivity
         });
 
 
+
     }
 
+
+
+    @Override
+    public void onAttachFragment(Fragment fragment) {
+        super.onAttachFragment(fragment);
+
+
+    }
 
     @Override
     public void onFragmentInteraction(Uri uri) {

@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.countdowntimer.settimer.SetTimerFragment"
+    >
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.checkListApp.settimer.SetTimerViewModel" />
+    </data>
+
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+   >
+
+    <TextView
+        android:id="@+id/setTimeText"
+        android:layout_width="305dp"
+        android:layout_height="108dp"
+        android:fontFamily="sans-serif-black"
+        android:letterSpacing=".06"
+        android:shadowColor="#1E88E5"
+        android:shadowDx="5"
+        android:shadowDy="10"
+        android:shadowRadius="10"
+        android:text="00:00:00"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="#D82C2929"
+        android:textSize="60sp"
+        android:textStyle="italic"
+        android:typeface="monospace"
+        app:layout_constraintBottom_toTopOf="@+id/rowOne"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/rowOne"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintGuide_begin="130dp"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/tableRowOne"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        app:layout_constraintBottom_toTopOf="@+id/rowTwo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/rowOne">
+
+        <Button
+            android:id="@+id/inputTimeBtn1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="10dp"
+            android:elevation="10dp"
+            android:onClick='@{() -> viewModel.inputText("1")}'
+            android:text="1"
+            android:textColor="#FFFFFF"
+            app:cornerRadius="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/inputTimeBtn2"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/inputTimeBtn2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:elevation="10dp"
+            android:onClick='@{() -> viewModel.inputText("2")}'
+            android:text="2"
+            android:textColor="#FFFFFF"
+            app:cornerRadius="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/inputTimeBtn3"
+            app:layout_constraintStart_toEndOf="@id/inputTimeBtn1"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/inputTimeBtn3"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:elevation="10dp"
+            android:onClick='@{() -> viewModel.inputText("3")}'
+            android:text="3"
+            android:textColor="#FFFFFF"
+            app:cornerRadius="10dp"
+
+            android:layout_marginStart="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/inputTimeBtn2"
+            app:layout_constraintTop_toTopOf="parent"
+           />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/rowTwo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintGuide_begin="216dp"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/tableRowTwo"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        app:layout_constraintBottom_toTopOf="@+id/rowThree"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/rowTwo">
+
+        <Button
+            android:id="@+id/inputTimeBtn4"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:elevation="10dp"
+            android:onClick='@{() -> viewModel.inputText("4")}'
+            android:text="4"
+            android:textColor="#FFFFFF"
+            app:cornerRadius="10dp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/inputTimeBtn5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/inputTimeBtn5"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:elevation="10dp"
+            android:onClick='@{() -> viewModel.inputText("5")}'
+            android:text="5"
+            android:textColor="#FFFFFF"
+            app:cornerRadius="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/inputTimeBtn6"
+            app:layout_constraintStart_toEndOf="@id/inputTimeBtn4"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/inputTimeBtn6"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:elevation="10dp"
+            android:onClick='@{() -> viewModel.inputText("6")}'
+            android:text="6"
+            android:textColor="#FFFFFF"
+            app:cornerRadius="10dp"
+
+            android:layout_marginStart="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/inputTimeBtn5"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/rowThree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintGuide_begin="284dp"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/tableRowThree"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        app:layout_constraintBottom_toTopOf="@+id/rowFour"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/rowThree">
+
+        <Button
+            android:id="@+id/inputTimeBtn7"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:elevation="10dp"
+            android:onClick='@{() -> viewModel.inputText("7")}'
+            android:text="7"
+            android:textColor="#FFFFFF"
+            app:cornerRadius="10dp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/inputTimeBtn8"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/inputTimeBtn8"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:elevation="10dp"
+            android:onClick='@{() -> viewModel.inputText("8")}'
+            android:text="8"
+            android:textColor="#FFFFFF"
+            app:cornerRadius="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/inputTimeBtn9"
+            app:layout_constraintStart_toEndOf="@id/inputTimeBtn7"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <Button
+            android:id="@+id/inputTimeBtn9"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:elevation="10dp"
+            android:onClick='@{() -> viewModel.inputText("9")}'
+            android:text="9"
+            android:textColor="#FFFFFF"
+            app:cornerRadius="10dp"
+
+            android:layout_marginStart="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/inputTimeBtn8"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/rowFour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintGuide_begin="369dp"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/tableRowFour"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        app:layout_constraintBottom_toTopOf="@+id/rowFive"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/rowFour">
+
+        <Button
+            android:id="@+id/inputTimeBtn00"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:elevation="10dp"
+            android:onClick='@{() -> viewModel.inputText("00")}'
+            android:text="00"
+            android:textColor="#FFFFFF"
+            app:cornerRadius="10dp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/inputTimeBtn0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/inputTimeBtn0"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:elevation="10dp"
+            android:onClick='@{() -> viewModel.inputText("0")}'
+            android:text="0"
+            android:textColor="#FFFFFF"
+            app:cornerRadius="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/inputTimeBtnBackspace"
+            app:layout_constraintStart_toEndOf="@id/inputTimeBtn00"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/inputTimeBtnBackspace"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:elevation="10dp"
+            android:text="bs"
+            android:textColor="#FFFFFF"
+            app:cornerRadius="10dp"
+            android:onClick='@{() -> viewModel.removeText()}'
+            android:layout_marginStart="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/inputTimeBtn0"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/rowFive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintGuide_begin="436dp"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/submitTime"
+        android:layout_width="184dp"
+        android:layout_height="54dp"
+        android:text="Submit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tableRowFour" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

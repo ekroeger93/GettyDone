@@ -1,6 +1,7 @@
 package com.example.checkListApp.ui.main.EntryManagement.ListComponent;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
@@ -16,21 +17,26 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.selection.SelectionTracker;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.checkListApp.MainActivity;
 import com.example.checkListApp.R;
 import com.example.checkListApp.database.EntryRepository;
 import com.example.checkListApp.databinding.EntryBinding;
 import com.example.checkListApp.input.CustomEditText;
 import com.example.checkListApp.input.DetectKeyboardBack;
+import com.example.checkListApp.timemanagement.TimeParcelBuilder;
 import com.example.checkListApp.ui.main.CustomGridLayoutManager;
 import com.example.checkListApp.ui.main.Entry;
 import com.example.checkListApp.ui.main.EntryManagement.Record.RecordHelper;
 import com.example.checkListApp.ui.main.MainFragment;
+import com.example.checkListApp.ui.main.MainFragmentDirections;
 import com.example.checkListApp.ui.main.Spacer;
 
 import org.jetbrains.annotations.NotNull;
@@ -52,9 +58,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     private RecyclerView recyclerView;
 
     public boolean toggleTracker = true;
+    public View setTimerView;
 
     public TrackerHelper trackerHelper;
 
+    Activity activity;
 
     public List<ViewHolder> getViewHolderList() {
         return viewHolderList;
@@ -62,6 +70,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     private SelectionTracker<Long> selectionTracker;
     private SelectionTracker<Long> savedSelectionTracker;
+
+    public void setActivity(Activity activity) {
+        this.activity = activity;
+    }
 
     public void setTracker(SelectionTracker<Long> tracker){
         this.selectionTracker = tracker;
@@ -132,6 +144,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public RecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         Context context = parent.getContext();
+
+        setTimerView = new View(context);
 
         return new ViewHolder( EntryBinding.inflate(LayoutInflater.from(context), parent, false));
 
@@ -237,7 +251,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         public TextView textView;
         public TableRow tEntryViewRow;
-        private final Button button;
+        private final Button checkButton;
+        private final Button setTimeButton;
 
         public  int selectOrder = -1;
         public boolean selected = false;
@@ -248,6 +263,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         TrackerHelper.Details details;
 
         EntryBinding binding;
+
 
         public void updater(){
 
@@ -261,7 +277,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                    details = new TrackerHelper.Details();
 
                     tEntryViewRow = binding.entry;
-                    button = binding.checkBtn;
+                    checkButton = binding.checkBtn;
+                    setTimeButton = binding.setEntryTimeBtn;
                     textView = binding.entryText;
 
 
@@ -273,9 +290,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
                     if(selected){
                       //  button.setText((CharSequence) String.valueOf(orderInt.getValue()));
-                        button.setText((CharSequence) String.valueOf(selectOrder));
+                        checkButton.setText((CharSequence) String.valueOf(selectOrder));
                     }else{
-                        button.setText(null);
+                        checkButton.setText(null);
                     }
 
                 }
@@ -292,9 +309,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
 
                         if (selectionTracker.isSelected(details.getSelectionKey())) {
-                            button.setBackgroundColor(Color.RED);
+                            checkButton.setBackgroundColor(Color.RED);
                         }else{
-                            button.setBackgroundColor(Color.BLUE);
+                            checkButton.setBackgroundColor(Color.BLUE);
                         }
 
                  }
@@ -352,13 +369,21 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 //                    });
 
 
-                    button.setOnTouchListener((view, motionEvent) -> {
+                    checkButton.setOnTouchListener((view, motionEvent) -> {
                         if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
                             getEntry().checked.postValue( !getEntry().checked.getValue());
                         }
 
                         return true;
                     });
+
+                    setTimeButton.setOnTouchListener((view, motionEvent)->{
+                        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+                            transitionToSetTimer();
+                        }
+                        return true;
+                    });
+
 
                 }
 
@@ -425,6 +450,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 }
 
 
+                public void transitionToSetTimer(){
+
+                    MainFragmentDirections.ActionMainFragmentToSetTimerFragment action =
+                            MainFragmentDirections.actionMainFragmentToSetTimerFragment(
+                                );
+                    action.setTimeParcel( new TimeParcelBuilder().setTimeIndexValue(getBindingAdapterPosition()).build() );
+                    Navigation.findNavController(activity, R.id.entryListFragment).navigate(action);
+
+                }
 
             }
 

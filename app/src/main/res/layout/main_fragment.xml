@@ -9,8 +9,12 @@
 
     <data>
         <variable
-            name="myViewModel"
+            name="mViewModel"
             type="com.example.checkListApp.ui.main.MainViewModel" />
+
+        <variable
+            name="mActivity"
+            type="com.example.checkListApp.MainActivity" />
 
     </data>
 
@@ -18,7 +22,8 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.main.MainFragment">
+        tools:context=".ui.main.MainFragment"
+        >
 
         <LinearLayout
             android:id="@+id/windowBox"
@@ -113,7 +118,9 @@
             app:layout_constraintGuide_begin="300dp" />
 
 
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
 </layout>

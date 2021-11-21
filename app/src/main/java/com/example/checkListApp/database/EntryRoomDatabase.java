@@ -14,7 +14,7 @@ import com.example.checkListApp.ui.main.Entry;
 import com.example.checkListApp.ui.main.MainViewModel;
 import com.example.checkListApp.ui.main.Spacer;
 
-@Database(entities = {Entry.class},version = 1)
+@Database(entities = {Entry.class},version = 1,exportSchema = false)
 @TypeConverters({TypeConvertTextEntry.class,TypeConvertIsChecked.class})
 public abstract class EntryRoomDatabase extends RoomDatabase {
 
@@ -32,15 +32,15 @@ public abstract class EntryRoomDatabase extends RoomDatabase {
                         mainViewModel = main;
 
                         INSTANCE =
-                                Room.inMemoryDatabaseBuilder(context.getApplicationContext(),
-                                        EntryRoomDatabase.class
-                                        )
-                                       .addCallback(roomCallback)
-                                        .build();
-//                                Room.databaseBuilder(context.getApplicationContext(),
-//                                        EntryRoomDatabase.class,
-//                                        "entry_database").build();
-//
+//                                Room.inMemoryDatabaseBuilder(context.getApplicationContext(),
+//                                        EntryRoomDatabase.class
+//                                        )
+//                                       .addCallback(roomCallback)
+//                                        .build();
+                                Room.databaseBuilder(context.getApplicationContext(),
+                                        EntryRoomDatabase.class,
+                                        "entry_database").build();
+
                     }
                 }
             }

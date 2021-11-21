@@ -1,12 +1,9 @@
 package com.example.checkListApp.ui.main;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -16,7 +13,6 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,38 +22,20 @@ import com.example.checkListApp.R;
 import com.example.checkListApp.ui.main.EntryManagement.Record.ProgressProvider;
 import com.example.checkListApp.ui.main.EntryManagement.Record.Record;
 import com.example.checkListApp.ui.main.EntryManagement.Record.RecordHelper;
-import com.github.mikephil.charting.animation.ChartAnimator;
-import com.github.mikephil.charting.buffer.BarBuffer;
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.MarkerImage;
-import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.MPPointF;
-import com.github.mikephil.charting.utils.Transformer;
-import com.github.mikephil.charting.utils.Utils;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -87,11 +65,11 @@ public class ProgressFragment extends Fragment {
 
 
     public static void transitionFromProgressToMain(Activity activity){
-        Navigation.findNavController(activity,R.id.fragment).navigate(R.id.action_progressFragment_to_mainFragment);
+        Navigation.findNavController(activity,R.id.entryListFragment).navigate(R.id.action_progressFragment_to_mainFragment);
     }
     public static void transitionFromProgressToFile(Activity activity){
 
-        Navigation.findNavController(activity,R.id.fragment)
+        Navigation.findNavController(activity,R.id.entryListFragment)
                 .navigate(ProgressFragmentDirections
                                 .actionProgressFragmentToFileListFragment
                                         (MainFragment.getJsonCheckArrayList()));
