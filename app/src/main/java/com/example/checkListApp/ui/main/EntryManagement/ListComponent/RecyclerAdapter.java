@@ -414,18 +414,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
                         RecordHelper.update();
 
-                        /*
-
-                        show completed button here
-
-                         */
-
-
                         repository.updateEntry(entry);
                         MainFragment.buildJson((ArrayList<Entry>) mList);
 
-
                     };
+
+                    Observer<String> changeTimeValue = o ->{
+
+                        setTimeButton.setText(o);
+                        entry.timeTemp = o;
+                        repository.updateEntry(entry);
+                        MainFragment.buildJson((ArrayList<Entry>) mList);
+                    };
+
 
                     Observer selectOrderObs = (Observer) o -> {
                         selectOrder = orderInt.getValue();
@@ -440,12 +441,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
 
 
+
+
                     orderInt.observe(owner,selectOrderObs);
                     isSelected.observe(owner,selectCheckObs);
 
                     getEntry().textEntry.observe(owner,observer);
                     getEntry().checked.observe(owner,checkObs);
-
+                    getEntry().countDownTimer.observe(owner,changeTimeValue);
 
                 }
 

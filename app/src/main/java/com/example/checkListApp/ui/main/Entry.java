@@ -39,14 +39,12 @@ public class Entry {
     public String textTemp;
     @Ignore
     public boolean checkTemp;
+    @Ignore
+    public String timeTemp;
 
     public Entry(){
     }
 
-    public Entry(String text,boolean check){
-        textEntry.setValue(text);
-        checked.setValue(check);
-    }
 
     public Entry(Entry entry) {
         textEntry.postValue(entry.textEntry.getValue());
@@ -54,25 +52,29 @@ public class Entry {
         countDownTimer.postValue(entry.countDownTimer.getValue());
     }
 
+    public Entry(String text, boolean isChecked, String timeText) {
+        textEntry.setValue(text);
+        checked.setValue(isChecked);
+        countDownTimer.setValue(timeText);
+    }
+
     public void setEntry(Entry entry){
 
         textEntry.setValue(entry.textEntry.getValue());
         checked.setValue(entry.checked.getValue());
+        countDownTimer.setValue(entry.countDownTimer.getValue());
     }
 
 
-    public void postEntryOptimized(String text, Boolean check){
+    public void postEntryOptimized(String text, Boolean check, String time){
 
         textEntry.postValue(text);
         checked.postValue(check);
+        countDownTimer.postValue(time);
 
     }
 
 
-    public void postEntry(Entry entry){
-        textEntry.postValue(entry.textEntry.getValue());
-        checked.postValue(entry.checked.getValue());
-    }
 
 
     public int getEntryID() {

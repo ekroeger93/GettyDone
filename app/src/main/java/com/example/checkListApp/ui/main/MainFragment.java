@@ -128,15 +128,17 @@ public class MainFragment extends Fragment {
     private static RecyclerAdapter adapter;
     private static CustomGridLayoutManager customGridLayoutManager;
     private static String jsonCheckArrayList;
-    private static ArrayList<Entry> checkList = new ArrayList<>();
+    private static volatile ArrayList<Entry> checkList = new ArrayList<>();
 
     public static float recyclerScrollCompute,itemHeightPx, ratioOffset;
     static public ToggleSwitchOrdering toggleSwitchOrdering;
     static public boolean isSorting = false;
     public static ArrayList<Entry> getCheckList(){ return checkList;}
+    public static void setCheckList(ArrayList<Entry> sL){checkList = sL;}
     public static String getJsonCheckArrayList() {
         return jsonCheckArrayList;
     }
+
 
     SelectionTracker<Long> selectionTracker;
     Operator operator;
@@ -725,6 +727,7 @@ static public void buildJson(ArrayList<Entry> checkList){
             .create();
 
 
+
     StringBuilder jsonCheckList = new StringBuilder();
 
 
@@ -740,6 +743,7 @@ static public void buildJson(ArrayList<Entry> checkList){
 
 
     jsonCheckArrayList = String.valueOf(jsonCheckList);
+
 
 }
 
@@ -770,6 +774,8 @@ public ArrayList<Entry> getJsonGeneratedArray(String json){
 
             jsonObject.addProperty("textEntry",src.textEntry.getValue());
             jsonObject.addProperty("isChecked",src.checked.getValue());
+            jsonObject.addProperty("timerLabel",src.countDownTimer.getValue());
+
 
             return jsonObject;
         }
@@ -779,19 +785,20 @@ public ArrayList<Entry> getJsonGeneratedArray(String json){
 
     static class DeserializeJsonToEntry implements JsonDeserializer<Entry>{
 
-
         @Override
         public Entry deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 
             JsonObject jsonObject = json.getAsJsonObject();
 
-            String textEntry = "";
+            String textEntry;
+            String timeText;
 
             textEntry = jsonObject.get("textEntry").toString();
             boolean isChecked = jsonObject.get("isChecked").getAsBoolean();
+            timeText = jsonObject.get("timerLabel").toString();
 
 
-            return new Entry(textEntry,isChecked);
+            return new Entry(textEntry,isChecked,timeText.substring(1,9));
 
 
         }

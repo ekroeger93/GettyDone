@@ -96,8 +96,6 @@ public class FileListFragment extends Fragment {
 
         FileListFragmentArgs args = FileListFragmentArgs.fromBundle(getArguments());
 
-        Log.d("test","m: "+args.getJsonData());
-
 //        binding.goToMainList.setOnClickListener(view1 -> {
 //
 //            //action_fileListFragment_to_mainFragment

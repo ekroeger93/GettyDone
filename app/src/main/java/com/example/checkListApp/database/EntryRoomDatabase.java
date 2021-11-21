@@ -32,14 +32,14 @@ public abstract class EntryRoomDatabase extends RoomDatabase {
                         mainViewModel = main;
 
                         INSTANCE =
-//                                Room.inMemoryDatabaseBuilder(context.getApplicationContext(),
-//                                        EntryRoomDatabase.class
-//                                        )
-//                                       .addCallback(roomCallback)
-//                                        .build();
-                                Room.databaseBuilder(context.getApplicationContext(),
-                                        EntryRoomDatabase.class,
-                                        "entry_database").build();
+                                Room.inMemoryDatabaseBuilder(context.getApplicationContext(),
+                                        EntryRoomDatabase.class
+                                        )
+                                       .addCallback(roomCallback)
+                                        .build();
+//                                Room.databaseBuilder(context.getApplicationContext(),
+//                                        EntryRoomDatabase.class,
+//                                        "entry_database").build();
 
                     }
                 }

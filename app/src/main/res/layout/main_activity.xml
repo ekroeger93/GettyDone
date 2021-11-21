@@ -70,35 +70,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/timeTextMain"
-        app:navGraph="@navigation/navigation" />
-
-    <TextView
-        android:id="@+id/timeTextMain"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-black"
-        android:letterSpacing=".06"
-        android:shadowColor="#1E88E5"
-        android:shadowDx="5"
-        android:shadowDy="10"
-        android:shadowRadius="10"
-        android:text="00:00:00"
-        android:textAlignment="center"
-        android:textAllCaps="false"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="#D82C2929"
-        android:textSize="60sp"
-        android:textStyle="italic"
-        android:typeface="monospace"
-
-        app:layout_constraintBottom_toTopOf="@id/entryListFragment"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appbar"
-
-        />
-
+        app:navGraph="@navigation/navigation" />
 
 
 

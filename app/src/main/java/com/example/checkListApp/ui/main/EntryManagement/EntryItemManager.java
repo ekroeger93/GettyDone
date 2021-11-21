@@ -199,7 +199,10 @@ public class EntryItemManager {
                 int index = entries.indexOf(entry)+1;
 
                 //Post seems to cause GC issues?
-                MainFragment.getCheckList().get(index).postEntryOptimized(entry.textTemp,entry.checkTemp);
+
+                MainFragment.getCheckList().get(index)
+                        .postEntryOptimized(entry.textTemp,entry.checkTemp,entry.timeTemp);
+
 
             }catch (IndexOutOfBoundsException | NullPointerException e){
 

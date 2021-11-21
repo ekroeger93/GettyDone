@@ -38,17 +38,36 @@
 
 <!--scrollSize: 250-->
 
+            <TextView
+                android:id="@+id/timeTextMain"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-black"
+                android:text="00:00:00"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="#D82C2929"
+                android:textSize="40sp"
+                android:textStyle="italic"
+                android:typeface="monospace"
+                android:layout_marginTop="10dp"
+
+
+
+                />
+
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/ScrollView"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/scrollSize"
-                android:layout_marginTop="50dp"
                 android:layout_marginBottom="0dp"
                 android:overScrollMode="always"
                 android:background="#4600BCD4"
                 tools:listitem="@layout/entry"
                 >
+
 
             </androidx.recyclerview.widget.RecyclerView>
 
@@ -115,7 +134,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_begin="300dp" />
+            app:layout_constraintGuide_begin="240dp" />
 
 
 
