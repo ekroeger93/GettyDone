@@ -37,6 +37,7 @@ import com.example.checkListApp.ui.main.EntryManagement.Record.RecordHelper;
 import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.MainFragmentDirections;
 import com.example.checkListApp.ui.main.Spacer;
+import com.example.checkListApp.ui.main.data_management.JsonService;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -393,7 +394,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         textView.setText(o);
                         entry.textTemp = o;
                         repository.updateEntry(entry);
-                        MainFragment.buildJson((ArrayList<Entry>) mList);
+                        JsonService.buildJson((ArrayList<Entry>) mList);
 
                     };
 
@@ -414,7 +415,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         RecordHelper.update();
 
                         repository.updateEntry(entry);
-                        MainFragment.buildJson((ArrayList<Entry>) mList);
+                        JsonService.buildJson((ArrayList<Entry>) mList);
 
                     };
 
@@ -423,7 +424,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         setTimeButton.setText(o);
                         entry.timeTemp = o;
                         repository.updateEntry(entry);
-                        MainFragment.buildJson((ArrayList<Entry>) mList);
+                        JsonService.buildJson((ArrayList<Entry>) mList);
                     };
 
 

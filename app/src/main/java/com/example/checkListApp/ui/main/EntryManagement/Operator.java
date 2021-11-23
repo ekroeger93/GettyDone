@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.checkListApp.ui.main.Entry;
 import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.EntryManagement.ListComponent.RecyclerAdapter;
+import com.example.checkListApp.ui.main.data_management.ListRefurbishment;
 
 public class Operator {
 
@@ -59,7 +60,7 @@ public class Operator {
 
 
      if (e.getViewHolder().getBindingAdapterPosition() == selection - 1)
-         MainFragment.updateAllSelection();
+         ListRefurbishment.updateAllSelection(MainFragment.getCheckList());
 
 
 
@@ -116,9 +117,15 @@ public class Operator {
 
 
                 MainFragment.getCheckList().remove(movingItem);
-                adapter.notifyItemRemoved(oldMovePosition);
+            //    adapter.notifyItemRemoved(oldMovePosition);
                 MainFragment.getCheckList().add(selection-1, movingItem);
-                adapter.notifyItemInserted(selection-1);
+           //     adapter.notifyItemInserted(selection-1);
+
+                adapter.notifyItemMoved(oldMovePosition,selection-1);
+                adapter.notifyItemChanged(oldMovePosition);
+                adapter.notifyItemChanged(selection-1);
+
+
 
                 oldMovePosition = selection-1;
 

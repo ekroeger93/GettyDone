@@ -22,6 +22,7 @@ import com.example.checkListApp.R;
 import com.example.checkListApp.ui.main.EntryManagement.Record.ProgressProvider;
 import com.example.checkListApp.ui.main.EntryManagement.Record.Record;
 import com.example.checkListApp.ui.main.EntryManagement.Record.RecordHelper;
+import com.example.checkListApp.ui.main.data_management.JsonService;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -72,7 +73,7 @@ public class ProgressFragment extends Fragment {
         Navigation.findNavController(activity,R.id.entryListFragment)
                 .navigate(ProgressFragmentDirections
                                 .actionProgressFragmentToFileListFragment
-                                        (MainFragment.getJsonCheckArrayList()));
+                                        (JsonService.getJsonCheckArrayList()));
 
 
     }

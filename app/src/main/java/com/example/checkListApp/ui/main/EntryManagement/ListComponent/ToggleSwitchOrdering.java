@@ -201,7 +201,6 @@ public class ToggleSwitchOrdering {
 
     public  void showNumberList(){
 
-        System.out.println("------------------------------");
 
         for(tNumber tNumber : listToOrder){
 
@@ -212,7 +211,6 @@ public class ToggleSwitchOrdering {
             }
         }
 
-        System.out.println("");
 
     }
 

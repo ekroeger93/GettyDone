@@ -43,6 +43,7 @@ public class Entry {
     public String timeTemp;
 
     public Entry(){
+        textEntry = new MutableLiveData<>("o");
     }
 
 

@@ -24,6 +24,7 @@ import com.example.checkListApp.ui.main.EntryManagement.ButtonPanel.ButtonPanelT
 import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.MainViewModel;
 import com.example.checkListApp.ui.main.EntryManagement.ListComponent.ToggleSwitchOrdering;
+import com.example.checkListApp.ui.main.data_management.ListRefurbishment;
 
 import java.util.ArrayList;
 import java.util.concurrent.Executor;
@@ -57,13 +58,17 @@ public class EntryItemManager {
 
         Entry entry = new Entry();
 
-        operator.adapter.notifyItemInserted(MainFragment.getCheckList().size() - 1);
 
         mViewModel.insertEntry(entry);
+
+       // operator.adapter.notifyItemInserted(MainFragment.getCheckList().size() );
 
         operator.adapter.notifyItemChanged(MainFragment.getCheckList().size());
 
         operator.refreshSelection(false);
+
+        //TODO BUG AFTER MOVING ITEM IT UNDOS THE NEW ARRANGEMENT
+        //NOTE: SOMETHING PROCEEDING THIS MAY BE EFFECTING IT
 
     }
 
@@ -99,11 +104,10 @@ public class EntryItemManager {
 
     public void sortSelected(SelectionTracker<Long> tracker){
 
-     //   MainFragment.updateAllSelection();
-//        assignSorted(outputSort());
+
         TaskSortEntries.executeAsync();
 
-
+//  notifyDataSetChanged();
 
     }
 
@@ -111,11 +115,10 @@ public class EntryItemManager {
 
         private final static Executor executor = Executors.newSingleThreadExecutor(); // change according to your requirements
 
-
         public static void executeAsync() {
             executor.execute(() -> {
 
-                MainFragment.updateAllSelection();
+                ListRefurbishment.updateAllSelection(MainFragment.getCheckList());
                 assignSorted(outputSort());
 
                 //Handle at main thread
@@ -148,10 +151,10 @@ public class EntryItemManager {
         }
 
 
-        for(ToggleSwitchOrdering.tNumber tNumber : MainFragment.toggleSwitchOrdering.listToOrder){
+        for(ToggleSwitchOrdering.tNumber tNumber : ListRefurbishment.toggleSwitchOrdering.listToOrder){
 
             try {
-                int indexOf = MainFragment.toggleSwitchOrdering.listToOrder.indexOf(tNumber);
+                int indexOf = ListRefurbishment.toggleSwitchOrdering.listToOrder.indexOf(tNumber);
                 int swapper = tNumber.number-1;//entry.getViewHolder().orderInt.getValue();
 
                 Entry entry = MainFragment.getCheckList().get(indexOf+1);

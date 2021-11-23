@@ -46,6 +46,9 @@ import com.example.checkListApp.ui.main.EntryManagement.ListComponent.RecyclerAd
 import com.example.checkListApp.ui.main.EntryManagement.ListComponent.ToggleSwitchOrdering;
 import com.example.checkListApp.ui.main.EntryManagement.Operator;
 import com.example.checkListApp.ui.main.EntryManagement.Record.RecordHelper;
+import com.example.checkListApp.ui.main.data_management.AuxiliaryData;
+import com.example.checkListApp.ui.main.data_management.JsonService;
+import com.example.checkListApp.ui.main.data_management.ListRefurbishment;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -130,17 +133,13 @@ public class MainFragment extends Fragment {
 
     private static RecyclerAdapter adapter;
     private static CustomLayoutManager customLayoutManager;
-    private static String jsonCheckArrayList;
     private static volatile ArrayList<Entry> checkList = new ArrayList<>();
 
     public static float recyclerScrollCompute,itemHeightPx, ratioOffset;
-    static public ToggleSwitchOrdering toggleSwitchOrdering;
     static public boolean isSorting = false;
     public static ArrayList<Entry> getCheckList(){ return checkList;}
-    public static void setCheckList(ArrayList<Entry> sL){checkList = sL;}
-    public static String getJsonCheckArrayList() {
-        return jsonCheckArrayList;
-    }
+    public static void setCheckList(ArrayList<Entry> data){checkList = data;}
+
 
 
     SelectionTracker<Long> selectionTracker;
@@ -208,9 +207,9 @@ public class MainFragment extends Fragment {
 
 
 
-        loadFile();
+        AuxiliaryData.loadFile(checkList, mViewModel, this);
 
-        getParcelTime();
+        AuxiliaryData.receiveParcelTime(checkList,this);
 
         setUpAdapter();
 
@@ -222,7 +221,6 @@ public class MainFragment extends Fragment {
 
 
 
-        toggleSwitchOrdering = new ToggleSwitchOrdering();
 
         RecordHelper.createButton(getContext(),binding);
 
@@ -231,63 +229,8 @@ public class MainFragment extends Fragment {
 
 
 
-    private void getParcelTime() {
-
-        try {
-            SetTimerFragmentArgs args = SetTimerFragmentArgs.fromBundle(getArguments());
-            timeParcel = args.getTimeParcel();
-            loadParcelTime();
-        }catch (NullPointerException e){
-            Log.d("timeParcel","error");
-        }
-
-    }
-
-    private void loadParcelTime(){
 
 
-        checkList.get(timeParcel.getTimeIndex()).countDownTimer.postValue(timeParcel.getTimeStringVal());
-
-        Log.d("timeParcel",":: " + checkList.get(timeParcel.getTimeIndex()).countDownTimer.getValue());
-
-    }
-
-    public void loadFile(){
-
-        try{
-            MainFragmentArgs args = MainFragmentArgs.fromBundle(getArguments());
-            ArrayList<Entry> loadedCheckList = getJsonGeneratedArray(args.getJsonData());
-
-            if(loadedCheckList != null){
-
-                for(Entry entry : loadedCheckList){
-                    entry.textEntry.setValue(entry.textEntry.getValue().replaceAll("\"" , ""));
-                    entry.countDownTimer.setValue(entry.countDownTimer.getValue().replaceAll("\"",""));
-                }
-
-                if(checkList.size() > 0){
-                    mViewModel.deleteAllEntries(checkList);
-                }
-
-                for(Entry entry : loadedCheckList) {
-                    mViewModel.loadEntry(entry);
-                    Log.d("test",entry.textEntry.getValue());
-                }
-                loadedCheckList.add(0,new Spacer());
-                loadedCheckList.add(new Spacer());
-
-                checkList.addAll(loadedCheckList);
-
-
-            }
-
-
-        }catch (IllegalArgumentException e){
-            e.printStackTrace();
-        }
-
-
-    }
 
     public void setUpAdapter(){
 
@@ -307,8 +250,8 @@ public class MainFragment extends Fragment {
         adapter.setActivity(getActivity());
 
 //        checkList.add(new Spacer());
-//        checkList.add(new Entry("a",false));
-//       checkList.add(new Entry("b",false));
+//        checkList.add(new Entry("a",false,"00:00:00"));
+//       checkList.add(new Entry("b",false,"00:00:00"));
 
         adapter.setList(checkList);
         adapter.notifyDataSetChanged();
@@ -351,7 +294,7 @@ public class MainFragment extends Fragment {
     public static void transitionToFileFromMain(Activity activity){
 
         MainFragmentDirections.ActionMainFragmentToFileListFragment action =
-                MainFragmentDirections.actionMainFragmentToFileListFragment(jsonCheckArrayList);
+                MainFragmentDirections.actionMainFragmentToFileListFragment(JsonService.getJsonCheckArrayList());
 
         Navigation.findNavController(activity, R.id.entryListFragment).navigate(action);
 
@@ -411,17 +354,17 @@ public void assignButtonListeners(){
                                 isSorting = true;
                                 entryItemManager.sortSelected(selectionTracker);
                                 buttonPanelToggle.toggleDisableToButton();
-
+                                adapter.notifyDataSetChanged();
 
                                 selectionTracker.clearSelection();
-                                MainFragment.reInitializeAllSelection();
+                                ListRefurbishment.reInitializeAllSelection(checkList);
                                 adapter.trackerOn(false);
 
                             });
 
                             //thread may still be running!!!
                             selectionTracker.clearSelection();
-                            MainFragment.reInitializeAllSelection();
+                            ListRefurbishment.reInitializeAllSelection(checkList);
 
 
                             isSorting = false;
@@ -498,13 +441,20 @@ public void assignButtonListeners(){
 
 public void assignObservers(){
 
+
+
+
     mViewModel.getAllEntries().observe(getViewLifecycleOwner(),new Observer<List<Entry>>() {
 
         @Override
         public void onChanged(@Nullable final List<Entry> entries) {
 
+
+
+
             //makes sure we keeps those spacers at the ends
             if( checkList == null || checkList.size()-2 != entries.size()
+
             ) {
                 checkList = (ArrayList<Entry>) entries;
                 checkList.add(0, new Spacer());
@@ -514,13 +464,17 @@ public void assignObservers(){
                 RecordHelper.update();
 
                 if(!isSorting)
-                updateToggleOrdering();
+                ListRefurbishment.updateToggleOrdering(checkList);
 
                 if(isSorting) {
-                    MainFragment.updateAllSelection();
+                    ListRefurbishment.updateAllSelection(checkList);
                 }
 
-                buildJson(checkList);
+                for(Entry entry : checkList) {
+                    Log.d("checkListTest", "..." + entry);
+                }
+
+                JsonService.buildJson(checkList);
 
             }
 
@@ -569,14 +523,14 @@ public void assignObservers(){
                             ultimately the holder.orderInt should reflect the toggleSwitchOrdering.list
                             * */
 
-                            toggleSwitchOrdering.toggleNum(index);
+                            ListRefurbishment.toggleSwitchOrdering.toggleNum(index);
 
-                            entryCurrent.isSelected.setValue(toggleSwitchOrdering.listToOrder.get(index).toggle);
-                            entryCurrent.orderInt.setValue(toggleSwitchOrdering.listToOrder.get(index).number);
+                            entryCurrent.isSelected.setValue(ListRefurbishment.toggleSwitchOrdering.listToOrder.get(index).toggle);
+                            entryCurrent.orderInt.setValue(ListRefurbishment.toggleSwitchOrdering.listToOrder.get(index).number);
 
-                            entryCurrent.selectOrder =toggleSwitchOrdering.listToOrder.get(index).number;
+                            entryCurrent.selectOrder =ListRefurbishment.toggleSwitchOrdering.listToOrder.get(index).number;
 
-                            MainFragment.updateAllSelection();
+                            ListRefurbishment.updateAllSelection(checkList);
 
                            break;
                                 }
@@ -631,177 +585,6 @@ public void assignObservers(){
 
 }
 
-    static public void updateToggleOrdering(){
-
-        toggleSwitchOrdering.listToOrder.clear();
-
-        int count = 0;
-        for(Entry entry : getCheckList()) {
-            int index = getCheckList().indexOf(entry);
-
-
-            if(entry instanceof Spacer) {}else {
-                count++;
-                toggleSwitchOrdering.listToOrder
-                        .add(new ToggleSwitchOrdering.tNumber(
-                                count, false));
-            }
-        }
-
-    }
-
-    public static void updateAllSelection(){
-
-
-        for(Entry entry : getCheckList()){
-            try {
-                if (entry instanceof Spacer) {
-                } else {
-                    int index= getCheckList().indexOf(entry);
-
-                    for(ToggleSwitchOrdering.tNumber tNumber : MainFragment.toggleSwitchOrdering.listToOrder) {
-                        int indexOf = MainFragment.toggleSwitchOrdering.listToOrder.indexOf(tNumber);
-                        if(indexOf == index-1){
-                        entry.getViewHolder().isSelected.postValue(tNumber.toggle);
-                        entry.getViewHolder().orderInt.postValue(tNumber.number);
-                       break;
-                       }
-
-
-                    }
-                   entry.getViewHolder().selectionUpdate();
-                }
-            }catch (NullPointerException | IndexOutOfBoundsException e){
-
-            }
-      }
-
-
-
-
-
-
-    }
-
-    public static void reInitializeAllSelection(){
-
-        System.out.println("clearing...");
-
-        for(Entry entry : getCheckList()){
-            try {
-                if (entry instanceof Spacer) {
-                } else {
-
-                    entry.getViewHolder().orderInt.postValue(-1);
-                    entry.getViewHolder().isSelected.postValue(false);
-                    entry.getViewHolder().selectOrder=0;
-                    entry.swappable = true;
-                    entry.getViewHolder().selectionUpdate();
-
-                //    System.out.print("["+entry.getViewHolder().orderInt.getValue()+']');
-                }
-            }catch (NullPointerException | IndexOutOfBoundsException e){
-
-            }
-
-        }
-
-
-        toggleSwitchOrdering.listToOrder.clear();
-        updateToggleOrdering();
-        updateAllSelection();
-
-
-    }
-
-
-static public void buildJson(ArrayList<Entry> checkList){
-
-    Gson gson = new GsonBuilder()
-            .excludeFieldsWithoutExposeAnnotation()
-            .registerTypeAdapter(Entry.class, new SerializeEntryToJson())
-            .registerTypeAdapter(Entry.class, new DeserializeJsonToEntry())
-            .create();
-
-
-
-    StringBuilder jsonCheckList = new StringBuilder();
-
-
-    jsonCheckList.append("[");
-    for(Entry entry : checkList){
-
-        if (entry.getClass() == Entry.class)
-        jsonCheckList.append(gson.toJson(entry)).append(",");
-    }
-
-    jsonCheckList.deleteCharAt(jsonCheckList.length()-1);
-    jsonCheckList.append("]");
-
-
-    jsonCheckArrayList = String.valueOf(jsonCheckList);
-
-
-}
-
-public ArrayList<Entry> getJsonGeneratedArray(String json){
-
-
-        Gson gson = new GsonBuilder()
-                .excludeFieldsWithoutExposeAnnotation()
-                .registerTypeAdapter(Entry.class, new SerializeEntryToJson())
-                .registerTypeAdapter(Entry.class, new DeserializeJsonToEntry())
-                .create();
-
-        ArrayList<Entry> entryArrayList;
-        Type userListType = new TypeToken<ArrayList<Entry>>(){}.getType();
-
-        entryArrayList = gson.fromJson(String.valueOf(json), userListType);
-
-        return entryArrayList;
-    }
-
-
-    static class SerializeEntryToJson implements JsonSerializer<Entry>{
-
-
-        @Override
-        public JsonElement serialize(Entry src, Type typeOfSrc, JsonSerializationContext context) {
-
-            JsonObject jsonObject = new JsonObject();
-
-            jsonObject.addProperty("textEntry",src.textEntry.getValue());
-            jsonObject.addProperty("isChecked",src.checked.getValue());
-            jsonObject.addProperty("timerLabel",src.countDownTimer.getValue());
-
-
-            return jsonObject;
-        }
-
-
-    }
-
-    static class DeserializeJsonToEntry implements JsonDeserializer<Entry>{
-
-        @Override
-        public Entry deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-
-            JsonObject jsonObject = json.getAsJsonObject();
-
-            String textEntry;
-            String timeText;
-
-            textEntry = jsonObject.get("textEntry").toString();
-            boolean isChecked = jsonObject.get("isChecked").getAsBoolean();
-            timeText = jsonObject.get("timerLabel").toString();
-
-
-            return new Entry(textEntry,isChecked,timeText);
-
-
-        }
-
-    }
 
 
 
