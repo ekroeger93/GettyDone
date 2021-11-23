@@ -41,7 +41,7 @@ public final class AuxiliaryData {
 
     }
 
-    public static void loadFile(ArrayList<Entry> data, MainViewModel mViewModel, MainFragment mainFragment){
+    public static ArrayList<Entry> loadFile(ArrayList<Entry> data, MainViewModel mViewModel, MainFragment mainFragment){
 
         try{
             MainFragmentArgs args = MainFragmentArgs.fromBundle(mainFragment.getArguments());
@@ -67,8 +67,9 @@ public final class AuxiliaryData {
 
                 data.addAll(loadedCheckList);
 
-                MainFragment.setCheckList(loadedCheckList);
+               // MainFragment.setCheckList(loadedCheckList);
 
+                return loadedCheckList;
 
             }
 
@@ -78,6 +79,7 @@ public final class AuxiliaryData {
         }
 
 
+        return null;
     }
 
 

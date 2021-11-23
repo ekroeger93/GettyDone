@@ -141,12 +141,11 @@ public class MainFragment extends Fragment {
     private RecyclerView recyclerView;
 
     private static CustomLayoutManager customLayoutManager;
+
     private static volatile ArrayList<Entry> checkList = new ArrayList<>();
 
-
+    //alot of classes rely on this being static
     public static ArrayList<Entry> getCheckList(){ return checkList;}
-    public static void setCheckList(ArrayList<Entry> data){checkList = data;}
-
 
     private boolean isSorting = false;
 
@@ -176,7 +175,7 @@ public class MainFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
 
-        AuxiliaryData.loadFile(checkList, mViewModel, this);
+        checkList = AuxiliaryData.loadFile(checkList, mViewModel, this);
 
         AuxiliaryData.receiveParcelTime(checkList,this);
 
@@ -429,7 +428,7 @@ public void assignObservers(){
                 RecordHelper.update();
 
                 if(!isSorting){
-                ListRefurbishment.updateToggleOrdering(checkList);
+                checkList = ListRefurbishment.updateToggleOrdering(checkList);
                 }else{ ListRefurbishment.updateAllSelection(checkList);
                 }
 

@@ -11,8 +11,7 @@ public final class ListRefurbishment {
 
     static public ToggleSwitchOrdering toggleSwitchOrdering = new ToggleSwitchOrdering();
 
-
-    static public void updateToggleOrdering(ArrayList<Entry> data){
+    static public ArrayList<Entry> updateToggleOrdering(ArrayList<Entry> data){
 
         toggleSwitchOrdering.listToOrder.clear();
 
@@ -29,12 +28,12 @@ public final class ListRefurbishment {
             }
         }
 
-        MainFragment.setCheckList(data);
+        //MainFragment.setCheckList(data);
 
+        return data;
     }
 
-    public static void updateAllSelection(ArrayList<Entry> data){
-
+    public static ArrayList<Entry> updateAllSelection(ArrayList<Entry> data){
 
         for(Entry entry : data){
             try {
@@ -59,9 +58,9 @@ public final class ListRefurbishment {
             }
         }
 
-        MainFragment.setCheckList(data);
+      //  MainFragment.setCheckList(data);
 
-
+        return data;
 
     }
 
@@ -87,7 +86,6 @@ public final class ListRefurbishment {
             }
 
         }
-
 
         toggleSwitchOrdering.listToOrder.clear();
         updateToggleOrdering(data);
