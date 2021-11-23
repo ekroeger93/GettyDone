@@ -126,62 +126,33 @@ public class MainFragment extends Fragment {
 
     protected MainFragmentBinding binding;
 
+    //reduce need for static
+    public static float recyclerScrollCompute,itemHeightPx, ratioOffset;
 
-    private Context context;
+    private EntryItemManager entryItemManager;
+    private SelectionTracker<Long> selectionTracker;
+
+    private Operator operator;
+    private ButtonPanel buttonPanel;
+    private ButtonPanelToggle buttonPanelToggle;
+
+    private RecyclerAdapter adapter;
     private MainViewModel mViewModel;
     private RecyclerView recyclerView;
 
-    private static RecyclerAdapter adapter;
     private static CustomLayoutManager customLayoutManager;
     private static volatile ArrayList<Entry> checkList = new ArrayList<>();
 
-    public static float recyclerScrollCompute,itemHeightPx, ratioOffset;
-    static public boolean isSorting = false;
+
     public static ArrayList<Entry> getCheckList(){ return checkList;}
     public static void setCheckList(ArrayList<Entry> data){checkList = data;}
 
 
-
-    SelectionTracker<Long> selectionTracker;
-    Operator operator;
-    ButtonPanel buttonPanel;
-    ButtonPanelToggle buttonPanelToggle;
-    EntryItemManager entryItemManager;
-
-    TimeParcel timeParcel;
-
-
-    //initialize
-    public void initialize() {
-
-
-        recyclerView.getViewTreeObserver().addOnGlobalLayoutListener(
-                () -> {
-
-                    ratioOffset = 1.75f;
-
-                    //adjusted so that selection is in middle of recyclerList
-                    recyclerScrollCompute = recyclerView.getHeight() / ratioOffset;
-
-                    itemHeightPx = 100;
-
-                    // Converts dip into its equivalent px
-                    float dip = itemHeightPx;
-                    Resources r = getResources();
-                    itemHeightPx = TypedValue.applyDimension(
-                            TypedValue.COMPLEX_UNIT_DIP,
-                            dip,
-                            r.getDisplayMetrics()); // converted to px 262.5
-
-                });
-
-
-    }
+    private boolean isSorting = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = this.getContext();
 
     }
 
@@ -189,7 +160,6 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-
 
 
         binding = DataBindingUtil.inflate(inflater,R.layout.main_fragment,container,false);
@@ -206,7 +176,6 @@ public class MainFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
 
-
         AuxiliaryData.loadFile(checkList, mViewModel, this);
 
         AuxiliaryData.receiveParcelTime(checkList,this);
@@ -219,15 +188,10 @@ public class MainFragment extends Fragment {
 
         assignObservers();
 
-
-
-
         RecordHelper.createButton(getContext(),binding);
 
 
     }
-
-
 
 
 
@@ -239,8 +203,7 @@ public class MainFragment extends Fragment {
         adapter = new RecyclerAdapter();
 
         recyclerView.setAdapter(adapter);
-        customLayoutManager = new CustomLayoutManager(context);
-
+        customLayoutManager = new CustomLayoutManager(getContext());
 
 
         recyclerView.setLayoutManager(customLayoutManager);
@@ -272,7 +235,7 @@ public class MainFragment extends Fragment {
         adapter.trackerOn(false);
 
         operator = new Operator(recyclerView,adapter);
-        entryItemManager = new EntryItemManager(context,mViewModel,operator);
+        entryItemManager = new EntryItemManager(getContext(),mViewModel,operator);
         buttonPanel = new ButtonPanel(getContext(), binding);
         buttonPanelToggle  = buttonPanel.buttonPanelToggle;
 
@@ -283,6 +246,33 @@ public class MainFragment extends Fragment {
 
     }
 
+
+    public void initialize() {
+
+        recyclerView.getViewTreeObserver().addOnGlobalLayoutListener(
+                () -> {
+
+                    ratioOffset = 1.75f;
+
+                    //adjusted so that selection is in middle of recyclerList
+                    recyclerScrollCompute = recyclerView.getHeight() / ratioOffset;
+
+                    itemHeightPx = 100;
+
+                    // Converts dip into its equivalent px
+                    float dip = itemHeightPx;
+                    Resources r = getResources();
+                    itemHeightPx = TypedValue.applyDimension(
+                            TypedValue.COMPLEX_UNIT_DIP,
+                            dip,
+                            r.getDisplayMetrics()); // converted to px 262.5
+
+                });
+
+
+    }
+
+
     public static void enableScroll(boolean flag){
         customLayoutManager.setScrollEnabled(flag);
     }
@@ -290,24 +280,6 @@ public class MainFragment extends Fragment {
     public static void scrollToPosition(RecyclerView recyclerView,int position){
         recyclerView.scrollToPosition(position);
     }
-
-    public static void transitionToFileFromMain(Activity activity){
-
-        MainFragmentDirections.ActionMainFragmentToFileListFragment action =
-                MainFragmentDirections.actionMainFragmentToFileListFragment(JsonService.getJsonCheckArrayList());
-
-        Navigation.findNavController(activity, R.id.entryListFragment).navigate(action);
-
-    }
-
-    public static void transitionToProgressFromMain(Activity activity){
-
-        Navigation.findNavController(activity, R.id.entryListFragment).navigate(  MainFragmentDirections.actionMainFragmentToProgressFragment());
-
-    }
-
-
-
 
 
 
@@ -365,7 +337,6 @@ public void assignButtonListeners(){
                             //thread may still be running!!!
                             selectionTracker.clearSelection();
                             ListRefurbishment.reInitializeAllSelection(checkList);
-
 
                             isSorting = false;
 
@@ -442,19 +413,13 @@ public void assignButtonListeners(){
 public void assignObservers(){
 
 
-
-
     mViewModel.getAllEntries().observe(getViewLifecycleOwner(),new Observer<List<Entry>>() {
 
         @Override
         public void onChanged(@Nullable final List<Entry> entries) {
 
-
-
-
             //makes sure we keeps those spacers at the ends
             if( checkList == null || checkList.size()-2 != entries.size()
-
             ) {
                 checkList = (ArrayList<Entry>) entries;
                 checkList.add(0, new Spacer());
@@ -463,29 +428,25 @@ public void assignObservers(){
 
                 RecordHelper.update();
 
-                if(!isSorting)
+                if(!isSorting){
                 ListRefurbishment.updateToggleOrdering(checkList);
-
-                if(isSorting) {
-                    ListRefurbishment.updateAllSelection(checkList);
+                }else{ ListRefurbishment.updateAllSelection(checkList);
                 }
 
-                for(Entry entry : checkList) {
-                    Log.d("checkListTest", "..." + entry);
-                }
+                //maintenance code
+//                for(Entry entry : checkList) {
+//                    Log.d("checkListTest", "..." + entry);
+//                }
 
                 JsonService.buildJson(checkList);
-
             }
 
 
 
 
         }
+
     });
-
-
-
 
 
 
@@ -567,13 +528,6 @@ public void assignObservers(){
 
         }
 
-
-
-
-
-
-
-
         @Override
         public void onSelectionChanged() {
             super.onSelectionChanged();
@@ -585,6 +539,24 @@ public void assignObservers(){
 
 }
 
+
+
+
+
+    public static void transitionToFileFromMain(Activity activity){
+
+        MainFragmentDirections.ActionMainFragmentToFileListFragment action =
+                MainFragmentDirections.actionMainFragmentToFileListFragment(JsonService.getJsonCheckArrayList());
+
+        Navigation.findNavController(activity, R.id.entryListFragment).navigate(action);
+
+    }
+
+    public static void transitionToProgressFromMain(Activity activity){
+
+        Navigation.findNavController(activity, R.id.entryListFragment).navigate(  MainFragmentDirections.actionMainFragmentToProgressFragment());
+
+    }
 
 
 
