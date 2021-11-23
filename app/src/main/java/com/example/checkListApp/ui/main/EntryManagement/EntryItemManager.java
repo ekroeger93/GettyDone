@@ -2,24 +2,19 @@ package com.example.checkListApp.ui.main.EntryManagement;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.TextView;
 
-import androidx.collection.ArraySet;
 import androidx.recyclerview.selection.SelectionTracker;
 
 import com.example.checkListApp.R;
-import com.example.checkListApp.database.EntryDao;
 import com.example.checkListApp.input.CustomEditText;
 import com.example.checkListApp.input.DetectKeyboardBack;
-import com.example.checkListApp.ui.main.Entry;
+import com.example.checkListApp.ui.main.entries.Entry;
 import com.example.checkListApp.ui.main.EntryManagement.ButtonPanel.ButtonPanelToggle;
 import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.MainViewModel;
@@ -28,9 +23,7 @@ import com.example.checkListApp.ui.main.data_management.ListRefurbishment;
 
 import java.util.ArrayList;
 import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Stream;
 
 public class EntryItemManager {
 

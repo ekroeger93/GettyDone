@@ -2,8 +2,7 @@ package com.example.checkListApp.ui.main.data_management;
 
 import android.util.Log;
 
-import com.example.checkListApp.ui.main.Entry;
-import com.example.checkListApp.ui.main.MainFragment;
+import com.example.checkListApp.ui.main.entries.Entry;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;

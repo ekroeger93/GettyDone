@@ -4,8 +4,8 @@ import android.util.Log;
 
 import com.example.checkListApp.settimer.SetTimerFragmentArgs;
 import com.example.checkListApp.timemanagement.TimeParcel;
-import com.example.checkListApp.ui.main.Entry;
-import com.example.checkListApp.ui.main.Spacer;
+import com.example.checkListApp.ui.main.entries.Entry;
+import com.example.checkListApp.ui.main.entries.Spacer;
 import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.MainFragmentArgs;
 import com.example.checkListApp.ui.main.MainViewModel;

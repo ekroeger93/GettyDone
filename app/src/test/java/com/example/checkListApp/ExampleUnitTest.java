@@ -1,10 +1,6 @@
 package com.example.checkListApp;
 
-import android.util.Log;
-
 import org.junit.Test;
-import com.google.gson.*;
-import com.example.checkListApp.ui.main.Entry;
 
 import static org.junit.Assert.*;
 

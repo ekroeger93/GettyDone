@@ -1,20 +1,12 @@
-package com.example.checkListApp.ui.main;
-
-import android.graphics.Color;
-import android.widget.TableRow;
-import android.widget.TextView;
+package com.example.checkListApp.ui.main.entries;
 
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import com.example.checkListApp.database.EntryRepository;
 import com.example.checkListApp.ui.main.EntryManagement.ListComponent.RecyclerAdapter;
-
-import java.util.ArrayList;
 
 @Entity(tableName = "Entries")
 public class Entry {

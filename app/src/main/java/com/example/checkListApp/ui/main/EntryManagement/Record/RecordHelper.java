@@ -1,12 +1,11 @@
 package com.example.checkListApp.ui.main.EntryManagement.Record;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.example.checkListApp.databinding.MainFragmentBinding;
-import com.example.checkListApp.ui.main.Entry;
+import com.example.checkListApp.ui.main.entries.Entry;
 import com.example.checkListApp.ui.main.MainFragment;
-import com.example.checkListApp.ui.main.Spacer;
+import com.example.checkListApp.ui.main.entries.Spacer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -18,12 +17,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.lang.reflect.Type;
-import java.nio.file.Path;
 import java.util.ArrayList;
 
 public final class RecordHelper {

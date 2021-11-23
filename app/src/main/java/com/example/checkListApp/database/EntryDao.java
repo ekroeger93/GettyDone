@@ -7,10 +7,8 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.example.checkListApp.ui.main.Entry;
-import com.example.checkListApp.ui.main.Spacer;
+import com.example.checkListApp.ui.main.entries.Entry;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Dao

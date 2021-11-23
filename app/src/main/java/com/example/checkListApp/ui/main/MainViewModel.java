@@ -1,12 +1,12 @@
 package com.example.checkListApp.ui.main;
 
-import android.app.Activity;
 import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.example.checkListApp.database.EntryRepository;
+import com.example.checkListApp.ui.main.entries.Entry;
 
 import java.util.ArrayList;
 import java.util.List;

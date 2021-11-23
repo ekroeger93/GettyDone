@@ -10,9 +10,8 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.example.checkListApp.ui.main.Entry;
+import com.example.checkListApp.ui.main.entries.Entry;
 import com.example.checkListApp.ui.main.MainViewModel;
-import com.example.checkListApp.ui.main.Spacer;
 
 @Database(entities = {Entry.class},version = 1,exportSchema = false)
 @TypeConverters({TypeConvertTextEntry.class,TypeConvertIsChecked.class})

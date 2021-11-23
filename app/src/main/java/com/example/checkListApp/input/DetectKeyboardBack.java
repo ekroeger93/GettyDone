@@ -1,26 +1,15 @@
 package com.example.checkListApp.input;
 
 import android.content.Context;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleObserver;
 
 
-import androidx.lifecycle.ViewModel;
+import com.example.checkListApp.ui.main.entries.Entry;
 
-import com.example.checkListApp.ui.main.Entry;
-
-import java.io.FileDescriptor;
 import java.util.Objects;
 
 public class DetectKeyboardBack implements LifecycleObserver{

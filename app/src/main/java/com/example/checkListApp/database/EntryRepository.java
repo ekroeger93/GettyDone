@@ -3,15 +3,14 @@ package com.example.checkListApp.database;
 import android.app.Application;
 import androidx.lifecycle.LiveData;
 
-import com.example.checkListApp.ui.main.Entry;
+import com.example.checkListApp.ui.main.entries.Entry;
 import com.example.checkListApp.ui.main.MainViewModel;
-import com.example.checkListApp.ui.main.Spacer;
+import com.example.checkListApp.ui.main.entries.Spacer;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 

@@ -1,8 +1,7 @@
 package com.example.checkListApp.ui.main.data_management;
 
-import com.example.checkListApp.ui.main.Entry;
-import com.example.checkListApp.ui.main.MainFragment;
-import com.example.checkListApp.ui.main.Spacer;
+import com.example.checkListApp.ui.main.entries.Entry;
+import com.example.checkListApp.ui.main.entries.Spacer;
 import com.example.checkListApp.ui.main.EntryManagement.ListComponent.ToggleSwitchOrdering;
 
 import java.util.ArrayList;
