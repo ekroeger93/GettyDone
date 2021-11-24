@@ -13,7 +13,7 @@ import com.example.checkListApp.timer.TimeState;
 import com.example.checkListApp.timer.TimeToggler;
 
 
-public class GlobalTimeViewModel extends ViewModel {
+public class MainTimerViewModel extends ViewModel {
 
     private final CountDownTimerAsync countTimer = CountDownTimerAsync.getInstance();
     private final TimeToggler timeToggler = TimeToggler.getTimeToggler();

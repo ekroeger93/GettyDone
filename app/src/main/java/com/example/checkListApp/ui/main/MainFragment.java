@@ -7,18 +7,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,7 +30,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.checkListApp.R;
 import com.example.checkListApp.databinding.MainFragmentBinding;
-import com.example.checkListApp.timer.CountDownTimerAsync;
 import com.example.checkListApp.ui.main.EntryManagement.ButtonPanel.ButtonPanel;
 import com.example.checkListApp.ui.main.EntryManagement.ButtonPanel.ButtonPanelToggle;
 import com.example.checkListApp.ui.main.EntryManagement.EntryItemManager;
@@ -177,6 +171,8 @@ public class MainFragment extends Fragment {
 
         assignObservers();
 
+        configureMainTimer();
+
         RecordHelper.createButton(getContext(),binding);
 
 
@@ -274,64 +270,35 @@ public class MainFragment extends Fragment {
     }
 
 
-
-
 @RequiresApi(api = Build.VERSION_CODES.O)
+public void configureMainTimer(){
+
+
+
+        MainTimerView mainTimerView = new MainTimerView();
+
+    mainTimerView.setListener(binding.timerExecuteBtn);
+
+    mainTimerView.setObserverForMainTextTime(binding.timeTextMain,getViewLifecycleOwner());
+
+    mainTimerView.setPostExecute(() -> {
+
+        new Handler(Looper.getMainLooper()).post(new Runnable () {
+            @Override
+            public void run () {
+                scrollPosition(selectedEntry.getValue()+1);
+                mainTimerView.getGlobalTimeViewModel().setCountDownTimer( checkList.get(selectedEntry.getValue()+1).countDownTimer.getValue());
+                mainTimerView.getGlobalTimeViewModel().toggleTime();
+            }
+        });
+
+    });
+
+
+}
+
 @SuppressLint("ClickableViewAccessibility")
 public void assignButtonListeners(){
-
-
-
-        //
-        GlobalTimeViewModel globalTimeViewModel= new GlobalTimeViewModel();
-
-        Button executeTime = binding.timerExecuteBtn;
-        TextView mainTimer = binding.timeTextMain;
-
-
-    Observer<String> observer = new Observer() {
-        @Override
-        public void onChanged(Object o) {
-            mainTimer.setText(globalTimeViewModel.getValueTime());
-        }
-    };
-    globalTimeViewModel.setObserver(observer, getViewLifecycleOwner());
-
-    Observer<Integer> observer1 = new Observer<Integer>() {
-        @Override
-        public void onChanged(Integer integer) {
-            globalTimeViewModel.setCountDownTimer( checkList.get(integer).countDownTimer.getValue());
-        }
-    };
-
-    selectedEntry.observe(getViewLifecycleOwner(),observer1);
-
-        executeTime.setOnClickListener( view ->{
-            globalTimeViewModel.toggleTime();
-        });
-
-
-        globalTimeViewModel.setPostExecute(new CountDownTimerAsync.PostExecute() {
-            @Override
-            public void execute() {
-
-                new Handler(Looper.getMainLooper()).post(new Runnable () {
-                    @Override
-                    public void run () {
-                        scrollPosition(selectedEntry.getValue()+1);
-                        globalTimeViewModel.setCountDownTimer( checkList.get(selectedEntry.getValue()+1).countDownTimer.getValue());
-                        globalTimeViewModel.toggleTime();
-                    }
-                });
-
-
-
-
-            }
-
-        });
-
-////////////////////////////////////
 
         buttonPanel.addButtonWithLeaf(
             binding.addDeleteBtn
