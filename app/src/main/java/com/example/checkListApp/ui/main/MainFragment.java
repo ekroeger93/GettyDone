@@ -158,6 +158,7 @@ public class MainFragment extends Fragment {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -318,6 +319,7 @@ public void assignButtonListeners(){
                     @Override
                     public void run () {
                         scrollPosition(selectedEntry.getValue()+1);
+                        globalTimeViewModel.setCountDownTimer( checkList.get(selectedEntry.getValue()+1).countDownTimer.getValue());
                         globalTimeViewModel.toggleTime();
                     }
                 });
