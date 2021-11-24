@@ -266,8 +266,10 @@ public class MainFragment extends Fragment {
         customLayoutManager.setScrollEnabled(flag);
     }
 
-    public static void scrollToPosition(RecyclerView recyclerView,int position){
-        recyclerView.scrollToPosition(position);
+
+
+    public static void scrollPosition(int position){
+        customLayoutManager.scrollToPositionWithOffset(position,100);
     }
 
 
@@ -315,11 +317,12 @@ public void assignButtonListeners(){
                 new Handler(Looper.getMainLooper()).post(new Runnable () {
                     @Override
                     public void run () {
-                        scrollToPosition(recyclerView, selectedEntry.getValue()+1);
+                        scrollPosition(selectedEntry.getValue()+1);
+                        globalTimeViewModel.toggleTime();
                     }
                 });
 
-                globalTimeViewModel.toggleTime();
+
 
 
             }
