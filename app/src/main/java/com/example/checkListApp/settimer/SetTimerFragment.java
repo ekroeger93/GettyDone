@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,6 +65,7 @@ public class SetTimerFragment extends Fragment {
         SetTimerFragmentArgs args = SetTimerFragmentArgs.fromBundle(getArguments());
         parcelable = args.getTimeParcel();
 
+
         //parcelable = getActivity().getIntent().getExtras().getParcelable(KeyHelperClass.TIME_PARCEL_DATA);;
         timeIndexPosition = parcelable.getTimeIndex();
 
@@ -94,6 +96,8 @@ public class SetTimerFragment extends Fragment {
             SetTimerFragmentDirections.ActionSetTimerFragmentToMainFragment action =
                     SetTimerFragmentDirections.actionSetTimerFragmentToMainFragment(
                   "");
+
+            Log.d("timerTest",":: " +setTimerText.getText().toString());
 
             action.setTimeParcel(
                     new TimeParcelBuilder()

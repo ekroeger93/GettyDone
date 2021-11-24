@@ -1,5 +1,8 @@
 package com.example.checkListApp.ui.main.data_management;
 
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.example.checkListApp.settimer.SetTimerFragmentArgs;
@@ -17,12 +20,19 @@ public final class AuxiliaryData {
    static TimeParcel timeParcel;
 
 
-    public static void receiveParcelTime(ArrayList<Entry> data, MainFragment mainFragment) {
+    public static void receiveParcelTime(ArrayList<Entry> data, Bundle bundle) {
 
         try {
-            SetTimerFragmentArgs args = SetTimerFragmentArgs.fromBundle(mainFragment.getArguments());
+            SetTimerFragmentArgs args = SetTimerFragmentArgs.fromBundle(bundle);
             timeParcel = args.getTimeParcel();
-            loadParcelTime(data);
+
+            int index = timeParcel.getTimeIndex();
+            String time = timeParcel.getTimeStringVal();
+            Log.d("timerTest",">>"+data);
+
+            loadParcelTime(data, index, time);
+            Log.d("timerTest",""+timeParcel.getTimeStringVal());
+
         }catch (NullPointerException e){
             Log.d("timeParcel","error");
         }
@@ -33,18 +43,26 @@ public final class AuxiliaryData {
         return timeParcel;
     }
 
-    public static void loadParcelTime(ArrayList<Entry> data){
+    public static void loadParcelTime(ArrayList<Entry> data, int index, String time){
 
-        data.get(timeParcel.getTimeIndex()).countDownTimer.postValue(timeParcel.getTimeStringVal());
 
-        Log.d("timeParcel",":: " + data.get(timeParcel.getTimeIndex()).countDownTimer.getValue());
+//        new Handler(Looper.getMainLooper()).post(new Runnable() {
+//            @Override
+//            public void run() {
+
+                data.get(index).countDownTimer.postValue(time);
+
+//            }
+//        });
+
+        Log.d("timerTest",":: " + data.get(timeParcel.getTimeIndex()).countDownTimer.getValue());
 
     }
 
-    public static ArrayList<Entry> loadFile(ArrayList<Entry> data, MainViewModel mViewModel, MainFragment mainFragment){
+    public static ArrayList<Entry> loadFile(ArrayList<Entry> data, MainViewModel mViewModel, Bundle bundle){
 
         try{
-            MainFragmentArgs args = MainFragmentArgs.fromBundle(mainFragment.getArguments());
+            MainFragmentArgs args = MainFragmentArgs.fromBundle(bundle);
             ArrayList<Entry> loadedCheckList = JsonService.getJsonGeneratedArray(args.getJsonData());
 
             if(loadedCheckList != null){
@@ -79,7 +97,7 @@ public final class AuxiliaryData {
         }
 
 
-        return null;
+        return data;
     }
 
 

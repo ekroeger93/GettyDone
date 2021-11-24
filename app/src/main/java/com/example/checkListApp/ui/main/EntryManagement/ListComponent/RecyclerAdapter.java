@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -259,10 +260,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         EntryBinding binding;
 
 
-        public void updater(){
-
-
-        }
 
                 public ViewHolder(@NonNull EntryBinding itemView) {
                     super(itemView.getRoot());
@@ -415,8 +412,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
                     Observer<String> changeTimeValue = o ->{
 
+                        Log.d("timerTest",o);
                         setTimeButton.setText(o);
                         entry.timeTemp = o;
+
                         repository.updateEntry(entry);
                         JsonService.buildJson((ArrayList<Entry>) mList);
                     };
@@ -430,7 +429,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
                     Observer selectCheckObs = (Observer) o ->{
                         selected = isSelected.getValue();
-
                     } ;
 
 
@@ -449,6 +447,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     MainFragmentDirections.ActionMainFragmentToSetTimerFragment action =
                             MainFragmentDirections.actionMainFragmentToSetTimerFragment(
                                 );
+
+
                     action.setTimeParcel( new TimeParcelBuilder().setTimeIndexValue(getBindingAdapterPosition()).build() );
                     Navigation.findNavController(activity, R.id.entryListFragment).navigate(action);
 

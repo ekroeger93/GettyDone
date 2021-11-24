@@ -75,7 +75,7 @@ public class Operator {
         if(isMovingItem) moveItem(movingItem);
 
 
-        return selection;
+        return selection - 1;
     }
 
     public void refreshSelection(boolean decremented){

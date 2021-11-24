@@ -24,7 +24,7 @@ public abstract class EntryRoomDatabase extends RoomDatabase {
         private static EntryRoomDatabase INSTANCE;
         private static MainViewModel mainViewModel;
 
-        static EntryRoomDatabase getDatabase(final Context context, MainViewModel main) {
+         static EntryRoomDatabase getDatabase(final Context context, MainViewModel main) {
             if (INSTANCE == null) {
                 synchronized (EntryRoomDatabase.class) {
                     if (INSTANCE == null) {
@@ -67,14 +67,12 @@ public abstract class EntryRoomDatabase extends RoomDatabase {
         @Override
         protected Void doInBackground(Void... voids) {
 
-            if(entryDao.getAllEntries().getValue() == null){
-
-              //  Entry entry = new Entry(true);
-
-                //entryDao.insertSpacer(entry);
-
-            }
-
+//            if(entryDao.getAllEntries().getValue() == null){
+//
+//                Entry entry = new Entry();
+//                entryDao.insertSpacer(entry);
+//
+//            }
 
 
             return null;
