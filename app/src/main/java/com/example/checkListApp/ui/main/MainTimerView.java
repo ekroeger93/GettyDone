@@ -27,6 +27,7 @@ public final class MainTimerView {
         Observer<Integer> observer = new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
+                if(checkList.size()!=0)
                 mainTimerViewModel.setCountDownTimer(checkList.get(integer).countDownTimer.getValue());
             }
         };

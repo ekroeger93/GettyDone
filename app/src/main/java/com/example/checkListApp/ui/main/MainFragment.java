@@ -277,10 +277,16 @@ public void configureMainTimer(){
 
         MainTimerView mainTimerView = new MainTimerView();
 
+        //update text timer based on current scroll selected position
+    selectedEntry.observe(getViewLifecycleOwner(),mainTimerView.getObserver(checkList));
+
+    //bind listener to button to toggle Time
     mainTimerView.setListener(binding.timerExecuteBtn);
 
+    //update time of both View and ViewModel
     mainTimerView.setObserverForMainTextTime(binding.timeTextMain,getViewLifecycleOwner());
 
+    //set a post execution after timer expires, proceeds to next Entry
     mainTimerView.setPostExecute(() -> {
 
         new Handler(Looper.getMainLooper()).post(new Runnable () {
