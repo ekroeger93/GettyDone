@@ -273,8 +273,6 @@ public class MainFragment extends Fragment {
 @RequiresApi(api = Build.VERSION_CODES.O)
 public void configureMainTimer(){
 
-
-
         MainTimerView mainTimerView = new MainTimerView();
 
         //update text timer based on current scroll selected position
@@ -310,10 +308,12 @@ public void assignButtonListeners(){
             binding.addDeleteBtn
             , view -> entryItemManager.add()
             , view -> entryItemManager.delete(),
+
             new LeafButton(getContext())
                     .setViewGroup(binding.main)
                     .assignListener(view -> {
-                        buttonPanelToggle.setOnClickListener(view1 -> {
+                        buttonPanelToggle.setOnClickListener(
+                                view1 -> { //deletes selected Entries
                             entryItemManager.deleteSelected(selectionTracker);
                             buttonPanelToggle.toggleDisableToButton();
                             adapter.trackerOn(false);
