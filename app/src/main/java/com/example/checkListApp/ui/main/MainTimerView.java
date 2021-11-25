@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
 import com.example.checkListApp.timer.CountDownTimerAsync;
@@ -16,6 +17,8 @@ import java.util.ArrayList;
 public final class MainTimerView {
 
     MainTimerViewModel mainTimerViewModel = new MainTimerViewModel();
+
+    MutableLiveData<Boolean> toggled = new MutableLiveData<>(false);
 
 
     public MainTimerViewModel getGlobalTimeViewModel() {
@@ -49,10 +52,19 @@ public final class MainTimerView {
 
     }
 
+    public void setObserverForToggledLiveData( LifecycleOwner owner, Observer<Boolean> observer){
+        toggled.observe(owner,observer);
+    }
+
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void setListener(Button executeTime) {
+
         executeTime.setOnClickListener(view -> {
+
+            toggled.postValue(mainTimerViewModel.isToggled());
             mainTimerViewModel.toggleTime();
+
         });
 
     }

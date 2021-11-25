@@ -21,6 +21,12 @@ public class MainTimerViewModel extends ViewModel {
     private TimeState timeState = new TimeState(0);
     private CountDownTimerAsync.PostExecute postExecute;
 
+    private  boolean toggled = false;
+
+    public boolean isToggled(){
+        return toggled;
+    }
+
     public void setPostExecute(CountDownTimerAsync.PostExecute postExecute) {
         countTimer.setPostExecute(postExecute);
     }
@@ -66,6 +72,8 @@ public class MainTimerViewModel extends ViewModel {
 
         timeToggler.toggleTime(countTimer,
                 (toggle) -> {
+
+            toggled = toggle;
 
                     if(toggle){
                         countTimer.setTimer(timeState);

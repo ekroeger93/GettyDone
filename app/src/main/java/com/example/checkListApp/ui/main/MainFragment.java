@@ -3,6 +3,7 @@ package com.example.checkListApp.ui.main;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -125,12 +126,14 @@ public class MainFragment extends Fragment {
     private static CustomLayoutManager customLayoutManager;
 
     private static ArrayList<Entry> checkList = new ArrayList<>();
-    private MutableLiveData<Integer> selectedEntry = new MutableLiveData<>();
+    private final MutableLiveData<Integer> selectedEntry = new MutableLiveData<>();
 
     //alot of classes rely on this being static
     public static ArrayList<Entry> getCheckList(){ return checkList;}
 
     private boolean isSorting = false;
+
+    public static boolean executionMode = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -176,11 +179,8 @@ public class MainFragment extends Fragment {
         RecordHelper.createButton(getContext(),binding);
 
 
+
     }
-
-
-
-
 
     public void setUpAdapter(){
 
@@ -259,12 +259,6 @@ public class MainFragment extends Fragment {
     }
 
 
-    public static void enableScroll(boolean flag){
-        customLayoutManager.setScrollEnabled(flag);
-    }
-
-
-
     public static void scrollPosition(int position){
         customLayoutManager.scrollToPositionWithOffset(position,100);
     }
@@ -281,18 +275,28 @@ public void configureMainTimer(){
     //bind listener to button to toggle Time
     mainTimerView.setListener(binding.timerExecuteBtn);
 
+    mainTimerView.setObserverForToggledLiveData(getViewLifecycleOwner(), aBoolean -> executionMode = aBoolean);
+
     //update time of both View and ViewModel
     mainTimerView.setObserverForMainTextTime(binding.timeTextMain,getViewLifecycleOwner());
 
     //set a post execution after timer expires, proceeds to next Entry
     mainTimerView.setPostExecute(() -> {
 
+
+        //TODO FIX TO TURN OFF
+        checkList.get(selectedEntry.getValue()).getViewHolder().checkOff();
+
         new Handler(Looper.getMainLooper()).post(new Runnable () {
             @Override
             public void run () {
-                scrollPosition(selectedEntry.getValue()+1);
-                mainTimerView.getGlobalTimeViewModel().setCountDownTimer( checkList.get(selectedEntry.getValue()+1).countDownTimer.getValue());
-                mainTimerView.getGlobalTimeViewModel().toggleTime();
+
+             if(selectedEntry.getValue() != checkList.size()-2) {
+                 scrollPosition(selectedEntry.getValue() + 1);
+                 mainTimerView.getGlobalTimeViewModel().setCountDownTimer(checkList.get(selectedEntry.getValue() + 1).countDownTimer.getValue());
+                 mainTimerView.getGlobalTimeViewModel().toggleTime();
+             }
+
             }
         });
 

@@ -28,6 +28,9 @@ import com.example.checkListApp.databinding.EntryBinding;
 import com.example.checkListApp.input.CustomEditText;
 import com.example.checkListApp.input.DetectKeyboardBack;
 import com.example.checkListApp.timemanagement.TimeParcelBuilder;
+import com.example.checkListApp.ui.main.MainFragment;
+import com.example.checkListApp.ui.main.MainTimerView;
+import com.example.checkListApp.ui.main.MainTimerViewModel;
 import com.example.checkListApp.ui.main.entries.Entry;
 import com.example.checkListApp.ui.main.EntryManagement.Record.RecordHelper;
 import com.example.checkListApp.ui.main.MainFragmentDirections;
@@ -246,11 +249,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         public TextView textView;
         public TableRow tEntryViewRow;
-        private final Button checkButton;
+        public final Button checkButton;
         private final Button setTimeButton;
+
+
 
         public  int selectOrder = -1;
         public boolean selected = false;
+        public boolean enforceChecked = false;
 
       public  MutableLiveData<Integer> orderInt = new MutableLiveData<>(-1);
       public  MutableLiveData<Boolean> isSelected = new MutableLiveData<>(false);
@@ -267,8 +273,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     binding = itemView;
                    details = new TrackerHelper.Details();
 
+
                     tEntryViewRow = binding.entry;
-                    checkButton = binding.checkBtn;
+                    checkButton = (Button) itemView.getRoot().findViewById(R.id.checkBtn);
                     setTimeButton = binding.setEntryTimeBtn;
                     textView = binding.entryText;
 
@@ -325,9 +332,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
        public Long getKey(){ return details.getSelectionKey();}
 
-
-
-
                 @SuppressLint("ClickableViewAccessibility")
                 public void setListeners(View itemView ){
 
@@ -354,11 +358,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
                     });
 
-//                    button.setOnClickListener(e ->{
-//                        getEntry().checked.postValue( !getEntry().checked.getValue());
-//                        //call the observer onChange()
-//                    });
+                    /*
+                    TODO: Having issue with button not clicking on setOnClick
+                   unless you use OnTouchListener... also setOnClick will activate
+                   on manual override method via .onClick() but touch won't.
+                    I don't understand whats going on
+                     */
 
+
+                    //FUCK IT USE BOTH
+                    checkButton.setOnClickListener(e ->{
+                        getEntry().checked.postValue( !getEntry().checked.getValue());
+                        //call the observer onChange()
+                    });
 
                     checkButton.setOnTouchListener((view, motionEvent) -> {
                         if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
@@ -367,6 +379,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
                         return true;
                     });
+                    //TODO: I FUCKED IT AND USED BOTH
 
                     setTimeButton.setOnTouchListener((view, motionEvent)->{
                         if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
@@ -375,6 +388,24 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         return true;
                     });
 
+
+                }
+
+                public void checkOff(){
+
+                    checkButton.callOnClick();
+
+//                    getEntry().checked.postValue(false);
+//
+//                    textView.setBackgroundColor(Color.GRAY);
+//                    tEntryViewRow.setBackgroundColor(Color.GRAY);
+//
+//                    getEntry().checkTemp = false;
+//
+//                    RecordHelper.update();
+//
+//                    repository.updateEntry(getEntry());
+//                    JsonService.buildJson((ArrayList<Entry>) mList);
 
                 }
 
@@ -390,6 +421,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     };
 
                     Observer<Boolean> checkObs = aBoolean -> {
+
+                        if (enforceChecked){
+                            textView.setBackgroundColor(Color.GRAY);
+                            tEntryViewRow.setBackgroundColor(Color.GRAY);
+
+                        }
 
                         textView.setBackgroundColor( entry.checked.getValue() ?
                                 Color.GRAY:
@@ -435,9 +472,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     orderInt.observe(owner,selectOrderObs);
                     isSelected.observe(owner,selectCheckObs);
 
-                    getEntry().textEntry.observe(owner, observer);
-                    getEntry().checked.observe(owner, checkObs);
-                    getEntry().countDownTimer.observe(owner, changeTimeValue);
+                    //TODO null value
+                    if(getEntry().textEntry !=null && !MainFragment.executionMode) {
+                        getEntry().textEntry.observe(owner, observer);
+                        getEntry().checked.observe(owner, checkObs);
+                        getEntry().countDownTimer.observe(owner, changeTimeValue);
+                    }
 
                 }
 

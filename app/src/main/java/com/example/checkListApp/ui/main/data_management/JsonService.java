@@ -86,13 +86,15 @@ public final class JsonService {
 
 
 
-            JsonObject jsonObject = new JsonObject();
+    JsonObject jsonObject = new JsonObject();
 
-                jsonObject.addProperty("textEntry", src.textEntry.getValue());
-                jsonObject.addProperty("isChecked", src.checked.getValue());
-                jsonObject.addProperty("timerLabel", src.countDownTimer.getValue());
+    //TODO NULL FAULT
+            if(src.textEntry != null) {
+    jsonObject.addProperty("textEntry", src.textEntry.getValue());
+    jsonObject.addProperty("isChecked", src.checked.getValue());
+    jsonObject.addProperty("timerLabel", src.countDownTimer.getValue());
 
-
+}
                 return jsonObject;
 
 
