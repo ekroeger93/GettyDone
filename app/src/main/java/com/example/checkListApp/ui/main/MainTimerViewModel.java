@@ -12,6 +12,10 @@ import com.example.checkListApp.timer.CountDownTimerAsync;
 import com.example.checkListApp.timer.TimeState;
 import com.example.checkListApp.timer.TimeToggler;
 
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 
 public class MainTimerViewModel extends ViewModel {
 
@@ -20,6 +24,8 @@ public class MainTimerViewModel extends ViewModel {
 
     private TimeState timeState = new TimeState(0);
     private CountDownTimerAsync.PostExecute postExecute;
+
+    public ExecuteToggleAsync toggleAsync = new ExecuteToggleAsync();
 
     private  boolean toggled = false;
 
@@ -66,15 +72,25 @@ public class MainTimerViewModel extends ViewModel {
     }
 
 
+     class ExecuteToggleAsync {
+
+        private final Executor executorService = Executors.newSingleThreadExecutor();
+
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        public void execute() {
+            executorService.execute(MainTimerViewModel.this::toggleTime);
+        }
+
+    }
+
+
+    //TODO: ASYNC FOR WHEN APP IS IN THE BACKGROUND
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void toggleTime(){
 
-
         timeToggler.toggleTime(countTimer,
                 (toggle) -> {
-
             toggled = toggle;
-
                     if(toggle){
                         countTimer.setTimer(timeState);
                         setTask();
@@ -82,7 +98,6 @@ public class MainTimerViewModel extends ViewModel {
                         timeState = new TimeState(countTimer.getNumberTime());
                         _countDownTimer.postValue(timeState.getTimeFormat());
                     }
-
                 }
         );
 

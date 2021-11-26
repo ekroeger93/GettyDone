@@ -275,6 +275,10 @@ public class EntryItemManager {
 
         }else{
             operator.adapter.notifyItemChanged(selection-1);
+
+            //TODO: CODE BELOW
+            //operator.adapter.notifyItemMoved(oldMovePosition,selection-1);
+
             operator.movingItem = null;
             buttonPanelToggle.toggleDisableToButton();
         }

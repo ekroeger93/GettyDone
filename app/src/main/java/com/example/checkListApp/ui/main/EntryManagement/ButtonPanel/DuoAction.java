@@ -50,7 +50,7 @@ public class DuoAction implements iButtonComponent {
 
         if(hasLeaf){
             leaf.button.setX(Button_X);
-            leaf.button.setY(Button_Y - (leaf.button.getHeight()*2.5f));
+            leaf.button.setY(Button_Y - (Button_Height*3.6f));
             leaf.setInitialization();
         }
 

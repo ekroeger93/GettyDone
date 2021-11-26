@@ -6,6 +6,7 @@ import androidx.navigation.Navigation;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,10 +27,7 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
     static public TabLayout tabLayout;
     int navPosition = 0;
 
-    public static final String ACTIVITY_KEY = "ACTIVITY_KEY";
-
     public static boolean visualSelect = false;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

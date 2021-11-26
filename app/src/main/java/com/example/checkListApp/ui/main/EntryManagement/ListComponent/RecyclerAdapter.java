@@ -381,12 +381,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     });
                     //TODO: I FUCKED IT AND USED BOTH
 
+                    //TODO: https://stackoverflow.com/questions/30284067/handle-button-click-inside-a-row-in-recyclerview
+
                     setTimeButton.setOnTouchListener((view, motionEvent)->{
                         if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
                             transitionToSetTimer();
                         }
                         return true;
                     });
+//
+//                    setTimeButton.setOnClickListener( view -> {
+//                        transitionToSetTimer();
+//
+//                    });
 
 
                 }
@@ -394,18 +401,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 public void checkOff(){
 
                     checkButton.callOnClick();
-
-//                    getEntry().checked.postValue(false);
-//
-//                    textView.setBackgroundColor(Color.GRAY);
-//                    tEntryViewRow.setBackgroundColor(Color.GRAY);
-//
-//                    getEntry().checkTemp = false;
-//
-//                    RecordHelper.update();
-//
-//                    repository.updateEntry(getEntry());
-//                    JsonService.buildJson((ArrayList<Entry>) mList);
 
                 }
 
@@ -449,7 +444,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
                     Observer<String> changeTimeValue = o ->{
 
-                        Log.d("timerTest",o);
+                 //       Log.d("timerTest",o);
                         setTimeButton.setText(o);
                         entry.timeTemp = o;
 

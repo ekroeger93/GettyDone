@@ -14,7 +14,6 @@ import com.example.checkListApp.databinding.MainFragmentBinding;
 public class ButtonPanelToggle{
 
 
-    Context context;
     private MainFragmentBinding binding;
     private boolean isDisabled = false;
 
@@ -61,6 +60,7 @@ public class ButtonPanelToggle{
             toggleButton.setVisibility(View.GONE);
 
         }
+
 
 
     }

@@ -2,8 +2,11 @@ package com.example.checkListApp.ui.main;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -66,20 +69,22 @@ TaDone Prototype
 --------------------------------------------------------------
 https://github.com/PhilJay/MPAndroidChart
 
--? add reminder notification
 -? save as pdf/rich text file -> print appMobilityPrint
 
 -------------------------------------------------------------
 
-Type Entries
-- Timer
-    -checks when expired
-    -has delay start period
-    -proceeds to next timer (chained)
-- Counter.0
+-> get to toggle() run in background ? Runnable
+-> ? could sum the time values into one and impl to GlobalTimer ?
+-> notifications
 
-    -checks when at zero
+class AppLifecycleListener : DefaultLifecycleObserver {
 
+    override fun onStart(owner: LifecycleOwner) { // app moved to foreground
+    }
+
+    override fun onStop(owner: LifecycleOwner) { // app moved to background
+    }
+}
 
 
 Collaboration
@@ -135,11 +140,20 @@ public class MainFragment extends Fragment {
 
     public static boolean executionMode = false;
 
+    private MediaPlayer selectedAudio;
+
+    private  MediaPlayer shortBell;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+    shortBell = MediaPlayer.create(getContext(), R.raw.short_bell);
+
+
     }
+
+
 
     @Nullable
     @Override
@@ -177,7 +191,6 @@ public class MainFragment extends Fragment {
         configureMainTimer();
 
         RecordHelper.createButton(getContext(),binding);
-
 
 
     }
@@ -269,7 +282,10 @@ public void configureMainTimer(){
 
         MainTimerView mainTimerView = new MainTimerView();
 
-        //update text timer based on current scroll selected position
+        Runnable runnable = () -> {
+        };
+
+    //update text timer based on current scroll selected position
     selectedEntry.observe(getViewLifecycleOwner(),mainTimerView.getObserver(checkList));
 
     //bind listener to button to toggle Time
@@ -283,22 +299,23 @@ public void configureMainTimer(){
     //set a post execution after timer expires, proceeds to next Entry
     mainTimerView.setPostExecute(() -> {
 
-
-        //TODO FIX TO TURN OFF
         checkList.get(selectedEntry.getValue()).getViewHolder().checkOff();
 
-        new Handler(Looper.getMainLooper()).post(new Runnable () {
-            @Override
-            public void run () {
+            new Handler(Looper.getMainLooper()).post(() -> {
+                if(selectedEntry.getValue() != checkList.size()-2) {
+                    scrollPosition(selectedEntry.getValue() + 1); }
+            });
 
-             if(selectedEntry.getValue() != checkList.size()-2) {
-                 scrollPosition(selectedEntry.getValue() + 1);
-                 mainTimerView.getGlobalTimeViewModel().setCountDownTimer(checkList.get(selectedEntry.getValue() + 1).countDownTimer.getValue());
-                 mainTimerView.getGlobalTimeViewModel().toggleTime();
-             }
+                mainTimerView.getGlobalTimeViewModel().setCountDownTimer(checkList.get(selectedEntry.getValue() + 1).countDownTimer.getValue());
+                mainTimerView.getGlobalTimeViewModel().toggleAsync.execute();
 
-            }
-        });
+                shortBell.start();
+
+
+
+       // binding.timerExecuteBtn.callOnClick();
+
+
 
     });
 
@@ -381,9 +398,10 @@ public void assignButtonListeners(){
             e.printStackTrace();
         }
 
-        if(operator.isMovingItem)
-        operator.moveItem(operator.movingItem);
+        if(operator.isMovingItem) {
+            operator.moveItem(operator.movingItem);
 
+        }
     });
 
     binding.touchExpander.setOnTouchListener((view, motionEvent) -> {
