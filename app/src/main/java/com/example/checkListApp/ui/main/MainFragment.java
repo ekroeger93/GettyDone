@@ -2,12 +2,15 @@ package com.example.checkListApp.ui.main;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Service;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Parcel;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -48,6 +51,7 @@ import com.example.checkListApp.ui.main.data_management.ListUtility;
 import com.example.checkListApp.ui.main.entries.Entry;
 import com.example.checkListApp.ui.main.entries.Spacer;
 
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -158,8 +162,6 @@ public class MainFragment extends Fragment {
 
     }
 
-
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -250,7 +252,6 @@ public class MainFragment extends Fragment {
 
     }
 
-
     public void initialize() {
 
         recyclerView.getViewTreeObserver().addOnGlobalLayoutListener(
@@ -276,14 +277,24 @@ public class MainFragment extends Fragment {
 
     }
 
-
     public static void scrollPosition(int position){
         customLayoutManager.scrollToPositionWithOffset(position,100);
     }
 
+    public static void startService(){
+        TimerService service = new TimerService();
+        Intent intent = new Intent();
 
-@RequiresApi(api = Build.VERSION_CODES.O)
-public void configureMainTimer(){
+        ParcelCountDownTimer parcel = new ParcelCountDownTimer();
+        parcel.checkList = checkList;
+        intent.putExtra(TimerService.SERVICE_KEY,parcel);
+
+
+        service.startService(intent);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void configureMainTimer(){
 
         MainTimerView mainTimerView = new MainTimerView();
 
@@ -302,8 +313,6 @@ public void configureMainTimer(){
       //  mainTimerView.toggled.postValue(mainTimerView.mainTimerViewModel.isToggled());
 
         mainTimerView.mainTimerViewModel.setCountDownTimer(new TimeState(setTime).getTimeFormat());
-
-
         mainTimerView.mainTimerViewModel.toggleTimeWithCustomTask(time -> {
 
             int elapsedTime = setTime - time;
@@ -326,7 +335,6 @@ public void configureMainTimer(){
                     Toast toast = Toast.makeText(getContext(),message+" done!",Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.TOP,0,0);
                     toast.show();
-
                 }
             });
 
@@ -378,8 +386,8 @@ public void configureMainTimer(){
 }
 
 
-@RequiresApi(api = Build.VERSION_CODES.O)
-public int setTimer(MainTimerView mainTimerView){
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public int setTimer(MainTimerView mainTimerView){
 
     int summationTime  = ListUtility.getSummationTime(checkList);
     String setTime = new TimeState(summationTime).getTimeFormat();
@@ -394,8 +402,8 @@ public int setTimer(MainTimerView mainTimerView){
     return summationTime;
 }
 
-@SuppressLint("ClickableViewAccessibility")
-public void assignButtonListeners(){
+    @SuppressLint("ClickableViewAccessibility")
+    public void assignButtonListeners(){
 
         buttonPanel.addButtonWithLeaf(
             binding.addDeleteBtn
@@ -524,7 +532,7 @@ public void assignButtonListeners(){
 
 }
 
-public void assignObservers(){
+    public void assignObservers(){
 
 
     mViewModel.getAllEntries().observe(getViewLifecycleOwner(),new Observer<List<Entry>>() {
