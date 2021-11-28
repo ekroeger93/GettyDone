@@ -10,12 +10,14 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -104,16 +106,10 @@ https://github.com/PhilJay/MPAndroidChart
 
 calender schedule
 
-revise countdown timer, instead of calling a new thread
-do one continuous thread with each entry time summed unto
-the global timer,
 
-set Checkpoints based on individual entry time
-when the global timer succeeds the an entry time
-check off the entry.
-
-
-
+//TODO: SERVICE IMPL
+https://stackoverflow.com/questions/43650201/how-to-make-an-android-app-run-in-background-when-the-screen-sleeps
+https://developer.android.com/guide/components/foreground-services
 
  */
 
@@ -322,6 +318,15 @@ public void configureMainTimer(){
                 @Override
                 public void run () {
                     scrollPosition(ListUtility.activeProcessTimeIndex);
+
+                    String message = checkList.get(
+                            ListUtility.activeProcessTimeIndex - 1
+                    ).textEntry.getValue();
+
+                    Toast toast = Toast.makeText(getContext(),message+" done!",Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.TOP,0,0);
+                    toast.show();
+
                 }
             });
 
@@ -347,6 +352,24 @@ public void configureMainTimer(){
     mainTimerView.setPostExecute(() -> {
 
         shortBell.start();
+
+        new Handler(Looper.getMainLooper()).post(new Runnable () {
+
+
+            @Override public void run() {
+
+                String message = checkList.get(
+                        ListUtility.activeProcessTimeIndex
+                ).textEntry.getValue();
+
+                Toast toast = Toast.makeText(getContext(), message + " done!", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.TOP,0,0);
+                toast.show();
+            }
+
+
+        });
+
         checkList.get(checkList.size()-2).getViewHolder().checkOff();
 
     });
