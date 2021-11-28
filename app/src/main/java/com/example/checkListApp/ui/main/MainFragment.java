@@ -5,7 +5,9 @@ import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.content.res.XmlResourceParser;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,6 +37,7 @@ import androidx.recyclerview.selection.SelectionTracker;
 import androidx.recyclerview.selection.StorageStrategy;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.checkListApp.MainActivity;
 import com.example.checkListApp.R;
 import com.example.checkListApp.databinding.MainFragmentBinding;
 import com.example.checkListApp.timer.TimeState;
@@ -211,6 +214,12 @@ public class MainFragment extends Fragment {
 
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+
+    }
+
     public void setUpAdapter(){
 
         recyclerView = binding.ScrollView;
@@ -290,16 +299,21 @@ public class MainFragment extends Fragment {
         customLayoutManager.scrollToPositionWithOffset(position,100);
     }
 
-    public static void startService(){
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void startService(){
         TimerService service = new TimerService();
-        Intent intent = new Intent();
+        Intent intent = new Intent(getContext(), TimerService.class);
+
 
         ParcelCountDownTimer parcel = new ParcelCountDownTimer();
         parcel.checkList = checkList;
+
         intent.putExtra(TimerService.SERVICE_KEY,parcel);
 
+        service.startForegroundService(intent);
 
-        service.startService(intent);
+
+        //service.startService(intent);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -317,9 +331,10 @@ public class MainFragment extends Fragment {
 
 
     binding.timerExecuteBtn.setOnClickListener(view -> {
-
+        startService();
         int setTime = setTimer(mainTimerView);
       //  mainTimerView.toggled.postValue(mainTimerView.mainTimerViewModel.isToggled());
+
 
         mainTimerView.mainTimerViewModel.setCountDownTimer(new TimeState(setTime).getTimeFormat());
         mainTimerView.mainTimerViewModel.toggleTimeWithCustomTask(time -> {

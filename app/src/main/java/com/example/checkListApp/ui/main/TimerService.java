@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import com.example.checkListApp.MainActivity;
+import com.example.checkListApp.R;
 import com.example.checkListApp.ui.main.entries.Entry;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class TimerService extends Service {
 
        Notification notification = new Notification.Builder(this,CHANNEL_ID)
                 .setContentTitle("time status: ")
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentText(checkList.get(1).textTemp)
                 .setContentIntent(pendingIntent).build();
 
