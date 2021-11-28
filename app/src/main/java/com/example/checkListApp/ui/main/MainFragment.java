@@ -312,7 +312,7 @@ public void configureMainTimer(){
 
             int elapsedTime = setTime - time;
 
-        if(ListUtility.currentActiveTime.timeElapsed(elapsedTime)){
+        if(ListUtility.currentActiveTime.timeElapsed(elapsedTime) && time > 0){
 
             String message = ListUtility.activeProcessTimeIndex+" = "+ListUtility.currentActiveTime.timeAccumulated + " "+elapsedTime;
             Log.d("testTime",message);
@@ -345,6 +345,8 @@ public void configureMainTimer(){
 
     //set a post execution after timer expires, proceeds to next Entry
     mainTimerView.setPostExecute(() -> {
+
+        shortBell.start();
         checkList.get(checkList.size()-2).getViewHolder().checkOff();
 
     });
