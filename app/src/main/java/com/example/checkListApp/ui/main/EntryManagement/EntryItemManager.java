@@ -4,11 +4,13 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.selection.SelectionTracker;
 
 import com.example.checkListApp.R;
@@ -180,6 +182,7 @@ public class EntryItemManager {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     static void assignSorted(ArrayList<Entry> entries){
 
         for(Entry entry : entries){

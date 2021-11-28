@@ -6,6 +6,8 @@ import android.content.res.Resources;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -315,7 +317,18 @@ public void configureMainTimer(){
             String message = ListUtility.activeProcessTimeIndex+" = "+ListUtility.currentActiveTime.timeAccumulated + " "+elapsedTime;
             Log.d("testTime",message);
             shortBell.start();
+
+            new Handler(Looper.getMainLooper()).post(new Runnable () {
+                @Override
+                public void run () {
+                    scrollPosition(ListUtility.activeProcessTimeIndex);
+                }
+            });
+
+            ListUtility.currentActiveTime.getViewHolder().checkOff();
             ListUtility.currentActiveTime = ListUtility.getNextActiveProcessTime(checkList);
+
+
 
         }
 
@@ -332,7 +345,7 @@ public void configureMainTimer(){
 
     //set a post execution after timer expires, proceeds to next Entry
     mainTimerView.setPostExecute(() -> {
-
+        checkList.get(checkList.size()-2).getViewHolder().checkOff();
 
     });
 
