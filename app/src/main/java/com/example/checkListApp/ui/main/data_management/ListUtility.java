@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
+import com.example.checkListApp.timer.TimeState;
 import com.example.checkListApp.ui.main.entries.Entry;
 import com.example.checkListApp.ui.main.entries.Spacer;
 import com.example.checkListApp.ui.main.EntryManagement.ListComponent.ToggleSwitchOrdering;
@@ -112,7 +113,7 @@ public final class ListUtility {
             viewModel.setNumberValueTime(viewModel.timeTemp);
 
             if(viewModel.numberValueTime !=0)
-                sum+=viewModel.numberValueTime;
+                sum+= new TimeState(viewModel.numberValueTime).getTimeNumberValue();
 
         }
 
