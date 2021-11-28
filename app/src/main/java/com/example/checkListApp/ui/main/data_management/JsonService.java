@@ -117,6 +117,7 @@ public final class JsonService {
             textEntry = jsonObject.get("textEntry").toString();
             boolean isChecked = jsonObject.get("isChecked").getAsBoolean();
             timeText = jsonObject.get("timerLabel").toString();
+            Log.d("checkListTime",">>> "+timeText);
 
 
             return new Entry(textEntry,isChecked,timeText);

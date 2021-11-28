@@ -124,10 +124,11 @@ public class FileListFragment extends Fragment {
 
 
             FileListFragmentDirections.ActionFileListFragmentToMainFragment action  =
-                    FileListFragmentDirections.actionFileListFragmentToMainFragment();
+                    FileListFragmentDirections
+                            .actionFileListFragmentToMainFragment
+                                    (fileManager.loadFile(fileListAdapter.getFileSelection()));
 
-            action.setJsonData(fileManager.loadFile(fileListAdapter.getFileSelection()));
-            Log.d("checkListTest", fileManager.loadFile(fileListAdapter.getFileSelection()));
+              Log.d("checkListTest", fileManager.loadFile(fileListAdapter.getFileSelection()));
 
             Navigation.findNavController(view).navigate(action);
 

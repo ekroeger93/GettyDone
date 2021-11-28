@@ -184,8 +184,6 @@ public class MainFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
-        checkList = AuxiliaryData.loadFile(checkList, mViewModel, getArguments());
-
         setUpAdapter();
 
         initialize();
@@ -200,6 +198,16 @@ public class MainFragment extends Fragment {
 
         RecordHelper.createButton(getContext(),binding);
 
+
+
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+
+        if(!getArguments().isEmpty())
+        checkList = AuxiliaryData.loadFile(checkList, mViewModel, getArguments());
 
     }
 
@@ -561,7 +569,6 @@ public class MainFragment extends Fragment {
 //                    Log.d("checkListTest", "..." + entry);
 //                }
 
-                Log.d("checkListTest",""+checkList.size());
 
                 JsonService.buildJson(checkList);
 

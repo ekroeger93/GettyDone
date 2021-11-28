@@ -1,5 +1,6 @@
 package com.example.checkListApp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.navigation.Navigation;
@@ -18,6 +19,7 @@ import com.example.checkListApp.timemanagement.TimeParcelBuilder;
 import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.MainFragmentDirections;
 import com.example.checkListApp.ui.main.ProgressFragment;
+import com.example.checkListApp.ui.main.data_management.AuxiliaryData;
 import com.google.android.material.tabs.TabLayout;
 
 public class MainActivity extends AppCompatActivity implements FileListFragment.OnFragmentInteractionListener{
@@ -115,7 +117,6 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
 
 
     }
-
 
 
     @Override

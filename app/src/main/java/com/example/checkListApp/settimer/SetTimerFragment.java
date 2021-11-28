@@ -94,7 +94,7 @@ public class SetTimerFragment extends Fragment {
              */
 
             SetTimerFragmentDirections.ActionSetTimerFragmentToMainFragment action =
-                    SetTimerFragmentDirections.actionSetTimerFragmentToMainFragment();
+                    SetTimerFragmentDirections.actionSetTimerFragmentToMainFragment("");
 
 
             Log.d("timerTest",":: " +setTimerText.getText().toString());
