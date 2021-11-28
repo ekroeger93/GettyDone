@@ -19,7 +19,7 @@ import com.example.checkListApp.ui.main.EntryManagement.ButtonPanel.ButtonPanelT
 import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.MainViewModel;
 import com.example.checkListApp.ui.main.EntryManagement.ListComponent.ToggleSwitchOrdering;
-import com.example.checkListApp.ui.main.data_management.ListRefurbishment;
+import com.example.checkListApp.ui.main.data_management.ListUtility;
 
 import java.util.ArrayList;
 import java.util.concurrent.Executor;
@@ -111,7 +111,7 @@ public class EntryItemManager {
         public static void executeAsync() {
             executor.execute(() -> {
 
-                ListRefurbishment.updateAllSelection(MainFragment.getCheckList());
+                ListUtility.updateAllSelection(MainFragment.getCheckList());
                 assignSorted(outputSort());
 
                 //Handle at main thread
@@ -144,10 +144,10 @@ public class EntryItemManager {
         }
 
 
-        for(ToggleSwitchOrdering.tNumber tNumber : ListRefurbishment.toggleSwitchOrdering.listToOrder){
+        for(ToggleSwitchOrdering.tNumber tNumber : ListUtility.toggleSwitchOrdering.listToOrder){
 
             try {
-                int indexOf = ListRefurbishment.toggleSwitchOrdering.listToOrder.indexOf(tNumber);
+                int indexOf = ListUtility.toggleSwitchOrdering.listToOrder.indexOf(tNumber);
                 int swapper = tNumber.number-1;//entry.getViewHolder().orderInt.getValue();
 
                 Entry entry = MainFragment.getCheckList().get(indexOf+1);

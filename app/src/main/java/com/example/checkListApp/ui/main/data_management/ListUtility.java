@@ -1,12 +1,20 @@
 package com.example.checkListApp.ui.main.data_management;
 
+import android.os.Build;
+import android.util.Log;
+
+import androidx.annotation.RequiresApi;
+
 import com.example.checkListApp.ui.main.entries.Entry;
 import com.example.checkListApp.ui.main.entries.Spacer;
 import com.example.checkListApp.ui.main.EntryManagement.ListComponent.ToggleSwitchOrdering;
 
 import java.util.ArrayList;
 
-public final class ListRefurbishment {
+public final class ListUtility {
+
+   public static int activeProcessTimeIndex = 1;
+   public static Entry currentActiveTime;
 
     static public ToggleSwitchOrdering toggleSwitchOrdering = new ToggleSwitchOrdering();
 
@@ -91,6 +99,55 @@ public final class ListRefurbishment {
         updateAllSelection(data);
 
 
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static int getSummationTime(ArrayList<Entry> list){
+
+        int sum = 0;
+
+        for(Entry viewModel:list){
+
+            viewModel.setNumberValueTime(viewModel.timeTemp);
+
+            if(viewModel.numberValueTime !=0)
+                sum+=viewModel.numberValueTime;
+
+        }
+
+        return sum;
+    }
+
+    public static ArrayList<Entry> accumulation(ArrayList<Entry> list){
+
+        for(int i = 0; i < list.size(); i++){
+
+            if(i != 0) {
+                list.get(i).setTimeAcclimated(
+                        list.get(i - 1).timeAccumulated);
+            }
+
+            Log.d("testTime", i+" = "+list.get(i).timeAccumulated);
+        }
+
+        return list;
+    }
+
+    public static Entry getNextActiveProcessTime(ArrayList<Entry> list){
+
+        if(activeProcessTimeIndex < list.size()-2){
+            ++activeProcessTimeIndex;
+            return list.get(activeProcessTimeIndex);
+        }else{
+            activeProcessTimeIndex = 1;
+        }
+
+        return list.get(list.size()-2);
+    }
+
+    public static void revertTimeIndex(){
+        activeProcessTimeIndex = 1;
     }
 
 

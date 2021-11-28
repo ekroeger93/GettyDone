@@ -2,15 +2,11 @@ package com.example.checkListApp.ui.main;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -34,6 +30,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.checkListApp.R;
 import com.example.checkListApp.databinding.MainFragmentBinding;
+import com.example.checkListApp.timer.TimeState;
 import com.example.checkListApp.ui.main.EntryManagement.ButtonPanel.ButtonPanel;
 import com.example.checkListApp.ui.main.EntryManagement.ButtonPanel.ButtonPanelToggle;
 import com.example.checkListApp.ui.main.EntryManagement.EntryItemManager;
@@ -43,7 +40,7 @@ import com.example.checkListApp.ui.main.EntryManagement.Operator;
 import com.example.checkListApp.ui.main.EntryManagement.Record.RecordHelper;
 import com.example.checkListApp.ui.main.data_management.AuxiliaryData;
 import com.example.checkListApp.ui.main.data_management.JsonService;
-import com.example.checkListApp.ui.main.data_management.ListRefurbishment;
+import com.example.checkListApp.ui.main.data_management.ListUtility;
 import com.example.checkListApp.ui.main.entries.Entry;
 import com.example.checkListApp.ui.main.entries.Spacer;
 
@@ -104,6 +101,16 @@ graphing show progress
 https://github.com/PhilJay/MPAndroidChart
 
 calender schedule
+
+revise countdown timer, instead of calling a new thread
+do one continuous thread with each entry time summed unto
+the global timer,
+
+set Checkpoints based on individual entry time
+when the global timer succeeds the an entry time
+check off the entry.
+
+
 
 
  */
@@ -282,16 +289,43 @@ public void configureMainTimer(){
 
         MainTimerView mainTimerView = new MainTimerView();
 
-        Runnable runnable = () -> {
-        };
 
     //update text timer based on current scroll selected position
-    selectedEntry.observe(getViewLifecycleOwner(),mainTimerView.getObserver(checkList));
+    //selectedEntry.observe(getViewLifecycleOwner(),mainTimerView.getObserver(checkList));
 
     //bind listener to button to toggle Time
-    mainTimerView.setListener(binding.timerExecuteBtn);
+    //mainTimerView.setListener(binding.timerExecuteBtn);
 
-    mainTimerView.setObserverForToggledLiveData(getViewLifecycleOwner(), aBoolean -> executionMode = aBoolean);
+
+
+    binding.timerExecuteBtn.setOnClickListener(view -> {
+
+        int setTime = setTimer(mainTimerView);
+      //  mainTimerView.toggled.postValue(mainTimerView.mainTimerViewModel.isToggled());
+
+        mainTimerView.mainTimerViewModel.setCountDownTimer(new TimeState(setTime).getTimeFormat());
+
+
+        mainTimerView.mainTimerViewModel.toggleTimeWithCustomTask(time -> {
+
+            int elapsedTime = setTime - time;
+
+        if(ListUtility.currentActiveTime.timeElapsed(elapsedTime)){
+
+            String message = ListUtility.activeProcessTimeIndex+" = "+ListUtility.currentActiveTime.timeAccumulated + " "+elapsedTime;
+            Log.d("testTime",message);
+            shortBell.start();
+            ListUtility.currentActiveTime = ListUtility.getNextActiveProcessTime(checkList);
+
+        }
+
+        });
+    });
+
+
+
+    //
+   // mainTimerView.setObserverForToggledLiveData(getViewLifecycleOwner(), aBoolean -> executionMode = aBoolean);
 
     //update time of both View and ViewModel
     mainTimerView.setObserverForMainTextTime(binding.timeTextMain,getViewLifecycleOwner());
@@ -299,27 +333,27 @@ public void configureMainTimer(){
     //set a post execution after timer expires, proceeds to next Entry
     mainTimerView.setPostExecute(() -> {
 
-        checkList.get(selectedEntry.getValue()).getViewHolder().checkOff();
-
-            new Handler(Looper.getMainLooper()).post(() -> {
-                if(selectedEntry.getValue() != checkList.size()-2) {
-                    scrollPosition(selectedEntry.getValue() + 1); }
-            });
-
-                mainTimerView.getGlobalTimeViewModel().setCountDownTimer(checkList.get(selectedEntry.getValue() + 1).countDownTimer.getValue());
-                mainTimerView.getGlobalTimeViewModel().toggleAsync.execute();
-
-                shortBell.start();
-
-
-
-       // binding.timerExecuteBtn.callOnClick();
-
-
 
     });
 
 
+}
+
+
+@RequiresApi(api = Build.VERSION_CODES.O)
+public int setTimer(MainTimerView mainTimerView){
+
+    int summationTime  = ListUtility.getSummationTime(checkList);
+    String setTime = new TimeState(summationTime).getTimeFormat();
+
+    mainTimerView.mainTimerViewModel.setCountDownTimer(setTime);
+
+    ListUtility.accumulation(checkList);
+
+    ListUtility.revertTimeIndex();
+    ListUtility.currentActiveTime = checkList.get(1);
+
+    return summationTime;
 }
 
 @SuppressLint("ClickableViewAccessibility")
@@ -369,14 +403,14 @@ public void assignButtonListeners(){
                                 adapter.notifyDataSetChanged();
 
                                 selectionTracker.clearSelection();
-                                ListRefurbishment.reInitializeAllSelection(checkList);
+                                ListUtility.reInitializeAllSelection(checkList);
                                 adapter.trackerOn(false);
 
                             });
 
                             //thread may still be running!!!
                             selectionTracker.clearSelection();
-                            ListRefurbishment.reInitializeAllSelection(checkList);
+                            ListUtility.reInitializeAllSelection(checkList);
 
                             isSorting = false;
 
@@ -471,8 +505,8 @@ public void assignObservers(){
                 RecordHelper.update();
 
                 if(!isSorting){
-                checkList = ListRefurbishment.updateToggleOrdering(checkList);
-                }else{ ListRefurbishment.updateAllSelection(checkList);
+                checkList = ListUtility.updateToggleOrdering(checkList);
+                }else{ ListUtility.updateAllSelection(checkList);
                 }
 
                 //maintenance code
@@ -526,14 +560,14 @@ public void assignObservers(){
                             ultimately the holder.orderInt should reflect the toggleSwitchOrdering.list
                             * */
 
-                            ListRefurbishment.toggleSwitchOrdering.toggleNum(index);
+                            ListUtility.toggleSwitchOrdering.toggleNum(index);
 
-                            entryCurrent.isSelected.setValue(ListRefurbishment.toggleSwitchOrdering.listToOrder.get(index).toggle);
-                            entryCurrent.orderInt.setValue(ListRefurbishment.toggleSwitchOrdering.listToOrder.get(index).number);
+                            entryCurrent.isSelected.setValue(ListUtility.toggleSwitchOrdering.listToOrder.get(index).toggle);
+                            entryCurrent.orderInt.setValue(ListUtility.toggleSwitchOrdering.listToOrder.get(index).number);
 
-                            entryCurrent.selectOrder =ListRefurbishment.toggleSwitchOrdering.listToOrder.get(index).number;
+                            entryCurrent.selectOrder = ListUtility.toggleSwitchOrdering.listToOrder.get(index).number;
 
-                            ListRefurbishment.updateAllSelection(checkList);
+                            ListUtility.updateAllSelection(checkList);
 
                            break;
                                 }
@@ -580,9 +614,6 @@ public void assignObservers(){
 
 
 }
-
-
-
 
 
     public static void transitionToFileFromMain(Activity activity){

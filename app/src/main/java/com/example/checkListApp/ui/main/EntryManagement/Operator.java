@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.checkListApp.ui.main.entries.Entry;
 import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.EntryManagement.ListComponent.RecyclerAdapter;
-import com.example.checkListApp.ui.main.data_management.ListRefurbishment;
+import com.example.checkListApp.ui.main.data_management.ListUtility;
 
 public class Operator {
 
@@ -60,7 +60,7 @@ public class Operator {
 
 
      if (e.getViewHolder().getBindingAdapterPosition() == selection - 1)
-         ListRefurbishment.updateAllSelection(MainFragment.getCheckList());
+         ListUtility.updateAllSelection(MainFragment.getCheckList());
 
 
 

@@ -61,10 +61,18 @@ public final class MainTimerView {
     public void setListener(Button executeTime) {
 
         executeTime.setOnClickListener(view -> {
-
             toggled.postValue(mainTimerViewModel.isToggled());
             mainTimerViewModel.toggleTime();
+        });
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void setListenerWithTask(Button executeTime, CountDownTimerAsync.CountDownTask task){
+
+        executeTime.setOnClickListener( view ->{
+            toggled.postValue(mainTimerViewModel.isToggled());
+            mainTimerViewModel.toggleTimeWithCustomTask(task);
         });
 
     }
@@ -72,6 +80,8 @@ public final class MainTimerView {
     public void setPostExecute( CountDownTimerAsync.PostExecute postExecute) {
         mainTimerViewModel.setPostExecute(postExecute);
     }
+
+
 
 
 

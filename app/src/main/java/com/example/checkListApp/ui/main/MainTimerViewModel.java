@@ -57,15 +57,20 @@ public class MainTimerViewModel extends ViewModel {
     }
 
     public void setTask(){
-        countTimer.setCountDownTask(() -> {
+        countTimer.setCountDownTask((n) -> {
             _countDownTimer.postValue(countTimer.getRunTime());
         });
     }
 
     public void setTaskCustom(CountDownTimerAsync.CountDownTask countDownTask){
-        _countDownTimer.postValue(countTimer.getRunTime());
-        countDownTask.execute();
+
+        countTimer.setCountDownTask((n) -> {
+            _countDownTimer.postValue(countTimer.getRunTime());
+            countDownTask.execute(countTimer.getNumberTime());
+        });
+
     }
+
 
     public void setObserver(Observer<String> observer, LifecycleOwner owner){
         _countDownTimer.observe(owner, observer);
@@ -101,8 +106,30 @@ public class MainTimerViewModel extends ViewModel {
                 }
         );
 
+    }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void toggleTimeWithCustomTask(CountDownTimerAsync.CountDownTask task){
+
+        timeToggler.toggleTime(countTimer,
+                (toggle) -> {
+                    toggled = toggle;
+                    if(toggle){
+                        countTimer.setTimer(timeState);
+                        setTaskCustom(task);
+                    }else {
+                        timeState = new TimeState(countTimer.getNumberTime());
+                        _countDownTimer.postValue(timeState.getTimeFormat());
+                    }
+                }
+        );
+
+    }
+
+
+    public void resetTimeState(){
+        timeState = new TimeState(0);
     }
 
 }

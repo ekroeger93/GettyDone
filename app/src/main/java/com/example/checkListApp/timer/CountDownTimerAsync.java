@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.TemporalAccessor;
 import java.util.Locale;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -23,11 +22,15 @@ public class CountDownTimerAsync {
 
         private TemporalAccessor futureTime;
         private CountDownTask countDownTask;
+        private PostExecute postExecute;
 
         private String runTime;
-        private int numberTime;
 
-        PostExecute postExecute;
+        private int numberTime;
+        private int setTime;
+        private int elapsedTime;
+
+
 
         private CountDownTimerAsync() {
         }
@@ -48,6 +51,9 @@ public class CountDownTimerAsync {
                     .plusMinutes(timeState.minutes)
                     .plusSeconds(timeState.seconds)
                     .atZone(ZoneId.systemDefault()).toInstant();
+
+            setTime = timeState.getTimeNumberValueDecimalTruncated();
+
         }
 
         public void execute() {
@@ -62,6 +68,7 @@ public class CountDownTimerAsync {
 
                     while (timeToggler.isToggleTimeON()) {
 
+                       // long timeElapsed = Duration.between(start, finish).
                         countingDown = Duration.between(Instant.now(), Instant.from(futureTime));
 
                         long HH = countingDown.toHours();
@@ -70,13 +77,14 @@ public class CountDownTimerAsync {
 
                         numberTime = Integer.parseInt( String.format(locale,"%02d%02d%02d", HH, MM, SS));
                         runTime = String.format(locale,"%02d:%02d:%02d", HH, MM, SS);
+                        elapsedTime = (int) (setTime - (countingDown.getSeconds()));
 
                         if(countingDown.getSeconds() < 0) {
                             postTimeExpire();
                             break;
                         }
 
-                        countDownTask.execute();
+                        countDownTask.execute(elapsedTime);
 
                     }
                 }
@@ -98,6 +106,9 @@ public class CountDownTimerAsync {
 
         }
 
+
+        public int getElapsedTime(){return  elapsedTime;}
+
         public int getNumberTime(){ return numberTime; }
 
         public String getRunTime(){ return runTime; }
@@ -105,13 +116,12 @@ public class CountDownTimerAsync {
 
         @FunctionalInterface
         public interface PostExecute{
-
             void execute();
         }
 
         @FunctionalInterface
         public interface CountDownTask{
-            void execute();
+            void execute(int timeValue);
         }
 
 

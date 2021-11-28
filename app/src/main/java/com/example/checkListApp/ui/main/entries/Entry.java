@@ -1,11 +1,16 @@
 package com.example.checkListApp.ui.main.entries;
 
+import android.os.Build;
+import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.MutableLiveData;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import com.example.checkListApp.timer.TimeState;
 import com.example.checkListApp.ui.main.EntryManagement.ListComponent.RecyclerAdapter;
 
 @Entity(tableName = "Entries")
@@ -34,36 +39,71 @@ public class Entry {
     @Ignore
     public String timeTemp;
 
+    @Ignore
+    public int numberValueTime = 0;
+    @Ignore
+    public Integer timeAccumulated =0;
+
     public Entry(){
         textEntry = new MutableLiveData<>("o");
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public Entry(Entry entry) {
         textEntry.postValue(entry.textEntry.getValue());
         checked.postValue(entry.checked.getValue());
         countDownTimer.postValue(entry.countDownTimer.getValue());
+
+        setNumberValueTime(countDownTimer.getValue());
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public Entry(String text, boolean isChecked, String timeText) {
         textEntry.setValue(text);
         checked.setValue(isChecked);
         countDownTimer.setValue(timeText);
+
+        setNumberValueTime(timeText);
+        //    numberValueTime = new TimeState(timeText).getTimeNumberValueDecimalTruncated();
     }
 
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void setNumberValueTime(String timeText){
+
+        Log.d("testTime","set: "+timeText);
+
+        try {
+            timeText = timeText.replace(":", "").trim();
+            numberValueTime = new TimeState(Integer.parseInt(timeText)).getTimeNumberValueDecimalTruncated();
+
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void setEntry(Entry entry){
 
         textEntry.setValue(entry.textEntry.getValue());
         checked.setValue(entry.checked.getValue());
         countDownTimer.setValue(entry.countDownTimer.getValue());
+
+        setNumberValueTime(countDownTimer.getValue());
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void postEntryOptimized(String text, Boolean check, String time){
 
         textEntry.postValue(text);
         checked.postValue(check);
         countDownTimer.postValue(time);
+
+        setNumberValueTime(time);
 
     }
 
@@ -89,7 +129,18 @@ public class Entry {
     }
 
 
+    public boolean timeElapsed(int time){
 
+        return  (timeAccumulated == time);
+    }
+
+    public void setTimeAcclimated(int timeAcclimated) {
+        this.timeAccumulated = numberValueTime + timeAcclimated;
+    }
+
+    public String getTimeEndPoint() {
+        return new TimeState(timeAccumulated).getTimeFormat();
+    }
 
 
 }
