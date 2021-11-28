@@ -34,7 +34,10 @@
             android:defaultValue="@null" />
         <argument
             android:name="jsonData"
-            app:argType="string" />
+            app:nullable="true"
+            app:argType="string"
+            android:defaultValue="[{'textEntry':'oj','isChecked':false,'timerLabel':'0:00:10'}]"
+        />
 
 
     </fragment>

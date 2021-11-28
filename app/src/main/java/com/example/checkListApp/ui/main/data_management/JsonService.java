@@ -1,6 +1,9 @@
 package com.example.checkListApp.ui.main.data_management;
 
+import android.os.Build;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import com.example.checkListApp.ui.main.entries.Entry;
 import com.google.gson.Gson;
@@ -34,16 +37,14 @@ public final class JsonService {
                 .create();
 
 
-
         StringBuilder jsonCheckList = new StringBuilder();
-
 
 
         jsonCheckList.append("[");
         for(Entry entry : checkList){
 
-            Log.d("checkListTest",""+jsonCheckList);
-            Log.d("checkListTest",""+entry);
+//            Log.d("checkListTest",""+jsonCheckList);
+//            Log.d("checkListTest",""+entry);
 
             if (entry.getClass() == Entry.class)
                 jsonCheckList.append(gson.toJson(entry)).append(",");
@@ -51,6 +52,8 @@ public final class JsonService {
 
         jsonCheckList.deleteCharAt(jsonCheckList.length()-1);
         jsonCheckList.append("]");
+
+        Log.d("checkListTest","gen: "+jsonCheckList);
 
 
         jsonCheckArrayList = String.valueOf(jsonCheckList);
@@ -82,9 +85,6 @@ public final class JsonService {
         @Override
         public JsonElement serialize(Entry src, Type typeOfSrc, JsonSerializationContext context) {
 
-         //   Log.d("checkListTest","end: "+src.textTemp);
-
-
 
     JsonObject jsonObject = new JsonObject();
 
@@ -105,6 +105,7 @@ public final class JsonService {
 
     static class DeserializeJsonToEntry implements JsonDeserializer<Entry> {
 
+        @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public Entry deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 

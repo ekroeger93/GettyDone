@@ -77,7 +77,7 @@ public class Entry {
 
         try {
             timeText = timeText.replace(":", "").trim();
-            numberValueTime = new TimeState(Integer.parseInt(timeText)).getTimeNumberValueDecimalTruncated();
+            numberValueTime = new TimeState(Integer.parseInt(timeText.replaceAll("\"",""))).getTimeNumberValueDecimalTruncated();
 
         }catch (NullPointerException e){
             e.printStackTrace();

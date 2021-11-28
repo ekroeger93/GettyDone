@@ -153,6 +153,8 @@ public class MainFragment extends Fragment {
 
     private  MediaPlayer shortBell;
 
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -181,7 +183,6 @@ public class MainFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
-
 
         checkList = AuxiliaryData.loadFile(checkList, mViewModel, getArguments());
 
@@ -560,7 +561,10 @@ public class MainFragment extends Fragment {
 //                    Log.d("checkListTest", "..." + entry);
 //                }
 
+                Log.d("checkListTest",""+checkList.size());
+
                 JsonService.buildJson(checkList);
+
             }
 
 

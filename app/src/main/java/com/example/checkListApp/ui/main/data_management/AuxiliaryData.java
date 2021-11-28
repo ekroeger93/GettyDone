@@ -61,8 +61,11 @@ public final class AuxiliaryData {
 
     public static ArrayList<Entry> loadFile(ArrayList<Entry> data, MainViewModel mViewModel, Bundle bundle){
 
-        try{
+
             MainFragmentArgs args = MainFragmentArgs.fromBundle(bundle);
+
+            Log.d("checkListTest","args: "+args.getJsonData());
+
             ArrayList<Entry> loadedCheckList = JsonService.getJsonGeneratedArray(args.getJsonData());
 
             if(loadedCheckList != null){
@@ -78,23 +81,18 @@ public final class AuxiliaryData {
 
                 for(Entry entry : loadedCheckList) {
                     mViewModel.loadEntry(entry);
-                    Log.d("test",entry.textEntry.getValue());
+                   // Log.d("checkListTest",entry.textEntry.getValue());
                 }
                 loadedCheckList.add(0,new Spacer());
                 loadedCheckList.add(new Spacer());
 
                 data.addAll(loadedCheckList);
 
-               // MainFragment.setCheckList(loadedCheckList);
 
                 return loadedCheckList;
 
             }
 
-
-        }catch (IllegalArgumentException e){
-            e.printStackTrace();
-        }
 
 
         return data;
