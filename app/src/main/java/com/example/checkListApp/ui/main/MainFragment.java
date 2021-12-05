@@ -2,17 +2,13 @@ package com.example.checkListApp.ui.main;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Service;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.content.res.XmlResourceParser;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Parcel;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -37,24 +33,25 @@ import androidx.recyclerview.selection.SelectionTracker;
 import androidx.recyclerview.selection.StorageStrategy;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.checkListApp.MainActivity;
 import com.example.checkListApp.R;
 import com.example.checkListApp.databinding.MainFragmentBinding;
+import com.example.checkListApp.timemanagement.ListTimersParcel;
+import com.example.checkListApp.timemanagement.ListTimersParcelBuilder;
+import com.example.checkListApp.timemanagement.utilities.KeyHelperClass;
 import com.example.checkListApp.timer.TimeState;
-import com.example.checkListApp.ui.main.EntryManagement.ButtonPanel.ButtonPanel;
-import com.example.checkListApp.ui.main.EntryManagement.ButtonPanel.ButtonPanelToggle;
-import com.example.checkListApp.ui.main.EntryManagement.EntryItemManager;
-import com.example.checkListApp.ui.main.EntryManagement.ButtonPanel.LeafButton;
-import com.example.checkListApp.ui.main.EntryManagement.ListComponent.RecyclerAdapter;
-import com.example.checkListApp.ui.main.EntryManagement.Operator;
-import com.example.checkListApp.ui.main.EntryManagement.Record.RecordHelper;
+import com.example.checkListApp.ui.main.entry_management.ButtonPanel.ButtonPanel;
+import com.example.checkListApp.ui.main.entry_management.ButtonPanel.ButtonPanelToggle;
+import com.example.checkListApp.ui.main.entry_management.EntryItemManager;
+import com.example.checkListApp.ui.main.entry_management.ButtonPanel.LeafButton;
+import com.example.checkListApp.ui.main.entry_management.ListComponent.RecyclerAdapter;
+import com.example.checkListApp.ui.main.entry_management.Operator;
+import com.example.checkListApp.ui.main.entry_management.Record.RecordHelper;
 import com.example.checkListApp.ui.main.data_management.AuxiliaryData;
 import com.example.checkListApp.ui.main.data_management.JsonService;
 import com.example.checkListApp.ui.main.data_management.ListUtility;
 import com.example.checkListApp.ui.main.entries.Entry;
 import com.example.checkListApp.ui.main.entries.Spacer;
 
-import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -156,6 +153,8 @@ public class MainFragment extends Fragment {
 
     private  MediaPlayer shortBell;
 
+    MainTimerView mainTimerView = new MainTimerView();
+    ListTimersParcel listTimersParcel;
 
 
     @Override
@@ -214,11 +213,6 @@ public class MainFragment extends Fragment {
 
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-
-    }
 
     public void setUpAdapter(){
 
@@ -301,25 +295,13 @@ public class MainFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void startService(){
-        TimerService service = new TimerService();
-        Intent intent = new Intent(getContext(), TimerService.class);
 
-
-        ParcelCountDownTimer parcel = new ParcelCountDownTimer();
-        parcel.checkList = checkList;
-
-        intent.putExtra(TimerService.SERVICE_KEY,parcel);
-
-        service.startForegroundService(intent);
-
-
+        getActivity().startForegroundService(getForegroundTimerServiceIntent());
         //service.startService(intent);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void configureMainTimer(){
-
-        MainTimerView mainTimerView = new MainTimerView();
 
 
     //update text timer based on current scroll selected position
@@ -331,12 +313,15 @@ public class MainFragment extends Fragment {
 
 
     binding.timerExecuteBtn.setOnClickListener(view -> {
-        startService();
+
+
         int setTime = setTimer(mainTimerView);
       //  mainTimerView.toggled.postValue(mainTimerView.mainTimerViewModel.isToggled());
 
-
         mainTimerView.mainTimerViewModel.setCountDownTimer(new TimeState(setTime).getTimeFormat());
+
+        startService();
+
         mainTimerView.mainTimerViewModel.toggleTimeWithCustomTask(time -> {
 
             int elapsedTime = setTime - time;
@@ -400,7 +385,12 @@ public class MainFragment extends Fragment {
             }
 
 
+
         });
+
+
+        mainTimerView.mainTimerViewModel.resetTimeState();
+        getActivity().stopService(getForegroundTimerServiceIntent());
 
         checkList.get(checkList.size()-2).getViewHolder().checkOff();
 
@@ -408,6 +398,35 @@ public class MainFragment extends Fragment {
 
 
 }
+
+    public Intent getForegroundTimerServiceIntent(){
+
+
+        Intent intent = new Intent(getActivity(), TimerService.class); // Build the intent for the service
+
+        listTimersParcel = new ListTimersParcelBuilder(checkList)
+                .setEntryViewModelList(checkList)
+                .setGlobalTimer(mainTimerView.mainTimerViewModel.getValueTime())
+                .setIndexActive(ListUtility.activeProcessTimeIndex).build();
+
+        int size = checkList.size();
+
+        String[] listOfCount = new String[size];
+
+        for(Entry m : checkList){
+            int index = checkList.indexOf(m);
+            listOfCount[index] = m.getCountDownTimer().getValue();
+
+        }
+
+        listTimersParcel.listOfCountDownTimers = listOfCount;
+
+        intent.putExtra(KeyHelperClass.TIME_PARCEL_DATA, listTimersParcel);
+
+
+        return intent;
+
+    }
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -417,7 +436,6 @@ public class MainFragment extends Fragment {
     String setTime = new TimeState(summationTime).getTimeFormat();
 
     mainTimerView.mainTimerViewModel.setCountDownTimer(setTime);
-
     ListUtility.accumulation(checkList);
 
     ListUtility.revertTimeIndex();
@@ -425,6 +443,8 @@ public class MainFragment extends Fragment {
 
     return summationTime;
 }
+
+
 
     @SuppressLint("ClickableViewAccessibility")
     public void assignButtonListeners(){

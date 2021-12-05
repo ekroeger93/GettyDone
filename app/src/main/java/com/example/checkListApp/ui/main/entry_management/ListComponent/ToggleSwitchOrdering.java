@@ -1,7 +1,6 @@
-package com.example.checkListApp.ui.main.EntryManagement.ListComponent;
+package com.example.checkListApp.ui.main.entry_management.ListComponent;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.IntPredicate;
 

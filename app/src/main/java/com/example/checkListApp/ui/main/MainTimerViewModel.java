@@ -19,13 +19,9 @@ import java.util.concurrent.Executors;
 
 public class MainTimerViewModel extends ViewModel {
 
-    private final CountDownTimerAsync countTimer = CountDownTimerAsync.getInstance();
-    private final TimeToggler timeToggler = TimeToggler.getTimeToggler();
-
+    private final TimeToggler timeToggler = new TimeToggler();//TimeToggler.getTimeToggler();
+     private final CountDownTimerAsync countTimer = CountDownTimerAsync.getInstanceToToggle(timeToggler);
     private TimeState timeState = new TimeState(0);
-    private CountDownTimerAsync.PostExecute postExecute;
-
-    public ExecuteToggleAsync toggleAsync = new ExecuteToggleAsync();
 
     private  boolean toggled = false;
 
@@ -52,6 +48,10 @@ public class MainTimerViewModel extends ViewModel {
         return _countDownTimer.getValue();
     }
 
+    public void setTimeState(TimeState timeState) {
+        this.timeState = timeState;
+    }
+
     public MutableLiveData<String> get_countDownTimer() {
         return _countDownTimer;
     }
@@ -71,11 +71,9 @@ public class MainTimerViewModel extends ViewModel {
 
     }
 
-
     public void setObserver(Observer<String> observer, LifecycleOwner owner){
         _countDownTimer.observe(owner, observer);
     }
-
 
      class ExecuteToggleAsync {
 
@@ -88,6 +86,13 @@ public class MainTimerViewModel extends ViewModel {
 
     }
 
+    public void setServiceTask(CountDownTimerAsync.ServiceTask serviceTask){
+
+        countTimer.setServiceTask((n) ->{
+            serviceTask.execute(countTimer.getNumberTime());
+        });
+
+    }
 
     //TODO: ASYNC FOR WHEN APP IS IN THE BACKGROUND
     @RequiresApi(api = Build.VERSION_CODES.O)

@@ -11,7 +11,9 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.example.checkListApp.timer.TimeState;
-import com.example.checkListApp.ui.main.EntryManagement.ListComponent.RecyclerAdapter;
+import com.example.checkListApp.ui.main.entry_management.ListComponent.RecyclerAdapter;
+
+import java.net.HttpCookie;
 
 @Entity(tableName = "Entries")
 public class Entry {
@@ -70,10 +72,10 @@ public class Entry {
 
 
 
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void setNumberValueTime(String timeText){
 
-        Log.d("testTime","set: "+timeText);
 
         try {
             timeText = timeText.replace(":", "").trim();
@@ -141,5 +143,12 @@ public class Entry {
         return new TimeState(timeAccumulated).getTimeFormat();
     }
 
+    public MutableLiveData<String> getCountDownTimer() {
+        return countDownTimer;
+    }
 
+
+    public void setTimeAccumulatedNonAdditive(int timeAccumulated) {
+        this.timeAccumulated = timeAccumulated;
+    }
 }

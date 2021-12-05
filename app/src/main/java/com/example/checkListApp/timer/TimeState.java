@@ -35,6 +35,28 @@ public class TimeState {
 
         }
 
+        public TimeState addTimeState(TimeState timeState){
+
+            TimeState newTime = this;
+
+            newTime.hours +=timeState.hours;
+            newTime.minutes +=timeState.minutes;
+            newTime.seconds +=timeState.seconds;
+
+            if(newTime.seconds >= 60){
+                newTime.seconds = Math.abs(60 - newTime.seconds);
+                newTime.minutes +=1;
+            }
+
+            if(newTime.minutes >= 60){
+                newTime.minutes = Math.abs(60 - newTime.minutes);
+                newTime.hours +=1;
+            }
+
+            return newTime;
+
+        }
+
         @SuppressLint("DefaultLocale")
         public String getTimeFormat() { return String.format("%02d:%02d:%02d", hours, minutes, seconds); }
 

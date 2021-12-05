@@ -1,11 +1,9 @@
-package com.example.checkListApp.ui.main.EntryManagement.Record;
+package com.example.checkListApp.ui.main.entry_management.Record;
 
 import android.annotation.SuppressLint;
-import android.icu.util.Calendar;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Formatter;
 
 public class Record {
 

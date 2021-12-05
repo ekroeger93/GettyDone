@@ -1,4 +1,4 @@
-package com.example.checkListApp.ui.main.EntryManagement;
+package com.example.checkListApp.ui.main.entry_management;
 
 import android.graphics.Color;
 import android.util.Log;
@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.checkListApp.ui.main.entries.Entry;
 import com.example.checkListApp.ui.main.MainFragment;
-import com.example.checkListApp.ui.main.EntryManagement.ListComponent.RecyclerAdapter;
+import com.example.checkListApp.ui.main.entry_management.ListComponent.RecyclerAdapter;
 import com.example.checkListApp.ui.main.data_management.ListUtility;
 
 public class Operator {

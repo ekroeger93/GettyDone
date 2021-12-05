@@ -1,4 +1,4 @@
-package com.example.checkListApp.ui.main.EntryManagement.ListComponent;
+package com.example.checkListApp.ui.main.entry_management.ListComponent;
 
 import android.view.MotionEvent;
 import android.view.View;
@@ -9,8 +9,6 @@ import androidx.recyclerview.selection.ItemDetailsLookup;
 import androidx.recyclerview.selection.ItemKeyProvider;
 import androidx.recyclerview.selection.SelectionTracker;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.checkListApp.ui.main.EntryManagement.ListComponent.RecyclerAdapter;
 
 public class TrackerHelper {
 

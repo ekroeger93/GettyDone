@@ -19,9 +19,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.checkListApp.R;
-import com.example.checkListApp.ui.main.EntryManagement.Record.ProgressProvider;
-import com.example.checkListApp.ui.main.EntryManagement.Record.Record;
-import com.example.checkListApp.ui.main.EntryManagement.Record.RecordHelper;
+import com.example.checkListApp.ui.main.entry_management.Record.ProgressProvider;
+import com.example.checkListApp.ui.main.entry_management.Record.Record;
+import com.example.checkListApp.ui.main.entry_management.Record.RecordHelper;
 import com.example.checkListApp.ui.main.data_management.JsonService;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;

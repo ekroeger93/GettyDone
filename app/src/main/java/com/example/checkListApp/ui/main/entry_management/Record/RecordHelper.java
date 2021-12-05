@@ -1,4 +1,4 @@
-package com.example.checkListApp.ui.main.EntryManagement.Record;
+package com.example.checkListApp.ui.main.entry_management.Record;
 
 import android.content.Context;
 

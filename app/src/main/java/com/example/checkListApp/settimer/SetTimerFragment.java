@@ -1,9 +1,7 @@
 package com.example.checkListApp.settimer;
 
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,13 +20,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 
-import com.example.checkListApp.timemanagement.KeyHelperClass;
-import com.example.checkListApp.MainActivity;
 import com.example.checkListApp.R;
 import com.example.checkListApp.timemanagement.TimeParcel;
 import com.example.checkListApp.timemanagement.TimeParcelBuilder;
 import com.example.checkListApp.databinding.SettimerFragmentBinding;
-import com.example.checkListApp.ui.main.MainFragmentDirections;
 
 public class SetTimerFragment extends Fragment {
 

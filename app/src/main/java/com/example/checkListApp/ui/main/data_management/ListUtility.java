@@ -8,7 +8,7 @@ import androidx.annotation.RequiresApi;
 import com.example.checkListApp.timer.TimeState;
 import com.example.checkListApp.ui.main.entries.Entry;
 import com.example.checkListApp.ui.main.entries.Spacer;
-import com.example.checkListApp.ui.main.EntryManagement.ListComponent.ToggleSwitchOrdering;
+import com.example.checkListApp.ui.main.entry_management.ListComponent.ToggleSwitchOrdering;
 
 import java.util.ArrayList;
 

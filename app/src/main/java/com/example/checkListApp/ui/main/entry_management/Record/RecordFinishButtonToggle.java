@@ -1,24 +1,16 @@
-package com.example.checkListApp.ui.main.EntryManagement.Record;
+package com.example.checkListApp.ui.main.entry_management.Record;
 
 import android.content.Context;
-import android.util.AttributeSet;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import com.example.checkListApp.R;
 import com.example.checkListApp.databinding.MainFragmentBinding;
-import com.example.checkListApp.ui.main.MainFragment;
-import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 public class RecordFinishButtonToggle {
 

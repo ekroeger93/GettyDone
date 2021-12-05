@@ -1,30 +1,24 @@
 package com.example.checkListApp;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.navigation.Navigation;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.WindowManager;
 
 import com.example.checkListApp.file_management.FileListFragment;
 import com.example.checkListApp.databinding.MainActivityBinding;
-import com.example.checkListApp.timemanagement.TimeParcelBuilder;
 import com.example.checkListApp.ui.main.MainFragment;
-import com.example.checkListApp.ui.main.MainFragmentDirections;
+import com.example.checkListApp.ui.main.MainTimerViewModel;
 import com.example.checkListApp.ui.main.ProgressFragment;
-import com.example.checkListApp.ui.main.data_management.AuxiliaryData;
 import com.google.android.material.tabs.TabLayout;
 
 public class MainActivity extends AppCompatActivity implements FileListFragment.OnFragmentInteractionListener{
 
     public MainActivityBinding activityBinding;
+    static public final MainTimerViewModel timerViewModel = new MainTimerViewModel();
 
     static public TabLayout tabLayout;
     int navPosition = 0;
@@ -119,6 +113,8 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
     }
 
 
+
+
     @Override
     public void onAttachFragment(Fragment fragment) {
         super.onAttachFragment(fragment);
@@ -135,4 +131,6 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
     public void onBackPressed() {
 
     }
+
+
 }

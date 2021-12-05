@@ -13,16 +13,45 @@ import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+
 public class CountDownTimerAsync {
+    //TODO: this maybe causing a small memory leak
+
+    /*
+
+    Singletons cannot be gc, this is very likely a memory leak however,
+
+    I used singleton here because I really don't need more than one thread with a running timer
+    and I figure the app would be more in sync when other classes used it.
+
+    As a design choice it doesn't make sense (to me) to have multiple running timers; I
+    really can't think of a use case scenario
+
+    from canary: 624 B - 10 objects is negligible
+
+     */
+
+
 
         private static final CountDownTimerAsync instance = new CountDownTimerAsync();
 
         private final ExecutorService executor = Executors.newSingleThreadExecutor();
-        private final TimeToggler timeToggler = TimeToggler.getTimeToggler();
+
+        private TimeToggler timeToggler;
 
         private TemporalAccessor futureTime;
-        private CountDownTask countDownTask;
-        private PostExecute postExecute;
+
+        private CountDownTask countDownTask = timeValue -> {
+
+        };
+
+        private ServiceTask serviceTask = timeValue -> {
+
+        };
+
+        private PostExecute postExecute = () -> {
+
+        };
 
         private String runTime;
 
@@ -32,13 +61,22 @@ public class CountDownTimerAsync {
 
 
 
-        private CountDownTimerAsync() {
+        public CountDownTimerAsync() {
         }
+
 
         static public CountDownTimerAsync getInstance() {
          return instance; }
 
+         static public CountDownTimerAsync getInstanceToToggle(TimeToggler timeToggler){
+            instance.timeToggler = timeToggler;
+            return instance;
+         }
+
+
         public void setCountDownTask(CountDownTask countDownTask) { this.countDownTask = countDownTask; }
+
+        public void setServiceTask(ServiceTask serviceTask){ this.serviceTask = serviceTask; }
 
         public void setPostExecute(PostExecute postExecute){
            this.postExecute = postExecute;
@@ -68,7 +106,6 @@ public class CountDownTimerAsync {
 
                     while (timeToggler.isToggleTimeON()) {
 
-                       // long timeElapsed = Duration.between(start, finish).
                         countingDown = Duration.between(Instant.now(), Instant.from(futureTime));
 
                         long HH = countingDown.toHours();
@@ -85,6 +122,7 @@ public class CountDownTimerAsync {
                         }
 
                         countDownTask.execute(elapsedTime);
+                        serviceTask.execute(elapsedTime);
 
                     }
                 }
@@ -123,6 +161,13 @@ public class CountDownTimerAsync {
         public interface CountDownTask{
             void execute(int timeValue);
         }
+
+        @FunctionalInterface
+        public interface ServiceTask{
+            void execute(int timeValue);
+        }
+
+
 
 
     }

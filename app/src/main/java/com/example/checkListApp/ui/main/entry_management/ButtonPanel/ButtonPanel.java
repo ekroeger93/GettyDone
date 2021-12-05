@@ -1,4 +1,4 @@
-package com.example.checkListApp.ui.main.EntryManagement.ButtonPanel;
+package com.example.checkListApp.ui.main.entry_management.ButtonPanel;
 
 import android.content.Context;
 import android.view.MotionEvent;

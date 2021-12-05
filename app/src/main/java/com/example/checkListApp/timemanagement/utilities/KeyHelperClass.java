@@ -1,4 +1,4 @@
-package com.example.checkListApp.timemanagement;
+package com.example.checkListApp.timemanagement.utilities;
 
 public final class KeyHelperClass {
 

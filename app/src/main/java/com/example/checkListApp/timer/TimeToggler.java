@@ -5,14 +5,9 @@ import android.os.Build;
 import androidx.annotation.RequiresApi;
 
 public class TimeToggler {
-    private static final TimeToggler TogglerInstance = new TimeToggler();
 
     private boolean toggleTime = false;
-    private TimeToggler(){}
-
-    static public TimeToggler getTimeToggler(){
-        return TogglerInstance;
-    }
+    public TimeToggler(){}
 
     public boolean isToggleTimeON() { return toggleTime; }
 

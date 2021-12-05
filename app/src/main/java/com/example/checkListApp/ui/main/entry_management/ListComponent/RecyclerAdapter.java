@@ -1,10 +1,9 @@
-package com.example.checkListApp.ui.main.EntryManagement.ListComponent;
+package com.example.checkListApp.ui.main.entry_management.ListComponent;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -29,10 +28,8 @@ import com.example.checkListApp.input.CustomEditText;
 import com.example.checkListApp.input.DetectKeyboardBack;
 import com.example.checkListApp.timemanagement.TimeParcelBuilder;
 import com.example.checkListApp.ui.main.MainFragment;
-import com.example.checkListApp.ui.main.MainTimerView;
-import com.example.checkListApp.ui.main.MainTimerViewModel;
 import com.example.checkListApp.ui.main.entries.Entry;
-import com.example.checkListApp.ui.main.EntryManagement.Record.RecordHelper;
+import com.example.checkListApp.ui.main.entry_management.Record.RecordHelper;
 import com.example.checkListApp.ui.main.MainFragmentDirections;
 import com.example.checkListApp.ui.main.entries.Spacer;
 import com.example.checkListApp.ui.main.data_management.JsonService;

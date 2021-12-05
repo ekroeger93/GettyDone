@@ -1,4 +1,4 @@
-package com.example.checkListApp.ui.main.EntryManagement;
+package com.example.checkListApp.ui.main.entry_management;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -17,10 +17,10 @@ import com.example.checkListApp.R;
 import com.example.checkListApp.input.CustomEditText;
 import com.example.checkListApp.input.DetectKeyboardBack;
 import com.example.checkListApp.ui.main.entries.Entry;
-import com.example.checkListApp.ui.main.EntryManagement.ButtonPanel.ButtonPanelToggle;
+import com.example.checkListApp.ui.main.entry_management.ButtonPanel.ButtonPanelToggle;
 import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.MainViewModel;
-import com.example.checkListApp.ui.main.EntryManagement.ListComponent.ToggleSwitchOrdering;
+import com.example.checkListApp.ui.main.entry_management.ListComponent.ToggleSwitchOrdering;
 import com.example.checkListApp.ui.main.data_management.ListUtility;
 
 import java.util.ArrayList;
