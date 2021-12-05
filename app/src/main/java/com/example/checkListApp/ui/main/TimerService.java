@@ -64,16 +64,13 @@ public class TimerService extends Service {
 
         Log.d("timerTest",data);
 
-        TimeState expireTime = new TimeState( Math.abs(entry.numberValueTime));
-
-
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this, channel)
                         .setContentIntent(pendingIntent)
                         .setSmallIcon(android.R.drawable.star_on)
                         .setOnlyAlertOnce(true)
                         .setContentTitle("CountDownTime")
-                        .setContentText("time: "+data+" expires: "+expireTime.getTimeFormat() );
+                        .setContentText("time: "+data+" expires: "+entry.timeAccumulated );
 
 
         return mBuilder
@@ -123,21 +120,21 @@ public class TimerService extends Service {
         private Entry currentActiveTime;
 
         private final int FOREGROUND_SERVICE_ID = 111;
+        private final int setTime;
 
+        private int elapsedTime;
 
 
         @RequiresApi(api = Build.VERSION_CODES.O)
         protected ForegroundTimerService(ListTimersParcel parcel, PendingIntent pendingIntent){
 
             this.pendingIntent = pendingIntent;
-            timerViewModelList = generateEntryList(parcel);
 
-           // setTime = setTimer(timerViewModelList);
+            timerViewModelList = (ArrayList<Entry>) generateEntryList(parcel);
+
+            setTime = setTimer(timerViewModelList);
 
             timeViewModel.setTimeState( new TimeState(getSummationTime(timerViewModelList)));
-
-            accumulation(timerViewModelList);
-            currentActiveTime = timerViewModelList.get(1);
 
 
         }
@@ -154,14 +151,14 @@ public class TimerService extends Service {
             AtomicReference<Notification> notification = new AtomicReference<>(preSetNotification());
 
             timeViewModel.setServiceTask( (time -> {
+                elapsedTime = setTime - time;
 
+                if (currentActiveTime.timeElapsed(elapsedTime)) {
 
-
-                if (currentActiveTime.timeElapsed(time)) {
                     currentActiveTime = (Entry) getNextActiveProcessTime(timerViewModelList);
                 }
                      //rebuild notification here
-                            notification.set(makeNotification(new TimeState(time).getTimeFormat(), currentActiveTime,pendingIntent));
+                            notification.set(makeNotification(new TimeState(elapsedTime).getTimeFormat(), currentActiveTime,pendingIntent));
                             mgr.notify(FOREGROUND_SERVICE_ID, notification.get());
 
             }));
@@ -172,23 +169,23 @@ public class TimerService extends Service {
         }
 
 
-//        private int setTimer(ArrayList<Entry> list){
-//
-//            int summationTime  = getSummationTime(list);
-//
-//            String setTime = new TimeState(getSummationTime(list)).getTimeFormat();
-//
-//            timeViewModel.setCountDownTimer(setTime);
-//
-//
-//            accumulation(list);
-//
-//            currentActiveTime = list.get(1);
-//
-//
-//            return summationTime;
-//        }
-//
+        private int setTimer(ArrayList<Entry> list){
+
+            int summationTime  = getSummationTime(list);
+
+            String setTime = new TimeState(getSummationTime(list)).getTimeFormat();
+
+            timeViewModel.setCountDownTimer(setTime);
+
+
+            accumulation(list);
+
+            currentActiveTime = list.get(1);
+
+
+            return summationTime;
+        }
+
 
     }
 

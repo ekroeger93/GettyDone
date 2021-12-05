@@ -12,15 +12,15 @@ import java.util.ArrayList;
 
 public abstract class ListTimerUtility {
 
-   static public int activeProcessTimeIndex;
+    int activeProcessTimeIndex;
 
    public void accumulation(ArrayList<Entry> list){
 
         for(int i = 0; i < list.size(); i++){
 
-            if(i != 0 && list.get(i).numberValueTime !=0) {
+            if(i != 0) {
                 list.get(i).setTimeAcclimated(
-                        list.get(i - 1).numberValueTime);
+                        list.get(i - 1).timeAccumulated);
             }
 
         }
@@ -43,7 +43,6 @@ public abstract class ListTimerUtility {
                     parcel.listOfText[i],parcel.listOfChecked[i],parcel.listOfCountDownTimers[i]
                     );
 
-            entry.setNumberValueTime(parcel.listOfNumberValueTime[i]);
             entry.setTimeAccumulatedNonAdditive(parcel.listOfAccumulatedTime[i]);
 
             list.add(entry);
@@ -54,22 +53,21 @@ public abstract class ListTimerUtility {
 
     }
 
-   @RequiresApi(api = Build.VERSION_CODES.O)
    public int getSummationTime(ArrayList<Entry> list){
 
         int sum = 0;
 
         for(Entry viewModel:list){
-          int value =  viewModel.getNumberValueTime();
+
             if(viewModel.numberValueTime !=0)
-                sum+=  value;
+                sum+=  new TimeState(viewModel.numberValueTime).getTimeNumberValue();
 
         }
 
         return sum;
     }
 
-   public static Entry getNextActiveProcessTime(ArrayList<Entry> list){
+   public Entry getNextActiveProcessTime(ArrayList<Entry> list){
 
         int size = list.size()-1;
 
@@ -77,7 +75,7 @@ public abstract class ListTimerUtility {
             ++activeProcessTimeIndex;
             return list.get(activeProcessTimeIndex);
         }else{
-            activeProcessTimeIndex = 1;
+            activeProcessTimeIndex = 0;
         }
 
         return list.get(size);
