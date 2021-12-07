@@ -108,28 +108,48 @@ public final class ListUtility {
 
         int sum = 0;
 
+    //    TimeState state = new TimeState(0);
+
         for(Entry viewModel:list){
 
-            viewModel.setNumberValueTime(viewModel.timeTemp);
+            //TODO: CHECK THIS
+                viewModel.setNumberValueTime(viewModel.timeTemp);
 
-            if(viewModel.numberValueTime !=0)
-                sum+= new TimeState(viewModel.numberValueTime).getTimeNumberValue();
+                int value = viewModel.getNumberValueTime();
+
+                if (viewModel.getNumberValueTime() != 0) {
+                      sum += value;
+                }
+
+                Log.d("summationT", "n= " + value);
 
         }
+
+        Log.d("summationT","sum= "+sum);
 
         return sum;
     }
 
     public static ArrayList<Entry> accumulation(ArrayList<Entry> list){
 
-        for(int i = 0; i < list.size(); i++){
+//        for(int i = 0; i < list.size(); i++){
+//
+//            if(i != 0) {
+//                list.get(i).setTimeAcclimated(
+//                        list.get(i - 1).timeAccumulated);
+//            }
+//
+//            Log.d("testTime", i+" = "+list.get(i).timeAccumulated);
+//        }
 
-            if(i != 0) {
+        for(int i = 1; i < list.size(); i++){
+
+            if(i != 1 && list.get(i).numberValueTime !=0) {
                 list.get(i).setTimeAcclimated(
-                        list.get(i - 1).timeAccumulated);
+                        list.get(i - 1).numberValueTime);
             }
 
-            Log.d("testTime", i+" = "+list.get(i).timeAccumulated);
+            Log.d("testTimerTest", "acc:::  " + list.get(i).timeAccumulated);
         }
 
         return list;

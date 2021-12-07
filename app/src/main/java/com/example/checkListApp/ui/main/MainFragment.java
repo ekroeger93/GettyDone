@@ -38,6 +38,7 @@ import com.example.checkListApp.databinding.MainFragmentBinding;
 import com.example.checkListApp.timemanagement.ListTimersParcel;
 import com.example.checkListApp.timemanagement.ListTimersParcelBuilder;
 import com.example.checkListApp.timemanagement.utilities.KeyHelperClass;
+import com.example.checkListApp.timemanagement.utilities.ListTimerUtility;
 import com.example.checkListApp.timer.TimeState;
 import com.example.checkListApp.ui.main.entry_management.ButtonPanel.ButtonPanel;
 import com.example.checkListApp.ui.main.entry_management.ButtonPanel.ButtonPanelToggle;
@@ -52,6 +53,7 @@ import com.example.checkListApp.ui.main.data_management.ListUtility;
 import com.example.checkListApp.ui.main.entries.Entry;
 import com.example.checkListApp.ui.main.entries.Spacer;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -128,6 +130,7 @@ public class MainFragment extends Fragment {
 
     private EntryItemManager entryItemManager;
     private SelectionTracker<Long> selectionTracker;
+    private Entry currentActiveTimer;
 
     private Operator operator;
     private ButtonPanel buttonPanel;
@@ -318,27 +321,34 @@ public class MainFragment extends Fragment {
         int setTime = setTimer(mainTimerView);
       //  mainTimerView.toggled.postValue(mainTimerView.mainTimerViewModel.isToggled());
 
+        Log.d("summationT"," result = "+setTime);
+
         mainTimerView.mainTimerViewModel.setCountDownTimer(new TimeState(setTime).getTimeFormat());
 
         startService();
 
         mainTimerView.mainTimerViewModel.toggleTimeWithCustomTask(time -> {
 
-            int elapsedTime = setTime - time;
+         //   int elapsedTime = setTime - time;
 
-        if(ListUtility.currentActiveTime.timeElapsed(elapsedTime) && time > 0){
+//            Log.d("testTimerTest","acc >"+currentActiveTimer.timeAccumulated);
+//            Log.d("testTimerTest","nVt >>"+currentActiveTimer.numberValueTime);
 
-            String message = ListUtility.activeProcessTimeIndex+" = "+ListUtility.currentActiveTime.timeAccumulated + " "+elapsedTime;
+        if(currentActiveTimer.timeElapsed(time)){
+
+
+
+            String message = ListTimerUtility.activeProcessTimeIndex+" = "+ListUtility.currentActiveTime.timeAccumulated + " "+time;
             Log.d("testTime",message);
             shortBell.start();
 
             new Handler(Looper.getMainLooper()).post(new Runnable () {
                 @Override
                 public void run () {
-                    scrollPosition(ListUtility.activeProcessTimeIndex);
+                    scrollPosition(ListTimerUtility.activeProcessTimeIndex);
 
                     String message = checkList.get(
-                            ListUtility.activeProcessTimeIndex - 1
+                            ListTimerUtility.activeProcessTimeIndex - 1
                     ).textEntry.getValue();
 
                     Toast toast = Toast.makeText(getContext(),message+" done!",Toast.LENGTH_SHORT);
@@ -347,8 +357,8 @@ public class MainFragment extends Fragment {
                 }
             });
 
-            ListUtility.currentActiveTime.getViewHolder().checkOff();
-            ListUtility.currentActiveTime = ListUtility.getNextActiveProcessTime(checkList);
+            currentActiveTimer.getViewHolder().checkOff();
+            currentActiveTimer = ListTimerUtility.getNextActiveProcessTime(checkList);
 
 
 
@@ -433,13 +443,20 @@ public class MainFragment extends Fragment {
     public int setTimer(MainTimerView mainTimerView){
 
     int summationTime  = ListUtility.getSummationTime(checkList);
-    String setTime = new TimeState(summationTime).getTimeFormat();
+    int tru  = new TimeState(summationTime).getTimeNumberValue();
 
-    mainTimerView.mainTimerViewModel.setCountDownTimer(setTime);
+    Log.d("summationT","T: "+tru);
+
+   // String setTime = new TimeState(summationTime).getTimeFormat();
+   // mainTimerView.mainTimerViewModel.setCountDownTimer(setTime);
+
     ListUtility.accumulation(checkList);
 
     ListUtility.revertTimeIndex();
-    ListUtility.currentActiveTime = checkList.get(1);
+   // ListUtility.currentActiveTime = checkList.get(0);
+
+    currentActiveTimer = checkList.get(1);
+
 
     return summationTime;
 }

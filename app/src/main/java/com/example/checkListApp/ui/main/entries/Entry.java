@@ -58,6 +58,7 @@ public class Entry {
         countDownTimer.postValue(entry.countDownTimer.getValue());
 
         setNumberValueTime(countDownTimer.getValue());
+        timeAccumulated = new TimeState(numberValueTime).getTimeNumberValue();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -67,6 +68,7 @@ public class Entry {
         countDownTimer.setValue(timeText);
 
         setNumberValueTime(timeText);
+        timeAccumulated = new TimeState(numberValueTime).getTimeNumberValue();
         //    numberValueTime = new TimeState(timeText).getTimeNumberValueDecimalTruncated();
     }
 
@@ -79,12 +81,17 @@ public class Entry {
 
         try {
             timeText = timeText.replace(":", "").trim();
-            numberValueTime = new TimeState(Integer.parseInt(timeText.replaceAll("\"",""))).getTimeNumberValueDecimalTruncated();
+            numberValueTime = new TimeState(Integer.parseInt(timeText.replaceAll("\"",""))).getTimeNumberValue();
 
         }catch (NullPointerException e){
             e.printStackTrace();
         }
 
+    }
+
+
+    public void setNumberValueTime(int valueTime){
+        numberValueTime = valueTime;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -132,11 +139,15 @@ public class Entry {
 
 
     public boolean timeElapsed(int time){
-        return  (timeAccumulated <= time);
+        return  (timeAccumulated == time);
     }
 
     public void setTimeAcclimated(int timeAcclimated) {
-        this.timeAccumulated = numberValueTime + timeAcclimated;
+        int original = new TimeState(numberValueTime).getTimeNumberValue();
+        int addedTime  = new TimeState(timeAcclimated).getTimeNumberValue();
+
+        this.timeAccumulated = original + addedTime;
+
     }
 
     public String getTimeEndPoint() {
@@ -147,6 +158,21 @@ public class Entry {
         return countDownTimer;
     }
 
+    public int getNumberValueTime(){
+        String timeText;
+
+        try {
+
+            timeText = countDownTimer.getValue().replace(":", "").trim();
+            return new TimeState(Integer.parseInt(timeText.replaceAll("\"",""))).getTimeNumberValue();
+
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
+
+        return 0;
+
+    }
 
     public void setTimeAccumulatedNonAdditive(int timeAccumulated) {
         this.timeAccumulated = timeAccumulated;
