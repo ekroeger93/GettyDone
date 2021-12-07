@@ -8,7 +8,7 @@ import androidx.annotation.RequiresApi;
 import com.example.checkListApp.timer.TimeState;
 import com.example.checkListApp.ui.main.entries.Entry;
 import com.example.checkListApp.ui.main.entries.Spacer;
-import com.example.checkListApp.ui.main.EntryManagement.ListComponent.ToggleSwitchOrdering;
+import com.example.checkListApp.ui.main.entry_management.ListComponent.ToggleSwitchOrdering;
 
 import java.util.ArrayList;
 
@@ -129,7 +129,7 @@ public final class ListUtility {
                         list.get(i - 1).timeAccumulated);
             }
 
-            Log.d("testTime", i+" = "+list.get(i).timeAccumulated);
+          //  Log.d("testTime", i+" = "+list.get(i).timeAccumulated);
         }
 
         return list;
@@ -141,7 +141,7 @@ public final class ListUtility {
             ++activeProcessTimeIndex;
             return list.get(activeProcessTimeIndex);
         }else{
-            activeProcessTimeIndex = 1;
+            activeProcessTimeIndex = 0;
         }
 
         return list.get(list.size()-2);

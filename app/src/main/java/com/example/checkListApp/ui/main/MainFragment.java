@@ -326,10 +326,10 @@ public class MainFragment extends Fragment {
 
             int elapsedTime = setTime - time;
 
-        if(ListUtility.currentActiveTime.timeElapsed(elapsedTime) && time > 0){
+        if(ListUtility.currentActiveTime.timeElapsed(elapsedTime)){
 
-            String message = ListUtility.activeProcessTimeIndex+" = "+ListUtility.currentActiveTime.timeAccumulated + " "+elapsedTime;
-            Log.d("testTime",message);
+         //   String message = ListUtility.activeProcessTimeIndex+" = "+ListUtility.currentActiveTime.timeAccumulated + " "+elapsedTime;
+        //    Log.d("testTime",message);
             shortBell.start();
 
             new Handler(Looper.getMainLooper()).post(new Runnable () {
@@ -338,7 +338,7 @@ public class MainFragment extends Fragment {
                     scrollPosition(ListUtility.activeProcessTimeIndex);
 
                     String message = checkList.get(
-                            ListUtility.activeProcessTimeIndex - 1
+                            ListUtility.activeProcessTimeIndex
                     ).textEntry.getValue();
 
                     Toast toast = Toast.makeText(getContext(),message+" done!",Toast.LENGTH_SHORT);

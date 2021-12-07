@@ -57,7 +57,10 @@ public class Entry {
         checked.postValue(entry.checked.getValue());
         countDownTimer.postValue(entry.countDownTimer.getValue());
 
-        setNumberValueTime(countDownTimer.getValue());
+        int numberTime = new TimeState(countDownTimer.getValue()).getTimeNumberValue();
+        numberValueTime = numberTime;
+        timeAccumulated = new TimeState(numberTime).getTimeNumberValue();//numberTime;//extractNumberValueTime(time);
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -67,10 +70,30 @@ public class Entry {
         countDownTimer.setValue(timeText);
 
         setNumberValueTime(timeText);
+        int numberTime = new TimeState(countDownTimer.getValue()).getTimeNumberValue();
+        timeAccumulated = new TimeState(numberTime).getTimeNumberValue();//numberTime;//extractNumberValueTime(time);
+
+
+
         //    numberValueTime = new TimeState(timeText).getTimeNumberValueDecimalTruncated();
     }
 
 
+    public int getNumberValueTime(){
+        String timeText;
+
+        try {
+
+            timeText = countDownTimer.getValue().replace(":", "").trim();
+            return new TimeState(Integer.parseInt(timeText.replaceAll("\"",""))).getTimeNumberValue();
+
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
+
+        return 0;
+
+    }
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -135,9 +158,20 @@ public class Entry {
         return  (timeAccumulated <= time);
     }
 
-    public void setTimeAcclimated(int timeAcclimated) {
-        this.timeAccumulated = numberValueTime + timeAcclimated;
-    }
+//    public void setTimeAcclimated(int timeAcclimated) {
+//        this.timeAccumulated = numberValueTime + timeAcclimated;
+//    }
+
+@RequiresApi(api = Build.VERSION_CODES.O)
+public void setTimeAcclimated(int timeAcclimated) {
+
+    int original = new TimeState(numberValueTime).getTimeNumberValue();
+    int addedTime  = new TimeState(timeAcclimated).getTimeNumberValue();
+
+    this.timeAccumulated = original + addedTime;
+
+}
+
 
     public String getTimeEndPoint() {
         return new TimeState(timeAccumulated).getTimeFormat();

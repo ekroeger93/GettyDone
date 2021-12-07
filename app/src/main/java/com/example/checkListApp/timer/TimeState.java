@@ -35,7 +35,12 @@ public class TimeState {
 
         }
 
-        public TimeState addTimeState(TimeState timeState){
+    public TimeState(String time) throws NumberFormatException{
+        this((Integer.parseInt(time.replace(":", "").trim())));
+    }
+
+
+    public TimeState addTimeState(TimeState timeState){
 
             TimeState newTime = this;
 
