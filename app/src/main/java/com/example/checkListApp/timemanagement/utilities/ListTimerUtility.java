@@ -59,18 +59,21 @@ public abstract class ListTimerUtility {
 
     }
 
+   @RequiresApi(api = Build.VERSION_CODES.O)
    public  int getSummationTime(ArrayList<Entry> list){
 
-        int sum = 0;
+       int sum = 0;
 
-        for(Entry viewModel:list){
+       for(Entry viewModel:list){
 
-            if(viewModel.numberValueTime !=0)
-                sum+=  new TimeState(viewModel.numberValueTime).getTimeNumberValue();
+           viewModel.setNumberValueTime(viewModel.timeTemp);
 
-        }
+           if(viewModel.numberValueTime !=0)
+               sum+= new TimeState(viewModel.numberValueTime).getTimeNumberValue();
 
-        return sum;
+       }
+
+       return sum;
     }
 
    public  Entry getNextActiveProcessTime(ArrayList<Entry> list){
@@ -84,7 +87,7 @@ public abstract class ListTimerUtility {
             activeProcessTimeIndex = 0;
         }
 
-        return list.get(activeProcessTimeIndex);
+        return list.get(size);
     }
 
    public  void revertTimeIndex(){ activeProcessTimeIndex = 1; }

@@ -323,7 +323,7 @@ public class MainFragment extends Fragment {
 
         mainTimerView.mainTimerViewModel.setCountDownTimer(new TimeState(setTime).getTimeFormat());
 
-      //  startService();
+        startService();
 
         mainTimerView.mainTimerViewModel.toggleTimeWithCustomTask(time -> {
 
