@@ -155,7 +155,7 @@ public class Entry {
 
 
     public boolean timeElapsed(int time){
-        return  (timeAccumulated <= time);
+        return  (timeAccumulated == time);
     }
 
 //    public void setTimeAcclimated(int timeAcclimated) {

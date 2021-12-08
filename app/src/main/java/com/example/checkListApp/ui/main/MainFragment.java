@@ -326,10 +326,10 @@ public class MainFragment extends Fragment {
 
             int elapsedTime = setTime - time;
 
-        if(ListUtility.currentActiveTime.timeElapsed(elapsedTime)){
+        if(ListUtility.currentActiveTime.timeElapsed(elapsedTime) || elapsedTime == setTime){
 
-         //   String message = ListUtility.activeProcessTimeIndex+" = "+ListUtility.currentActiveTime.timeAccumulated + " "+elapsedTime;
-        //    Log.d("testTime",message);
+            String message = ListUtility.activeProcessTimeIndex+" = "+ListUtility.currentActiveTime.timeAccumulated + " "+elapsedTime;
+            Log.d("testTime",message);
             shortBell.start();
 
             new Handler(Looper.getMainLooper()).post(new Runnable () {

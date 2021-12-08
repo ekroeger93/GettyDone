@@ -120,16 +120,26 @@ public final class ListUtility {
         return sum;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public static ArrayList<Entry> accumulation(ArrayList<Entry> list){
+
+//        for(int i = 0; i < list.size(); i++){
+//
+//            if(i != 0) {
+//                list.get(i).setTimeAcclimated(
+//                        list.get(i - 1).timeAccumulated);
+//            }
+//
+//          //  Log.d("testTime", i+" = "+list.get(i).timeAccumulated);
+//        }
 
         for(int i = 0; i < list.size(); i++){
 
-            if(i != 0) {
+            if(i != 0 && list.get(i).numberValueTime !=0) {
                 list.get(i).setTimeAcclimated(
-                        list.get(i - 1).timeAccumulated);
+                        list.get(i - 1).numberValueTime);
             }
 
-          //  Log.d("testTime", i+" = "+list.get(i).timeAccumulated);
         }
 
         return list;
@@ -144,7 +154,7 @@ public final class ListUtility {
             activeProcessTimeIndex = 0;
         }
 
-        return list.get(list.size()-2);
+        return list.get(activeProcessTimeIndex);
     }
 
     public static void revertTimeIndex(){

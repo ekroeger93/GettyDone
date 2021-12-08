@@ -116,7 +116,7 @@ public class CountDownTimerAsync {
                         runTime = String.format(locale,"%02d:%02d:%02d", HH, MM, SS);
                         elapsedTime = (int) (setTime - (countingDown.getSeconds()));
 
-                        if(countingDown.getSeconds() < 0) {
+                        if(countingDown.getSeconds() <= 0) {
                             postTimeExpire();
                             break;
                         }

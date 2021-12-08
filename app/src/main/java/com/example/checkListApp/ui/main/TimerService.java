@@ -23,10 +23,12 @@ import com.example.checkListApp.timemanagement.ListTimersParcel;
 import com.example.checkListApp.timemanagement.utilities.KeyHelperClass;
 import com.example.checkListApp.timemanagement.utilities.ListTimerUtility;
 import com.example.checkListApp.timer.TimeState;
+import com.example.checkListApp.ui.main.data_management.ListUtility;
 import com.example.checkListApp.ui.main.entries.Entry;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class TimerService extends Service {
@@ -40,6 +42,11 @@ public class TimerService extends Service {
                 PendingIntent.getActivity(this, 0, intent,  PendingIntent.FLAG_UPDATE_CURRENT);
 
         ListTimersParcel parcelableList = intent.getParcelableExtra(KeyHelperClass.TIME_PARCEL_DATA);
+
+
+
+            Log.d("serviceTest", ". "+ Arrays.toString(parcelableList.listOfCountDownTimers));
+
 
         ForegroundTimerService foregroundTimerService = new ForegroundTimerService(parcelableList , pendingIntent);
 
@@ -63,6 +70,10 @@ public class TimerService extends Service {
         }
 
         Log.d("timerTest",data);
+        TimeState expireTime = new TimeState( Math.abs(entry.numberValueTime));
+
+
+
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this, channel)
@@ -70,7 +81,7 @@ public class TimerService extends Service {
                         .setSmallIcon(android.R.drawable.star_on)
                         .setOnlyAlertOnce(true)
                         .setContentTitle("CountDownTime")
-                        .setContentText("time: "+data+" expires: "+entry.timeAccumulated );
+                        .setContentText("time: "+data+" expires: "+expireTime.getTimeFormat() );
 
 
         return mBuilder
@@ -120,7 +131,7 @@ public class TimerService extends Service {
         private Entry currentActiveTime;
 
         private final int FOREGROUND_SERVICE_ID = 111;
-        private final int setTime;
+     //   private final int setTime;
 
         private int elapsedTime;
 
@@ -132,9 +143,21 @@ public class TimerService extends Service {
 
             timerViewModelList = (ArrayList<Entry>) generateEntryList(parcel);
 
-            setTime = setTimer(timerViewModelList);
+//            for(Entry n : timerViewModelList){
+//                Log.d("serviceTest", "e. "+n.getCountDownTimer());
+//            }
+
+           // setTime = setTimer(timerViewModelList);
 
             timeViewModel.setTimeState( new TimeState(getSummationTime(timerViewModelList)));
+
+            accumulation(timerViewModelList);
+            currentActiveTime = timerViewModelList.get(1);
+
+                        for(Entry n : timerViewModelList){
+                Log.d("serviceTest", "e. "+n.timeAccumulated);
+            }
+
 
 
         }
@@ -151,14 +174,16 @@ public class TimerService extends Service {
             AtomicReference<Notification> notification = new AtomicReference<>(preSetNotification());
 
             timeViewModel.setServiceTask( (time -> {
-                elapsedTime = setTime - time;
 
-                if (currentActiveTime.timeElapsed(elapsedTime)) {
 
-                    currentActiveTime = (Entry) getNextActiveProcessTime(timerViewModelList);
+                if (currentActiveTime.timeElapsed(time)) {
+
+                 //   currentActiveTime = ListUtility.getNextActiveProcessTime(timerViewModelList);
+
+                    Log.d("serviceTest","here!");
                 }
                      //rebuild notification here
-                            notification.set(makeNotification(new TimeState(elapsedTime).getTimeFormat(), currentActiveTime,pendingIntent));
+                            notification.set(makeNotification(new TimeState(time).getTimeFormat(), ListUtility.currentActiveTime,pendingIntent));
                             mgr.notify(FOREGROUND_SERVICE_ID, notification.get());
 
             }));
