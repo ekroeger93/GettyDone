@@ -157,6 +157,8 @@ public class MainFragment extends Fragment {
     ListTimersParcel listTimersParcel;
 
 
+    ListUtility listUtility = new ListUtility();
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -253,6 +255,7 @@ public class MainFragment extends Fragment {
         adapter.trackerOn(false);
 
         operator = new Operator(recyclerView,adapter);
+        operator.setListUtility(listUtility);
         entryItemManager = new EntryItemManager(getContext(),mViewModel,operator);
         buttonPanel = new ButtonPanel(getContext(), binding);
         buttonPanelToggle  = buttonPanel.buttonPanelToggle;
@@ -320,25 +323,27 @@ public class MainFragment extends Fragment {
 
         mainTimerView.mainTimerViewModel.setCountDownTimer(new TimeState(setTime).getTimeFormat());
 
-        startService();
+      //  startService();
 
         mainTimerView.mainTimerViewModel.toggleTimeWithCustomTask(time -> {
 
             int elapsedTime = setTime - time;
 
-        if(ListUtility.currentActiveTime.timeElapsed(elapsedTime) || elapsedTime == setTime){
 
-            String message = ListUtility.activeProcessTimeIndex+" = "+ListUtility.currentActiveTime.timeAccumulated + " "+elapsedTime;
+
+            if(listUtility.currentActiveTime.timeElapsed(elapsedTime) || elapsedTime == setTime){
+
+            String message = listUtility.activeProcessTimeIndex+" = "+listUtility.currentActiveTime.timeAccumulated + " "+elapsedTime;
             Log.d("testTime",message);
             shortBell.start();
 
             new Handler(Looper.getMainLooper()).post(new Runnable () {
                 @Override
                 public void run () {
-                    scrollPosition(ListUtility.activeProcessTimeIndex);
+                    scrollPosition(listUtility.activeProcessTimeIndex);
 
                     String message = checkList.get(
-                            ListUtility.activeProcessTimeIndex
+                            listUtility.activeProcessTimeIndex
                     ).textEntry.getValue();
 
                     Toast toast = Toast.makeText(getContext(),message+" done!",Toast.LENGTH_SHORT);
@@ -347,14 +352,15 @@ public class MainFragment extends Fragment {
                 }
             });
 
-            ListUtility.currentActiveTime.getViewHolder().checkOff();
-            ListUtility.currentActiveTime = ListUtility.getNextActiveProcessTime(checkList);
+            listUtility.currentActiveTime.getViewHolder().checkOff();
+            listUtility.currentActiveTime = listUtility.getNextActiveProcessTime(checkList);
 
 
 
         }
 
         });
+
     });
 
 
@@ -376,7 +382,7 @@ public class MainFragment extends Fragment {
             @Override public void run() {
 
                 String message = checkList.get(
-                        ListUtility.activeProcessTimeIndex
+                        listUtility.activeProcessTimeIndex
                 ).textEntry.getValue();
 
                 Toast toast = Toast.makeText(getContext(), message + " done!", Toast.LENGTH_SHORT);
@@ -407,7 +413,7 @@ public class MainFragment extends Fragment {
         listTimersParcel = new ListTimersParcelBuilder(checkList)
                 .setEntryViewModelList(checkList)
                 .setGlobalTimer(mainTimerView.mainTimerViewModel.getValueTime())
-                .setIndexActive(ListUtility.activeProcessTimeIndex).build();
+                .setIndexActive(listUtility.activeProcessTimeIndex).build();
 
         int size = checkList.size();
 
@@ -432,14 +438,15 @@ public class MainFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public int setTimer(MainTimerView mainTimerView){
 
-    int summationTime  = ListUtility.getSummationTime(checkList);
+    int summationTime  = listUtility.getSummationTime(checkList);
     String setTime = new TimeState(summationTime).getTimeFormat();
 
     mainTimerView.mainTimerViewModel.setCountDownTimer(setTime);
-    ListUtility.accumulation(checkList);
+    Log.d("testTime", ""+summationTime);
+    listUtility.accumulation(checkList);
 
-    ListUtility.revertTimeIndex();
-    ListUtility.currentActiveTime = checkList.get(1);
+    listUtility.revertTimeIndex();
+    listUtility.currentActiveTime = checkList.get(1);
 
     return summationTime;
 }
@@ -493,14 +500,14 @@ public class MainFragment extends Fragment {
                                 adapter.notifyDataSetChanged();
 
                                 selectionTracker.clearSelection();
-                                ListUtility.reInitializeAllSelection(checkList);
+                                listUtility.reInitializeAllSelection(checkList);
                                 adapter.trackerOn(false);
 
                             });
 
                             //thread may still be running!!!
                             selectionTracker.clearSelection();
-                            ListUtility.reInitializeAllSelection(checkList);
+                            listUtility.reInitializeAllSelection(checkList);
 
                             isSorting = false;
 
@@ -595,8 +602,8 @@ public class MainFragment extends Fragment {
                 RecordHelper.update();
 
                 if(!isSorting){
-                checkList = ListUtility.updateToggleOrdering(checkList);
-                }else{ ListUtility.updateAllSelection(checkList);
+                checkList = listUtility.updateToggleOrdering(checkList);
+                }else{ listUtility.updateAllSelection(checkList);
                 }
 
                 //maintenance code
@@ -652,14 +659,14 @@ public class MainFragment extends Fragment {
                             ultimately the holder.orderInt should reflect the toggleSwitchOrdering.list
                             * */
 
-                            ListUtility.toggleSwitchOrdering.toggleNum(index);
+                            listUtility.toggleSwitchOrdering.toggleNum(index);
 
-                            entryCurrent.isSelected.setValue(ListUtility.toggleSwitchOrdering.listToOrder.get(index).toggle);
-                            entryCurrent.orderInt.setValue(ListUtility.toggleSwitchOrdering.listToOrder.get(index).number);
+                            entryCurrent.isSelected.setValue(listUtility.toggleSwitchOrdering.listToOrder.get(index).toggle);
+                            entryCurrent.orderInt.setValue(listUtility.toggleSwitchOrdering.listToOrder.get(index).number);
 
-                            entryCurrent.selectOrder = ListUtility.toggleSwitchOrdering.listToOrder.get(index).number;
+                            entryCurrent.selectOrder = listUtility.toggleSwitchOrdering.listToOrder.get(index).number;
 
-                            ListUtility.updateAllSelection(checkList);
+                            listUtility.updateAllSelection(checkList);
 
                            break;
                                 }

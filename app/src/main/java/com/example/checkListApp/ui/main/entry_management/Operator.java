@@ -16,12 +16,16 @@ public class Operator {
     //Passed In and out (needs assignment)
     public RecyclerView recyclerView;
     public RecyclerAdapter adapter;
+    ListUtility listUtility;
 
 
     public Operator(RecyclerView recyclerView, RecyclerAdapter adapter){
         this.recyclerView = recyclerView; this.adapter = adapter;
     }
 
+    public void setListUtility(ListUtility listUtility) {
+        this.listUtility = listUtility;
+    }
 
     //Passed Out (gets assigned here)
      public RecyclerView.ViewHolder currentViewHolder;
@@ -60,7 +64,7 @@ public class Operator {
 
 
      if (e.getViewHolder().getBindingAdapterPosition() == selection - 1)
-         ListUtility.updateAllSelection(MainFragment.getCheckList());
+         listUtility.updateAllSelection(MainFragment.getCheckList());
 
 
 

@@ -14,21 +14,11 @@ import java.util.ArrayList;
 
 public abstract class ListTimerUtility {
 
-    int activeProcessTimeIndex;
-    public static Entry currentActiveTime;
+    public int activeProcessTimeIndex = 1;
+    public  Entry currentActiveTime;
 
    @RequiresApi(api = Build.VERSION_CODES.O)
-   public void accumulation(ArrayList<Entry> list){
-
-//        for(int i = 0; i < list.size(); i++){
-//
-//            if(i != 0) {
-//                list.get(i).setTimeAcclimated(
-//                        list.get(i - 1).timeAccumulated);
-//            }
-//
-//        }
-
+   public  void accumulation(ArrayList<Entry> list){
 
        for(int i = 0; i < list.size(); i++){
 
@@ -69,7 +59,7 @@ public abstract class ListTimerUtility {
 
     }
 
-   public int getSummationTime(ArrayList<Entry> list){
+   public  int getSummationTime(ArrayList<Entry> list){
 
         int sum = 0;
 
@@ -83,9 +73,9 @@ public abstract class ListTimerUtility {
         return sum;
     }
 
-   public Entry getNextActiveProcessTime(ArrayList<Entry> list){
+   public  Entry getNextActiveProcessTime(ArrayList<Entry> list){
 
-        int size = list.size()-1;
+        int size = list.size()-2;
 
         if(activeProcessTimeIndex < size){
             ++activeProcessTimeIndex;
@@ -97,7 +87,7 @@ public abstract class ListTimerUtility {
         return list.get(activeProcessTimeIndex);
     }
 
-   public void revertTimeIndex(){ activeProcessTimeIndex = 0; }
+   public  void revertTimeIndex(){ activeProcessTimeIndex = 1; }
 
    public int getActiveProcessTimeIndex(){return  activeProcessTimeIndex;}
 
