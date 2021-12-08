@@ -128,8 +128,6 @@ public class TimerService extends Service {
         private final MainTimerViewModel timeViewModel = MainActivity.timerViewModel;
         private final ArrayList<Entry> timerViewModelList;
 
-        private Entry currentActiveTime;
-
         private final int FOREGROUND_SERVICE_ID = 111;
      //   private final int setTime;
 
@@ -143,13 +141,8 @@ public class TimerService extends Service {
 
             timerViewModelList = (ArrayList<Entry>) generateEntryList(parcel);
 
-//            for(Entry n : timerViewModelList){
-//                Log.d("serviceTest", "e. "+n.getCountDownTimer());
-//            }
-
-           // setTime = setTimer(timerViewModelList);
-
             timeViewModel.setTimeState( new TimeState(getSummationTime(timerViewModelList)));
+
 
             accumulation(timerViewModelList);
             currentActiveTime = timerViewModelList.get(1);
@@ -173,17 +166,19 @@ public class TimerService extends Service {
 
             AtomicReference<Notification> notification = new AtomicReference<>(preSetNotification());
 
-            timeViewModel.setServiceTask( (time -> {
+            int setTime  = getSummationTime(timerViewModelList);
 
+                timeViewModel.setServiceTask( (time -> {
 
-                if (currentActiveTime.timeElapsed(time)) {
+                    int elapsedTime = setTime - time;
 
-                 //   currentActiveTime = ListUtility.getNextActiveProcessTime(timerViewModelList);
+                    if(currentActiveTime.timeElapsed(elapsedTime) || elapsedTime == setTime){
+                   currentActiveTime = getNextActiveProcessTime(timerViewModelList);
 
                     Log.d("serviceTest","here!");
                 }
                      //rebuild notification here
-                            notification.set(makeNotification(new TimeState(time).getTimeFormat(), ListUtility.currentActiveTime,pendingIntent));
+                            notification.set(makeNotification(new TimeState(time).getTimeFormat(), currentActiveTime,pendingIntent));
                             mgr.notify(FOREGROUND_SERVICE_ID, notification.get());
 
             }));

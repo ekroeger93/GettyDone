@@ -15,6 +15,7 @@ import java.util.ArrayList;
 public abstract class ListTimerUtility {
 
     int activeProcessTimeIndex;
+    public static Entry currentActiveTime;
 
    @RequiresApi(api = Build.VERSION_CODES.O)
    public void accumulation(ArrayList<Entry> list){
@@ -93,7 +94,7 @@ public abstract class ListTimerUtility {
             activeProcessTimeIndex = 0;
         }
 
-        return list.get(size);
+        return list.get(activeProcessTimeIndex);
     }
 
    public void revertTimeIndex(){ activeProcessTimeIndex = 0; }
