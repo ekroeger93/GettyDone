@@ -135,7 +135,7 @@ public final class ListUtility {
 
         for(int i = 0; i < list.size(); i++){
 
-            if(i != 0 && list.get(i).numberValueTime !=0) {
+            if(i != 0 && list.get(i).timeAccumulated !=0) {
                 list.get(i).setTimeAcclimated(
                         list.get(i - 1).numberValueTime);
             }
@@ -147,14 +147,14 @@ public final class ListUtility {
 
     public static Entry getNextActiveProcessTime(ArrayList<Entry> list){
 
-        if(activeProcessTimeIndex < list.size()-2){
+        if(activeProcessTimeIndex <= list.size()-2){
             ++activeProcessTimeIndex;
             return list.get(activeProcessTimeIndex);
         }else{
-            activeProcessTimeIndex = 0;
+            activeProcessTimeIndex = 1;
         }
 
-        return list.get(activeProcessTimeIndex);
+        return list.get(list.size()-2);
     }
 
     public static void revertTimeIndex(){
