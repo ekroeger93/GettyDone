@@ -85,16 +85,6 @@ https://github.com/PhilJay/MPAndroidChart
 -> ? could sum the time values into one and impl to GlobalTimer ?
 -> notifications
 
-class AppLifecycleListener : DefaultLifecycleObserver {
-
-    override fun onStart(owner: LifecycleOwner) { // app moved to foreground
-    }
-
-    override fun onStop(owner: LifecycleOwner) { // app moved to background
-    }
-}
-
-
 Collaboration
 Tags
 Calendar Sync
@@ -114,7 +104,15 @@ https://github.com/PhilJay/MPAndroidChart
 calender schedule
 
 
-//TODO: SERVICE IMPL
+//TODO: Switching tabs and back to List cause mainTimer to lose memory
+//TODO: Disable buttons when timer is running!
+//TODO: timer set to zero or is zero at expiration
+//TODO: timer starts at appropriate vale
+//TODO: fix touch / onclick listener view models
+
+correspond list to a select color for graph and add file name
+
+
 https://stackoverflow.com/questions/43650201/how-to-make-an-android-app-run-in-background-when-the-screen-sleeps
 https://developer.android.com/guide/components/foreground-services
 
