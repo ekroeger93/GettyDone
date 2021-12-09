@@ -7,7 +7,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.example.checkListApp.ui.main.entries.Entry;
+import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 
 import java.util.List;
 

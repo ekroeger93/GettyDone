@@ -3,7 +3,7 @@ package com.example.checkListApp.timemanagement;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.example.checkListApp.ui.main.entries.Entry;
+import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 
 import java.util.ArrayList;
 

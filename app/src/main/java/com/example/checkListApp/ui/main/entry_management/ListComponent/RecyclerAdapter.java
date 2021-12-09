@@ -28,10 +28,10 @@ import com.example.checkListApp.input.CustomEditText;
 import com.example.checkListApp.input.DetectKeyboardBack;
 import com.example.checkListApp.timemanagement.TimeParcelBuilder;
 import com.example.checkListApp.ui.main.MainFragment;
-import com.example.checkListApp.ui.main.entries.Entry;
+import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 import com.example.checkListApp.ui.main.entry_management.Record.RecordHelper;
 import com.example.checkListApp.ui.main.MainFragmentDirections;
-import com.example.checkListApp.ui.main.entries.Spacer;
+import com.example.checkListApp.ui.main.entry_management.entries.Spacer;
 import com.example.checkListApp.ui.main.data_management.JsonService;
 
 import org.jetbrains.annotations.NotNull;

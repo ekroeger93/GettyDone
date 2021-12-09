@@ -10,7 +10,7 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.example.checkListApp.ui.main.entries.Entry;
+import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 import com.example.checkListApp.ui.main.MainViewModel;
 
 @Database(entities = {Entry.class},version = 1,exportSchema = false)

@@ -35,6 +35,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.checkListApp.R;
 import com.example.checkListApp.databinding.MainFragmentBinding;
+import com.example.checkListApp.timemanagement.MainTimerView;
+import com.example.checkListApp.timemanagement.TimerService;
 import com.example.checkListApp.timemanagement.ListTimersParcel;
 import com.example.checkListApp.timemanagement.ListTimersParcelBuilder;
 import com.example.checkListApp.timemanagement.utilities.KeyHelperClass;
@@ -43,14 +45,15 @@ import com.example.checkListApp.ui.main.entry_management.ButtonPanel.ButtonPanel
 import com.example.checkListApp.ui.main.entry_management.ButtonPanel.ButtonPanelToggle;
 import com.example.checkListApp.ui.main.entry_management.EntryItemManager;
 import com.example.checkListApp.ui.main.entry_management.ButtonPanel.LeafButton;
+import com.example.checkListApp.ui.main.entry_management.ListComponent.CustomLayoutManager;
 import com.example.checkListApp.ui.main.entry_management.ListComponent.RecyclerAdapter;
 import com.example.checkListApp.ui.main.entry_management.Operator;
 import com.example.checkListApp.ui.main.entry_management.Record.RecordHelper;
 import com.example.checkListApp.ui.main.data_management.AuxiliaryData;
 import com.example.checkListApp.ui.main.data_management.JsonService;
 import com.example.checkListApp.ui.main.data_management.ListUtility;
-import com.example.checkListApp.ui.main.entries.Entry;
-import com.example.checkListApp.ui.main.entries.Spacer;
+import com.example.checkListApp.ui.main.entry_management.entries.Entry;
+import com.example.checkListApp.ui.main.entry_management.entries.Spacer;
 
 import java.util.ArrayList;
 import java.util.List;

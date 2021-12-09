@@ -16,7 +16,7 @@ import androidx.recyclerview.selection.SelectionTracker;
 import com.example.checkListApp.R;
 import com.example.checkListApp.input.CustomEditText;
 import com.example.checkListApp.input.DetectKeyboardBack;
-import com.example.checkListApp.ui.main.entries.Entry;
+import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 import com.example.checkListApp.ui.main.entry_management.ButtonPanel.ButtonPanelToggle;
 import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.MainViewModel;

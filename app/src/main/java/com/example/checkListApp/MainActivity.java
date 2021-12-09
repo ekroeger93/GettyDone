@@ -11,8 +11,8 @@ import android.view.WindowManager;
 import com.example.checkListApp.file_management.FileListFragment;
 import com.example.checkListApp.databinding.MainActivityBinding;
 import com.example.checkListApp.ui.main.MainFragment;
-import com.example.checkListApp.ui.main.MainTimerViewModel;
-import com.example.checkListApp.ui.main.ProgressFragment;
+import com.example.checkListApp.timemanagement.MainTimerViewModel;
+import com.example.checkListApp.ui.main.progress.ProgressFragment;
 import com.google.android.material.tabs.TabLayout;
 
 public class MainActivity extends AppCompatActivity implements FileListFragment.OnFragmentInteractionListener{

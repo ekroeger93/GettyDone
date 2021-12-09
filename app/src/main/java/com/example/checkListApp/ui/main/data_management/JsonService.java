@@ -5,7 +5,7 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
-import com.example.checkListApp.ui.main.entries.Entry;
+import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;

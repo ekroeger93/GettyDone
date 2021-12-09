@@ -3,9 +3,9 @@ package com.example.checkListApp.database;
 import android.app.Application;
 import androidx.lifecycle.LiveData;
 
-import com.example.checkListApp.ui.main.entries.Entry;
+import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 import com.example.checkListApp.ui.main.MainViewModel;
-import com.example.checkListApp.ui.main.entries.Spacer;
+import com.example.checkListApp.ui.main.entry_management.entries.Spacer;
 
 import java.util.ArrayList;
 import java.util.List;

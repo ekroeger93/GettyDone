@@ -1,4 +1,4 @@
-package com.example.checkListApp.ui.main;
+package com.example.checkListApp.timemanagement;
 
 import android.os.Build;
 
@@ -13,7 +13,6 @@ import com.example.checkListApp.timer.TimeState;
 import com.example.checkListApp.timer.TimeToggler;
 
 import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 

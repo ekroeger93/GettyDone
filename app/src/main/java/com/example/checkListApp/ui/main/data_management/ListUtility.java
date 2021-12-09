@@ -1,14 +1,8 @@
 package com.example.checkListApp.ui.main.data_management;
 
-import android.os.Build;
-import android.util.Log;
-
-import androidx.annotation.RequiresApi;
-
 import com.example.checkListApp.timemanagement.utilities.ListTimerUtility;
-import com.example.checkListApp.timer.TimeState;
-import com.example.checkListApp.ui.main.entries.Entry;
-import com.example.checkListApp.ui.main.entries.Spacer;
+import com.example.checkListApp.ui.main.entry_management.entries.Entry;
+import com.example.checkListApp.ui.main.entry_management.entries.Spacer;
 import com.example.checkListApp.ui.main.entry_management.ListComponent.ToggleSwitchOrdering;
 
 import java.util.ArrayList;

@@ -1,15 +1,12 @@
 package com.example.checkListApp.ui.main;
 
 import android.app.Application;
-import android.content.Context;
-import android.media.MediaPlayer;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.example.checkListApp.R;
 import com.example.checkListApp.database.EntryRepository;
-import com.example.checkListApp.ui.main.entries.Entry;
+import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 
 import java.util.ArrayList;
 import java.util.List;

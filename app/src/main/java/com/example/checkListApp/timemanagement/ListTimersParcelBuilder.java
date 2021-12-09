@@ -1,6 +1,6 @@
 package com.example.checkListApp.timemanagement;
 
-import com.example.checkListApp.ui.main.entries.Entry;
+import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 
 import java.util.ArrayList;
 

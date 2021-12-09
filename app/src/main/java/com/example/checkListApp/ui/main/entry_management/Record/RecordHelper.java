@@ -3,9 +3,9 @@ package com.example.checkListApp.ui.main.entry_management.Record;
 import android.content.Context;
 
 import com.example.checkListApp.databinding.MainFragmentBinding;
-import com.example.checkListApp.ui.main.entries.Entry;
+import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 import com.example.checkListApp.ui.main.MainFragment;
-import com.example.checkListApp.ui.main.entries.Spacer;
+import com.example.checkListApp.ui.main.entry_management.entries.Spacer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;

@@ -65,7 +65,7 @@
 
     <fragment
         android:id="@+id/progressFragment"
-        android:name="com.example.checkListApp.ui.main.ProgressFragment"
+        android:name="com.example.checkListApp.ui.main.progress.ProgressFragment"
         android:label="FragmentProgress"
         tools:layout="@layout/fragment_progress">
         <action

@@ -5,7 +5,7 @@ import android.util.Log;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.checkListApp.ui.main.entries.Entry;
+import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.entry_management.ListComponent.RecyclerAdapter;
 import com.example.checkListApp.ui.main.data_management.ListUtility;

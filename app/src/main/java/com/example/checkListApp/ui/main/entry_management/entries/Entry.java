@@ -1,7 +1,6 @@
-package com.example.checkListApp.ui.main.entries;
+package com.example.checkListApp.ui.main.entry_management.entries;
 
 import android.os.Build;
-import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.MutableLiveData;
@@ -12,8 +11,6 @@ import androidx.room.PrimaryKey;
 
 import com.example.checkListApp.timer.TimeState;
 import com.example.checkListApp.ui.main.entry_management.ListComponent.RecyclerAdapter;
-
-import java.net.HttpCookie;
 
 @Entity(tableName = "Entries")
 public class Entry {

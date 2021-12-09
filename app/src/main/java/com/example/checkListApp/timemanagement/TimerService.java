@@ -1,4 +1,4 @@
-package com.example.checkListApp.ui.main;
+package com.example.checkListApp.timemanagement;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
@@ -19,12 +19,10 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 import com.example.checkListApp.MainActivity;
-import com.example.checkListApp.timemanagement.ListTimersParcel;
 import com.example.checkListApp.timemanagement.utilities.KeyHelperClass;
 import com.example.checkListApp.timemanagement.utilities.ListTimerUtility;
 import com.example.checkListApp.timer.TimeState;
-import com.example.checkListApp.ui.main.data_management.ListUtility;
-import com.example.checkListApp.ui.main.entries.Entry;
+import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 
 
 import java.util.ArrayList;
@@ -48,7 +46,7 @@ public class TimerService extends Service {
             Log.d("serviceTest", ". "+ Arrays.toString(parcelableList.listOfCountDownTimers));
 
 
-        ForegroundTimerService foregroundTimerService = new ForegroundTimerService(parcelableList , pendingIntent);
+        ForegroundTimerService foregroundTimerService = new ForegroundTimerService(this, parcelableList , pendingIntent);
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
@@ -122,78 +120,73 @@ public class TimerService extends Service {
         return null;
     }
 
-    private class ForegroundTimerService extends ListTimerUtility {
 
+    static class ForegroundTimerService extends ListTimerUtility {
+
+        private final TimerService timerService;
         private final PendingIntent pendingIntent;
         private final MainTimerViewModel timeViewModel = MainActivity.timerViewModel;
         private final ArrayList<Entry> timerViewModelList;
 
         private final int FOREGROUND_SERVICE_ID = 111;
-     //   private final int setTime;
+        //   private final int setTime;
 
         private int elapsedTime;
 
 
         @RequiresApi(api = Build.VERSION_CODES.O)
-        protected ForegroundTimerService(ListTimersParcel parcel, PendingIntent pendingIntent){
+        protected ForegroundTimerService(TimerService timerService, ListTimersParcel parcel, PendingIntent pendingIntent) {
+            this.timerService = timerService;
 
             this.pendingIntent = pendingIntent;
 
             timerViewModelList = (ArrayList<Entry>) generateEntryList(parcel);
 
-            timeViewModel.setTimeState( new TimeState(getSummationTime(timerViewModelList)));
+            timeViewModel.setTimeState(new TimeState(getSummationTime(timerViewModelList)));
 
 
             accumulation(timerViewModelList);
             currentActiveTime = timerViewModelList.get(1);
 
-                        for(Entry n : timerViewModelList){
-                Log.d("serviceTest", "e. "+n.timeAccumulated);
+            for (Entry n : timerViewModelList) {
+                Log.d("serviceTest", "e. " + n.timeAccumulated);
             }
 
 
-
         }
 
 
         @RequiresApi(api = Build.VERSION_CODES.O)
-        public Notification preSetNotification(){
-            return makeNotification("Q", new Entry(), pendingIntent);
+        public Notification preSetNotification() {
+            return timerService.makeNotification("Q", new Entry(), pendingIntent);
         }
 
         @RequiresApi(api = Build.VERSION_CODES.O)
-        public synchronized Notification createTimer(NotificationManager mgr){
+        public synchronized Notification createTimer(NotificationManager mgr) {
 
             AtomicReference<Notification> notification = new AtomicReference<>(preSetNotification());
 
-            int setTime  = getSummationTime(timerViewModelList);
+            int setTime = getSummationTime(timerViewModelList);
 
-                timeViewModel.setServiceTask( (time -> {
+            timeViewModel.setServiceTask((time -> {
 
-                    int elapsedTime = setTime - time;
+                int elapsedTime = setTime - time;
 
-                    if(currentActiveTime.timeElapsed(elapsedTime) || elapsedTime == setTime){
-                   currentActiveTime = getNextActiveProcessTime(timerViewModelList);
+                if (currentActiveTime.timeElapsed(elapsedTime) || elapsedTime == setTime) {
+                    currentActiveTime = getNextActiveProcessTime(timerViewModelList);
 
-                    Log.d("serviceTest","here!");
+                    Log.d("serviceTest", "here!");
                 }
-                     //rebuild notification here
-                            notification.set(makeNotification(new TimeState(time).getTimeFormat(), currentActiveTime,pendingIntent));
-                            mgr.notify(FOREGROUND_SERVICE_ID, notification.get());
+                //rebuild notification here
+                notification.set(timerService.makeNotification(new TimeState(time).getTimeFormat(), currentActiveTime, pendingIntent));
+                mgr.notify(FOREGROUND_SERVICE_ID, notification.get());
 
             }));
-
 
 
             return notification.get();
         }
 
 
-
     }
-
-
-
-
-
 }
