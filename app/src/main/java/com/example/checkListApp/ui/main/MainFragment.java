@@ -331,7 +331,7 @@ public class MainFragment extends Fragment {
 
 
 
-            if(listUtility.currentActiveTime.timeElapsed(elapsedTime) || elapsedTime == setTime){
+            if(listUtility.currentActiveTime.timeElapsed(elapsedTime)){
 
             String message = listUtility.activeProcessTimeIndex+" = "+listUtility.currentActiveTime.timeAccumulated + " "+elapsedTime;
             Log.d("testTime",message);

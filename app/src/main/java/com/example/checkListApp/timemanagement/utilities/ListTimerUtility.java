@@ -24,7 +24,7 @@ public abstract class ListTimerUtility {
 
            if(i != 0 ) {
                list.get(i).setTimeAcclimated(
-                       list.get(i - 1).numberValueTime);
+                       list.get(i - 1).timeAccumulated);
            }
 
        }
@@ -79,16 +79,16 @@ public abstract class ListTimerUtility {
 
    public  Entry getNextActiveProcessTime(ArrayList<Entry> list){
 
-        int size = list.size()-2;
+        int size = list.size()-1;
 
-        if(activeProcessTimeIndex < size){
+        if(activeProcessTimeIndex < size) {
             ++activeProcessTimeIndex;
             return list.get(activeProcessTimeIndex);
-        }else{
-            activeProcessTimeIndex = 1;
+        } else{
+            activeProcessTimeIndex = 0;
         }
 
-        return list.get(size);
+        return list.get(size-2);
     }
 
    public  void revertTimeIndex(){ activeProcessTimeIndex = 1; }
