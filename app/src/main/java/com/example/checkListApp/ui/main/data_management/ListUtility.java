@@ -135,7 +135,7 @@ public final class ListUtility {
 
         for(int i = 0; i < list.size(); i++){
 
-            if(i != 0 && list.get(i).timeAccumulated !=0) {
+            if(i != 0 && list.get(i).numberValueTime !=0) {
                 list.get(i).setTimeAcclimated(
                         list.get(i - 1).numberValueTime);
             }
