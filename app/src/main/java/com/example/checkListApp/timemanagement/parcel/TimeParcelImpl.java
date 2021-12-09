@@ -1,4 +1,4 @@
-package com.example.checkListApp.timemanagement;
+package com.example.checkListApp.timemanagement.parcel;
 
 public interface TimeParcelImpl {
 

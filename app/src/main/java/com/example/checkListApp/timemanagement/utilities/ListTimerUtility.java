@@ -5,7 +5,7 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
-import com.example.checkListApp.timemanagement.ListTimersParcel;
+import com.example.checkListApp.timemanagement.parcel.ListTimersParcel;
 import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 

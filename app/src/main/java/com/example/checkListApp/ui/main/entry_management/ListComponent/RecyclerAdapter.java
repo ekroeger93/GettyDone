@@ -26,7 +26,7 @@ import com.example.checkListApp.database.EntryRepository;
 import com.example.checkListApp.databinding.EntryBinding;
 import com.example.checkListApp.input.CustomEditText;
 import com.example.checkListApp.input.DetectKeyboardBack;
-import com.example.checkListApp.timemanagement.TimeParcelBuilder;
+import com.example.checkListApp.timemanagement.parcel.TimeParcelBuilder;
 import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 import com.example.checkListApp.ui.main.entry_management.Record.RecordHelper;

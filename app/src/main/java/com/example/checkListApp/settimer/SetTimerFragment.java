@@ -21,8 +21,8 @@ import androidx.navigation.Navigation;
 
 
 import com.example.checkListApp.R;
-import com.example.checkListApp.timemanagement.TimeParcel;
-import com.example.checkListApp.timemanagement.TimeParcelBuilder;
+import com.example.checkListApp.timemanagement.parcel.TimeParcel;
+import com.example.checkListApp.timemanagement.parcel.TimeParcelBuilder;
 import com.example.checkListApp.databinding.SettimerFragmentBinding;
 
 public class SetTimerFragment extends Fragment {

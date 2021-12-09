@@ -1,4 +1,4 @@
-package com.example.checkListApp.timemanagement;
+package com.example.checkListApp.timemanagement.parcel;
 
 import android.os.Parcel;
 import android.os.Parcelable;

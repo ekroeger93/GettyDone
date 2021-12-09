@@ -29,7 +29,7 @@
         </action>
         <argument
             android:name="timeParcel"
-            app:argType="com.example.checkListApp.timemanagement.TimeParcel"
+            app:argType="com.example.checkListApp.timemanagement.parcel.TimeParcel"
             app:nullable="true"
             android:defaultValue="@null" />
         <argument
@@ -88,7 +88,7 @@
            </action>
         <argument
             android:name="timeParcel"
-            app:argType="com.example.checkListApp.timemanagement.TimeParcel"
+            app:argType="com.example.checkListApp.timemanagement.parcel.TimeParcel"
             app:nullable="true"
             android:defaultValue="@null" />
 

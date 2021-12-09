@@ -1,4 +1,4 @@
-package com.example.checkListApp.timemanagement;
+package com.example.checkListApp.timemanagement.parcel;
 
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 
