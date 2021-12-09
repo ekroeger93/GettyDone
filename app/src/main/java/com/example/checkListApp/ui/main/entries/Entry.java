@@ -70,7 +70,7 @@ public class Entry {
         countDownTimer.setValue(timeText);
 
         setNumberValueTime(timeText);
-        int numberTime = new TimeState(countDownTimer.getValue()).getTimeNumberValue();
+        int numberTime = new TimeState(timeText).getTimeNumberValue();
         timeAccumulated = new TimeState(numberTime).getTimeNumberValue();//numberTime;//extractNumberValueTime(time);
 
 

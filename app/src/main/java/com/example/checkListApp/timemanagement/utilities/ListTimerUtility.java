@@ -14,27 +14,17 @@ import java.util.ArrayList;
 
 public abstract class ListTimerUtility {
 
-    int activeProcessTimeIndex;
-    public static Entry currentActiveTime;
+    public int activeProcessTimeIndex = 1;
+    public  Entry currentActiveTime;
 
    @RequiresApi(api = Build.VERSION_CODES.O)
-   public void accumulation(ArrayList<Entry> list){
-
-//        for(int i = 0; i < list.size(); i++){
-//
-//            if(i != 0) {
-//                list.get(i).setTimeAcclimated(
-//                        list.get(i - 1).timeAccumulated);
-//            }
-//
-//        }
-
+   public  void accumulation(ArrayList<Entry> list){
 
        for(int i = 0; i < list.size(); i++){
 
-           if(i != 0 && list.get(i).numberValueTime !=0) {
+           if(i != 0 ) {
                list.get(i).setTimeAcclimated(
-                       list.get(i - 1).numberValueTime);
+                       list.get(i - 1).timeAccumulated);
            }
 
        }
@@ -69,50 +59,42 @@ public abstract class ListTimerUtility {
 
     }
 
-   public int getSummationTime(ArrayList<Entry> list){
+   @RequiresApi(api = Build.VERSION_CODES.O)
+   public  int getSummationTime(ArrayList<Entry> list){
 
-        int sum = 0;
+       int sum = 0;
 
-        for(Entry viewModel:list){
+       for(Entry viewModel:list){
 
-            if(viewModel.numberValueTime !=0)
-                sum+=  new TimeState(viewModel.numberValueTime).getTimeNumberValue();
+           viewModel.setNumberValueTime(viewModel.timeTemp);
 
-        }
+           int value = viewModel.getNumberValueTime();
 
-        return sum;
+               sum+= value;
+
+       }
+
+       return sum;
     }
 
-   public Entry getNextActiveProcessTime(ArrayList<Entry> list){
+   public  Entry getNextActiveProcessTime(ArrayList<Entry> list){
 
         int size = list.size()-1;
 
-        if(activeProcessTimeIndex < size){
+        if(activeProcessTimeIndex < size) {
             ++activeProcessTimeIndex;
             return list.get(activeProcessTimeIndex);
-        }else{
+        } else{
             activeProcessTimeIndex = 0;
         }
 
-        return list.get(activeProcessTimeIndex);
+        return list.get(size-2);
     }
 
-   public void revertTimeIndex(){ activeProcessTimeIndex = 0; }
+   public  void revertTimeIndex(){ activeProcessTimeIndex = 1; }
 
    public int getActiveProcessTimeIndex(){return  activeProcessTimeIndex;}
 
-//   public ArrayList<Entry> generateListOfTimers(ArrayList<String> listTime, ArrayList<Integer> listNumTime){
-//
-//        ArrayList<Entry> timerLogsList = new ArrayList<>(5);
-//
-//        for(int i =0; i<listNumTime.size(); i++){
-//            String time = listTime.get(i);
-//            Integer numberTime = listNumTime.get(i);
-//            timerLogsList.add(new Entry(time,numberTime));
-//        }
-//
-//        return  timerLogsList;
-//    }
 
 
 

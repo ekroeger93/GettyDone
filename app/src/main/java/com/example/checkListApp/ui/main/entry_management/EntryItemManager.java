@@ -33,6 +33,7 @@ public class EntryItemManager {
     private final Context context;
     private final MainViewModel mViewModel;
     private final Operator operator;
+    private static ListUtility listUtility;
 
     ButtonPanelToggle buttonPanelToggle;
 
@@ -42,6 +43,7 @@ public class EntryItemManager {
         this.context = context;
         this.mViewModel = mainViewModel;
         this.operator = operator;
+        listUtility = operator.listUtility;
 
     }
 
@@ -97,6 +99,7 @@ public class EntryItemManager {
 
 //TODO: fix memory leak here:
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void sortSelected(SelectionTracker<Long> tracker){
 
 
@@ -110,10 +113,11 @@ public class EntryItemManager {
 
         private final static Executor executor = Executors.newSingleThreadExecutor(); // change according to your requirements
 
+        @RequiresApi(api = Build.VERSION_CODES.O)
         public static void executeAsync() {
             executor.execute(() -> {
 
-                ListUtility.updateAllSelection(MainFragment.getCheckList());
+                listUtility.updateAllSelection(MainFragment.getCheckList());
                 assignSorted(outputSort());
 
                 //Handle at main thread
@@ -146,10 +150,10 @@ public class EntryItemManager {
         }
 
 
-        for(ToggleSwitchOrdering.tNumber tNumber : ListUtility.toggleSwitchOrdering.listToOrder){
+        for(ToggleSwitchOrdering.tNumber tNumber : listUtility.toggleSwitchOrdering.listToOrder){
 
             try {
-                int indexOf = ListUtility.toggleSwitchOrdering.listToOrder.indexOf(tNumber);
+                int indexOf = listUtility.toggleSwitchOrdering.listToOrder.indexOf(tNumber);
                 int swapper = tNumber.number-1;//entry.getViewHolder().orderInt.getValue();
 
                 Entry entry = MainFragment.getCheckList().get(indexOf+1);

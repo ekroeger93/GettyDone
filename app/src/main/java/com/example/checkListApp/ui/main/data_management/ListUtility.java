@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
+import com.example.checkListApp.timemanagement.utilities.ListTimerUtility;
 import com.example.checkListApp.timer.TimeState;
 import com.example.checkListApp.ui.main.entries.Entry;
 import com.example.checkListApp.ui.main.entries.Spacer;
@@ -12,14 +13,12 @@ import com.example.checkListApp.ui.main.entry_management.ListComponent.ToggleSwi
 
 import java.util.ArrayList;
 
-public final class ListUtility {
+public class ListUtility  extends ListTimerUtility {
 
-   public static int activeProcessTimeIndex = 1;
-   public static Entry currentActiveTime;
 
-    static public ToggleSwitchOrdering toggleSwitchOrdering = new ToggleSwitchOrdering();
+     public ToggleSwitchOrdering toggleSwitchOrdering = new ToggleSwitchOrdering();
 
-    static public ArrayList<Entry> updateToggleOrdering(ArrayList<Entry> data){
+     public ArrayList<Entry> updateToggleOrdering(ArrayList<Entry> data){
 
         toggleSwitchOrdering.listToOrder.clear();
 
@@ -41,7 +40,7 @@ public final class ListUtility {
         return data;
     }
 
-    public static ArrayList<Entry> updateAllSelection(ArrayList<Entry> data){
+    public  ArrayList<Entry> updateAllSelection(ArrayList<Entry> data){
 
         for(Entry entry : data){
             try {
@@ -72,7 +71,7 @@ public final class ListUtility {
 
     }
 
-    public static void reInitializeAllSelection(ArrayList<Entry> data){
+    public  void reInitializeAllSelection(ArrayList<Entry> data){
 
         System.out.println("clearing...");
 
@@ -103,63 +102,6 @@ public final class ListUtility {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public static int getSummationTime(ArrayList<Entry> list){
-
-        int sum = 0;
-
-        for(Entry viewModel:list){
-
-            viewModel.setNumberValueTime(viewModel.timeTemp);
-
-            if(viewModel.numberValueTime !=0)
-                sum+= new TimeState(viewModel.numberValueTime).getTimeNumberValue();
-
-        }
-
-        return sum;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public static ArrayList<Entry> accumulation(ArrayList<Entry> list){
-
-//        for(int i = 0; i < list.size(); i++){
-//
-//            if(i != 0) {
-//                list.get(i).setTimeAcclimated(
-//                        list.get(i - 1).timeAccumulated);
-//            }
-//
-//          //  Log.d("testTime", i+" = "+list.get(i).timeAccumulated);
-//        }
-
-        for(int i = 0; i < list.size(); i++){
-
-            if(i != 0 && list.get(i).numberValueTime !=0) {
-                list.get(i).setTimeAcclimated(
-                        list.get(i - 1).numberValueTime);
-            }
-
-        }
-
-        return list;
-    }
-
-    public static Entry getNextActiveProcessTime(ArrayList<Entry> list){
-
-        if(activeProcessTimeIndex <= list.size()-2){
-            ++activeProcessTimeIndex;
-            return list.get(activeProcessTimeIndex);
-        }else{
-            activeProcessTimeIndex = 1;
-        }
-
-        return list.get(list.size()-2);
-    }
-
-    public static void revertTimeIndex(){
-        activeProcessTimeIndex = 1;
-    }
 
 
 }
