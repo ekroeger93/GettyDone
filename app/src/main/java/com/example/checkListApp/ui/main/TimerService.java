@@ -189,23 +189,6 @@ public class TimerService extends Service {
         }
 
 
-        private int setTimer(ArrayList<Entry> list){
-
-            int summationTime  = getSummationTime(list);
-
-            String setTime = new TimeState(getSummationTime(list)).getTimeFormat();
-
-            timeViewModel.setCountDownTimer(setTime);
-
-
-            accumulation(list);
-
-            currentActiveTime = list.get(1);
-
-
-            return summationTime;
-        }
-
 
     }
 

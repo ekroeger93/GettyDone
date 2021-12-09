@@ -22,7 +22,7 @@ public abstract class ListTimerUtility {
 
        for(int i = 0; i < list.size(); i++){
 
-           if(i != 0 && list.get(i).numberValueTime !=0) {
+           if(i != 0 ) {
                list.get(i).setTimeAcclimated(
                        list.get(i - 1).numberValueTime);
            }
@@ -68,8 +68,9 @@ public abstract class ListTimerUtility {
 
            viewModel.setNumberValueTime(viewModel.timeTemp);
 
-           if(viewModel.numberValueTime !=0)
-               sum+= new TimeState(viewModel.numberValueTime).getTimeNumberValue();
+           int value = viewModel.getNumberValueTime();
+
+               sum+= value;
 
        }
 
@@ -84,7 +85,7 @@ public abstract class ListTimerUtility {
             ++activeProcessTimeIndex;
             return list.get(activeProcessTimeIndex);
         }else{
-            activeProcessTimeIndex = 0;
+            activeProcessTimeIndex = 1;
         }
 
         return list.get(size);
@@ -94,18 +95,6 @@ public abstract class ListTimerUtility {
 
    public int getActiveProcessTimeIndex(){return  activeProcessTimeIndex;}
 
-//   public ArrayList<Entry> generateListOfTimers(ArrayList<String> listTime, ArrayList<Integer> listNumTime){
-//
-//        ArrayList<Entry> timerLogsList = new ArrayList<>(5);
-//
-//        for(int i =0; i<listNumTime.size(); i++){
-//            String time = listTime.get(i);
-//            Integer numberTime = listNumTime.get(i);
-//            timerLogsList.add(new Entry(time,numberTime));
-//        }
-//
-//        return  timerLogsList;
-//    }
 
 
 

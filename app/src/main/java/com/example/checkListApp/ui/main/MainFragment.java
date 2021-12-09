@@ -453,6 +453,7 @@ public class MainFragment extends Fragment {
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("ClickableViewAccessibility")
     public void assignButtonListeners(){
 
