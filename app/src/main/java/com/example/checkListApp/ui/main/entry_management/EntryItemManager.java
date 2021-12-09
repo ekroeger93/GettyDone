@@ -203,8 +203,10 @@ public class EntryItemManager {
 
                 //Post seems to cause GC issues?
 
+                //TODO: performance issues
+                //TODO: timeTemp not working used getValue instead
                 MainFragment.getCheckList().get(index)
-                        .postEntryOptimized(entry.textTemp,entry.checkTemp,entry.timeTemp);
+                        .postEntryOptimized(entry.textTemp,entry.checkTemp,entry.countDownTimer.getValue());
 
 
             }catch (IndexOutOfBoundsException | NullPointerException e){
