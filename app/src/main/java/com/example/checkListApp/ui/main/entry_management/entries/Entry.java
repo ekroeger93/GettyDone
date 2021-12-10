@@ -127,10 +127,6 @@ public class Entry {
 
         setNumberValueTime(time);
 
-        int numberTime = new TimeState(time).getTimeNumberValue();
-        timeAccumulated = new TimeState(numberTime).getTimeNumberValue();//numberTime;//extractNumberValueTime(time);
-
-
     }
 
 

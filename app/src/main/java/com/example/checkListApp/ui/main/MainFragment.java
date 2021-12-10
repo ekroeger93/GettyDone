@@ -320,8 +320,6 @@ public class MainFragment extends Fragment {
 
 
         int setTime = setTimer(mainTimerView);
-      //  mainTimerView.toggled.postValue(mainTimerView.mainTimerViewModel.isToggled());
-
         mainTimerView.mainTimerViewModel.setCountDownTimer(new TimeState(setTime).getTimeFormat());
 
         startService();
@@ -330,44 +328,43 @@ public class MainFragment extends Fragment {
 
             int elapsedTime = setTime - time;
 
+            //TODO: BUG if the current and next timer are equal it skips
+            if(listUtility.currentActiveTime.timeElapsed(elapsedTime)) {
+
+                String message = listUtility.activeProcessTimeIndex + " = " + listUtility.currentActiveTime.timeAccumulated + " " + elapsedTime;
+                Log.d("testTime", message);
+                shortBell.start();
+
+                String messageB = checkList.get(listUtility.activeProcessTimeIndex).textEntry.getValue();
 
 
-            if(listUtility.currentActiveTime.timeElapsed(elapsedTime)){
+                if (getActivity() != null) {
 
-            String message = listUtility.activeProcessTimeIndex+" = "+listUtility.currentActiveTime.timeAccumulated + " "+elapsedTime;
-            Log.d("testTime",message);
-            shortBell.start();
+                    getActivity().runOnUiThread(() -> {
 
-            new Handler(Looper.getMainLooper()).post(new Runnable () {
-                @Override
-                public void run () {
-                    scrollPosition(listUtility.activeProcessTimeIndex);
+                        scrollPosition(listUtility.activeProcessTimeIndex);
 
-                    String message = checkList.get(
-                            listUtility.activeProcessTimeIndex
-                    ).textEntry.getValue();
+                        Toast toast = Toast.makeText(getContext(), messageB + " done!", Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.TOP, 0, 0);
+                        toast.show();
 
-                    Toast toast = Toast.makeText(getContext(),message+" done!",Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.TOP,0,0);
-                    toast.show();
+                    });
+
                 }
-            });
+                //TODO: elusive bug here
 
-            listUtility.currentActiveTime.getViewHolder().checkOff();
-            listUtility.currentActiveTime = listUtility.getNextActiveProcessTime(checkList);
+                listUtility.currentActiveTime.getViewHolder().checkOff();
+                listUtility.currentActiveTime = listUtility.getNextActiveProcessTime(checkList);
 
 
+            }
 
-        }
+
 
         });
 
     });
 
-
-
-    //
-   // mainTimerView.setObserverForToggledLiveData(getViewLifecycleOwner(), aBoolean -> executionMode = aBoolean);
 
     //update time of both View and ViewModel
     mainTimerView.setObserverForMainTextTime(binding.timeTextMain,getViewLifecycleOwner());

@@ -163,7 +163,7 @@ public class TimerService extends Service {
         }
 
         @RequiresApi(api = Build.VERSION_CODES.O)
-        public synchronized Notification createTimer(NotificationManager mgr) {
+        public Notification createTimer(NotificationManager mgr) {
 
             AtomicReference<Notification> notification = new AtomicReference<>(preSetNotification());
 
@@ -176,7 +176,7 @@ public class TimerService extends Service {
                 if (currentActiveTime.timeElapsed(elapsedTime) || elapsedTime == setTime) {
                     currentActiveTime = getNextActiveProcessTime(timerViewModelList);
 
-                    Log.d("serviceTest", "here!");
+
                 }
                 //rebuild notification here
                 notification.set(timerService.makeNotification(new TimeState(time).getTimeFormat(), currentActiveTime, pendingIntent));
