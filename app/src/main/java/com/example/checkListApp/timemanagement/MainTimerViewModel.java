@@ -47,6 +47,8 @@ public class MainTimerViewModel extends ViewModel {
         return _countDownTimer.getValue();
     }
 
+    public int getNumberValueTime() {return  new TimeState(_countDownTimer.getValue()).getTimeNumberValue();}
+
     public void setTimeState(TimeState timeState) {
         this.timeState = timeState;
     }

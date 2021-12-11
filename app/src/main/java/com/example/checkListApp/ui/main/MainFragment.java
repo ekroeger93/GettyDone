@@ -36,6 +36,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.checkListApp.R;
 import com.example.checkListApp.databinding.MainFragmentBinding;
 import com.example.checkListApp.timemanagement.MainTimerView;
+import com.example.checkListApp.timemanagement.MainTimerViewModel;
 import com.example.checkListApp.timemanagement.TimerService;
 import com.example.checkListApp.timemanagement.parcel.ListTimersParcel;
 import com.example.checkListApp.timemanagement.parcel.ListTimersParcelBuilder;
@@ -57,6 +58,8 @@ import com.example.checkListApp.ui.main.entry_management.entries.Spacer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 /*
@@ -140,7 +143,7 @@ public class MainFragment extends Fragment {
 
     private static CustomLayoutManager customLayoutManager;
 
-    private static ArrayList<Entry> checkList = new ArrayList<>();
+    private static volatile ArrayList<Entry> checkList = new ArrayList<>();
     private final MutableLiveData<Integer> selectedEntry = new MutableLiveData<>();
 
     //alot of classes rely on this being static
@@ -316,30 +319,35 @@ public class MainFragment extends Fragment {
 
 
 
+
+
     binding.timerExecuteBtn.setOnClickListener(view -> {
 
-
         int setTime = setTimer(mainTimerView);
-        mainTimerView.mainTimerViewModel.setCountDownTimer(new TimeState(setTime).getTimeFormat());
 
         startService();
+
+        //TODO: BUG if the current and next timer are equal it skips
+
+        /* I'm getting an array with a size is not fully realized unless
+         * I scroll down the list, thus repeated accumulation assignments on new thread
+         *
+         * A dumb fix would be to literally animate from bottom to top and start the thread
+         * once the animation reaches the top of list
+         *
+         * */
+
 
         mainTimerView.mainTimerViewModel.toggleTimeWithCustomTask(time -> {
 
             int elapsedTime = setTime - time;
-
-            //TODO: BUG if the current and next timer are equal it skips
             if(listUtility.currentActiveTime.timeElapsed(elapsedTime)) {
 
-                String message = listUtility.activeProcessTimeIndex + " = " + listUtility.currentActiveTime.timeAccumulated + " " + elapsedTime;
-                Log.d("testTime", message);
                 shortBell.start();
 
                 String messageB = checkList.get(listUtility.activeProcessTimeIndex).textEntry.getValue();
 
-
                 if (getActivity() != null) {
-
                     getActivity().runOnUiThread(() -> {
 
                         scrollPosition(listUtility.activeProcessTimeIndex);
@@ -349,19 +357,20 @@ public class MainFragment extends Fragment {
                         toast.show();
 
                     });
-
                 }
-                //TODO: elusive bug here
 
-                listUtility.currentActiveTime.getViewHolder().checkOff();
-                listUtility.currentActiveTime = listUtility.getNextActiveProcessTime(checkList);
-
+                if(checkList.get(listUtility.activeProcessTimeIndex).numberValueTime  !=0 ) {
+                    checkList.get(listUtility.activeProcessTimeIndex).getViewHolder().checkOff();
+                    listUtility.currentActiveTime = listUtility.getNextActiveProcessTime(checkList);
+                }
 
             }
 
 
 
         });
+
+
 
     });
 

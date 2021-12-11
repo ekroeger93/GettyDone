@@ -41,7 +41,7 @@ public class Entry {
     @Ignore
     public int numberValueTime = 0;
     @Ignore
-    public Integer timeAccumulated =0;
+    public int timeAccumulated = 0;
 
     public Entry(){
         textEntry = new MutableLiveData<>("o");

@@ -17,9 +17,16 @@ public abstract class ListTimerUtility {
     public  Entry currentActiveTime;
 
    @RequiresApi(api = Build.VERSION_CODES.O)
-   public  void accumulation(ArrayList<Entry> list){
+   public void accumulation(ArrayList<Entry> list){
 
-       for(int i = 0; i < list.size(); i++){
+
+       //TODO: fix this
+//       D: 1 = 5 5
+//       D: 2 = 10 10
+//       D: 3 = 10 10 <-- ?
+//       D: 4 = 10 10
+//       D: 5 = 10 10
+       for(int i = 0; i <= list.size()-2; i++){
 
            if(i != 0 ) {
                list.get(i).setTimeAcclimated(
@@ -76,12 +83,12 @@ public abstract class ListTimerUtility {
        return sum;
     }
 
-   public Entry getNextActiveProcessTime(ArrayList<Entry> list){
+   public  Entry getNextActiveProcessTime(ArrayList<Entry> list){
 
         int size = list.size()-1;
 
         if(activeProcessTimeIndex < size) {
-            ++activeProcessTimeIndex;
+            activeProcessTimeIndex++;
             return list.get(activeProcessTimeIndex);
         } else{
             activeProcessTimeIndex = 1;
