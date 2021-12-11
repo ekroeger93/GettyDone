@@ -17,10 +17,15 @@ public class Operator {
     public RecyclerView recyclerView;
     public RecyclerAdapter adapter;
     ListUtility listUtility;
+    private final MainFragment mainFragment;
 
 
-    public Operator(RecyclerView recyclerView, RecyclerAdapter adapter){
-        this.recyclerView = recyclerView; this.adapter = adapter;
+    public Operator(MainFragment mainFragment){
+
+        this.mainFragment= mainFragment;
+
+        this.recyclerView = mainFragment.getRecyclerView();
+        this.adapter = mainFragment.getAdapter();
     }
 
     public void setListUtility(ListUtility listUtility) {
@@ -47,9 +52,9 @@ public class Operator {
 
         int solveForPos;
         solveForPos = (int) Math.round((currentScroll - ((int) recyclerScrollCompute - (itemHeightPx / 2f))) / (itemHeightPx));
-        selection  = Math.max(1,Math.min(solveForPos,MainFragment.getCheckList().size()-1));
+        selection  = Math.max(1,Math.min(solveForPos,mainFragment.getCheckList().size()-1));
 
-        for (Entry e : MainFragment.getCheckList()) {
+        for (Entry e : mainFragment.getCheckList()) {
 
             try{
                 if(!e.checked.getValue()){
@@ -64,7 +69,7 @@ public class Operator {
 
 
      if (e.getViewHolder().getBindingAdapterPosition() == selection - 1)
-         listUtility.updateAllSelection(MainFragment.getCheckList());
+         listUtility.updateAllSelection(mainFragment.getCheckList());
 
 
 
@@ -93,9 +98,9 @@ public class Operator {
         lastSolvedPosition = (int) Math.round((lastScroll - ((int) recyclerScrollCompute - (itemHeightPx / 2f))) / (itemHeightPx));
 
         if(decremented) {
-            lastSelection = Math.max(1, Math.min(lastSolvedPosition, MainFragment.getCheckList().size() -2 ));
+            lastSelection = Math.max(1, Math.min(lastSolvedPosition, mainFragment.getCheckList().size() -2 ));
         }else{
-            lastSelection = Math.max(1, Math.min(lastSolvedPosition, MainFragment.getCheckList().size() - 1 ));
+            lastSelection = Math.max(1, Math.min(lastSolvedPosition, mainFragment.getCheckList().size() - 1 ));
         }
 
 
@@ -116,16 +121,16 @@ public class Operator {
         try {
             if (oldMovePosition != selection-1
                     && selection > 0
-                    && selection < MainFragment.getCheckList().size()
+                    && selection < mainFragment.getCheckList().size()
             ) {
 
 
                 //TODO: FIX BUG WITH EXECUTION TIMER
                 //TODO:FIX BUG PARCEL TIME NOT BEING UPDATED AFTER MOVE
 
-                MainFragment.getCheckList().remove(movingItem);
+                mainFragment.getCheckList().remove(movingItem);
                 adapter.notifyItemRemoved(oldMovePosition);
-                MainFragment.getCheckList().add(selection-1, movingItem);
+                mainFragment.getCheckList().add(selection-1, movingItem);
                 adapter.notifyItemInserted(selection-1);
 
           //      adapter.notifyItemMoved(oldMovePosition,selection-1);

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public abstract class ListTimerUtility {
 
     public int activeProcessTimeIndex = 1;
-    public  Entry currentActiveTime;
+    public Entry currentActiveTime;
 
    @RequiresApi(api = Build.VERSION_CODES.O)
    public void accumulation(ArrayList<Entry> list){
@@ -40,9 +40,12 @@ public abstract class ListTimerUtility {
    @RequiresApi(api = Build.VERSION_CODES.O)
    public ArrayList<Entry> generateEntryList(ListTimersParcel parcel){
 
-        int size = MainFragment.getCheckList().size();// parcel.listOfCountDownTimers.length;
+      //  int size = MainFragment.getCheckList().size();// parcel.listOfCountDownTimers.length;
 
-        ArrayList<Entry> list = new ArrayList<>(size);
+        //TODO: THIS May need to be fix
+       int size = parcel.listOfChecked.length;
+
+       ArrayList<Entry> list = new ArrayList<>(size);
 
        Log.d("serviceTest"," size: "+size);
 

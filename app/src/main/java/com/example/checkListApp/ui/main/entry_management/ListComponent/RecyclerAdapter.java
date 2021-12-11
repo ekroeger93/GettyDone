@@ -43,7 +43,8 @@ import java.util.List;
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
 
-    private List<Entry> mList;
+    private ArrayList<Entry> mList;
+    private RecordHelper recordHelper;
 
     private List<ViewHolder> viewHolderList;
 
@@ -69,11 +70,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public void setActivity(Activity activity) {
         this.activity = activity;
     }
+    public void setRecordHelper(RecordHelper recordHelper){this.recordHelper = recordHelper;}
 
     public void setTracker(SelectionTracker<Long> tracker){
         this.selectionTracker = tracker;
         this.savedSelectionTracker = tracker;
-
     }
 
     public void trackerOn(boolean turnOnTracker){
@@ -126,10 +127,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
 
 
-    public void setList(List<Entry> mList) {
-        this.mList = mList;
+    public void setList(ArrayList<Entry> mList) {
 
-    notifyDataSetChanged();
+        if(this.mList != null && this.mList.size() > 0) this.mList.clear();
+
+        this.mList = mList;
+        notifyDataSetChanged();
+       // notifyItemRangeChanged(0,mList.size(),null);
+
     }
 
 
@@ -185,13 +190,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         if(entry instanceof Entry)
         {
-
-
          //   if(entry.getViewHolder() == null)
                 entry.setViewHolder(holder);
 
+            holder.recordHelper = recordHelper;
             holder.setListeners(holder.itemView);
             holder.setObservers(holder.getEntry());
+
 
             holder.selectionUpdate();
 
@@ -245,7 +250,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         public final Button checkButton;
         private final Button setTimeButton;
 
-
+        private RecordHelper recordHelper;
 
         public  int selectOrder = -1;
         public boolean selected = false;
@@ -272,7 +277,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
 
                 }
-
 
                 public void selectionUpdate(){
 
@@ -311,10 +315,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     }
                 }
 
+                TrackerHelper.Details getItemDetails(){ return  details; }
 
-        TrackerHelper.Details getItemDetails(){ return  details; }
 
-       public Long getKey(){ return details.getSelectionKey();}
+
+                public Long getKey(){ return details.getSelectionKey();}
 
                 @SuppressLint("ClickableViewAccessibility")
                 public void setListeners(View itemView ){
@@ -413,10 +418,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
                         entry.checkTemp = aBoolean.booleanValue();
 
-                        RecordHelper.update();
-
+                        recordHelper.update(mList);
                         repository.updateEntry(entry);
-                        JsonService.buildJson((ArrayList<Entry>) mList);
+                        JsonService.buildJson(mList);
 
                     };
 
@@ -446,14 +450,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     isSelected.observe(owner,selectCheckObs);
 
                     //TODO null value
-                    if(getEntry().textEntry !=null && !MainFragment.executionMode) {
+
+                    if(!MainFragment.executionMode) {
                         getEntry().textEntry.observe(owner, observer);
                         getEntry().checked.observe(owner, checkObs);
                         getEntry().countDownTimer.observe(owner, changeTimeValue);
                     }
 
                 }
-
 
                 public void transitionToSetTimer(){
 

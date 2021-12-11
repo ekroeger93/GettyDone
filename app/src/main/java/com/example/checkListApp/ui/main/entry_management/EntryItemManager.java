@@ -35,15 +35,21 @@ public class EntryItemManager {
     private final Operator operator;
     private static ListUtility listUtility;
 
+    private final MainFragment mainFragment;
+    private final TaskSortEntries taskSortEntries;
+
     ButtonPanelToggle buttonPanelToggle;
 
 
-    public EntryItemManager(Context context, MainViewModel mainViewModel, Operator operator){
+    public EntryItemManager(MainFragment mainFragment){
 
-        this.context = context;
-        this.mViewModel = mainViewModel;
-        this.operator = operator;
+        this.context = mainFragment.getContext();
+        this.mViewModel = mainFragment.getmViewModel();
+        this.operator = mainFragment.getOperator();
         listUtility = operator.listUtility;
+
+        this.mainFragment = mainFragment;
+        taskSortEntries = new TaskSortEntries(mainFragment);
 
     }
 
@@ -54,13 +60,11 @@ public class EntryItemManager {
     public void add(){
 
         Entry entry = new Entry();
-
-
         mViewModel.insertEntry(entry);
 
        // operator.adapter.notifyItemInserted(MainFragment.getCheckList().size() );
 
-        operator.adapter.notifyItemChanged(MainFragment.getCheckList().size());
+        operator.adapter.notifyItemChanged(mainFragment.getCheckList().size());
 
         operator.refreshSelection(false);
 
@@ -71,7 +75,7 @@ public class EntryItemManager {
 
     public void deleteSelected(SelectionTracker<Long> tracker){
 
-        for(Entry entry : MainFragment.getCheckList()){
+        for(Entry entry : mainFragment.getCheckList()){
 
             try{
 
@@ -83,7 +87,7 @@ public class EntryItemManager {
 
                 mViewModel.deleteEntry(entry);
                 operator.adapter.notifyItemRemoved(position);
-                operator.adapter.notifyItemChanged(MainFragment.getCheckList().size());
+                operator.adapter.notifyItemChanged(mainFragment.getCheckList().size());
 
             }
             }catch (NullPointerException e){
@@ -103,21 +107,30 @@ public class EntryItemManager {
     public void sortSelected(SelectionTracker<Long> tracker){
 
 
-        TaskSortEntries.executeAsync();
+//        TaskSortEntries.executeAsync();
+
+        taskSortEntries.executeAsync();
 
 //  notifyDataSetChanged();
 
     }
 
-    public static final class TaskSortEntries {
+    public final class TaskSortEntries {
 
-        private final static Executor executor = Executors.newSingleThreadExecutor(); // change according to your requirements
+        private final  Executor executor = Executors.newSingleThreadExecutor(); // change according to your requirements
+
+        MainFragment mainFragment;
+
+        public TaskSortEntries(MainFragment mainFragment){
+
+            this.mainFragment = mainFragment;
+        }
 
         @RequiresApi(api = Build.VERSION_CODES.O)
-        public static void executeAsync() {
+        public void executeAsync() {
             executor.execute(() -> {
 
-                listUtility.updateAllSelection(MainFragment.getCheckList());
+                listUtility.updateAllSelection(mainFragment.getCheckList());
                 assignSorted(outputSort());
 
                 //Handle at main thread
@@ -134,9 +147,9 @@ public class EntryItemManager {
 
     }
 
-    static ArrayList<Entry> outputSort(){
+     ArrayList<Entry> outputSort(){
 
-        int size =  MainFragment.getCheckList().size();
+        int size =  mainFragment.getCheckList().size();
 
         ArrayList<Boolean> swappable = new ArrayList<>(size);
         ArrayList<Entry>swapList = new ArrayList<>(size);
@@ -156,7 +169,7 @@ public class EntryItemManager {
                 int indexOf = listUtility.toggleSwitchOrdering.listToOrder.indexOf(tNumber);
                 int swapper = tNumber.number-1;//entry.getViewHolder().orderInt.getValue();
 
-                Entry entry = MainFragment.getCheckList().get(indexOf+1);
+                Entry entry = mainFragment.getCheckList().get(indexOf+1);
 
                 swapList.set(indexOf,entry);
                 swappable.set(indexOf,true);
@@ -187,7 +200,7 @@ public class EntryItemManager {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    static void assignSorted(ArrayList<Entry> entries){
+     void assignSorted(ArrayList<Entry> entries){
 
         for(Entry entry : entries){
             System.out.println(entry.textEntry.getValue());
@@ -205,7 +218,7 @@ public class EntryItemManager {
 
                 //TODO: performance issues
                 //TODO: timeTemp not working used getValue instead
-                MainFragment.getCheckList().get(index)
+                mainFragment.getCheckList().get(index)
                         .postEntryOptimized(entry.textTemp,entry.checkTemp,entry.countDownTimer.getValue());
 
 
@@ -221,9 +234,9 @@ public class EntryItemManager {
 
     public void delete(){
 
-        if(MainFragment.getCheckList().get(operator.selection-1).getClass() == Entry.class){
+        if(mainFragment.getCheckList().get(operator.selection-1).getClass() == Entry.class){
 
-            View view = MainFragment.getCheckList().get(operator.selection-1).getViewHolder().itemView;
+            View view = mainFragment.getCheckList().get(operator.selection-1).getViewHolder().itemView;
 
             view.clearAnimation();
 
@@ -246,9 +259,9 @@ public class EntryItemManager {
 
                             super.onAnimationStart(animation);
 
-                            mViewModel.deleteEntry(MainFragment.getCheckList().get(operator.selection - 1));
+                            mViewModel.deleteEntry(mainFragment.getCheckList().get(operator.selection - 1));
                             operator.adapter.notifyItemRemoved(operator.selection - 1);
-                            operator.adapter.notifyItemChanged(MainFragment.getCheckList().size());
+                            operator.adapter.notifyItemChanged(mainFragment.getCheckList().size());
 
                             buttonPanelToggle.toggleDisable();
                         }
@@ -274,13 +287,12 @@ public class EntryItemManager {
 
 
         if (!isMovingItem) {
-            operator.movingItem = MainFragment.getCheckList().get(selection - 1);
+            operator.movingItem = mainFragment.getCheckList().get(selection - 1);
             operator.oldMovePosition = selection - 1;
-            operator.movingItem.setViewHolder(MainFragment.getCheckList().get(selection - 1).getViewHolder());
+            operator.movingItem.setViewHolder(mainFragment.getCheckList().get(selection - 1).getViewHolder());
             operator.movingItem.getViewHolder().itemView.setBackgroundColor(Color.BLUE);
             operator.moveItem(operator.movingItem);
             buttonPanelToggle.toggleDisableToButton();
-            ;
 
         }else{
             operator.adapter.notifyItemChanged(selection-1);
@@ -289,8 +301,8 @@ public class EntryItemManager {
             //operator.adapter.notifyItemMoved(oldMovePosition,selection-1);
 
             operator.movingItem = null;
-            buttonPanelToggle.toggleDisableToButton();
         }
+        buttonPanelToggle.toggleDisableToButton();
 
         operator.isMovingItem = !isMovingItem;
 
@@ -311,7 +323,7 @@ public class EntryItemManager {
         new DetectKeyboardBack(
                 context,
                 editHolderText,
-                textHolderText, MainFragment.getCheckList().get(operator.selection - 1));
+                textHolderText, mainFragment.getCheckList().get(operator.selection - 1));
 
         operator.recyclerView.smoothScrollToPosition(operator.selection - 1);
 

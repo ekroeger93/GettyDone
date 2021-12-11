@@ -119,6 +119,8 @@ public final class JsonService {
             timeText = jsonObject.get("timerLabel").toString();
             Log.d("checkListTime",">>> "+timeText);
 
+            //TODO:fix this
+            timeText = timeText.replaceAll("\"","").trim();
 
             return new Entry(textEntry,isChecked,timeText);
 

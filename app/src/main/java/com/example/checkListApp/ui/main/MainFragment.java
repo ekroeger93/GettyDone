@@ -137,17 +137,25 @@ public class MainFragment extends Fragment {
     private ButtonPanel buttonPanel;
     private ButtonPanelToggle buttonPanelToggle;
 
+    private final RecordHelper recordHelper = new RecordHelper();
+
     private RecyclerAdapter adapter;
     private MainViewModel mViewModel;
     private RecyclerView recyclerView;
 
     private static CustomLayoutManager customLayoutManager;
 
-    private static ArrayList<Entry> checkList = new ArrayList<>();
+    private ArrayList<Entry> checkList = new ArrayList<>();
     private final MutableLiveData<Integer> selectedEntry = new MutableLiveData<>();
 
     //alot of classes rely on this being static
-    public static ArrayList<Entry> getCheckList(){ return checkList;}
+    public ArrayList<Entry> getCheckList(){ return checkList;}
+    public Operator getOperator (){ return operator;}
+    public MainViewModel getmViewModel(){ return mViewModel;}
+
+    public RecyclerView getRecyclerView(){ return recyclerView;}
+    public RecyclerAdapter getAdapter() {return adapter;}
+    public RecordHelper getRecordHelper() {return recordHelper;}
 
     private boolean isSorting = false;
 
@@ -216,10 +224,11 @@ public class MainFragment extends Fragment {
 
         if(!getArguments().isEmpty())
         checkList = AuxiliaryData.loadFile(checkList, mViewModel, getArguments());
+        refreshAdapterWithLoadedCheckList();
 
     }
 
-
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void setUpAdapter(){
 
         recyclerView = binding.ScrollView;
@@ -229,20 +238,25 @@ public class MainFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         customLayoutManager = new CustomLayoutManager(getContext());
 
-
         recyclerView.setLayoutManager(customLayoutManager);
         recyclerView.setHasFixedSize(false);
+
         adapter.setOwner(getViewLifecycleOwner());
         adapter.setRepository(mViewModel.getRepository());
         adapter.setActivity(getActivity());
+        adapter.setRecordHelper(recordHelper);
 
 //        checkList.add(new Spacer());
 //        checkList.add(new Entry("a",false,"00:00:00"));
 //       checkList.add(new Entry("b",false,"00:00:00"));
 
-        adapter.setList(checkList);
-        adapter.notifyDataSetChanged();
+        ArrayList<Entry> tempArray = new ArrayList<>();
 
+        tempArray.add( new Spacer());
+        tempArray.add( new Entry("a",false,"00:00:00"));
+        tempArray.add( new Entry("a",false,"00:00:00"));
+
+        adapter.setList(tempArray);
 
         selectionTracker = new SelectionTracker.Builder<>(
                 "selection",
@@ -258,16 +272,19 @@ public class MainFragment extends Fragment {
         adapter.setTracker(selectionTracker);
         adapter.trackerOn(false);
 
-        operator = new Operator(recyclerView,adapter);
+        operator = new Operator(this);
         operator.setListUtility(listUtility);
-        entryItemManager = new EntryItemManager(getContext(),mViewModel,operator);
+        entryItemManager = new EntryItemManager( this);
         buttonPanel = new ButtonPanel(getContext(), binding);
         buttonPanelToggle  = buttonPanel.buttonPanelToggle;
 
         entryItemManager.setButtonPanelToggle(buttonPanelToggle);
 
-      //  enableScroll(false);
+    }
 
+    public void refreshAdapterWithLoadedCheckList(){
+
+        adapter.setList(checkList);
 
     }
 
@@ -607,7 +624,7 @@ public class MainFragment extends Fragment {
                 checkList.add(checkList.size(), new Spacer());
                 adapter.setList(checkList);
 
-                RecordHelper.update();
+                recordHelper.update(checkList);
 
                 if(!isSorting){
                 checkList = listUtility.updateToggleOrdering(checkList);
@@ -648,14 +665,14 @@ public class MainFragment extends Fragment {
                 RecyclerAdapter.ViewHolder entryCurrent;
                 int index;
 
-            for (Entry entry : getCheckList()) {
+            for (Entry entry : checkList) {
                 try {
                     if (entry instanceof Spacer) {} else {
 
                         if (key.equals(entry.getViewHolder().getKey())) {
 
                             entryCurrent = entry.getViewHolder();
-                            index = getCheckList().indexOf(entry) - 1;
+                            index = checkList.indexOf(entry) - 1;
 
                             //I need the adapter to re-realize the list size
                             //due to the adapter erroneous size prior to cleaning
@@ -691,7 +708,7 @@ public class MainFragment extends Fragment {
 
             try {
 
-                    for(Entry entry : getCheckList()){
+                    for(Entry entry : checkList){
                         //   entry.getViewHolder().selectionUpdate();
                         RecyclerAdapter.ViewHolder viewHolder = entry.getViewHolder();
                         if(entry instanceof Spacer){}else{
