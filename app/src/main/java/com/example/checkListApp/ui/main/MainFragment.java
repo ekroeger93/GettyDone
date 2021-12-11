@@ -143,7 +143,7 @@ public class MainFragment extends Fragment {
 
     private static CustomLayoutManager customLayoutManager;
 
-    private static volatile ArrayList<Entry> checkList = new ArrayList<>();
+    private static ArrayList<Entry> checkList = new ArrayList<>();
     private final MutableLiveData<Integer> selectedEntry = new MutableLiveData<>();
 
     //alot of classes rely on this being static

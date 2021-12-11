@@ -78,7 +78,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     public void trackerOn(boolean turnOnTracker){
         toggleTracker = turnOnTracker;
-
         notifyDataSetChanged();
     }
 
@@ -181,9 +180,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         {
             holder.itemView.setVisibility(View.INVISIBLE);
             holder.setIsRecyclable(false);
-//            entry.getViewHolder().itemView.setVisibility(View.INVISIBLE);
-//            entry.getViewHolder().setIsRecyclable(false);
-
         }
 
 
@@ -262,14 +258,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         EntryBinding binding;
 
-
-
                 public ViewHolder(@NonNull EntryBinding itemView) {
                     super(itemView.getRoot());
 
                     binding = itemView;
-                   details = new TrackerHelper.Details();
-
+                    details = new TrackerHelper.Details();
 
                     tEntryViewRow = binding.entry;
                     checkButton = (Button) itemView.getRoot().findViewById(R.id.checkBtn);
@@ -284,7 +277,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 public void selectionUpdate(){
 
                     if(selected){
-                      //  button.setText((CharSequence) String.valueOf(orderInt.getValue()));
                         checkButton.setText((CharSequence) String.valueOf(selectOrder));
                     }else{
                         checkButton.setText(null);
@@ -301,8 +293,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
                        details.position = position;
 
-
-
                         if (selectionTracker.isSelected(details.getSelectionKey())) {
                             checkButton.setBackgroundColor(Color.RED);
                         }else{
@@ -311,10 +301,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
                  }
 
-
-
                 }
-
 
                 public Entry getEntry() {
                     try{
@@ -386,12 +373,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         }
                         return true;
                     });
-//
-//                    setTimeButton.setOnClickListener( view -> {
-//                        transitionToSetTimer();
-//
-//                    });
-
 
                 }
 
