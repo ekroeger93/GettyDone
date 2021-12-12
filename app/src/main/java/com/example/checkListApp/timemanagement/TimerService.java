@@ -44,12 +44,14 @@ public class TimerService extends Service {
 
 
 
-            Log.d("serviceTest", ". "+ Arrays.toString(parcelableList.listOfCountDownTimers));
+        Log.d("serviceTest", ". "+ Arrays.toString(parcelableList.listOfCountDownTimers));
 
 
-        ForegroundTimerService foregroundTimerService = new ForegroundTimerService(this, parcelableList , pendingIntent);
+        ForegroundTimerService foregroundTimerService =
+                new ForegroundTimerService(this, parcelableList , pendingIntent);
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         int FOREGROUND_SERVICE_ID = 111;
         startForeground(FOREGROUND_SERVICE_ID, foregroundTimerService.createTimer(notificationManager));

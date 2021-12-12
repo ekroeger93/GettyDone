@@ -153,6 +153,16 @@ public class MainFragment extends Fragment {
     public Operator getOperator (){ return operator;}
     public MainViewModel getmViewModel(){ return mViewModel;}
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public ArrayList<Entry> getGeneratedLoadShit() {
+        ListTimersParcel parcelableList =
+                getForegroundTimerServiceIntent()
+                        .getParcelableExtra(KeyHelperClass.TIME_PARCEL_DATA);
+
+        return listUtility.generateEntryList(parcelableList);
+    }
+
+
     public RecyclerView getRecyclerView(){ return recyclerView;}
     public RecyclerAdapter getAdapter() {return adapter;}
     public RecordHelper getRecordHelper() {return recordHelper;}
@@ -164,7 +174,9 @@ public class MainFragment extends Fragment {
 
     private MediaPlayer selectedAudio;
 
-    private  MediaPlayer shortBell;
+    private MediaPlayer shortBell;
+
+    private boolean forceObserveList = false;
 
     MainTimerView mainTimerView = new MainTimerView();
     ListTimersParcel listTimersParcel;
@@ -229,7 +241,7 @@ public class MainFragment extends Fragment {
 
             checkList = AuxiliaryData.loadFile(checkList, mViewModel, getArguments());
 
-            for(Entry entry : checkList) mViewModel.loadEntry(entry);
+            for(Entry entry : getCheckList()) mViewModel.loadEntry(entry);
 
         }
  //       adapter.setList(checkList);
@@ -330,9 +342,6 @@ public class MainFragment extends Fragment {
     //mainTimerView.setListener(binding.timerExecuteBtn);
 
 
-
-
-
     binding.timerExecuteBtn.setOnClickListener(view -> {
 
         int setTime = setTimer(mainTimerView);
@@ -349,9 +358,18 @@ public class MainFragment extends Fragment {
          *
          * */
 
+        //checkList = (ArrayList<Entry>) mViewModel.getAllEntries().getValue();
+        listUtility.accumulationLiveData(checkList);
+
+
+
+        final boolean[] flag = {false};
 
         mainTimerView.mainTimerViewModel.toggleTimeWithCustomTask(time -> {
 
+            if(!flag[0]) {
+                 flag[0] = true;
+            }
 
             int elapsedTime = setTime - time;
             if(listUtility.currentActiveTime.timeElapsed(elapsedTime)) {
@@ -368,6 +386,16 @@ public class MainFragment extends Fragment {
                         Toast toast = Toast.makeText(getContext(), messageB + " done!", Toast.LENGTH_SHORT);
                         toast.setGravity(Gravity.TOP, 0, 0);
                         toast.show();
+
+                        for(Entry e:checkList){
+
+                            Log.d("timeAccu",
+                                    "::accLive " +e._timeAccumulated.getValue()+
+                                            " ::acc "+e.timeAccumulated+
+                                            " nV= "+e.numberValueTime+
+                                            " nVLive= "+e._numberValueTime.getValue()+
+                                            " textV "+e.textEntry.getValue());
+                        }
 
                     });
                 }
@@ -468,11 +496,6 @@ public class MainFragment extends Fragment {
     listUtility.revertTimeIndex();
     listUtility.currentActiveTime = checkList.get(1);
 
-    for(Entry e: checkList) {
-        mViewModel.updateEntry(e);
-    }
-
-    adapter.notifyDataSetChanged();
 
 
     return summationTime;
@@ -620,10 +643,11 @@ public class MainFragment extends Fragment {
         public void onChanged(@Nullable final List<Entry> entries) {
 
             //makes sure we keeps those spacers at the ends
-            if( checkList == null || checkList.size()-2 != entries.size()
+            if(checkList == null || checkList.size()-2 != entries.size()
             ) {
 
 
+                Log.d("timeAcc","called");
 
 
                 checkList = (ArrayList<Entry>) entries;
@@ -648,6 +672,7 @@ public class MainFragment extends Fragment {
 
                 JsonService.buildJson(checkList);
 
+                forceObserveList = false;
             }
 
 

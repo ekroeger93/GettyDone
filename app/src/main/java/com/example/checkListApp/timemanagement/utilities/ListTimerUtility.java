@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 
 import com.example.checkListApp.timemanagement.parcel.ListTimersParcel;
+import com.example.checkListApp.timer.TimeState;
 import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 
@@ -29,15 +30,37 @@ public abstract class ListTimerUtility {
        for(int i = 0; i <= list.size()-2; i++){
 
            if(i != 0 ) {
-               list.get(i).setTimeAcclimated(
-                       list.get(i - 1).timeAccumulated);
-           }
+
+               list.get(i).setTimeAcclimated(list.get(i - 1).timeAccumulated);
+              }
 
        }
 
     }
 
-   @RequiresApi(api = Build.VERSION_CODES.O)
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void accumulationLiveData(ArrayList<Entry> list){
+
+        //TODO: fix this
+//       D: 1 = 5 5
+//       D: 2 = 10 10
+//       D: 3 = 10 10 <-- ?
+//       D: 4 = 10 10
+//       D: 5 = 10 10
+        for(int i = 0; i <= list.size()-2; i++){
+
+            if(i != 0 ) {
+                list.get(i).setTimeAccumulatedLiveData(list.get(i-1)._timeAccumulated.getValue());
+
+            }
+
+        }
+
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
    public ArrayList<Entry> generateEntryList(ListTimersParcel parcel){
 
       //  int size = MainFragment.getCheckList().size();// parcel.listOfCountDownTimers.length;
@@ -75,7 +98,7 @@ public abstract class ListTimerUtility {
 
        for(Entry viewModel:list){
 
-           viewModel.setNumberValueTime(viewModel.timeTemp);
+           viewModel.setNumberValueTime(viewModel.countDownTimer.getValue());
 
            int value = viewModel.getNumberValueTime();
 

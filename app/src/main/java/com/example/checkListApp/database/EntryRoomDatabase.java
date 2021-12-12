@@ -14,7 +14,7 @@ import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 import com.example.checkListApp.ui.main.MainViewModel;
 
 @Database(entities = {Entry.class},version = 1,exportSchema = false)
-@TypeConverters({TypeConvertTextEntry.class,TypeConvertIsChecked.class})
+@TypeConverters({TypeConvertTextEntry.class,TypeConvertIsChecked.class,TypeConvertMutableLiveInteger.class})
 public abstract class EntryRoomDatabase extends RoomDatabase {
 
 
