@@ -29,7 +29,7 @@
         </action>
         <argument
             android:name="timeParcel"
-            app:argType="com.example.checkListApp.timemanagement.TimeParcel"
+            app:argType="com.example.checkListApp.timemanagement.parcel.TimeParcel"
             app:nullable="true"
             android:defaultValue="@null" />
         <argument
@@ -65,7 +65,7 @@
 
     <fragment
         android:id="@+id/progressFragment"
-        android:name="com.example.checkListApp.ui.main.ProgressFragment"
+        android:name="com.example.checkListApp.ui.main.progress.ProgressFragment"
         android:label="FragmentProgress"
         tools:layout="@layout/fragment_progress">
         <action
@@ -88,7 +88,7 @@
            </action>
         <argument
             android:name="timeParcel"
-            app:argType="com.example.checkListApp.timemanagement.TimeParcel"
+            app:argType="com.example.checkListApp.timemanagement.parcel.TimeParcel"
             app:nullable="true"
             android:defaultValue="@null" />
 

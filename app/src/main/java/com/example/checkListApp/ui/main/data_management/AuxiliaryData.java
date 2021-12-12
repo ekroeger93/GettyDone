@@ -4,9 +4,9 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.checkListApp.settimer.SetTimerFragmentArgs;
-import com.example.checkListApp.timemanagement.TimeParcel;
-import com.example.checkListApp.ui.main.entries.Entry;
-import com.example.checkListApp.ui.main.entries.Spacer;
+import com.example.checkListApp.timemanagement.parcel.TimeParcel;
+import com.example.checkListApp.ui.main.entry_management.entries.Entry;
+import com.example.checkListApp.ui.main.entry_management.entries.Spacer;
 import com.example.checkListApp.ui.main.MainFragmentArgs;
 import com.example.checkListApp.ui.main.MainViewModel;
 
@@ -71,19 +71,6 @@ public final class AuxiliaryData {
                     entry.textEntry.setValue(entry.textEntry.getValue().replaceAll("\"" , ""));
                     entry.countDownTimer.setValue(entry.countDownTimer.getValue().replaceAll("\"",""));
                 }
-
-                if(data.size() > 0){
-                    mViewModel.deleteAllEntries(data);
-                }
-
-                for(Entry entry : loadedCheckList) {
-                    mViewModel.loadEntry(entry);
-                   // Log.d("checkListTest",entry.textEntry.getValue());
-                }
-                loadedCheckList.add(0,new Spacer());
-                loadedCheckList.add(new Spacer());
-
-                data.addAll(loadedCheckList);
 
 
                 return loadedCheckList;

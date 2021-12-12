@@ -1,15 +1,12 @@
 package com.example.checkListApp.ui.main;
 
 import android.app.Application;
-import android.content.Context;
-import android.media.MediaPlayer;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.example.checkListApp.R;
 import com.example.checkListApp.database.EntryRepository;
-import com.example.checkListApp.ui.main.entries.Entry;
+import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +15,7 @@ public class MainViewModel extends AndroidViewModel {
 
 
     private final EntryRepository repository;
-    private final LiveData<List<Entry>> allProducts;
-
-
+    private final LiveData<List<Entry>> allEntries;
 
     public EntryRepository getRepository() {
         return repository;
@@ -29,12 +24,12 @@ public class MainViewModel extends AndroidViewModel {
     public MainViewModel (Application application) {
         super(application);
         repository = new EntryRepository(application,this);
-        allProducts = repository.getAllEntries();
+        allEntries = repository.getAllEntries();
 
     }
 
     public LiveData<List<Entry>> getAllEntries(){
-        return allProducts;
+        return allEntries;
     }
 
     public void insertEntry(Entry n){

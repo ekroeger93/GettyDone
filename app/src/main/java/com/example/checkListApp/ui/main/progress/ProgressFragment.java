@@ -1,4 +1,4 @@
-package com.example.checkListApp.ui.main;
+package com.example.checkListApp.ui.main.progress;
 
 import android.app.Activity;
 import android.graphics.Canvas;

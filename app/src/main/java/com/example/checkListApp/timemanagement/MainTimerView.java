@@ -1,4 +1,4 @@
-package com.example.checkListApp.ui.main;
+package com.example.checkListApp.timemanagement;
 
 import android.os.Build;
 import android.widget.Button;
@@ -10,13 +10,13 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
 import com.example.checkListApp.timer.CountDownTimerAsync;
-import com.example.checkListApp.ui.main.entries.Entry;
+import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 
 import java.util.ArrayList;
 
 public final class MainTimerView {
 
-    MainTimerViewModel mainTimerViewModel = new MainTimerViewModel();
+    public MainTimerViewModel mainTimerViewModel = new MainTimerViewModel();
 
     MutableLiveData<Boolean> toggled = new MutableLiveData<>(false);
 

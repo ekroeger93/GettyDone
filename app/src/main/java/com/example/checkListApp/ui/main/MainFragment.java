@@ -35,25 +35,31 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.checkListApp.R;
 import com.example.checkListApp.databinding.MainFragmentBinding;
-import com.example.checkListApp.timemanagement.ListTimersParcel;
-import com.example.checkListApp.timemanagement.ListTimersParcelBuilder;
+import com.example.checkListApp.timemanagement.MainTimerView;
+import com.example.checkListApp.timemanagement.MainTimerViewModel;
+import com.example.checkListApp.timemanagement.TimerService;
+import com.example.checkListApp.timemanagement.parcel.ListTimersParcel;
+import com.example.checkListApp.timemanagement.parcel.ListTimersParcelBuilder;
 import com.example.checkListApp.timemanagement.utilities.KeyHelperClass;
 import com.example.checkListApp.timer.TimeState;
 import com.example.checkListApp.ui.main.entry_management.ButtonPanel.ButtonPanel;
 import com.example.checkListApp.ui.main.entry_management.ButtonPanel.ButtonPanelToggle;
 import com.example.checkListApp.ui.main.entry_management.EntryItemManager;
 import com.example.checkListApp.ui.main.entry_management.ButtonPanel.LeafButton;
+import com.example.checkListApp.ui.main.entry_management.ListComponent.CustomLayoutManager;
 import com.example.checkListApp.ui.main.entry_management.ListComponent.RecyclerAdapter;
 import com.example.checkListApp.ui.main.entry_management.Operator;
 import com.example.checkListApp.ui.main.entry_management.Record.RecordHelper;
 import com.example.checkListApp.ui.main.data_management.AuxiliaryData;
 import com.example.checkListApp.ui.main.data_management.JsonService;
 import com.example.checkListApp.ui.main.data_management.ListUtility;
-import com.example.checkListApp.ui.main.entries.Entry;
-import com.example.checkListApp.ui.main.entries.Spacer;
+import com.example.checkListApp.ui.main.entry_management.entries.Entry;
+import com.example.checkListApp.ui.main.entry_management.entries.Spacer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 /*
@@ -82,16 +88,6 @@ https://github.com/PhilJay/MPAndroidChart
 -> ? could sum the time values into one and impl to GlobalTimer ?
 -> notifications
 
-class AppLifecycleListener : DefaultLifecycleObserver {
-
-    override fun onStart(owner: LifecycleOwner) { // app moved to foreground
-    }
-
-    override fun onStop(owner: LifecycleOwner) { // app moved to background
-    }
-}
-
-
 Collaboration
 Tags
 Calendar Sync
@@ -110,8 +106,16 @@ https://github.com/PhilJay/MPAndroidChart
 
 calender schedule
 
+//TODO: Switching tabs and back to List cause mainTimer to lose memory, disable when active
+//TODO: Disable buttons when timer is running!
+//TODO: timer set to zero or is zero at expiration
+//TODO: timer starts at appropriate vale
+//TODO: fix touch / onclick listener view models
+//TODO: loaded checklist is sometimes out of order
 
-//TODO: SERVICE IMPL
+correspond list to a select color for graph and add file name
+
+
 https://stackoverflow.com/questions/43650201/how-to-make-an-android-app-run-in-background-when-the-screen-sleeps
 https://developer.android.com/guide/components/foreground-services
 
@@ -133,17 +137,36 @@ public class MainFragment extends Fragment {
     private ButtonPanel buttonPanel;
     private ButtonPanelToggle buttonPanelToggle;
 
+    private final RecordHelper recordHelper = new RecordHelper();
+
     private RecyclerAdapter adapter;
     private MainViewModel mViewModel;
     private RecyclerView recyclerView;
 
     private static CustomLayoutManager customLayoutManager;
 
-    private static ArrayList<Entry> checkList = new ArrayList<>();
+    private ArrayList<Entry> checkList = new ArrayList<>();
     private final MutableLiveData<Integer> selectedEntry = new MutableLiveData<>();
 
     //alot of classes rely on this being static
-    public static ArrayList<Entry> getCheckList(){ return checkList;}
+    public ArrayList<Entry> getCheckList(){ return checkList;}
+    public Operator getOperator (){ return operator;}
+    public MainViewModel getmViewModel(){ return mViewModel;}
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public ArrayList<Entry> getGeneratedLoadShit() {
+        ListTimersParcel parcelableList =
+                getForegroundTimerServiceIntent()
+                        .getParcelableExtra(KeyHelperClass.TIME_PARCEL_DATA);
+
+        return listUtility.generateEntryList(parcelableList);
+    }
+
+
+    public RecyclerView getRecyclerView(){ return recyclerView;}
+    public RecyclerAdapter getAdapter() {return adapter;}
+    public RecordHelper getRecordHelper() {return recordHelper;}
+    public ListUtility getListUtility() { return listUtility;}
 
     private boolean isSorting = false;
 
@@ -151,7 +174,7 @@ public class MainFragment extends Fragment {
 
     private MediaPlayer selectedAudio;
 
-    private  MediaPlayer shortBell;
+    private MediaPlayer shortBell;
 
     MainTimerView mainTimerView = new MainTimerView();
     ListTimersParcel listTimersParcel;
@@ -210,35 +233,39 @@ public class MainFragment extends Fragment {
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
 
-        if(!getArguments().isEmpty())
-        checkList = AuxiliaryData.loadFile(checkList, mViewModel, getArguments());
+        if(!getArguments().isEmpty()) {
+
+            mViewModel.deleteAllEntries(checkList);
+
+            checkList = AuxiliaryData.loadFile(checkList, mViewModel, getArguments());
+
+            for(Entry entry : getCheckList()) mViewModel.loadEntry(entry);
+
+        }
 
     }
 
-
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void setUpAdapter(){
 
         recyclerView = binding.ScrollView;
 
-        adapter = new RecyclerAdapter();
+        adapter = new RecyclerAdapter(this);
 
         recyclerView.setAdapter(adapter);
         customLayoutManager = new CustomLayoutManager(getContext());
 
-
         recyclerView.setLayoutManager(customLayoutManager);
         recyclerView.setHasFixedSize(false);
-        adapter.setOwner(getViewLifecycleOwner());
-        adapter.setRepository(mViewModel.getRepository());
-        adapter.setActivity(getActivity());
 
-//        checkList.add(new Spacer());
-//        checkList.add(new Entry("a",false,"00:00:00"));
-//       checkList.add(new Entry("b",false,"00:00:00"));
 
-        adapter.setList(checkList);
-        adapter.notifyDataSetChanged();
+        ArrayList<Entry> tempArray = new ArrayList<>();
 
+        tempArray.add( new Spacer());
+        tempArray.add( new Entry("a",false,"00:00:00"));
+        tempArray.add( new Entry("a",false,"00:00:00"));
+
+        adapter.setList(tempArray);
 
         selectionTracker = new SelectionTracker.Builder<>(
                 "selection",
@@ -254,18 +281,16 @@ public class MainFragment extends Fragment {
         adapter.setTracker(selectionTracker);
         adapter.trackerOn(false);
 
-        operator = new Operator(recyclerView,adapter);
-        operator.setListUtility(listUtility);
-        entryItemManager = new EntryItemManager(getContext(),mViewModel,operator);
+        operator = new Operator(this);
+        entryItemManager = new EntryItemManager( this);
         buttonPanel = new ButtonPanel(getContext(), binding);
         buttonPanelToggle  = buttonPanel.buttonPanelToggle;
 
         entryItemManager.setButtonPanelToggle(buttonPanelToggle);
 
-      //  enableScroll(false);
-
-
     }
+
+
 
     public void initialize() {
 
@@ -314,59 +339,60 @@ public class MainFragment extends Fragment {
     //mainTimerView.setListener(binding.timerExecuteBtn);
 
 
-
     binding.timerExecuteBtn.setOnClickListener(view -> {
 
-
         int setTime = setTimer(mainTimerView);
-      //  mainTimerView.toggled.postValue(mainTimerView.mainTimerViewModel.isToggled());
-
-        mainTimerView.mainTimerViewModel.setCountDownTimer(new TimeState(setTime).getTimeFormat());
 
         startService();
 
         mainTimerView.mainTimerViewModel.toggleTimeWithCustomTask(time -> {
 
             int elapsedTime = setTime - time;
+            if(listUtility.currentActiveTime.timeElapsed(elapsedTime)) {
 
+                shortBell.start();
 
+                String messageB = checkList.get(listUtility.activeProcessTimeIndex).textEntry.getValue();
 
-            if(listUtility.currentActiveTime.timeElapsed(elapsedTime)){
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
 
-            String message = listUtility.activeProcessTimeIndex+" = "+listUtility.currentActiveTime.timeAccumulated + " "+elapsedTime;
-            Log.d("testTime",message);
-            shortBell.start();
+                        scrollPosition(listUtility.activeProcessTimeIndex);
 
-            new Handler(Looper.getMainLooper()).post(new Runnable () {
-                @Override
-                public void run () {
-                    scrollPosition(listUtility.activeProcessTimeIndex);
+                        Toast toast = Toast.makeText(getContext(), messageB + " done!", Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.TOP, 0, 0);
+                        toast.show();
 
-                    String message = checkList.get(
-                            listUtility.activeProcessTimeIndex
-                    ).textEntry.getValue();
+//                        for(Entry e:checkList){
+//                            Log.d("timeAccu",
+//                                            " ::acc "+e.timeAccumulated+
+//                                            " nV= "+e.numberValueTime+
+//                                            " textV "+e.textEntry.getValue());
+//                        }
 
-                    Toast toast = Toast.makeText(getContext(),message+" done!",Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.TOP,0,0);
-                    toast.show();
+                    });
                 }
-            });
 
-            listUtility.currentActiveTime.getViewHolder().checkOff();
-            listUtility.currentActiveTime = listUtility.getNextActiveProcessTime(checkList);
+                if(listUtility.currentActiveTime.numberValueTime !=0 ){
+                    listUtility.currentActiveTime.getViewHolder().checkOff();
+                    listUtility.currentActiveTime = listUtility.getNextActiveProcessTime(checkList);
+                }
+
+//                if(checkList.get(listUtility.activeProcessTimeIndex).numberValueTime  !=0 ) {
+//                    checkList.get(listUtility.activeProcessTimeIndex).getViewHolder().checkOff();
+//                    listUtility.currentActiveTime = listUtility.getNextActiveProcessTime(checkList);
+//                }
+
+            }
 
 
-
-        }
 
         });
 
+
+
     });
 
-
-
-    //
-   // mainTimerView.setObserverForToggledLiveData(getViewLifecycleOwner(), aBoolean -> executionMode = aBoolean);
 
     //update time of both View and ViewModel
     mainTimerView.setObserverForMainTextTime(binding.timeTextMain,getViewLifecycleOwner());
@@ -447,6 +473,8 @@ public class MainFragment extends Fragment {
 
     listUtility.revertTimeIndex();
     listUtility.currentActiveTime = checkList.get(1);
+
+
 
     return summationTime;
 }
@@ -593,14 +621,18 @@ public class MainFragment extends Fragment {
         public void onChanged(@Nullable final List<Entry> entries) {
 
             //makes sure we keeps those spacers at the ends
-            if( checkList == null || checkList.size()-2 != entries.size()
+            if(checkList == null || checkList.size()-2 != entries.size()
             ) {
+
+
                 checkList = (ArrayList<Entry>) entries;
                 checkList.add(0, new Spacer());
                 checkList.add(checkList.size(), new Spacer());
+
+
                 adapter.setList(checkList);
 
-                RecordHelper.update();
+                recordHelper.update(checkList);
 
                 if(!isSorting){
                 checkList = listUtility.updateToggleOrdering(checkList);
@@ -641,14 +673,14 @@ public class MainFragment extends Fragment {
                 RecyclerAdapter.ViewHolder entryCurrent;
                 int index;
 
-            for (Entry entry : getCheckList()) {
+            for (Entry entry : checkList) {
                 try {
                     if (entry instanceof Spacer) {} else {
 
                         if (key.equals(entry.getViewHolder().getKey())) {
 
                             entryCurrent = entry.getViewHolder();
-                            index = getCheckList().indexOf(entry) - 1;
+                            index = checkList.indexOf(entry) - 1;
 
                             //I need the adapter to re-realize the list size
                             //due to the adapter erroneous size prior to cleaning
@@ -684,7 +716,7 @@ public class MainFragment extends Fragment {
 
             try {
 
-                    for(Entry entry : getCheckList()){
+                    for(Entry entry : checkList){
                         //   entry.getViewHolder().selectionUpdate();
                         RecyclerAdapter.ViewHolder viewHolder = entry.getViewHolder();
                         if(entry instanceof Spacer){}else{

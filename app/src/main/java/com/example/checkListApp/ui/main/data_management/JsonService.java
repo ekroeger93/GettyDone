@@ -5,7 +5,7 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
-import com.example.checkListApp.ui.main.entries.Entry;
+import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -119,6 +119,8 @@ public final class JsonService {
             timeText = jsonObject.get("timerLabel").toString();
             Log.d("checkListTime",">>> "+timeText);
 
+            //TODO:fix this
+            timeText = timeText.replaceAll("\"","").trim();
 
             return new Entry(textEntry,isChecked,timeText);
 

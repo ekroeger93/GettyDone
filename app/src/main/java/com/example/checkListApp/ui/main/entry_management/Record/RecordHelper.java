@@ -3,9 +3,9 @@ package com.example.checkListApp.ui.main.entry_management.Record;
 import android.content.Context;
 
 import com.example.checkListApp.databinding.MainFragmentBinding;
-import com.example.checkListApp.ui.main.entries.Entry;
+import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 import com.example.checkListApp.ui.main.MainFragment;
-import com.example.checkListApp.ui.main.entries.Spacer;
+import com.example.checkListApp.ui.main.entry_management.entries.Spacer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -20,7 +20,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-public final class RecordHelper {
+public class RecordHelper {
 
     static int numOfEntries;
     static int numChecked;
@@ -35,12 +35,12 @@ public final class RecordHelper {
         RecordFinishButtonToggle.create(context,binding);
     }
 
-    static public void update(){
+    public void update(ArrayList<Entry> list){
 
-        numOfEntries = MainFragment.getCheckList().size()-2;
+        numOfEntries = list.size()-2;
         numChecked = 0;
 
-        for(Entry entry : MainFragment.getCheckList()){
+        for(Entry entry : list){
 
             if(entry instanceof Spacer){} else {
 

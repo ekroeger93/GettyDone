@@ -1,4 +1,4 @@
-package com.example.checkListApp.ui.main;
+package com.example.checkListApp.ui.main.entry_management.ListComponent;
 
 import android.content.Context;
 

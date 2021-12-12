@@ -5,38 +5,50 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
-import com.example.checkListApp.timemanagement.ListTimersParcel;
+import com.example.checkListApp.timemanagement.parcel.ListTimersParcel;
 import com.example.checkListApp.timer.TimeState;
 import com.example.checkListApp.ui.main.MainFragment;
-import com.example.checkListApp.ui.main.entries.Entry;
+import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 
 import java.util.ArrayList;
 
 public abstract class ListTimerUtility {
 
     public int activeProcessTimeIndex = 1;
-    public  Entry currentActiveTime;
+    public Entry currentActiveTime;
 
    @RequiresApi(api = Build.VERSION_CODES.O)
-   public  void accumulation(ArrayList<Entry> list){
+   public void accumulation(ArrayList<Entry> list){
 
-       for(int i = 0; i < list.size(); i++){
+
+       //TODO: fix this
+//       D: 1 = 5 5
+//       D: 2 = 10 10
+//       D: 3 = 10 10 <-- ?
+//       D: 4 = 10 10
+//       D: 5 = 10 10
+       for(int i = 0; i <= list.size()-2; i++){
 
            if(i != 0 ) {
-               list.get(i).setTimeAcclimated(
-                       list.get(i - 1).timeAccumulated);
-           }
+
+               list.get(i).setTimeAcclimated(list.get(i - 1).timeAccumulated);
+              }
 
        }
 
     }
 
-   @RequiresApi(api = Build.VERSION_CODES.O)
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
    public ArrayList<Entry> generateEntryList(ListTimersParcel parcel){
 
-        int size = MainFragment.getCheckList().size();// parcel.listOfCountDownTimers.length;
+      //  int size = MainFragment.getCheckList().size();// parcel.listOfCountDownTimers.length;
 
-        ArrayList<Entry> list = new ArrayList<>(size);
+        //TODO: THIS May need to be fix
+       int size = parcel.listOfChecked.length;
+
+       ArrayList<Entry> list = new ArrayList<>(size);
 
        Log.d("serviceTest"," size: "+size);
 
@@ -66,7 +78,7 @@ public abstract class ListTimerUtility {
 
        for(Entry viewModel:list){
 
-           viewModel.setNumberValueTime(viewModel.timeTemp);
+           viewModel.setNumberValueTime(viewModel.countDownTimer.getValue());
 
            int value = viewModel.getNumberValueTime();
 
@@ -82,10 +94,10 @@ public abstract class ListTimerUtility {
         int size = list.size()-1;
 
         if(activeProcessTimeIndex < size) {
-            ++activeProcessTimeIndex;
+            activeProcessTimeIndex++;
             return list.get(activeProcessTimeIndex);
         } else{
-            activeProcessTimeIndex = 0;
+            activeProcessTimeIndex = 1;
         }
 
         return list.get(size-2);

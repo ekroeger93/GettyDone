@@ -3,9 +3,9 @@ package com.example.checkListApp.database;
 import android.app.Application;
 import androidx.lifecycle.LiveData;
 
-import com.example.checkListApp.ui.main.entries.Entry;
+import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 import com.example.checkListApp.ui.main.MainViewModel;
-import com.example.checkListApp.ui.main.entries.Spacer;
+import com.example.checkListApp.ui.main.entry_management.entries.Spacer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +50,22 @@ public static class TaskDeleteAllEntries {
     }
 
 }
+
+//public static class TaskReloadAllEntries {
+//
+//    private final Executor executor = Executors.newSingleThreadExecutor();
+//    private final EntryDao asyncDao;
+//
+//    TaskReloadAllEntries(EntryDao dao){
+//        asyncDao = dao;
+//    }
+//
+//    public void executeAsync(){
+//        executor.execute(asyncDao::reload);
+//    }
+//
+//
+//}
 
 
 public static class TaskInsertEntry {
@@ -176,6 +192,8 @@ public static class TaskInsertSpace{
     }
 
     public void deleteAllEntries(ArrayList<Entry> list){ new TaskDeleteAllEntries(entryDao).executeAsync();}
+
+  //  public void loadAllEntries(ArrayList<Entry> list){ new }
 
     public void insertSpace(Spacer spacer) { new TaskInsertSpace(entryDao,spacer).executeAsync();}
 
