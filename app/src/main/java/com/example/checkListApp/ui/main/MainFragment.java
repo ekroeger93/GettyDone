@@ -337,14 +337,14 @@ public class MainFragment extends Fragment {
             int elapsedTime = setTime - time;
             if(listUtility.currentActiveTime.timeElapsed(elapsedTime)) {
 
-                for(Entry e: checkList) {
-                    Log.d(
-                            "timerTestAcc",
-                            "acc: " + e.timeAccumulated +
-                                    " set: "+setTime +
-                                    " ela: "+elapsedTime +
-                                    " time: "+time);
-                }
+//                for(Entry e: checkList) {
+//                    Log.d(
+//                            "timerTestAcc",
+//                            "acc: " + e.timeAccumulated +
+//                                    " set: "+setTime +
+//                                    " ela: "+elapsedTime +
+//                                    " time: "+time);
+//                }
 
                 shortBell.start();
 

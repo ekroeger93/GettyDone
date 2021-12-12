@@ -71,7 +71,10 @@ public class TimerService extends Service {
         }
 
         Log.d("timerTest",data);
-        TimeState expireTime = new TimeState( Math.abs(entry.numberValueTime));
+        TimeState countTime = new TimeState(data);
+        TimeState expireTime = new TimeState( Math.abs(entry.timeAccumulated));
+
+        int timeRemainder =  expireTime.getTimeNumberValue() - countTime.getTimeNumberValue();
 
 
 
@@ -82,7 +85,12 @@ public class TimerService extends Service {
                         .setSmallIcon(android.R.drawable.star_on)
                         .setOnlyAlertOnce(true)
                         .setContentTitle("CountDownTime")
-                        .setContentText("time: "+data+" expires: "+expireTime.getTimeFormat() );
+                        .setContentText(
+                               // "time: " +data+ " expires: " +expireTime.getTimeFormat() +
+                                " expires: "+ new TimeState(timeRemainder).getTimeFormat() +
+                                        " || "+ entry.textTemp
+
+                        );
 
 
         return mBuilder
@@ -158,10 +166,13 @@ public class TimerService extends Service {
 
         }
 
+        public int getElapsedTime() {
+            return elapsedTime;
+        }
 
         @RequiresApi(api = Build.VERSION_CODES.O)
         public Notification preSetNotification() {
-            return timerService.makeNotification("Q", new Entry(), pendingIntent);
+            return timerService.makeNotification("00:00:00", new Entry(), pendingIntent);
         }
 
         @RequiresApi(api = Build.VERSION_CODES.O)
@@ -173,7 +184,7 @@ public class TimerService extends Service {
 
             timeViewModel.setServiceTask((time -> {
 
-                int elapsedTime = setTime - time;
+                elapsedTime = setTime - time;
 
                 if (currentActiveTime.timeElapsed(elapsedTime) || elapsedTime == setTime) {
                     currentActiveTime = getNextActiveProcessTime(timerViewModelList);
@@ -181,7 +192,8 @@ public class TimerService extends Service {
 
                 }
                 //rebuild notification here
-                notification.set(timerService.makeNotification(new TimeState(time).getTimeFormat(), currentActiveTime, pendingIntent));
+                notification.set(timerService.makeNotification(
+                        new TimeState(elapsedTime).getTimeFormat(), currentActiveTime, pendingIntent));
                 mgr.notify(FOREGROUND_SERVICE_ID, notification.get());
 
             }));

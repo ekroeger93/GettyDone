@@ -62,9 +62,12 @@ public class Entry {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public Entry(String text, boolean isChecked, String timeText) {
+
         textEntry.setValue(text);
         checked.setValue(isChecked);
         countDownTimer.setValue(timeText);
+
+        textTemp = text;
 
         setNumberValueTime(timeText);
         int numberTime = new TimeState(timeText).getTimeNumberValue();
@@ -114,6 +117,8 @@ public class Entry {
         textEntry.setValue(entry.textEntry.getValue());
         checked.setValue(entry.checked.getValue());
         countDownTimer.setValue(entry.countDownTimer.getValue());
+
+        textTemp = entry.textTemp;
 
         setNumberValueTime(countDownTimer.getValue());
     }
@@ -168,18 +173,7 @@ public void setTimeAcclimated(int timeAcclimated) {
 
 }
 
-public void setTimeAccumulatedLiveData(int timeAccumulated){
 
-    int original = new TimeState(numberValueTime).getTimeNumberValue();
-    int addedTime  = new TimeState(timeAccumulated).getTimeNumberValue();
-
-
-}
-
-
-    public String getTimeEndPoint() {
-        return new TimeState(timeAccumulated).getTimeFormat();
-    }
 
     public MutableLiveData<String> getCountDownTimer() {
         return countDownTimer;
