@@ -468,8 +468,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                                 );
 
 
-                    action.setTimeParcel( new TimeParcelBuilder().setTimeIndexValue(getBindingAdapterPosition()).build() );
+                    action.setTimeParcel( new TimeParcelBuilder()
+                            .setTimeIndexValue(getBindingAdapterPosition())
+                        //    .setRetainJsonData(JsonService.getJsonCheckArrayList())
+                            .build() );
                     Navigation.findNavController(activity, R.id.entryListFragment).navigate(action);
+
+
+
 
                 }
 

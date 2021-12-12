@@ -120,6 +120,7 @@ public final class JsonService {
             Log.d("checkListTime",">>> "+timeText);
 
             //TODO:fix this
+            textEntry = textEntry.replaceAll("\"","").trim();
             timeText = timeText.replaceAll("\"","").trim();
 
             return new Entry(textEntry,isChecked,timeText);

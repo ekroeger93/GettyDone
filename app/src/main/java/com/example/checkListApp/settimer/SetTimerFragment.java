@@ -24,6 +24,7 @@ import com.example.checkListApp.R;
 import com.example.checkListApp.timemanagement.parcel.TimeParcel;
 import com.example.checkListApp.timemanagement.parcel.TimeParcelBuilder;
 import com.example.checkListApp.databinding.SettimerFragmentBinding;
+import com.example.checkListApp.ui.main.data_management.JsonService;
 
 public class SetTimerFragment extends Fragment {
 
@@ -37,6 +38,7 @@ public class SetTimerFragment extends Fragment {
     private static Integer timeIndexPosition;
 
     TimeParcel parcelable;
+    String jsonData;
 
 
     public SetTimerFragment(){
@@ -61,8 +63,10 @@ public class SetTimerFragment extends Fragment {
         parcelable = args.getTimeParcel();
 
 
+
         //parcelable = getActivity().getIntent().getExtras().getParcelable(KeyHelperClass.TIME_PARCEL_DATA);;
         timeIndexPosition = parcelable.getTimeIndex();
+//        jsonData = parcelable.getRetainedJsonData();
 
 
         return binding.getRoot();
@@ -89,16 +93,17 @@ public class SetTimerFragment extends Fragment {
              */
 
             SetTimerFragmentDirections.ActionSetTimerFragmentToMainFragment action =
-                    SetTimerFragmentDirections.actionSetTimerFragmentToMainFragment("");
+                    SetTimerFragmentDirections.actionSetTimerFragmentToMainFragment(JsonService.getJsonCheckArrayList());
 
 
-            Log.d("timerTest",":: " +setTimerText.getText().toString());
+            Log.d("timerTest",":: " +action.getJsonData());
 
             action.setTimeParcel(
                     new TimeParcelBuilder()
                             .setTimeIndexValue(timeIndexPosition)
                             .setTimeStringValue(setTimerText.getText().toString())
                             .setTimeNumberValue(mViewModel.getTimerValue())
+//                            .setRetainJsonData(jsonData)
                             .build()
             );
 

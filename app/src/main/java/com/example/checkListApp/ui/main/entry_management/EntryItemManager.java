@@ -16,6 +16,7 @@ import androidx.recyclerview.selection.SelectionTracker;
 import com.example.checkListApp.R;
 import com.example.checkListApp.input.CustomEditText;
 import com.example.checkListApp.input.DetectKeyboardBack;
+import com.example.checkListApp.ui.main.data_management.JsonService;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 import com.example.checkListApp.ui.main.entry_management.ButtonPanel.ButtonPanelToggle;
 import com.example.checkListApp.ui.main.MainFragment;
@@ -292,19 +293,18 @@ public class EntryItemManager {
             operator.movingItem.setViewHolder(mainFragment.getCheckList().get(selection - 1).getViewHolder());
             operator.movingItem.getViewHolder().itemView.setBackgroundColor(Color.BLUE);
             operator.moveItem(operator.movingItem);
-            buttonPanelToggle.toggleDisableToButton();
+
+
+         //   buttonPanelToggle.toggleDisableToButton();
 
         }else{
             operator.adapter.notifyItemChanged(selection-1);
-
-            //TODO: CODE BELOW
-            //operator.adapter.notifyItemMoved(oldMovePosition,selection-1);
-
             operator.movingItem = null;
         }
-        buttonPanelToggle.toggleDisableToButton();
 
+        buttonPanelToggle.toggleDisableToButton();
         operator.isMovingItem = !isMovingItem;
+
 
     }
 

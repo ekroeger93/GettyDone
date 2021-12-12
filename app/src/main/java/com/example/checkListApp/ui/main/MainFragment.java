@@ -96,8 +96,7 @@ https://github.com/PhilJay/MPAndroidChart
 //TODO: toggle switch ordering may have leaks and complications
 //TODO: fix Service text Entry
 
-Features:
-
+//TODO: Features
 -add in pull down/up to extender, change the recycler view Y size
     -use anchor points when dragging
 
@@ -136,6 +135,7 @@ public class MainFragment extends Fragment {
     private ButtonPanelToggle buttonPanelToggle;
 
     private final RecordHelper recordHelper = new RecordHelper();
+//    private final AuxiliaryData auxiliaryData  = new AuxiliaryData(this);
 
     private RecyclerAdapter adapter;
     private MainViewModel mViewModel;
@@ -144,17 +144,19 @@ public class MainFragment extends Fragment {
     private static CustomLayoutManager customLayoutManager;
 
     private ArrayList<Entry> checkList = new ArrayList<>();
+
+
     private final MutableLiveData<Integer> selectedEntry = new MutableLiveData<>();
 
     public ArrayList<Entry> getCheckList(){ return checkList;}
-    public Operator getOperator (){ return operator;}
-    public MainViewModel getmViewModel(){ return mViewModel;}
+    public Operator         getOperator (){ return operator;}
+    public MainViewModel    getmViewModel(){ return mViewModel;}
 
+    public RecyclerView     getRecyclerView(){ return recyclerView;}
+    public RecyclerAdapter  getAdapter() {return adapter;}
 
-    public RecyclerView getRecyclerView(){ return recyclerView;}
-    public RecyclerAdapter getAdapter() {return adapter;}
-    public RecordHelper getRecordHelper() {return recordHelper;}
-    public ListUtility getListUtility() { return listUtility;}
+    public RecordHelper     getRecordHelper() {return recordHelper;}
+    public ListUtility      getListUtility() { return listUtility;}
 
     private boolean isSorting = false;
 
@@ -164,11 +166,10 @@ public class MainFragment extends Fragment {
 
     private MediaPlayer shortBell;
 
-    MainTimerView mainTimerView = new MainTimerView();
+    private final MainTimerView mainTimerView = new MainTimerView();
     ListTimersParcel listTimersParcel;
 
-
-    ListUtility listUtility = new ListUtility();
+    private final ListUtility listUtility = new ListUtility();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -202,8 +203,6 @@ public class MainFragment extends Fragment {
 
         initialize();
 
-        AuxiliaryData.receiveParcelTime(checkList,getArguments());
-
         assignButtonListeners();
 
         assignObservers();
@@ -216,21 +215,38 @@ public class MainFragment extends Fragment {
 
     }
 
+
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
 
+
+
+
         if(!getArguments().isEmpty()) {
+
+            Log.d("loadTest", ""+ (getArguments().get(KeyHelperClass.TIME_PARCEL_DATA) == null));
+
+//            Log.d("loadTest","json "+JsonService.getJsonGeneratedArray());
 
             mViewModel.deleteAllEntries(checkList);
 
-            checkList = AuxiliaryData.loadFile(checkList, mViewModel, getArguments());
+            checkList = AuxiliaryData.loadFile( checkList, getArguments());
+
+            AuxiliaryData.receiveParcelTime(checkList, getArguments());
+
+            Log.d("loadTest","load: "+checkList);
 
             for(Entry entry : getCheckList()) mViewModel.loadEntry(entry);
-
         }
 
+
+
     }
+
+
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void setUpAdapter(){
@@ -276,8 +292,6 @@ public class MainFragment extends Fragment {
         entryItemManager.setButtonPanelToggle(buttonPanelToggle);
 
     }
-
-
 
     public void initialize() {
 
@@ -444,7 +458,6 @@ public class MainFragment extends Fragment {
 
     }
 
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     public int setTimer(MainTimerView mainTimerView){
 
@@ -466,7 +479,6 @@ public class MainFragment extends Fragment {
             return listUtility.getSummationTime(checkList);
         }
 }
-
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -611,7 +623,6 @@ public class MainFragment extends Fragment {
             //makes sure we keeps those spacers at the ends
             if(checkList == null || checkList.size()-2 != entries.size()
             ) {
-
 
                 checkList = (ArrayList<Entry>) entries;
                 checkList.add(0, new Spacer());

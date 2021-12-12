@@ -14,33 +14,45 @@ import java.util.ArrayList;
 
 public final class AuxiliaryData {
 
-   static TimeParcel timeParcel;
+    static TimeParcel timeParcel;
 
 
-    public static void receiveParcelTime(ArrayList<Entry> data, Bundle bundle) {
+    public static ArrayList<Entry> receiveParcelTime(ArrayList<Entry> data, Bundle bundle) {
+
 
         try {
             SetTimerFragmentArgs args = SetTimerFragmentArgs.fromBundle(bundle);
             timeParcel = args.getTimeParcel();
 
-            int index = timeParcel.getTimeIndex();
+            int index = timeParcel.getTimeIndex()-1;
             String time = timeParcel.getTimeStringVal();
-            Log.d("timerTest",">>"+data);
 
-            loadParcelTime(data, index, time);
-            Log.d("timerTest",""+timeParcel.getTimeStringVal());
+
+            //TODO: it works but I don't like it
+//           String retainJson = timeParcel.getRetainedJsonData();
+//           ArrayList<Entry> retainedState = JsonService.getJsonGeneratedArray(retainJson);
+//           retainedState.get(index).countDownTimer.postValue(time);
+
+            data.get(index).countDownTimer.postValue(time);
+
+            Log.d("timerTest", "" + timeParcel.getTimeStringVal());
+
+            return  data;
+           // return retainedState;
 
         }catch (NullPointerException e){
-            Log.d("timeParcel","error");
+            e.printStackTrace();
         }
+
+        return data;
 
     }
 
-    public static TimeParcel getTimeParcel() {
+    public  TimeParcel getTimeParcel() {
         return timeParcel;
     }
 
-    public static void loadParcelTime(ArrayList<Entry> data, int index, String time){
+    public static  void loadParcelTime(ArrayList<Entry> data, int index, String time){
 
 
 //        new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -56,7 +68,7 @@ public final class AuxiliaryData {
 
     }
 
-    public static ArrayList<Entry> loadFile(ArrayList<Entry> data, MainViewModel mViewModel, Bundle bundle){
+    public static ArrayList<Entry> loadFile(ArrayList<Entry> data, Bundle bundle){
 
 
             MainFragmentArgs args = MainFragmentArgs.fromBundle(bundle);
@@ -64,6 +76,8 @@ public final class AuxiliaryData {
             Log.d("checkListTest","args: "+args.getJsonData());
 
             ArrayList<Entry> loadedCheckList = JsonService.getJsonGeneratedArray(args.getJsonData());
+
+            Log.d("loadTest","json: "+loadedCheckList);
 
             if(loadedCheckList != null){
 
