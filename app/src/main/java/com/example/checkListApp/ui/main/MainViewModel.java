@@ -15,9 +15,7 @@ public class MainViewModel extends AndroidViewModel {
 
 
     private final EntryRepository repository;
-    private final LiveData<List<Entry>> allProducts;
-
-
+    private final LiveData<List<Entry>> allEntries;
 
     public EntryRepository getRepository() {
         return repository;
@@ -26,12 +24,12 @@ public class MainViewModel extends AndroidViewModel {
     public MainViewModel (Application application) {
         super(application);
         repository = new EntryRepository(application,this);
-        allProducts = repository.getAllEntries();
+        allEntries = repository.getAllEntries();
 
     }
 
     public LiveData<List<Entry>> getAllEntries(){
-        return allProducts;
+        return allEntries;
     }
 
     public void insertEntry(Entry n){

@@ -9,6 +9,7 @@ import androidx.room.Update;
 
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Dao

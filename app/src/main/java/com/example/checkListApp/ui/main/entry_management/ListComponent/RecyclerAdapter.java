@@ -67,10 +67,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     private SelectionTracker<Long> selectionTracker;
     private SelectionTracker<Long> savedSelectionTracker;
 
-    public void setActivity(Activity activity) {
-        this.activity = activity;
-    }
-    public void setRecordHelper(RecordHelper recordHelper){this.recordHelper = recordHelper;}
 
     public void setTracker(SelectionTracker<Long> tracker){
         this.selectionTracker = tracker;
@@ -96,16 +92,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
 
 
-    public void setOwner(LifecycleOwner owner) {
-        this.owner = owner;
-    }
+    public RecyclerAdapter(MainFragment fragment){
 
-    public void setRepository(EntryRepository repository) {
-        this.repository = repository;
-    }
-
-    public RecyclerAdapter(){
         gestureDetector = new GestureDetector.SimpleOnGestureListener();
+
+        this.owner = fragment.getViewLifecycleOwner();
+        this.repository = fragment.getmViewModel().getRepository();
+        this.activity = fragment.getActivity();
+        this.recordHelper = fragment.getRecordHelper();
+
     }
 
 
@@ -126,12 +121,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
 
+    public void deSetList(){
+
+        this.mList.clear();
+        notifyDataSetChanged();
+    }
 
     public void setList(ArrayList<Entry> mList) {
 
-        if(this.mList != null && this.mList.size() > 0) this.mList.clear();
-
         this.mList = mList;
+
+        //TODO: having issues with notifyItemRangeInsert
+
+        //Fuck all solution
         notifyDataSetChanged();
        // notifyItemRangeChanged(0,mList.size(),null);
 

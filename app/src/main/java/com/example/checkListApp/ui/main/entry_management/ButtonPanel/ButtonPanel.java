@@ -24,15 +24,12 @@ public class ButtonPanel {
     List<DuoAction> actionList = new ArrayList<>();
 
     public ButtonPanelToggle buttonPanelToggle;
-
     private final int mWidth;
-    Context context;
 
     public ButtonPanel(Context context, MainFragmentBinding binding){
-        this.context = context;
         this.binding = binding;
-        mWidth = context.getResources().getDisplayMetrics().widthPixels;
 
+        mWidth = context.getResources().getDisplayMetrics().widthPixels;
         buttonPanelToggle = new ButtonPanelToggle(context,binding);
     }
 

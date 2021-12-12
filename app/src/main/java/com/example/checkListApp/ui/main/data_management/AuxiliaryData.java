@@ -72,19 +72,6 @@ public final class AuxiliaryData {
                     entry.countDownTimer.setValue(entry.countDownTimer.getValue().replaceAll("\"",""));
                 }
 
-                if(data.size() > 0){
-                    mViewModel.deleteAllEntries(data);
-                }
-
-                for(Entry entry : loadedCheckList) {
-                    mViewModel.loadEntry(entry);
-                   // Log.d("checkListTest",entry.textEntry.getValue());
-                }
-                loadedCheckList.add(0,new Spacer());
-                loadedCheckList.add(new Spacer());
-
-                data.addAll(loadedCheckList);
-
 
                 return loadedCheckList;
 

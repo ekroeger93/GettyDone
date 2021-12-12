@@ -51,6 +51,22 @@ public static class TaskDeleteAllEntries {
 
 }
 
+//public static class TaskReloadAllEntries {
+//
+//    private final Executor executor = Executors.newSingleThreadExecutor();
+//    private final EntryDao asyncDao;
+//
+//    TaskReloadAllEntries(EntryDao dao){
+//        asyncDao = dao;
+//    }
+//
+//    public void executeAsync(){
+//        executor.execute(asyncDao::reload);
+//    }
+//
+//
+//}
+
 
 public static class TaskInsertEntry {
 
@@ -176,6 +192,8 @@ public static class TaskInsertSpace{
     }
 
     public void deleteAllEntries(ArrayList<Entry> list){ new TaskDeleteAllEntries(entryDao).executeAsync();}
+
+  //  public void loadAllEntries(ArrayList<Entry> list){ new }
 
     public void insertSpace(Spacer spacer) { new TaskInsertSpace(entryDao,spacer).executeAsync();}
 

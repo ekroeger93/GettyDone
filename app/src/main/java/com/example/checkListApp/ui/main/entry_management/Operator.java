@@ -12,24 +12,18 @@ import com.example.checkListApp.ui.main.data_management.ListUtility;
 
 public class Operator {
 
-
     //Passed In and out (needs assignment)
-    public RecyclerView recyclerView;
-    public RecyclerAdapter adapter;
-    ListUtility listUtility;
+    protected RecyclerView recyclerView;
+    protected RecyclerAdapter adapter;
+    protected final ListUtility listUtility;
     private final MainFragment mainFragment;
-
 
     public Operator(MainFragment mainFragment){
 
         this.mainFragment= mainFragment;
-
         this.recyclerView = mainFragment.getRecyclerView();
         this.adapter = mainFragment.getAdapter();
-    }
-
-    public void setListUtility(ListUtility listUtility) {
-        this.listUtility = listUtility;
+        this.listUtility = mainFragment.getListUtility();
     }
 
     //Passed Out (gets assigned here)
@@ -38,7 +32,6 @@ public class Operator {
      public Entry movingItem;
      public int oldMovePosition;
      public int selection;
-
      public boolean isMovingItem = false;
 
     public int getSelection(){

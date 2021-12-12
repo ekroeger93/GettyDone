@@ -156,6 +156,7 @@ public class MainFragment extends Fragment {
     public RecyclerView getRecyclerView(){ return recyclerView;}
     public RecyclerAdapter getAdapter() {return adapter;}
     public RecordHelper getRecordHelper() {return recordHelper;}
+    public ListUtility getListUtility() { return listUtility;}
 
     private boolean isSorting = false;
 
@@ -222,9 +223,16 @@ public class MainFragment extends Fragment {
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
 
-        if(!getArguments().isEmpty())
-        checkList = AuxiliaryData.loadFile(checkList, mViewModel, getArguments());
-        refreshAdapterWithLoadedCheckList();
+        if(!getArguments().isEmpty()) {
+
+            mViewModel.deleteAllEntries(checkList);
+
+            checkList = AuxiliaryData.loadFile(checkList, mViewModel, getArguments());
+
+            for(Entry entry : checkList) mViewModel.loadEntry(entry);
+
+        }
+ //       adapter.setList(checkList);
 
     }
 
@@ -233,7 +241,7 @@ public class MainFragment extends Fragment {
 
         recyclerView = binding.ScrollView;
 
-        adapter = new RecyclerAdapter();
+        adapter = new RecyclerAdapter(this);
 
         recyclerView.setAdapter(adapter);
         customLayoutManager = new CustomLayoutManager(getContext());
@@ -241,14 +249,6 @@ public class MainFragment extends Fragment {
         recyclerView.setLayoutManager(customLayoutManager);
         recyclerView.setHasFixedSize(false);
 
-        adapter.setOwner(getViewLifecycleOwner());
-        adapter.setRepository(mViewModel.getRepository());
-        adapter.setActivity(getActivity());
-        adapter.setRecordHelper(recordHelper);
-
-//        checkList.add(new Spacer());
-//        checkList.add(new Entry("a",false,"00:00:00"));
-//       checkList.add(new Entry("b",false,"00:00:00"));
 
         ArrayList<Entry> tempArray = new ArrayList<>();
 
@@ -273,7 +273,6 @@ public class MainFragment extends Fragment {
         adapter.trackerOn(false);
 
         operator = new Operator(this);
-        operator.setListUtility(listUtility);
         entryItemManager = new EntryItemManager( this);
         buttonPanel = new ButtonPanel(getContext(), binding);
         buttonPanelToggle  = buttonPanel.buttonPanelToggle;
@@ -282,11 +281,7 @@ public class MainFragment extends Fragment {
 
     }
 
-    public void refreshAdapterWithLoadedCheckList(){
 
-        adapter.setList(checkList);
-
-    }
 
     public void initialize() {
 
@@ -356,6 +351,7 @@ public class MainFragment extends Fragment {
 
 
         mainTimerView.mainTimerViewModel.toggleTimeWithCustomTask(time -> {
+
 
             int elapsedTime = setTime - time;
             if(listUtility.currentActiveTime.timeElapsed(elapsedTime)) {
@@ -471,6 +467,13 @@ public class MainFragment extends Fragment {
 
     listUtility.revertTimeIndex();
     listUtility.currentActiveTime = checkList.get(1);
+
+    for(Entry e: checkList) {
+        mViewModel.updateEntry(e);
+    }
+
+    adapter.notifyDataSetChanged();
+
 
     return summationTime;
 }
@@ -619,9 +622,15 @@ public class MainFragment extends Fragment {
             //makes sure we keeps those spacers at the ends
             if( checkList == null || checkList.size()-2 != entries.size()
             ) {
+
+
+
+
                 checkList = (ArrayList<Entry>) entries;
                 checkList.add(0, new Spacer());
                 checkList.add(checkList.size(), new Spacer());
+
+
                 adapter.setList(checkList);
 
                 recordHelper.update(checkList);
