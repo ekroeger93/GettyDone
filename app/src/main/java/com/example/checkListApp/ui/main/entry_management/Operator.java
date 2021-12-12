@@ -122,15 +122,14 @@ public class Operator {
                 //TODO:FIX BUG PARCEL TIME NOT BEING UPDATED AFTER MOVE
 
                 mainFragment.getCheckList().remove(movingItem);
-//                adapter.notifyItemRemoved(oldMovePosition);
+                adapter.notifyItemRemoved(oldMovePosition);
                 mainFragment.getCheckList().add(selection-1, movingItem);
-//                adapter.notifyItemInserted(selection-1);
+                adapter.notifyItemInserted(selection-1);
 
                 adapter.notifyItemMoved(oldMovePosition,selection-1);
                  adapter.notifyItemChanged(oldMovePosition);
                 adapter.notifyItemChanged(selection-1);
 
-           //     adapter.notifyDataSetChanged();
 
 
                 oldMovePosition = selection-1;

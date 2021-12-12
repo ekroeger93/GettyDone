@@ -89,22 +89,38 @@ graphing show progress
 https://github.com/PhilJay/MPAndroidChart
 
 //TODO: BUGS
-//TODO: Switching tabs and back to List cause mainTimer to lose memory, disable when active
-//TODO: Disable buttons when timer is running!
-//TODO: fix touch / onclick listener viewholders
-//TODO: loaded checklist is sometimes out of order, use Id
-//TODO: toggle switch ordering may have leaks and complications
-//TODO: fix Service text Entry
 
-//TODO: on move, Entry check buttons are coupled together
+ Switching tabs and back to List cause mainTimer to lose memory,
+ Disable buttons when timer is running!
+ ButtonPanel should be hidden, pause and reset buttons timer visible
+ tabs should be hidden
+ view holder buttons greyed out and disabled (unless paused),
+ try using LiveData
+
+
+ fix touch / onclick listener viewholders
+
+ loaded checklist is sometimes out of order, use Id
+
+ toggle switch ordering may have leaks and complications
+
+ fix Service text Entry, gets null value
+
+ when a time is set to 0, needs to toggle timer again when checked (on toggle only)
+ or force all zero set times to be one
+
+
 
 //TODO: Features
+
+-add reset timer
+
 -add in pull down/up to extender, change the recycler view Y size
     -use anchor points when dragging
 
 -image button checkBox
 -change buttons into icons
--animate entry on move and delete
+-animate entry on move and delete, have better indications for user
 -fix up the file manager, add transitions
 -add selected audio functionality
 -add duplicate, hold down add
