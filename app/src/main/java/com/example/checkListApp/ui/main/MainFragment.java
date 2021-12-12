@@ -66,27 +66,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 TaDone Prototype
 --------------------------------------------------------------
-https://github.com/PhilJay/MPAndroidChart
-
--? save as pdf/rich text file -> print appMobilityPrint
-
 -------------------------------------------------------------
-
-Collaboration
-Tags
-Calendar Sync
-File Attachments
-Smart Lists
-Widgets
-Natural Language Parsing
-Repeatable Tasks
-Reminders
-Smart Assistant Support
-Folders / Groups
-Subtasks
-
-graphing show progress
-https://github.com/PhilJay/MPAndroidChart
 
 //TODO: BUGS
 
@@ -114,12 +94,18 @@ https://github.com/PhilJay/MPAndroidChart
 //TODO: Features
 
 -add reset timer
+-add buttons for notification service
 
 -add in pull down/up to extender, change the recycler view Y size
     -use anchor points when dragging
+    or fullscreen mode
+
+-select sounds on setTimer
 
 -image button checkBox
+
 -change buttons into icons
+
 -animate entry on move and delete, have better indications for user
 -fix up the file manager, add transitions
 -add selected audio functionality
@@ -129,10 +115,15 @@ https://github.com/PhilJay/MPAndroidChart
 add legend keys,
 change Y axis value to number of times submitted completion,
 
+Post production ideas:
+-? save to google drive, share data
+-? save as pdf/rich text file -> print appMobilityPrint
+-? schedule on calender, notification
 
 
 https://stackoverflow.com/questions/43650201/how-to-make-an-android-app-run-in-background-when-the-screen-sleeps
 https://developer.android.com/guide/components/foreground-services
+https://github.com/PhilJay/MPAndroidChart
 
  */
 
@@ -142,7 +133,6 @@ public class MainFragment extends Fragment {
 
     protected MainFragmentBinding binding;
 
-    //reduce need for static
     public static float recyclerScrollCompute,itemHeightPx, ratioOffset;
 
     private EntryItemManager entryItemManager;
@@ -261,9 +251,6 @@ public class MainFragment extends Fragment {
 
 
     }
-
-
-
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -510,15 +497,20 @@ public class MainFragment extends Fragment {
 
             new LeafButton(getContext())
                     .setViewGroup(binding.main)
+                    //assign a onClickListener for leaf button
                     .assignListener(view -> {
+
+                        //listener for the button panel
                         buttonPanelToggle.setOnClickListener(
                                 view1 -> { //deletes selected Entries
                             entryItemManager.deleteSelected(selectionTracker);
                             buttonPanelToggle.toggleDisableToButton();
                             adapter.trackerOn(false);
                         });
+
                         adapter.trackerOn(true);
                         buttonPanelToggle.toggleDisableToButton();
+
                     }).create()
 
     );
