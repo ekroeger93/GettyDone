@@ -103,11 +103,17 @@ public class MainTimerViewModel extends ViewModel {
                 (toggle) -> {
             toggled = toggle;
                     if(toggle){
+
+                        if(countTimer.getNumberTime() == 0){
                         countTimer.setTimer(timeState);
+                        }else{
+                            countTimer.setTimer( new TimeState(countTimer.getNumberTime()));
+                        }
+
                         setTask();
                     }else {
                         timeState = new TimeState(countTimer.getNumberTime());
-                        _countDownTimer.postValue(timeState.getTimeFormat());
+                       _countDownTimer.postValue(timeState.getTimeFormat());
                     }
                 }
         );
@@ -122,8 +128,15 @@ public class MainTimerViewModel extends ViewModel {
                 (toggle) -> {
                     toggled = toggle;
                     if(toggle){
-                        countTimer.setTimer(timeState);
+
+                        if(countTimer.getNumberTime() == 0){
+                            countTimer.setTimer(timeState);
+                        }else{
+                            countTimer.setTimer( new TimeState(countTimer.getNumberTime()));
+                        }
+
                         setTaskCustom(task);
+
                     }else {
                         timeState = new TimeState(countTimer.getNumberTime());
                         _countDownTimer.postValue(timeState.getTimeFormat());

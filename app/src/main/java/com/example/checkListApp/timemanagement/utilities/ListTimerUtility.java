@@ -20,13 +20,6 @@ public abstract class ListTimerUtility {
    @RequiresApi(api = Build.VERSION_CODES.O)
    public void accumulation(ArrayList<Entry> list){
 
-
-       //TODO: fix this
-//       D: 1 = 5 5
-//       D: 2 = 10 10
-//       D: 3 = 10 10 <-- ?
-//       D: 4 = 10 10
-//       D: 5 = 10 10
        for(int i = 0; i <= list.size()-2; i++){
 
            if(i != 0 ) {

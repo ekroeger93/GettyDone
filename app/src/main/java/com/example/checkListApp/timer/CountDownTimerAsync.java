@@ -58,6 +58,7 @@ public class CountDownTimerAsync {
         private int numberTime;
         private int setTime;
         private int elapsedTime;
+        private int countDownTime;
 
 
 
@@ -114,9 +115,15 @@ public class CountDownTimerAsync {
 
                         numberTime = Integer.parseInt( String.format(locale,"%02d%02d%02d", HH, MM, SS));
                         runTime = String.format(locale,"%02d:%02d:%02d", HH, MM, SS);
+                        countDownTime = (int) countingDown.getSeconds();
+
                         elapsedTime = (int) (setTime - (countingDown.getSeconds()));
 
                         if(countingDown.getSeconds() <= 0) {
+
+                            countDownTask.execute(0);
+                            serviceTask.execute(0);
+
                             postTimeExpire();
                             break;
                         }
@@ -151,8 +158,9 @@ public class CountDownTimerAsync {
 
         public String getRunTime(){ return runTime; }
 
+        public int getCountDownTime() { return countDownTime; }
 
-        @FunctionalInterface
+    @FunctionalInterface
         public interface PostExecute{
             void execute();
         }
