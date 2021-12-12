@@ -63,18 +63,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 
 /*
-Objectives
-
--add in pull down/up to extender, change the recycler view Y size
-    -use anchor points when dragging
-
--order consistent, save index in Json and load in proper order, use Entry ID
-//cd /data/user/0/com.example.myfileio/files
--image button checkBox
--change buttons into icons
--animate entry on move and delete
--fix up the file manager, add transitions
-
 
 TaDone Prototype
 --------------------------------------------------------------
@@ -83,10 +71,6 @@ https://github.com/PhilJay/MPAndroidChart
 -? save as pdf/rich text file -> print appMobilityPrint
 
 -------------------------------------------------------------
-
--> get to toggle() run in background ? Runnable
--> ? could sum the time values into one and impl to GlobalTimer ?
--> notifications
 
 Collaboration
 Tags
@@ -104,16 +88,30 @@ Subtasks
 graphing show progress
 https://github.com/PhilJay/MPAndroidChart
 
-calender schedule
-
+//TODO: BUGS
 //TODO: Switching tabs and back to List cause mainTimer to lose memory, disable when active
 //TODO: Disable buttons when timer is running!
-//TODO: timer set to zero or is zero at expiration
-//TODO: timer starts at appropriate vale
-//TODO: fix touch / onclick listener view models
-//TODO: loaded checklist is sometimes out of order
+//TODO: fix touch / onclick listener viewholders
+//TODO: loaded checklist is sometimes out of order, use Id
+//TODO: toggle switch ordering may have leaks and complications
+//TODO: fix Service text Entry
 
-correspond list to a select color for graph and add file name
+Features:
+
+-add in pull down/up to extender, change the recycler view Y size
+    -use anchor points when dragging
+
+-image button checkBox
+-change buttons into icons
+-animate entry on move and delete
+-fix up the file manager, add transitions
+-add selected audio functionality
+-add duplicate, hold down add
+
+-color code Entry Lists for graphing,
+add legend keys,
+change Y axis value to number of times submitted completion,
+
 
 
 https://stackoverflow.com/questions/43650201/how-to-make-an-android-app-run-in-background-when-the-screen-sleeps
@@ -148,19 +146,9 @@ public class MainFragment extends Fragment {
     private ArrayList<Entry> checkList = new ArrayList<>();
     private final MutableLiveData<Integer> selectedEntry = new MutableLiveData<>();
 
-    //alot of classes rely on this being static
     public ArrayList<Entry> getCheckList(){ return checkList;}
     public Operator getOperator (){ return operator;}
     public MainViewModel getmViewModel(){ return mViewModel;}
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public ArrayList<Entry> getGeneratedLoadShit() {
-        ListTimersParcel parcelableList =
-                getForegroundTimerServiceIntent()
-                        .getParcelableExtra(KeyHelperClass.TIME_PARCEL_DATA);
-
-        return listUtility.generateEntryList(parcelableList);
-    }
 
 
     public RecyclerView getRecyclerView(){ return recyclerView;}
@@ -200,7 +188,6 @@ public class MainFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater,R.layout.main_fragment,container,false);
         binding.setLifecycleOwner(this);
 
-        //setRetainInstance(true);
         return binding.getRoot();
 
     }
@@ -350,6 +337,15 @@ public class MainFragment extends Fragment {
             int elapsedTime = setTime - time;
             if(listUtility.currentActiveTime.timeElapsed(elapsedTime)) {
 
+//                for(Entry e: checkList) {
+//                    Log.d(
+//                            "timerTestAcc",
+//                            "acc: " + e.timeAccumulated +
+//                                    " set: "+setTime +
+//                                    " ela: "+elapsedTime +
+//                                    " time: "+time);
+//                }
+
                 shortBell.start();
 
                 String messageB = checkList.get(listUtility.activeProcessTimeIndex).textEntry.getValue();
@@ -363,12 +359,6 @@ public class MainFragment extends Fragment {
                         toast.setGravity(Gravity.TOP, 0, 0);
                         toast.show();
 
-//                        for(Entry e:checkList){
-//                            Log.d("timeAccu",
-//                                            " ::acc "+e.timeAccumulated+
-//                                            " nV= "+e.numberValueTime+
-//                                            " textV "+e.textEntry.getValue());
-//                        }
 
                     });
                 }
@@ -378,10 +368,6 @@ public class MainFragment extends Fragment {
                     listUtility.currentActiveTime = listUtility.getNextActiveProcessTime(checkList);
                 }
 
-//                if(checkList.get(listUtility.activeProcessTimeIndex).numberValueTime  !=0 ) {
-//                    checkList.get(listUtility.activeProcessTimeIndex).getViewHolder().checkOff();
-//                    listUtility.currentActiveTime = listUtility.getNextActiveProcessTime(checkList);
-//                }
 
             }
 
@@ -392,7 +378,6 @@ public class MainFragment extends Fragment {
 
 
     });
-
 
     //update time of both View and ViewModel
     mainTimerView.setObserverForMainTextTime(binding.timeTextMain,getViewLifecycleOwner());
@@ -424,7 +409,6 @@ public class MainFragment extends Fragment {
         mainTimerView.mainTimerViewModel.resetTimeState();
         getActivity().stopService(getForegroundTimerServiceIntent());
 
-        checkList.get(checkList.size()-2).getViewHolder().checkOff();
 
     });
 
@@ -464,19 +448,23 @@ public class MainFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public int setTimer(MainTimerView mainTimerView){
 
-    int summationTime  = listUtility.getSummationTime(checkList);
-    String setTime = new TimeState(summationTime).getTimeFormat();
+        if(mainTimerView.mainTimerViewModel.getNumberValueTime() == 0) {
+            int summationTime = listUtility.getSummationTime(checkList);
+            String setTime = new TimeState(summationTime).getTimeFormat();
+            mainTimerView.mainTimerViewModel.setCountDownTimer(setTime);
 
-    mainTimerView.mainTimerViewModel.setCountDownTimer(setTime);
-    Log.d("testTime", ""+summationTime);
-    listUtility.accumulation(checkList);
+            listUtility.accumulation(checkList);
 
-    listUtility.revertTimeIndex();
-    listUtility.currentActiveTime = checkList.get(1);
+            listUtility.revertTimeIndex();
+            listUtility.currentActiveTime = checkList.get(1);
 
+            return summationTime;
 
+        }else{
+            listUtility.accumulation(checkList);
 
-    return summationTime;
+            return listUtility.getSummationTime(checkList);
+        }
 }
 
 

@@ -391,7 +391,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
                 public void setObservers(Entry entry){
 
-                    Observer<String> observer = o -> {
+                    Observer<String> onChangeEntryText = o -> {
 
                         textView.setText(o);
                         entry.textTemp = o;
@@ -400,7 +400,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
                     };
 
-                    Observer<Boolean> checkObs = aBoolean -> {
+                    Observer<Boolean> onChangeEntryChecked = aBoolean -> {
 
                         if (enforceChecked){
                             textView.setBackgroundColor(Color.GRAY);
@@ -426,9 +426,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
                     };
 
-                    Observer<String> changeTimeValue = o ->{
+                    Observer<String> onChangeTimeValue = o ->{
 
-                 //       Log.d("timerTest",o);
                         setTimeButton.setText(o);
                         entry.timeTemp = o;
 
@@ -455,9 +454,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     //TODO null value
 
                     if(!MainFragment.executionMode) {
-                        getEntry().textEntry.observe(owner, observer);
-                        getEntry().checked.observe(owner, checkObs);
-                        getEntry().countDownTimer.observe(owner, changeTimeValue);
+                        getEntry().textEntry.observe(owner, onChangeEntryText);
+                        getEntry().checked.observe(owner, onChangeEntryChecked);
+                        getEntry().countDownTimer.observe(owner, onChangeTimeValue);
                     }
 
                 }
