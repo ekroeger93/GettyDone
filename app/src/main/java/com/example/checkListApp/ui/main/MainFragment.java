@@ -91,10 +91,10 @@ https://github.com/PhilJay/MPAndroidChart
 //TODO: BUGS
 //TODO: Switching tabs and back to List cause mainTimer to lose memory, disable when active
 //TODO: Disable buttons when timer is running!
-//TODO: timer starts at appropriate value
 //TODO: fix touch / onclick listener viewholders
 //TODO: loaded checklist is sometimes out of order, use Id
 //TODO: toggle switch ordering may have leaks and complications
+//TODO: fix Service text Entry
 
 Features:
 
