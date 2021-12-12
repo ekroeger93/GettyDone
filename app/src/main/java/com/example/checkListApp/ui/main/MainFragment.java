@@ -96,6 +96,8 @@ https://github.com/PhilJay/MPAndroidChart
 //TODO: toggle switch ordering may have leaks and complications
 //TODO: fix Service text Entry
 
+//TODO: on move, Entry check buttons are coupled together
+
 //TODO: Features
 -add in pull down/up to extender, change the recycler view Y size
     -use anchor points when dragging
