@@ -106,12 +106,12 @@ https://github.com/PhilJay/MPAndroidChart
 
 calender schedule
 
-
-//TODO: Switching tabs and back to List cause mainTimer to lose memory
+//TODO: Switching tabs and back to List cause mainTimer to lose memory, disable when active
 //TODO: Disable buttons when timer is running!
 //TODO: timer set to zero or is zero at expiration
 //TODO: timer starts at appropriate vale
 //TODO: fix touch / onclick listener view models
+//TODO: loaded checklist is sometimes out of order
 
 correspond list to a select color for graph and add file name
 
@@ -175,8 +175,6 @@ public class MainFragment extends Fragment {
     private MediaPlayer selectedAudio;
 
     private MediaPlayer shortBell;
-
-    private boolean forceObserveList = false;
 
     MainTimerView mainTimerView = new MainTimerView();
     ListTimersParcel listTimersParcel;
@@ -244,7 +242,6 @@ public class MainFragment extends Fragment {
             for(Entry entry : getCheckList()) mViewModel.loadEntry(entry);
 
         }
- //       adapter.setList(checkList);
 
     }
 
@@ -348,28 +345,7 @@ public class MainFragment extends Fragment {
 
         startService();
 
-        //TODO: BUG if the current and next timer are equal it skips
-
-        /* I'm getting an array with a size is not fully realized unless
-         * I scroll down the list, thus repeated accumulation assignments on new thread
-         *
-         * A dumb fix would be to literally animate from bottom to top and start the thread
-         * once the animation reaches the top of list
-         *
-         * */
-
-        //checkList = (ArrayList<Entry>) mViewModel.getAllEntries().getValue();
-        listUtility.accumulationLiveData(checkList);
-
-
-
-        final boolean[] flag = {false};
-
         mainTimerView.mainTimerViewModel.toggleTimeWithCustomTask(time -> {
-
-            if(!flag[0]) {
-                 flag[0] = true;
-            }
 
             int elapsedTime = setTime - time;
             if(listUtility.currentActiveTime.timeElapsed(elapsedTime)) {
@@ -387,23 +363,25 @@ public class MainFragment extends Fragment {
                         toast.setGravity(Gravity.TOP, 0, 0);
                         toast.show();
 
-                        for(Entry e:checkList){
-
-                            Log.d("timeAccu",
-                                    "::accLive " +e._timeAccumulated.getValue()+
-                                            " ::acc "+e.timeAccumulated+
-                                            " nV= "+e.numberValueTime+
-                                            " nVLive= "+e._numberValueTime.getValue()+
-                                            " textV "+e.textEntry.getValue());
-                        }
+//                        for(Entry e:checkList){
+//                            Log.d("timeAccu",
+//                                            " ::acc "+e.timeAccumulated+
+//                                            " nV= "+e.numberValueTime+
+//                                            " textV "+e.textEntry.getValue());
+//                        }
 
                     });
                 }
 
-                if(checkList.get(listUtility.activeProcessTimeIndex).numberValueTime  !=0 ) {
-                    checkList.get(listUtility.activeProcessTimeIndex).getViewHolder().checkOff();
+                if(listUtility.currentActiveTime.numberValueTime !=0 ){
+                    listUtility.currentActiveTime.getViewHolder().checkOff();
                     listUtility.currentActiveTime = listUtility.getNextActiveProcessTime(checkList);
                 }
+
+//                if(checkList.get(listUtility.activeProcessTimeIndex).numberValueTime  !=0 ) {
+//                    checkList.get(listUtility.activeProcessTimeIndex).getViewHolder().checkOff();
+//                    listUtility.currentActiveTime = listUtility.getNextActiveProcessTime(checkList);
+//                }
 
             }
 
@@ -647,9 +625,6 @@ public class MainFragment extends Fragment {
             ) {
 
 
-                Log.d("timeAcc","called");
-
-
                 checkList = (ArrayList<Entry>) entries;
                 checkList.add(0, new Spacer());
                 checkList.add(checkList.size(), new Spacer());
@@ -672,7 +647,6 @@ public class MainFragment extends Fragment {
 
                 JsonService.buildJson(checkList);
 
-                forceObserveList = false;
             }
 
 

@@ -24,12 +24,6 @@ public class Entry {
     public MutableLiveData<Boolean> checked = new MutableLiveData<>(false);
     @ColumnInfo(name = "timerLabel")
     public MutableLiveData<String> countDownTimer = new MutableLiveData<>("00:00:00");
-  //  @ColumnInfo(name = "timeAccumulated")
-
-    @Ignore
-    public MutableLiveData<Integer> _timeAccumulated = new MutableLiveData<>(0);
-    @Ignore
-    public MutableLiveData<Integer> _numberValueTime = new MutableLiveData<>(0);
 
     @Ignore
     private RecyclerAdapter.ViewHolder viewHolder;
@@ -63,8 +57,6 @@ public class Entry {
         numberValueTime = numberTime;
         timeAccumulated = new TimeState(numberTime).getTimeNumberValue();//numberTime;//extractNumberValueTime(time);
 
-        _numberValueTime.postValue(numberTime);
-        _timeAccumulated.postValue(new TimeState(numberTime).getTimeNumberValue());
 
     }
 
@@ -79,8 +71,6 @@ public class Entry {
         numberValueTime = numberTime;
         timeAccumulated = new TimeState(numberTime).getTimeNumberValue();//numberTime;//extractNumberValueTime(time);
 
-        _numberValueTime.setValue(numberTime);
-        _timeAccumulated.setValue(new TimeState(numberTime).getTimeNumberValue());
 
 
         //    numberValueTime = new TimeState(timeText).getTimeNumberValueDecimalTruncated();
@@ -112,7 +102,6 @@ public class Entry {
             timeText = timeText.replace(":", "").trim();
             numberValueTime = new TimeState(Integer.parseInt(timeText.replaceAll("\"",""))).getTimeNumberValueDecimalTruncated();
 
-            _numberValueTime.postValue(new TimeState(Integer.parseInt(timeText.replaceAll("\"",""))).getTimeNumberValueDecimalTruncated());
         }catch (NullPointerException e){
             e.printStackTrace();
         }
@@ -167,9 +156,6 @@ public class Entry {
         return  (timeAccumulated == time);
     }
 
-    public boolean timeElapsedWithLiveData(int time){
-        return  _timeAccumulated.getValue() == time;
-    }
 
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -187,7 +173,6 @@ public void setTimeAccumulatedLiveData(int timeAccumulated){
     int original = new TimeState(numberValueTime).getTimeNumberValue();
     int addedTime  = new TimeState(timeAccumulated).getTimeNumberValue();
 
-    this._timeAccumulated.postValue(original + addedTime);
 
 }
 
@@ -204,7 +189,6 @@ public void setTimeAccumulatedLiveData(int timeAccumulated){
     public void setTimeAccumulatedNonAdditive(int timeAccumulated) {
         this.timeAccumulated = timeAccumulated;
 
-        this._timeAccumulated.postValue(timeAccumulated);
     }
 
 }

@@ -436,17 +436,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         JsonService.buildJson((ArrayList<Entry>) mList);
                     };
 
-                    Observer<Integer> onChangeTimeAccumulation = o ->{
 
-                //        entry.timeAccumulated = o;
-                        repository.updateEntry(entry);
-
-                    };
-
-                    Observer<Integer> onChangeNumberValueTime = o ->{
-
-                        repository.updateEntry(entry);
-                    };
 
                     Observer selectOrderObs = (Observer) o -> {
                         selectOrder = orderInt.getValue();
@@ -468,8 +458,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         getEntry().textEntry.observe(owner, observer);
                         getEntry().checked.observe(owner, checkObs);
                         getEntry().countDownTimer.observe(owner, changeTimeValue);
-                        getEntry()._timeAccumulated.observe(owner, onChangeTimeAccumulation);
-                        getEntry()._numberValueTime.observe(owner, onChangeNumberValueTime);
                     }
 
                 }
