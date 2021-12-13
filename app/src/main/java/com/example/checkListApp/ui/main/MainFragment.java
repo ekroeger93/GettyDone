@@ -95,6 +95,7 @@ TaDone Prototype
 
 -add reset timer
 -add buttons for notification service
+-add repeatable time, iteration were it will loop back to first entry
 
 -add in pull down/up to extender, change the recycler view Y size
     -use anchor points when dragging
