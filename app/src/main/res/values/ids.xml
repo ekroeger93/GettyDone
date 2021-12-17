@@ -6,5 +6,5 @@
 
     <item name="dates" type="id"/>
 
-
+    <item name="item_click_support" type="id" />
 </resources>

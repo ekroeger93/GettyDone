@@ -2,6 +2,7 @@ package com.example.checkListApp.ui.main;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.media.MediaPlayer;
@@ -35,6 +36,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.checkListApp.R;
 import com.example.checkListApp.databinding.MainFragmentBinding;
+import com.example.checkListApp.input.CustomEditText;
+import com.example.checkListApp.input.DetectKeyboardBack;
 import com.example.checkListApp.timemanagement.MainTimerView;
 import com.example.checkListApp.timemanagement.MainTimerViewModel;
 import com.example.checkListApp.timemanagement.TimerService;
@@ -47,6 +50,7 @@ import com.example.checkListApp.ui.main.entry_management.ButtonPanel.ButtonPanel
 import com.example.checkListApp.ui.main.entry_management.EntryItemManager;
 import com.example.checkListApp.ui.main.entry_management.ButtonPanel.LeafButton;
 import com.example.checkListApp.ui.main.entry_management.ListComponent.CustomLayoutManager;
+import com.example.checkListApp.ui.main.entry_management.ListComponent.ListItemClickListener;
 import com.example.checkListApp.ui.main.entry_management.ListComponent.RecyclerAdapter;
 import com.example.checkListApp.ui.main.entry_management.Operator;
 import com.example.checkListApp.ui.main.entry_management.Record.RecordHelper;
@@ -129,7 +133,7 @@ https://github.com/PhilJay/MPAndroidChart
  */
 
 
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements ListItemClickListener {
 
 
     protected MainFragmentBinding binding;
@@ -212,8 +216,11 @@ public class MainFragment extends Fragment {
 
         initialize();
 
+        //TODO: selectionTracker interference with onClick!!!
+
         assignButtonListeners();
 
+        //TODO: investigate here too
         assignObservers();
 
         configureMainTimer();
@@ -276,6 +283,9 @@ public class MainFragment extends Fragment {
 
         adapter.setList(tempArray);
 
+        adapter.setTrackerHelper(recyclerView);
+
+//        //TODO: DISABLE SELECTION TRACKER
         selectionTracker = new SelectionTracker.Builder<>(
                 "selection",
                 recyclerView,
@@ -284,8 +294,6 @@ public class MainFragment extends Fragment {
                 StorageStrategy.createLongStorage())
                 .withSelectionPredicate( adapter.trackerHelper.predicate)
                 .build();
-
-
 
         adapter.setTracker(selectionTracker);
         adapter.trackerOn(false);
@@ -773,6 +781,44 @@ public class MainFragment extends Fragment {
 
     }
 
+
+    @Override
+    public void clickPosition(RecyclerAdapter.ViewHolder viewHolder,View view, int position) {
+
+        Log.d("clickTest","clicking");
+
+        if(view.getId() == R.id.checkBtn){
+
+            viewHolder.getEntry().checked.postValue( !viewHolder.getEntry().checked.getValue());
+
+//            Toast toast = Toast.makeText(getContext(), ""+position,Toast.LENGTH_SHORT );
+//            toast.show();
+
+        }
+
+        if(view.getId() == R.id.setEntryTimeBtn){
+            viewHolder.transitionToSetTimer();
+        }
+
+
+        if(view.getId() == R.id.entryText){
+
+            View itemView = viewHolder.itemView;
+            Entry entry = checkList.get(position);
+
+            scrollPosition(position);
+
+            CustomEditText editHolderText = itemView.findViewById(R.id.entryEditTxt);
+            new DetectKeyboardBack(
+                    itemView.getContext(),
+                    editHolderText,
+                    viewHolder.textView, entry
+
+            );
+
+
+        }
+    }
 
 
 }
