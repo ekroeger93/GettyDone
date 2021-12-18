@@ -8,6 +8,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
@@ -157,6 +158,17 @@ public class CountDownTimerAsync {
         public int getNumberTime(){ return numberTime; }
 
         public String getRunTime(){ return runTime; }
+
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        public void resetAll(){
+            futureTime =  LocalDateTime.now();
+            setTime = 0;
+            elapsedTime = 0;
+            countDownTime = 0;
+            numberTime = 0;
+            runTime = "00:00:00";
+
+        }
 
         public int getCountDownTime() { return countDownTime; }
 

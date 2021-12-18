@@ -291,6 +291,9 @@ public class EntryItemManager {
 
 
         if (!isMovingItem) {
+
+            mainFragment.hideTimeExecuteBtn(true);
+
             operator.movingItem = mainFragment.getCheckList().get(selection - 1);
             operator.oldMovePosition = selection - 1;
          //   operator.movingItem.setViewHolder(mainFragment.getCheckList().get(selection - 1).getViewHolder());
@@ -301,6 +304,9 @@ public class EntryItemManager {
          //   buttonPanelToggle.toggleDisableToButton();
 
         }else{
+
+            mainFragment.hideTimeExecuteBtn(false);
+
             operator.movingItem = null;
         }
 

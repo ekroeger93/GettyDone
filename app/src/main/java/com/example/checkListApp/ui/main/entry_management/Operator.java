@@ -111,6 +111,8 @@ public class Operator {
     public void moveItem(Entry movingItem){
 
         try {
+
+
             if (oldMovePosition != selection-1
                     && selection > 0
                     && selection < mainFragment.getCheckList().size()

@@ -151,4 +151,15 @@ public class MainTimerViewModel extends ViewModel {
         timeState = new TimeState(0);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void resetAbsolutely(){
+//        timeState = new TimeState(0);
+//        _countDownTimer.postValue(timeState.getTimeFormat());//
+//        countTimer.setTimer(timeState);
+//        countTimer.resetAll();
+//        timeToggler.shutDown();//
+
+    }
+
+
 }

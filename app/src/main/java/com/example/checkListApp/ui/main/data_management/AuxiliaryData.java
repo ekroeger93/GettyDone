@@ -31,18 +31,11 @@ public final class AuxiliaryData {
             int index = timeParcel.getTimeIndex()-1;
             String time = timeParcel.getTimeStringVal();
 
-
-            //TODO: it works but I don't like it
-//           String retainJson = timeParcel.getRetainedJsonData();
-//           ArrayList<Entry> retainedState = JsonService.getJsonGeneratedArray(retainJson);
-//           retainedState.get(index).countDownTimer.postValue(time);
-
             data.get(index).countDownTimer.postValue(time);
 
             Log.d("timerTest", "" + timeParcel.getTimeStringVal());
 
             return  data;
-           // return retainedState;
 
         }catch (NullPointerException e){
             e.printStackTrace();

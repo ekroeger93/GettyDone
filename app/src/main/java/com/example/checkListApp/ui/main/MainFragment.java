@@ -35,7 +35,9 @@ import androidx.recyclerview.selection.SelectionTracker;
 import androidx.recyclerview.selection.StorageStrategy;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.checkListApp.MainActivity;
 import com.example.checkListApp.R;
+import com.example.checkListApp.databinding.MainActivityBinding;
 import com.example.checkListApp.databinding.MainFragmentBinding;
 import com.example.checkListApp.input.CustomEditText;
 import com.example.checkListApp.input.DetectKeyboardBack;
@@ -66,6 +68,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
+import com.example.checkListApp.databinding.MainActivityBinding;
 
 /*
 
@@ -74,16 +77,6 @@ TaDone Prototype
 -------------------------------------------------------------
 
 //TODO: BUGS
-
- Switching tabs and back to List cause mainTimer to lose memory,
- Disable buttons when timer is running!
- ButtonPanel should be hidden, pause and reset buttons timer visible
- tabs should be hidden
- view holder buttons greyed out and disabled (unless paused),
- try using LiveData
-
-
- fix touch / onclick listener viewholders <- fixed*
 
  loaded checklist is sometimes out of order,
   use jackson instead @JsonPropertyOrder
@@ -139,6 +132,8 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     protected MainFragmentBinding binding;
 
+    MainActivityBinding activityBinding;
+
     public static float recyclerScrollCompute,itemHeightPx, ratioOffset;
 
     private EntryItemManager entryItemManager;
@@ -175,7 +170,12 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     private boolean isSorting = false;
 
-    public static boolean timerIsRunning = false;
+    private final MutableLiveData<Boolean> timerRunning = new MutableLiveData<>(false);
+    public Boolean isTimerRunning()   { return timerRunning.getValue();}
+    public MutableLiveData<Boolean> getTimerRunning() { return timerRunning;}
+
+
+
 
     private MediaPlayer selectedAudio;
 
@@ -204,6 +204,8 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         binding = DataBindingUtil.inflate(inflater,R.layout.main_fragment,container,false);
         binding.setLifecycleOwner(this);
 
+
+
         return binding.getRoot();
 
     }
@@ -213,6 +215,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+
 
         setUpAdapter();
 
@@ -237,6 +240,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
+
 
 
 
@@ -270,6 +274,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void setUpAdapter(){
+
 
         recyclerView = binding.ScrollView;
 
@@ -367,7 +372,14 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         startService();
 
+        timerRunning.postValue( !timerRunning.getValue());
+        Log.d("timeRunning", ""+timerRunning.getValue());
+
+       // Log.d("timeRunning", ""+timerRunning);
+
         mainTimerView.mainTimerViewModel.toggleTimeWithCustomTask(time -> {
+
+
 
             int elapsedTime = setTime - time;
             if(listUtility.currentActiveTime.timeElapsed(elapsedTime)) {
@@ -424,7 +436,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         new Handler(Looper.getMainLooper()).post(new Runnable () {
 
-
             @Override public void run() {
 
                 String message = checkList.get(
@@ -442,6 +453,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
 
         mainTimerView.mainTimerViewModel.resetTimeState();
+        timerRunning.postValue(false);
         getActivity().stopService(getForegroundTimerServiceIntent());
 
 
@@ -640,8 +652,26 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     public void assignObservers(){
 
+        Observer<Boolean> onTimerRunning = new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
 
-    mViewModel.getAllEntries().observe(getViewLifecycleOwner(),new Observer<List<Entry>>() {
+                if(!aBoolean){
+                    MainActivity.tabLayout.setVisibility(View.VISIBLE);
+                    hideButtons(false);
+                }else{
+                    MainActivity.tabLayout.setVisibility(View.GONE);
+                    hideButtons(true);
+                }
+
+            }
+        };
+
+        timerRunning.observe(getViewLifecycleOwner(), onTimerRunning);
+
+
+
+        mViewModel.getAllEntries().observe(getViewLifecycleOwner(),new Observer<List<Entry>>() {
 
         @Override
         public void onChanged(@Nullable final List<Entry> entries) {
@@ -775,7 +805,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
 }
 
-
     public static void transitionToFileFromMain(Activity activity){
 
         MainFragmentDirections.ActionMainFragmentToFileListFragment action =
@@ -792,10 +821,10 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void clickPosition(RecyclerAdapter.ViewHolder viewHolder,View view, int position) {
 
-        Log.d("clickTest","clicking");
 
         if(view.getId() == R.id.checkBtn){
 
@@ -807,7 +836,18 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         }
 
         if(view.getId() == R.id.setEntryTimeBtn){
-            viewHolder.transitionToSetTimer();
+
+            if(!isTimerRunning()) {
+
+           //     binding.timeTextMain.setText("00:00:00");
+                mainTimerView.mainTimerViewModel.resetAbsolutely();
+            //    timerRunning.postValue(false);
+                getActivity().stopService(getForegroundTimerServiceIntent());
+
+                //   getActivity().stopService(getForegroundTimerServiceIntent());
+
+                viewHolder.transitionToSetTimer();
+            }
         }
 
 
@@ -827,6 +867,25 @@ public class MainFragment extends Fragment implements ListItemClickListener {
             );
 
 
+        }
+    }
+
+    public void hideButtons(boolean hide){
+
+        if(hide){
+            binding.buttonPanel.setVisibility(View.GONE);
+        }else {
+            binding.buttonPanel.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    public void hideTimeExecuteBtn(boolean hide){
+
+        if(hide){
+            binding.timerExecuteBtn.setVisibility(View.GONE);
+        }else{
+            binding.timerExecuteBtn.setVisibility(View.VISIBLE);
         }
     }
 

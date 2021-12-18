@@ -58,7 +58,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/entryListFragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
 

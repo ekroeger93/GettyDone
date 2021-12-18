@@ -479,7 +479,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         @Override
         public void onClick(View view) {
-                    listItemClickListener.clickPosition(this,view ,getBindingAdapterPosition());
+
+                    try {
+                        listItemClickListener.clickPosition(this, view, getBindingAdapterPosition());
+                    }catch (NullPointerException e){
+                        e.printStackTrace();
+                    }
         }
 
 

@@ -18,9 +18,6 @@ public final class MainTimerView {
 
     public MainTimerViewModel mainTimerViewModel = new MainTimerViewModel();
 
-    MutableLiveData<Boolean> toggled = new MutableLiveData<>(false);
-
-
     public MainTimerViewModel getGlobalTimeViewModel() {
         return mainTimerViewModel;
     }
@@ -52,17 +49,14 @@ public final class MainTimerView {
 
     }
 
-    public void setObserverForToggledLiveData( LifecycleOwner owner, Observer<Boolean> observer){
-        toggled.observe(owner,observer);
-    }
+
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void setListener(Button executeTime) {
 
         executeTime.setOnClickListener(view -> {
-            toggled.postValue(mainTimerViewModel.isToggled());
-            mainTimerViewModel.toggleTime();
+             mainTimerViewModel.toggleTime();
         });
 
     }
@@ -71,7 +65,6 @@ public final class MainTimerView {
     public void setListenerWithTask(Button executeTime, CountDownTimerAsync.CountDownTask task){
 
         executeTime.setOnClickListener( view ->{
-            toggled.postValue(mainTimerViewModel.isToggled());
             mainTimerViewModel.toggleTimeWithCustomTask(task);
         });
 
