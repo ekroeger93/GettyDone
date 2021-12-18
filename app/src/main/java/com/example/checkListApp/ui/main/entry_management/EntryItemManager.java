@@ -219,8 +219,11 @@ public class EntryItemManager {
 
                 //TODO: performance issues
                 //TODO: timeTemp not working used getValue instead
-                mainFragment.getCheckList().get(index)
-                        .postEntryOptimized(entry.textTemp,entry.checkTemp,entry.countDownTimer.getValue());
+
+//                mainFragment.getCheckList().get(index)
+//                        .postEntryOptimized(entry.textTemp,entry.checkTemp,entry.countDownTimer.getValue());
+
+                mainFragment.getCheckList().get(index).setEntry(entry);
 
 
             }catch (IndexOutOfBoundsException | NullPointerException e){

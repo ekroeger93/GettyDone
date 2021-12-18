@@ -10,6 +10,8 @@ import androidx.recyclerview.selection.ItemKeyProvider;
 import androidx.recyclerview.selection.SelectionTracker;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.TreeMap;
+
 public class TrackerHelper {
 
 
@@ -18,10 +20,12 @@ public class TrackerHelper {
    public KeyProvider keyProvider;
    public Predicate predicate;
 
+    boolean isMotionActive = true;
+
 
     public TrackerHelper(RecyclerView recyclerView, RecyclerView.Adapter  adapter){
 
-        details = new Details();
+        details = new Details(this);
         itemDetailsLookup = new ItemDetailLookup(recyclerView);
         keyProvider = new KeyProvider(adapter);
         predicate = new Predicate();
@@ -29,12 +33,16 @@ public class TrackerHelper {
 
     }
 
-
+    public void setIsMotionActive(boolean isMotionActive) {
+        this.isMotionActive = isMotionActive;
+    }
 
     static class Details extends ItemDetailsLookup.ItemDetails<Long> {
         long position;
+        TrackerHelper trackerHelper;
 
-        Details() {
+        Details(TrackerHelper trackerHelper) {
+            this.trackerHelper = trackerHelper;
         }
 
         @Override
@@ -50,7 +58,7 @@ public class TrackerHelper {
 
         @Override
         public boolean inSelectionHotspot(@NonNull MotionEvent e) {
-            return true;
+            return trackerHelper.isMotionActive;
         }
     }
 

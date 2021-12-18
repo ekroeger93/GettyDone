@@ -26,6 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -84,7 +85,8 @@ TaDone Prototype
 
  fix touch / onclick listener viewholders <- fixed*
 
- loaded checklist is sometimes out of order, use Id
+ loaded checklist is sometimes out of order,
+  use jackson instead @JsonPropertyOrder
 
  toggle switch ordering may have leaks and complications
 
@@ -100,25 +102,24 @@ TaDone Prototype
 -add reset timer
 -add buttons for notification service
 -add repeatable time, iteration were it will loop back to first entry
-
--add in pull down/up to extender, change the recycler view Y size
-    -use anchor points when dragging
-    or fullscreen mode
-
 -select sounds on setTimer
 
 -image button checkBox
-
 -change buttons into icons
 
 -animate entry on move and delete, have better indications for user
 -fix up the file manager, add transitions
--add selected audio functionality
 -add duplicate, hold down add
 
 -color code Entry Lists for graphing,
 add legend keys,
 change Y axis value to number of times submitted completion,
+
+
+-add in pull down/up to extender, change the recycler view Y size
+    -use anchor points when dragging
+    or fullscreen mode
+
 
 Post production ideas:
 -? save to google drive, share data
@@ -157,6 +158,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     private static CustomLayoutManager customLayoutManager;
 
     private ArrayList<Entry> checkList = new ArrayList<>();
+    private MutableLiveData< ArrayList<Entry>> _checkList = new MutableLiveData<>();
 
 
     private final MutableLiveData<Integer> selectedEntry = new MutableLiveData<>();
@@ -173,7 +175,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     private boolean isSorting = false;
 
-    public static boolean executionMode = false;
+    public static boolean timerIsRunning = false;
 
     private MediaPlayer selectedAudio;
 
@@ -238,7 +240,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
 
 
-
         if(!getArguments().isEmpty()) {
 
             Log.d("loadTest", ""+ (getArguments().get(KeyHelperClass.TIME_PARCEL_DATA) == null));
@@ -247,7 +248,12 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
             mViewModel.deleteAllEntries(checkList);
 
-            checkList = AuxiliaryData.loadFile( checkList, getArguments());
+            if(AuxiliaryData.loadFile(getArguments()) != null){
+                checkList = AuxiliaryData.loadFile(getArguments());
+                _checkList.setValue(checkList);
+            }else{
+                checkList = _checkList.getValue();
+            }
 
             AuxiliaryData.receiveParcelTime(checkList, getArguments());
 
@@ -255,6 +261,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
             for(Entry entry : getCheckList()) mViewModel.loadEntry(entry);
         }
+
 
 
 
@@ -656,6 +663,9 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                 checkList = listUtility.updateToggleOrdering(checkList);
                 }else{ listUtility.updateAllSelection(checkList);
                 }
+
+
+                _checkList.setValue(checkList);
 
                 //maintenance code
 //                for(Entry entry : checkList) {

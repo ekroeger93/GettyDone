@@ -114,9 +114,11 @@ public class Entry {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void setEntry(Entry entry){
 
-        textEntry.setValue(entry.textEntry.getValue());
-        checked.setValue(entry.checked.getValue());
-        countDownTimer.setValue(entry.countDownTimer.getValue());
+        entryID = entry.getEntryID();
+
+        textEntry.postValue(entry.textEntry.getValue());
+        checked.postValue(entry.checked.getValue());
+        countDownTimer.postValue(entry.countDownTimer.getValue());
 
         textTemp = entry.textTemp;
 

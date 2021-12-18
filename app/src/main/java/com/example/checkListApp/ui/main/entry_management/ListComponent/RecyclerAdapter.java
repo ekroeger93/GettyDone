@@ -78,6 +78,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     public void trackerOn(boolean turnOnTracker){
         toggleTracker = turnOnTracker;
+        trackerHelper.setIsMotionActive(turnOnTracker);
 
         notifyDataSetChanged();
     }
@@ -292,7 +293,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     super(itemView.getRoot());
 
                     binding = itemView;
-                    details = new TrackerHelper.Details();
+                    details = new TrackerHelper.Details(trackerHelper);
 
                     tEntryViewRow = binding.entry;
                     checkButton = binding.checkBtn;
@@ -342,15 +343,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         //TODO: selectionTracker is restricting usage of OnClicklistener
                         //only problem is you can't scroll if touching these buttons
 
-                        checkButton.setOnTouchListener((view, motionEvent) -> {
-                            view.getParent().requestDisallowInterceptTouchEvent(true);
-                            return false;
-                        });
-
-                        setTimeButton.setOnTouchListener((view, motionEvent) -> {
-                            view.getParent().requestDisallowInterceptTouchEvent(true);
-                            return false;
-                        });
+//                        checkButton.setOnTouchListener((view, motionEvent) -> {
+//                            view.getParent().requestDisallowInterceptTouchEvent(true);
+//                            return false;
+//                        });
+//
+//                        setTimeButton.setOnTouchListener((view, motionEvent) -> {
+//                            view.getParent().requestDisallowInterceptTouchEvent(true);
+//                            return false;
+//                        });
 
 //                        textView.setOnTouchListener((view, motionEvent) -> {
 //                            view.getParent().requestDisallowInterceptTouchEvent(true);
@@ -444,11 +445,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     //TODO null value
 
                     try {
-                        if (!MainFragment.executionMode) {
+            //            if (!MainFragment.executionMode) {
                             getEntry().textEntry.observe(owner, onChangeEntryText);
                             getEntry().checked.observe(owner, onChangeEntryChecked);
                             getEntry().countDownTimer.observe(owner, onChangeTimeValue);
-                        }
+                //        }
                     }catch (NullPointerException e){
                         e.printStackTrace();
                     }

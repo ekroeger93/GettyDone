@@ -1,7 +1,10 @@
 package com.example.checkListApp.ui.main.data_management;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import com.example.checkListApp.settimer.SetTimerFragmentArgs;
 import com.example.checkListApp.timemanagement.parcel.TimeParcel;
@@ -11,6 +14,7 @@ import com.example.checkListApp.ui.main.MainFragmentArgs;
 import com.example.checkListApp.ui.main.MainViewModel;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public final class AuxiliaryData {
 
@@ -68,16 +72,12 @@ public final class AuxiliaryData {
 
     }
 
-    public static ArrayList<Entry> loadFile(ArrayList<Entry> data, Bundle bundle){
+    public static ArrayList<Entry> loadFile( Bundle bundle){
 
 
             MainFragmentArgs args = MainFragmentArgs.fromBundle(bundle);
 
-            Log.d("checkListTest","args: "+args.getJsonData());
-
             ArrayList<Entry> loadedCheckList = JsonService.getJsonGeneratedArray(args.getJsonData());
-
-            Log.d("loadTest","json: "+loadedCheckList);
 
             if(loadedCheckList != null){
 
@@ -93,7 +93,7 @@ public final class AuxiliaryData {
 
 
 
-        return data;
+        return null;
     }
 
 

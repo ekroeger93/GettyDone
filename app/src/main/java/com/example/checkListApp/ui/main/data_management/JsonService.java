@@ -24,17 +24,27 @@ public final class JsonService {
 
     private static String jsonCheckArrayList;
 
+    //TODO: jackson instead @JsonPropertyOrder
+    private static final Gson gson;
+
+    static { gson = new GsonBuilder()
+            .excludeFieldsWithoutExposeAnnotation()
+            .registerTypeAdapter(Entry.class, new SerializeEntryToJson())
+            .registerTypeAdapter(Entry.class, new DeserializeJsonToEntry())
+            .create();
+    }
+
     public static String getJsonCheckArrayList(){
         return jsonCheckArrayList;
     }
 
     public static void buildJson(ArrayList<Entry> checkList){
-
-        Gson gson = new GsonBuilder()
-                .excludeFieldsWithoutExposeAnnotation()
-                .registerTypeAdapter(Entry.class, new SerializeEntryToJson())
-                .registerTypeAdapter(Entry.class, new DeserializeJsonToEntry())
-                .create();
+//
+//        Gson gson = new GsonBuilder()
+//                .excludeFieldsWithoutExposeAnnotation()
+//                .registerTypeAdapter(Entry.class, new SerializeEntryToJson())
+//                .registerTypeAdapter(Entry.class, new DeserializeJsonToEntry())
+//                .create();
 
 
         StringBuilder jsonCheckList = new StringBuilder();
@@ -62,12 +72,11 @@ public final class JsonService {
 
     public static ArrayList<Entry> getJsonGeneratedArray(String json){
 
-
-        Gson gson = new GsonBuilder()
-                .excludeFieldsWithoutExposeAnnotation()
-                .registerTypeAdapter(Entry.class, new SerializeEntryToJson())
-                .registerTypeAdapter(Entry.class, new DeserializeJsonToEntry())
-                .create();
+//        Gson gson = new GsonBuilder()
+//                .excludeFieldsWithoutExposeAnnotation()
+//                .registerTypeAdapter(Entry.class, new SerializeEntryToJson())
+//                .registerTypeAdapter(Entry.class, new DeserializeJsonToEntry())
+//                .create();
 
         ArrayList<Entry> entryArrayList;
         Type userListType = new TypeToken<ArrayList<Entry>>(){}.getType();
@@ -88,13 +97,22 @@ public final class JsonService {
 
     JsonObject jsonObject = new JsonObject();
 
-    //TODO NULL FAULT
-            if(src.textEntry != null) {
+//            object.add("bar", context.serialize(foo.getBar());
+//            object.add("baz", context.serialize(foo.getBaz());
+//
+
+            //TODO NULL FAULT
+          //  if(src.textEntry != null) {
+
+//            jsonObject.add("textEntry",context.serialize(src.textEntry.getValue()));
+//            jsonObject.add("isChecked",context.serialize(src.checked.getValue()));
+//            jsonObject.add("timerLabel",context.serialize(src.countDownTimer.getValue()));
+
     jsonObject.addProperty("textEntry", src.textEntry.getValue());
     jsonObject.addProperty("isChecked", src.checked.getValue());
     jsonObject.addProperty("timerLabel", src.countDownTimer.getValue());
 
-}
+//}
                 return jsonObject;
 
 
@@ -111,12 +129,9 @@ public final class JsonService {
 
             JsonObject jsonObject = json.getAsJsonObject();
 
-            String textEntry;
-            String timeText;
-
-            textEntry = jsonObject.get("textEntry").toString();
+            String textEntry = jsonObject.get("textEntry").toString();
             boolean isChecked = jsonObject.get("isChecked").getAsBoolean();
-            timeText = jsonObject.get("timerLabel").toString();
+            String timeText = jsonObject.get("timerLabel").toString();
             Log.d("checkListTime",">>> "+timeText);
 
             //TODO:fix this
