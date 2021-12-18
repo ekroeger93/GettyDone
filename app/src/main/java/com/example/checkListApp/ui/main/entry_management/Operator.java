@@ -50,21 +50,20 @@ public class Operator {
         for (Entry e : mainFragment.getCheckList()) {
 
             try{
-                if(!e.checked.getValue()){
+           //     if(!e.checked.getValue()){
 
                 if (e.getViewHolder().getBindingAdapterPosition() == selection - 1) {
                     e.getViewHolder().itemView.setBackgroundColor(Color.RED);
+                    listUtility.updateAllSelection(mainFragment.getCheckList());
                 } else {
                     e.getViewHolder().itemView.setBackgroundColor(Color.parseColor("#95FF8D"));
                 }
-                }
+            //    }
 
 
 
-     if (e.getViewHolder().getBindingAdapterPosition() == selection - 1)
-         listUtility.updateAllSelection(mainFragment.getCheckList());
-
-
+//     if (e.getViewHolder().getBindingAdapterPosition() == selection - 1)
+//         listUtility.updateAllSelection(mainFragment.getCheckList());
 
 
             }catch (NullPointerException a){
@@ -122,9 +121,9 @@ public class Operator {
                 //TODO:FIX BUG PARCEL TIME NOT BEING UPDATED AFTER MOVE
 
                 mainFragment.getCheckList().remove(movingItem);
-                adapter.notifyItemRemoved(oldMovePosition);
+             //   adapter.notifyItemRemoved(oldMovePosition);
                 mainFragment.getCheckList().add(selection-1, movingItem);
-                adapter.notifyItemInserted(selection-1);
+           //     adapter.notifyItemInserted(selection-1);
 
                 adapter.notifyItemMoved(oldMovePosition,selection-1);
                  adapter.notifyItemChanged(oldMovePosition);

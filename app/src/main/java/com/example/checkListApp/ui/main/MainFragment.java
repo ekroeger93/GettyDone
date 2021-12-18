@@ -82,7 +82,7 @@ TaDone Prototype
  try using LiveData
 
 
- fix touch / onclick listener viewholders
+ fix touch / onclick listener viewholders <- fixed*
 
  loaded checklist is sometimes out of order, use Id
 

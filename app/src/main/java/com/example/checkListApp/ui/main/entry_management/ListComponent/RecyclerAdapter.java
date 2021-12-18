@@ -166,6 +166,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         ViewHolder viewHolder = new ViewHolder(entryBinding,listItemClickListener);
         viewHolder.onClick(view);
 
+        viewHolder.setObservers(viewHolder.getEntry());
+
    //     viewHolder.checkButton = viewHolder.itemView.findViewById(R.id.checkBtn);
 //       viewHolder.itemView.setOnClickListener(viewHolder);
 //       viewHolder.checkButton.setOnClickListener(viewHolder);
@@ -210,17 +212,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         }
 
 
-        if(entry instanceof Entry)
+        if(entry != null)
         {
-            if(entry.getViewHolder() == null)
-                entry.setViewHolder(holder);
+           // if(entry.getViewHolder() == null)
+            entry.setViewHolder(holder);
 
             holder.recordHelper = recordHelper;
         //    holder.setListeners(holder.itemView);
             holder.setObservers(holder.getEntry());
 
 
-            holder.selectionUpdate();
+           // holder.selectionUpdate();
             holder.checkSelected(position);
 
 
@@ -310,11 +312,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
                 public void selectionUpdate(){
 
-//                    if(selected){
-//                        checkButton.setText((CharSequence) String.valueOf(selectOrder));
-//                    }else{
-//                        checkButton.setText(null);
-//                    }
+                    if(selected){
+                        checkButton.setText((CharSequence) String.valueOf(selectOrder));
+                    }else{
+                        checkButton.setText(null);
+                    }
 
                 }
 
@@ -369,70 +371,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
                 TrackerHelper.Details getItemDetails(){ return  details; }
 
-
-
                 public Long getKey(){ return details.getSelectionKey();}
-
-//                @SuppressLint("ClickableViewAccessibility")
-//                public void setListeners(View itemView ){
-//
-//
-//                    tEntryViewRow.setOnLongClickListener(view -> {
-//                        CustomEditText editHolderText = itemView.findViewById(R.id.entryEditTxt);
-//                        new DetectKeyboardBack(
-//                                itemView.getContext(),
-//                                editHolderText,
-//                                textView, getEntry());
-//
-//                        if(getEntry() != this.getEntry()){
-//                              itemView.findViewById(R.id.entryEditTxt).setVisibility(View.INVISIBLE);
-//
-//                              itemView.findViewById(R.id.entryText).setVisibility(View.VISIBLE);
-//                            }
-//
-//
-//
-//                        return false;
-//
-//                    });
-//
-//                    /*
-//                    TODO: Having issue with button not clicking on setOnClick
-//                   unless you use OnTouchListener... also setOnClick will activate
-//                   on manual override method via .onClick() but touch won't.
-//                    I don't understand whats going on
-//                     */
-//
-//
-//                    //FUCK IT USE BOTH
-//                    checkButton.setOnClickListener(e ->{
-//                        getEntry().checked.postValue( !getEntry().checked.getValue());
-//                        //call the observer onChange()
-//                    });
-//
-////                    checkButton.setOnTouchListener((view, motionEvent) -> {
-////                        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
-////                            getEntry().checked.postValue( !getEntry().checked.getValue());
-////                        }
-////
-////                        return true;
-////                    });
-//                    //TODO: I FUCKED IT AND USED BOTH
-//
-//                    //TODO: https://stackoverflow.com/questions/30284067/handle-button-click-inside-a-row-in-recyclerview
-//
-//                    setTimeButton.setOnClickListener(view -> {
-//                        transitionToSetTimer();
-//                    });
-//
-////                    setTimeButton.setOnTouchListener((view, motionEvent)->{
-////                        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
-////                            transitionToSetTimer();
-////                        }
-////                        return true;
-////                    });
-//
-//                }
 
                 public void checkOff(){
 
@@ -504,11 +443,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
                     //TODO null value
 
-                    if(!MainFragment.executionMode) {
-                        getEntry().textEntry.observe(owner, onChangeEntryText);
-                        getEntry().checked.observe(owner, onChangeEntryChecked);
-                        getEntry().countDownTimer.observe(owner, onChangeTimeValue);
+                    try {
+                        if (!MainFragment.executionMode) {
+                            getEntry().textEntry.observe(owner, onChangeEntryText);
+                            getEntry().checked.observe(owner, onChangeEntryChecked);
+                            getEntry().countDownTimer.observe(owner, onChangeTimeValue);
+                        }
+                    }catch (NullPointerException e){
+                        e.printStackTrace();
                     }
+
 
                 }
 

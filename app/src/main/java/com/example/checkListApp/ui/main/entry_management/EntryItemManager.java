@@ -277,7 +277,7 @@ public class EntryItemManager {
 
         boolean isMovingItem = operator.isMovingItem;
         int selection = operator.selection;
-       // int oldMovePosition = operator.oldMovePosition;
+        int oldMovePosition = operator.oldMovePosition;
 
         buttonPanelToggle.setOnClickListener(    new View.OnClickListener() {
             @Override
@@ -290,7 +290,7 @@ public class EntryItemManager {
         if (!isMovingItem) {
             operator.movingItem = mainFragment.getCheckList().get(selection - 1);
             operator.oldMovePosition = selection - 1;
-            operator.movingItem.setViewHolder(mainFragment.getCheckList().get(selection - 1).getViewHolder());
+         //   operator.movingItem.setViewHolder(mainFragment.getCheckList().get(selection - 1).getViewHolder());
             operator.movingItem.getViewHolder().itemView.setBackgroundColor(Color.BLUE);
             operator.moveItem(operator.movingItem);
 
@@ -298,12 +298,12 @@ public class EntryItemManager {
          //   buttonPanelToggle.toggleDisableToButton();
 
         }else{
-          //  operator.adapter.notifyItemChanged(selection-1);
             operator.movingItem = null;
         }
 
-        buttonPanelToggle.toggleDisableToButton();
+         buttonPanelToggle.toggleDisableToButton();
         operator.isMovingItem = !isMovingItem;
+
 
 
     }
