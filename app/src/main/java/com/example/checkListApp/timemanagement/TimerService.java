@@ -23,6 +23,7 @@ import com.example.checkListApp.timemanagement.parcel.ListTimersParcel;
 import com.example.checkListApp.timemanagement.utilities.KeyHelperClass;
 import com.example.checkListApp.timemanagement.utilities.ListTimerUtility;
 import com.example.checkListApp.timer.TimeState;
+import com.example.checkListApp.ui.main.data_management.ListUtility;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 
 
@@ -187,10 +188,9 @@ public class TimerService extends Service {
                 elapsedTime = setTime - time;
 
                 if (currentActiveTime.timeElapsed(elapsedTime) || elapsedTime == setTime) {
-                    currentActiveTime = getNextActiveProcessTime(timerViewModelList);
-
-
+                    currentActiveTime =  getNextActiveProcessTime(timerViewModelList);
                 }
+
                 //rebuild notification here
                 notification.set(timerService.makeNotification(
                         new TimeState(elapsedTime).getTimeFormat(), currentActiveTime, pendingIntent));

@@ -28,7 +28,7 @@ public final class AuxiliaryData {
             SetTimerFragmentArgs args = SetTimerFragmentArgs.fromBundle(bundle);
             timeParcel = args.getTimeParcel();
 
-            int index = timeParcel.getTimeIndex()-1;
+            int index = timeParcel.getTimeIndex();//-1;
             String time = timeParcel.getTimeStringVal();
 
             data.get(index).countDownTimer.postValue(time);
