@@ -65,7 +65,8 @@ public final class AuxiliaryData {
 
     }
 
-    public static ArrayList<Entry> loadFile( Bundle bundle){
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public static ArrayList<Entry> loadFile(Bundle bundle){
 
 
             MainFragmentArgs args = MainFragmentArgs.fromBundle(bundle);

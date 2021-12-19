@@ -92,7 +92,7 @@ TaDone Prototype
  when a time is set to 0, needs to toggle timer again when checked (on toggle only feature)
  or force all zero set times to be one
 
- don't unhide/disable buttons on timer pause, but on reset
+ don't unhide/enable buttons on timer pause, but on reset
 
 //TODO: Features
 
