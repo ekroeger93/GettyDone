@@ -5,7 +5,8 @@ public enum MainFragmentState {
     NORMAL,
     MOVING_ITEM,
     SELECTING_ITEMS,
-    TIMER_EXECUTED
+    TIMER_RUNNING,
+    TIMER_PAUSE
 
 
 }
