@@ -87,7 +87,7 @@ TaDone Prototype
   use jackson instead @JsonPropertyOrder
 
  toggle switch ordering may have leaks and complications
-
+                        .
  when a time is set to 0, needs to toggle timer again when checked (on toggle only feature)
  or force all zero set times to be one
 
