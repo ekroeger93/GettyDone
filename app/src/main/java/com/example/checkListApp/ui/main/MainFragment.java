@@ -1,10 +1,12 @@
 package com.example.checkListApp.ui.main;
 
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationSet;
 import android.view.animation.OvershootInterpolator;
 import android.widget.Toast;
 
@@ -26,6 +29,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
@@ -54,6 +58,7 @@ import com.example.checkListApp.ui.main.entry_management.EntryItemManager;
 import com.example.checkListApp.ui.main.entry_management.ButtonPanel.LeafButton;
 import com.example.checkListApp.ui.main.entry_management.ListComponent.CustomLayoutManager;
 import com.example.checkListApp.ui.main.entry_management.ListComponent.ListItemClickListener;
+import com.example.checkListApp.ui.main.entry_management.ListComponent.ListItemObserver;
 import com.example.checkListApp.ui.main.entry_management.ListComponent.RecyclerAdapter;
 import com.example.checkListApp.ui.main.entry_management.Operator;
 import com.example.checkListApp.ui.main.entry_management.Record.RecordHelper;
@@ -83,9 +88,7 @@ TaDone Prototype
 
  toggle switch ordering may have leaks and complications
 
- fix Service text Entry, gets null value
-
- when a time is set to 0, needs to toggle timer again when checked (on toggle only)
+ when a time is set to 0, needs to toggle timer again when checked (on toggle only feature)
  or force all zero set times to be one
 
 
@@ -93,7 +96,7 @@ TaDone Prototype
 //TODO: Features
 
 -add reset timer
--add buttons for notification service
+-add buttons for notification service (pause, reset, quit)
 -add repeatable time, iteration were it will loop back to first entry
 -select sounds on setTimer
 
@@ -317,6 +320,10 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         buttonPanel = new ButtonPanel(getContext(), binding);
         buttonPanelToggle  = buttonPanel.buttonPanelToggle;
 
+
+
+//        adapter.registerAdapterDataObserver();
+
         entryItemManager.setButtonPanelToggle(buttonPanelToggle);
 
     }
@@ -368,9 +375,14 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     //mainTimerView.setListener(binding.timerExecuteBtn);
 
 
+
+
     binding.timerExecuteBtn.setOnClickListener(view -> {
 
         int setTime = setTimer(mainTimerView);
+
+
+
 
         startService();
 
@@ -469,6 +481,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
 
         Intent intent = new Intent(getActivity(), TimerService.class); // Build the intent for the service
+
 
         listTimersParcel = new ListTimersParcelBuilder(checkList)
                 .setEntryViewModelList(checkList)
@@ -672,7 +685,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         };
 
         timerRunning.observe(getViewLifecycleOwner(), onTimerRunning);
-
 
 
         mViewModel.getAllEntries().observe(getViewLifecycleOwner(),new Observer<List<Entry>>() {
@@ -892,6 +904,8 @@ public class MainFragment extends Fragment implements ListItemClickListener {
             binding.timerExecuteBtn.setVisibility(View.VISIBLE);
         }
     }
+
+
 
 
 }

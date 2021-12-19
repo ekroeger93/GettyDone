@@ -79,11 +79,11 @@ public class ListTimersParcel implements Parcelable {
         }
         in.createBooleanArray();
 
-        //TODO: maybe issue here
         listOfText = new String[size];
+
         for(Entry n : entryTimerViewModels){
             int index = entryTimerViewModels.indexOf(n);
-            listOfText[index] = n.textTemp;
+            listOfText[index] = n.textEntry.getValue();
         }
         in.createStringArray();
 

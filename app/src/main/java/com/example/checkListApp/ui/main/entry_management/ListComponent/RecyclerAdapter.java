@@ -14,6 +14,9 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleEventObserver;
+import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
@@ -45,14 +48,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
 
     private ArrayList<Entry> mList;
-    private RecordHelper recordHelper;
 
-    private List<ViewHolder> viewHolderList;
+    private final RecordHelper recordHelper;
+    private final LifecycleOwner owner;
+    private final EntryRepository repository;
 
-    private LifecycleOwner owner;
-    private EntryRepository repository;
     GestureDetector.SimpleOnGestureListener gestureDetector;
-    private RecyclerView recyclerView;
 
     ListItemClickListener listItemClickListener;
 
@@ -62,10 +63,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public TrackerHelper trackerHelper;
 
     Activity activity;
-
-    public List<ViewHolder> getViewHolderList() {
-        return viewHolderList;
-    }
 
     private SelectionTracker<Long> selectionTracker;
     private SelectionTracker<Long> savedSelectionTracker;
@@ -142,10 +139,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         this.mList = mList;
 
         //TODO: having issues with notifyItemRangeInsert
-
-        //Fuck all solution
         notifyDataSetChanged();
-       // notifyItemRangeChanged(0,mList.size(),null);
+
 
     }
 
@@ -161,17 +156,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         View view  = LayoutInflater.from(context).inflate( R.layout.entry,parent, false);
 
-       //TODO: try get rid of binding
         EntryBinding entryBinding =  EntryBinding.inflate(LayoutInflater.from(context), parent, false);
 
         ViewHolder viewHolder = new ViewHolder(entryBinding,listItemClickListener);
         viewHolder.onClick(view);
 
-        viewHolder.setObservers(viewHolder.getEntry());
 
-   //     viewHolder.checkButton = viewHolder.itemView.findViewById(R.id.checkBtn);
-//       viewHolder.itemView.setOnClickListener(viewHolder);
-//       viewHolder.checkButton.setOnClickListener(viewHolder);
 
         return viewHolder;
 
@@ -186,13 +176,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     @Override
     public void registerAdapterDataObserver(@NonNull RecyclerView.AdapterDataObserver observer) {
         super.registerAdapterDataObserver(observer);
-
     }
 
     @Override
     public int getItemViewType(int position) {
         return position;
     }
+
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -222,11 +212,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         //    holder.setListeners(holder.itemView);
             holder.setObservers(holder.getEntry());
 
-
            // holder.selectionUpdate();
             holder.checkSelected(position);
-
-
 
         }
 
@@ -267,7 +254,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener,
+            View.OnLongClickListener{
 
         public TextView textView;
         public TableRow tEntryViewRow;
@@ -286,6 +275,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         TrackerHelper.Details details;
 
         ListItemClickListener listItemClickListener;
+
 
         EntryBinding binding;
 
@@ -308,6 +298,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
                     this.listItemClickListener = listItemClickListener;
 
+
+
+                    setObservers(getEntry());
 
                 }
 
@@ -338,27 +331,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         }
 
                  }
-                    else{
-
-                        //TODO: selectionTracker is restricting usage of OnClicklistener
-                        //only problem is you can't scroll if touching these buttons
-
-//                        checkButton.setOnTouchListener((view, motionEvent) -> {
-//                            view.getParent().requestDisallowInterceptTouchEvent(true);
-//                            return false;
-//                        });
-//
-//                        setTimeButton.setOnTouchListener((view, motionEvent) -> {
-//                            view.getParent().requestDisallowInterceptTouchEvent(true);
-//                            return false;
-//                        });
-
-//                        textView.setOnTouchListener((view, motionEvent) -> {
-//                            view.getParent().requestDisallowInterceptTouchEvent(true);
-//                            return false;
-//                        });;
-
-                    }
 
                 }
 
@@ -367,8 +339,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     return mList.get(getBindingAdapterPosition());}
                     catch (ArrayIndexOutOfBoundsException e){
                         return null;
+                    }catch (NullPointerException e){
+                        return mList.get(getLayoutPosition());
                     }
+
+
                 }
+
 
                 TrackerHelper.Details getItemDetails(){ return  details; }
 
@@ -387,7 +364,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         textView.setText(o);
                         entry.textTemp = o;
                         repository.updateEntry(entry);
-                        JsonService.buildJson((ArrayList<Entry>) mList);
+                        JsonService.buildJson(mList);
 
                     };
 
@@ -409,7 +386,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                                 Color.parseColor("#95FF8D")
                         );
 
-                        entry.checkTemp = aBoolean.booleanValue();
+                        entry.checkTemp = aBoolean;
 
                         recordHelper.update(mList);
                         repository.updateEntry(entry);
@@ -428,15 +405,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
 
 
-                    Observer selectOrderObs = (Observer) o -> {
-                        selectOrder = orderInt.getValue();
+                    Observer<Integer> selectOrderObs = o -> {
+                        selectOrder = o;//orderInt.getValue();
                         selectionUpdate();
                         //   notifyItemChanged(getBindingAdapterPosition());
                     };
 
-                    Observer selectCheckObs = (Observer) o ->{
-                        selected = isSelected.getValue();
-                    } ;
+                    Observer<Boolean> selectCheckObs = o ->{
+                        selected = o;//isSelected.getValue();
+                    };
 
 
                     orderInt.observe(owner,selectOrderObs);
@@ -445,11 +422,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     //TODO null value
 
                     try {
-            //            if (!MainFragment.executionMode) {
+
                             getEntry().textEntry.observe(owner, onChangeEntryText);
                             getEntry().checked.observe(owner, onChangeEntryChecked);
                             getEntry().countDownTimer.observe(owner, onChangeTimeValue);
-                //        }
+
+
                     }catch (NullPointerException e){
                         e.printStackTrace();
                     }
@@ -485,6 +463,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     }catch (NullPointerException e){
                         e.printStackTrace();
                     }
+
         }
 
 
@@ -493,6 +472,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     listItemClickListener.clickPosition(this,view,getBindingAdapterPosition());
             return false;
         }
+
+
+
     }
 
 

@@ -4,13 +4,18 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+import androidx.room.Query;
 
 import com.example.checkListApp.timer.TimeState;
+import com.example.checkListApp.ui.main.data_management.JsonService;
 import com.example.checkListApp.ui.main.entry_management.ListComponent.RecyclerAdapter;
+
+import java.util.ArrayList;
 
 @Entity(tableName = "Entries")
 public class Entry {
@@ -43,7 +48,7 @@ public class Entry {
     public int timeAccumulated = 0;
 
     public Entry(){
-        textEntry = new MutableLiveData<>("o");
+
     }
 
 
@@ -52,6 +57,7 @@ public class Entry {
         textEntry.postValue(entry.textEntry.getValue());
         checked.postValue(entry.checked.getValue());
         countDownTimer.postValue(entry.countDownTimer.getValue());
+
 
         int numberTime = new TimeState(countDownTimer.getValue()).getTimeNumberValue();
         numberValueTime = numberTime;
@@ -79,7 +85,6 @@ public class Entry {
         //    numberValueTime = new TimeState(timeText).getTimeNumberValueDecimalTruncated();
     }
 
-
     public int getNumberValueTime(){
         String timeText;
 
@@ -95,7 +100,6 @@ public class Entry {
         return 0;
 
     }
-
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void setNumberValueTime(String timeText){
@@ -138,8 +142,6 @@ public class Entry {
     }
 
 
-
-
     public int getEntryID() {
         return this.entryID;
     }
@@ -153,7 +155,6 @@ public class Entry {
     }
 
 
-
     public RecyclerAdapter.ViewHolder getViewHolder() {
         return viewHolder;
     }
@@ -165,8 +166,8 @@ public class Entry {
 
 
 
-@RequiresApi(api = Build.VERSION_CODES.O)
-public void setTimeAcclimated(int timeAcclimated) {
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void setTimeAcclimated(int timeAcclimated) {
 
     int original = new TimeState(numberValueTime).getTimeNumberValue();
     int addedTime  = new TimeState(timeAcclimated).getTimeNumberValue();
@@ -176,15 +177,16 @@ public void setTimeAcclimated(int timeAcclimated) {
 }
 
 
-
     public MutableLiveData<String> getCountDownTimer() {
         return countDownTimer;
     }
-
 
     public void setTimeAccumulatedNonAdditive(int timeAccumulated) {
         this.timeAccumulated = timeAccumulated;
 
     }
+
+
+
 
 }
