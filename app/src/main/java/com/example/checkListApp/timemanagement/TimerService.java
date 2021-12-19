@@ -23,6 +23,7 @@ import com.example.checkListApp.timemanagement.parcel.ListTimersParcel;
 import com.example.checkListApp.timemanagement.utilities.KeyHelperClass;
 import com.example.checkListApp.timemanagement.utilities.ListTimerUtility;
 import com.example.checkListApp.timer.TimeState;
+import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.data_management.ListUtility;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 
@@ -32,6 +33,9 @@ import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class TimerService extends Service {
+
+
+   public static int activeTimeIndex=0;
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -44,9 +48,11 @@ public class TimerService extends Service {
         ListTimersParcel parcelableList = intent.getParcelableExtra(KeyHelperClass.TIME_PARCEL_DATA);
 
 
+        activeTimeIndex = parcelableList.getActiveTimeIndex();
 
-        Log.d("serviceTest", ". "+ Arrays.toString(parcelableList.listOfCountDownTimers));
+//        Log.d("serviceTest", ". "+ Arrays.toString(parcelableList.listOfCountDownTimers));
 
+        Log.d("serviceTest", "active Index = "+activeTimeIndex);
 
         ForegroundTimerService foregroundTimerService =
                 new ForegroundTimerService(this, parcelableList , pendingIntent);
@@ -157,12 +163,18 @@ public class TimerService extends Service {
             timeViewModel.setTimeState(new TimeState(getSummationTime(timerViewModelList)));
 
 
-            accumulation(timerViewModelList);
-            currentActiveTime = timerViewModelList.get(1);
+          //  accumulation(timerViewModelList);
 
-            for (Entry n : timerViewModelList) {
-                Log.d("serviceTest", "e. " + n.timeAccumulated);
-            }
+//            if (timeViewModel.getNumberValueTime() ==0) {
+//                currentActiveTime = timerViewModelList.get(1);
+//            }else{
+//                currentActiveTime = getNextActiveProcessTime(timerViewModelList);
+//            }
+
+//            for (Entry n : timerViewModelList) {
+//                Log.d("serviceTest", "e. " + n.timeAccumulated);
+//            }
+
 
 
         }
@@ -181,14 +193,22 @@ public class TimerService extends Service {
 
             AtomicReference<Notification> notification = new AtomicReference<>(preSetNotification());
 
-            int setTime = getSummationTime(timerViewModelList);
+            int setTime = setTimer(timeViewModel);// getSummationTime(timerViewModelList);
+
+            currentActiveTime = timerViewModelList.get(activeProcessTimeIndex);
 
             timeViewModel.setServiceTask((time -> {
 
                 elapsedTime = setTime - time;
 
-                if (currentActiveTime.timeElapsed(elapsedTime) || elapsedTime == setTime) {
+//                Log.d("serviceTest","time: "+time+" setTime: "+setTime+" e= "+elapsedTime);
+
+                Log.d("serviceTest","ccc: "+currentActiveTime.timeAccumulated);
+                if (currentActiveTime.timeElapsed(elapsedTime)// || elapsedTime == setTime
+                ) {
+                    Log.d("serviceTest","act: "+activeProcessTimeIndex);
                     currentActiveTime =  getNextActiveProcessTime(timerViewModelList);
+//                    currentActiveTime = timerViewModelList.get(activeProcessTimeIndex);
                 }
 
                 //rebuild notification here
@@ -201,6 +221,37 @@ public class TimerService extends Service {
 
             return notification.get();
         }
+
+
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        public int setTimer(MainTimerViewModel mainTimerViewModel){
+
+            if(mainTimerViewModel.getNumberValueTime() == 0) {
+                int summationTime = getSummationTime(timerViewModelList);
+                String setTime = new TimeState(summationTime).getTimeFormat();
+                mainTimerViewModel.setCountDownTimer(setTime);
+
+                accumulation(timerViewModelList);
+
+                revertTimeIndex();
+                currentActiveTime = timerViewModelList.get(1);
+
+                return summationTime;
+
+            }else{
+                accumulation(timerViewModelList);
+//                for(Entry n : timerViewModelList){
+//                    Log.d("serviceTest","acc: "+n.timeAccumulated);
+//                }
+
+                activeProcessTimeIndex = activeTimeIndex;
+              //  Log.d("serviceTest", "alreadySet");
+              //  Log.d("serviceTest", " sum: "+getSummationTime(timerViewModelList));
+
+                return getSummationTime(timerViewModelList);
+            }
+        }
+
 
 
     }

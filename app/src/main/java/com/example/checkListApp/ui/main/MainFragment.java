@@ -186,6 +186,8 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     private final ListUtility listUtility = new ListUtility();
 
+    public static int activeIndex = 0;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -373,7 +375,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         startService();
 
         timerRunning.postValue( !timerRunning.getValue());
-        Log.d("timeRunning", ""+timerRunning.getValue());
 
        // Log.d("timeRunning", ""+timerRunning);
 
@@ -383,6 +384,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
             int elapsedTime = setTime - time;
             if(listUtility.currentActiveTime.timeElapsed(elapsedTime)) {
+
 
 //                for(Entry e: checkList) {
 //                    Log.d(
@@ -415,6 +417,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                     listUtility.currentActiveTime = listUtility.getNextActiveProcessTime(checkList);
                 }
 
+                activeIndex = listUtility.activeProcessTimeIndex;
 
             }
 
@@ -471,6 +474,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                 .setEntryViewModelList(checkList)
                 .setGlobalTimer(mainTimerView.mainTimerViewModel.getValueTime())
                 .setIndexActive(listUtility.activeProcessTimeIndex).build();
+
 
         int size = checkList.size();
 
