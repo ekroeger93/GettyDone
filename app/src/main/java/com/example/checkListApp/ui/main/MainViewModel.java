@@ -42,6 +42,10 @@ public class MainViewModel extends AndroidViewModel {
 
     public void deleteAllEntries(ArrayList<Entry> list){ repository.deleteAllEntries(list);}
 
+    public void swapEntryValues(Entry one, Entry two){ repository.swapEntryValues(one, two);}
+
+    public void swapEntryIdValues(Entry one, Entry two){ repository.swapEntryIdValues(one,two);}
+
     public void loadEntry(Entry entry){ repository.loadEntry(entry);}
 
     public void updateEntry(Entry n){repository.updateEntry(n);}

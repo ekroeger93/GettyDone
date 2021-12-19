@@ -66,6 +66,12 @@ public class Entry {
 
     }
 
+    public void refreshDataValues(){
+        this.textEntry.setValue(textEntry.getValue());
+        this.checked.setValue(checked.getValue());
+        this.countDownTimer.setValue(countDownTimer.getValue());
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     public Entry(String text, boolean isChecked, String timeText) {
 
@@ -112,6 +118,17 @@ public class Entry {
         }catch (NullPointerException e){
             e.printStackTrace();
         }
+
+    }
+
+
+    public void swapIds(Entry entry){
+
+        int tempId = entryID;
+
+        entryID = entry.entryID;
+        entry.entryID = tempId;
+
 
     }
 

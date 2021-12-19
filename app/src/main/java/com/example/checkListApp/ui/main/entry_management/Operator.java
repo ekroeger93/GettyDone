@@ -1,6 +1,7 @@
 package com.example.checkListApp.ui.main.entry_management;
 
 import android.graphics.Color;
+import android.os.Handler;
 import android.util.Log;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,6 +10,8 @@ import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.entry_management.ListComponent.RecyclerAdapter;
 import com.example.checkListApp.ui.main.data_management.ListUtility;
+
+import java.util.TimerTask;
 
 public class Operator {
 
@@ -122,15 +125,29 @@ public class Operator {
                 //TODO: FIX BUG WITH EXECUTION TIMER
                 //TODO:FIX BUG PARCEL TIME NOT BEING UPDATED AFTER MOVE
 
+
+//                final Handler handler = new Handler();
+//                handler.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                    }
+//                }, 100);
+
+                //TODO: RESTRICT FROM SCROLLING WHILE ENTRIES ARE MOVING
+                // moving too fast screws things up
+
+                int oldPosition = mainFragment.getCheckList().indexOf(movingItem);
+
                 mainFragment.getCheckList().remove(movingItem);
-             //   adapter.notifyItemRemoved(oldMovePosition);
                 mainFragment.getCheckList().add(selection-1, movingItem);
-           //     adapter.notifyItemInserted(selection-1);
+
+                Entry entrySwap = mainFragment.getCheckList().get(oldPosition);
+
+                movingItem.swapIds(entrySwap);
 
                 adapter.notifyItemMoved(oldMovePosition,selection-1);
-                 adapter.notifyItemChanged(oldMovePosition);
+                adapter.notifyItemChanged(oldMovePosition);
                 adapter.notifyItemChanged(selection-1);
-
 
 
                 oldMovePosition = selection-1;

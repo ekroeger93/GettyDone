@@ -1,6 +1,7 @@
 package com.example.checkListApp.database;
 
 import androidx.lifecycle.LiveData;
+import androidx.room.AutoMigration;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -37,6 +38,32 @@ public interface EntryDao {
 
     @Update
     void updateEntry(Entry entry);
+
+    @Query("UPDATE entries " +
+            "SET entryID = (CASE WHEN entryID = :idOne THEN :idTwo ELSE :idOne END)" +
+            "WHERE entryID IN (:idOne,:idTwo)")
+    void swapRowId(int idOne, int idTwo);
+
+
+//    @Query("UPDATE entries SET textEntry = :textEntry" +
+//            " AND isChecked = :checked" +
+//            " AND timerLabel = timerLabel" +
+//            " WHERE entryID = :id ")
+//    void updateSelect(String textEntry, boolean checked, String timeLabel, int id);
+
+    @Query("UPDATE entries " +
+            "SET textEntry = CASE WHEN textEntry = :textEntry THEN :textEntry2 END, " +
+            "isChecked = CASE WHEN isChecked = :checked THEN :checked2  END," +
+            "timerLabel = CASE WHEN timerLabel = :timerLabel THEN :timerLabel2 END " +
+            "WHERE entryID = :idOne " +
+            "AND entryID = :idTwo ")
+
+    void swapEntries(
+            boolean checked, boolean checked2,
+            String textEntry, String textEntry2,
+            String timerLabel, String timerLabel2,
+            int idOne, int idTwo);
+
 
     @Query("DELETE FROM entries")
     void deleteAllEntries();

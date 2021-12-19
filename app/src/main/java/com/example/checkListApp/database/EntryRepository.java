@@ -91,7 +91,59 @@ public static class TaskInsertEntry {
 
     }
 
+public static class TaskSwapEntryValues{
 
+    private final Executor executor = Executors.newSingleThreadExecutor(); // change according to your requirements
+
+    private final EntryDao asyncDao;
+    private final Entry entryOne;
+    private final Entry entryTwo;
+
+    TaskSwapEntryValues(EntryDao dao, Entry one ,Entry two){
+        asyncDao = dao;
+
+        entryOne = one;
+        entryTwo = two;
+    }
+    public  void executeAsync() {
+        executor.execute(() -> {
+
+            asyncDao.swapEntries(
+                    entryOne.checked.getValue(),entryTwo.checked.getValue(),
+                    entryOne.textEntry.getValue(), entryTwo.textEntry.getValue(),
+                    entryOne.countDownTimer.getValue(), entryTwo.countDownTimer.getValue(),
+                    entryOne.getEntryID(), entryTwo.getEntryID()
+                    );
+
+        });
+    }
+
+}
+
+public static class TaskSwapIdEntryValues{
+
+    private final Executor executor = Executors.newSingleThreadExecutor(); // change according to your requirements
+
+    private final EntryDao asyncDao;
+    private final Entry entryOne;
+    private final Entry entryTwo;
+
+    TaskSwapIdEntryValues(EntryDao dao, Entry one ,Entry two){
+        asyncDao = dao;
+
+        entryOne = one;
+        entryTwo = two;
+    }
+    public  void executeAsync() {
+        executor.execute(() -> {
+
+            asyncDao.swapRowId(entryOne.getEntryID(),entryTwo.getEntryID());
+
+        });
+    }
+
+
+}
 
 public static class TaskLoadEntry{
 
@@ -192,6 +244,10 @@ public static class TaskInsertSpace{
     }
 
     public void deleteAllEntries(ArrayList<Entry> list){ new TaskDeleteAllEntries(entryDao).executeAsync();}
+
+    public void swapEntryValues(Entry entryOne, Entry entryTwo){ new TaskSwapEntryValues(entryDao, entryOne, entryTwo).executeAsync(); }
+
+    public void swapEntryIdValues(Entry entryOne, Entry entryTwo){ new TaskSwapIdEntryValues(entryDao, entryOne, entryTwo).executeAsync(); }
 
   //  public void loadAllEntries(ArrayList<Entry> list){ new }
 

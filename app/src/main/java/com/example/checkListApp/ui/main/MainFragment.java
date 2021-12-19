@@ -74,6 +74,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.example.checkListApp.databinding.MainActivityBinding;
+import com.google.gson.JsonObject;
 
 /*
 
@@ -247,8 +248,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         super.onViewStateRestored(savedInstanceState);
 
 
-
-
         if(!getArguments().isEmpty()) {
 
             Log.d("loadTest", ""+ (getArguments().get(KeyHelperClass.TIME_PARCEL_DATA) == null));
@@ -275,6 +274,17 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
 
     }
+
+    @Override
+    public void onPrimaryNavigationFragmentChanged(boolean isPrimaryNavigationFragment) {
+        super.onPrimaryNavigationFragmentChanged(isPrimaryNavigationFragment);
+
+        for(Entry entry : getCheckList()) mViewModel.updateEntry(entry);
+
+
+    }
+
+
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -614,7 +624,9 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         }
 
         if(operator.isMovingItem) {
+
             operator.moveItem(operator.movingItem);
+
 
         }
     });
