@@ -36,6 +36,11 @@ public class TimerService extends Service {
 
    public static int activeTimeIndex=0;
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -55,14 +60,17 @@ public class TimerService extends Service {
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         int FOREGROUND_SERVICE_ID = 111;
+
+//      if(!parcelableList.globalSetTimer.equals("00:00:00"))
         startForeground(FOREGROUND_SERVICE_ID, foregroundTimerService.createTimer(notificationManager));
 
 
-        return (START_NOT_STICKY);
+      //  return (START_NOT_STICKY);
+        return START_REDELIVER_INTENT;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public Notification makeNotification(String data, Entry entry, PendingIntent pendingIntent) {
+    public Notification makeNotification(String data, int timer, Entry entry, PendingIntent pendingIntent) {
         String channel;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
@@ -70,6 +78,8 @@ public class TimerService extends Service {
         else {
             channel = "";
         }
+
+
 
         TimeState countTime = new TimeState(data);
         TimeState expireTime = new TimeState( Math.abs(entry.timeAccumulated));
@@ -89,6 +99,10 @@ public class TimerService extends Service {
                                         " || "+ entry.textEntry.getValue()
 
                         );
+
+
+        Log.d("serviceTest",""+timer );
+        if (timer <= 0) stopSelf();
 
 
         return mBuilder
@@ -159,7 +173,7 @@ public class TimerService extends Service {
 
         @RequiresApi(api = Build.VERSION_CODES.O)
         public Notification preSetNotification() {
-            return timerService.makeNotification("00:00:00", new Entry(), pendingIntent);
+            return timerService.makeNotification("00:00:00", 1,new Entry(), pendingIntent);
         }
 
         @RequiresApi(api = Build.VERSION_CODES.O)
@@ -169,24 +183,31 @@ public class TimerService extends Service {
 
             int setTime = setTimer(timeViewModel);// getSummationTime(timerViewModelList);
 
+
+
             currentActiveTime = timerViewModelList.get(activeProcessTimeIndex);
 
-            timeViewModel.setServiceTask((time -> {
+            //TODO: BUG HERE RAPIDLY RESETING TIME
+                timeViewModel.setServiceTask((time -> {
                 elapsedTime = setTime - time;
 
+//
                 if (currentActiveTime.timeElapsed(elapsedTime)// || elapsedTime == setTime
                 ) {
                     currentActiveTime =  getNextActiveProcessTime(timerViewModelList);
                }
 
+
                 //rebuild notification here
                 notification.set(timerService.makeNotification(
-                        new TimeState(elapsedTime).getTimeFormat()
+                        new TimeState(elapsedTime).getTimeFormat(), time
                         , currentActiveTime
                         , pendingIntent));
                 mgr.notify(FOREGROUND_SERVICE_ID, notification.get());
 
             }));
+
+
 
 
             return notification.get();

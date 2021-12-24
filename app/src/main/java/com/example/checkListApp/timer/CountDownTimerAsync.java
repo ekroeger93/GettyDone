@@ -1,9 +1,11 @@
 package com.example.checkListApp.timer;
 
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
+import java.time.DateTimeException;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -108,7 +110,14 @@ public class CountDownTimerAsync {
 
                     while (timeToggler.isToggleTimeON()) {
 
-                        countingDown = Duration.between(Instant.now(), Instant.from(futureTime));
+                        try {
+
+                            //TODO: BUG HERE futureTime TemporalAccessor
+                            countingDown = Duration.between(Instant.now(), Instant.from(futureTime));
+                        }catch (DateTimeException e){
+                            Log.d("BUG_",".."+e.getCause().getMessage());
+                            break;
+                        }
 
                         long HH = countingDown.toHours();
                         long MM = countingDown.toMinutes()%60;

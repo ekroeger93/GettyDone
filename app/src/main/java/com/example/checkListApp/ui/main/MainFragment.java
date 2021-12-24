@@ -3,6 +3,7 @@ package com.example.checkListApp.ui.main;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -71,6 +72,7 @@ import com.example.checkListApp.ui.main.entry_management.entries.Spacer;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Timer;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -405,19 +407,21 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         int setTime = setTimer(mainTimerView);
 
+     //   hideButtons(true);
 
-        startService();
+        if(setTime > 0 ) {
+            startService();
 
-        timerRunning.postValue( !timerRunning.getValue());
+            timerRunning.postValue(true//!timerRunning.getValue()
+            );
 
-       // Log.d("timeRunning", ""+timerRunning);
+            // Log.d("timeRunning", ""+timerRunning);
 
-        mainTimerView.mainTimerViewModel.toggleTimeWithCustomTask(time -> {
+            mainTimerView.mainTimerViewModel.toggleTimeWithCustomTask(time -> {
 
 
-
-            int elapsedTime = setTime - time;
-            if(listUtility.currentActiveTime.timeElapsed(elapsedTime)) {
+                int elapsedTime = setTime - time;
+                if (listUtility.currentActiveTime.timeElapsed(elapsedTime)) {
 
 
 //                for(Entry e: checkList) {
@@ -429,39 +433,53 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 //                                    " time: "+time);
 //                }
 
-                shortBell.start();
+                    shortBell.start();
 
-                String messageB = checkList.get(listUtility.activeProcessTimeIndex).textEntry.getValue();
+                    String messageB = checkList.get(listUtility.activeProcessTimeIndex).textEntry.getValue();
 
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(() -> {
 
-                        scrollPosition(listUtility.activeProcessTimeIndex);
+                            scrollPosition(listUtility.activeProcessTimeIndex);
 
-                        Toast toast = Toast.makeText(getContext(), messageB + " done!", Toast.LENGTH_SHORT);
-                        toast.setGravity(Gravity.TOP, 0, 0);
-                        toast.show();
+                            Toast toast = Toast.makeText(getContext(), messageB + " done!", Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.TOP, 0, 0);
+                            toast.show();
 
 
-                    });
+                        });
+                    }
+
+                    if (listUtility.currentActiveTime.numberValueTime != 0) {
+                        listUtility.currentActiveTime.getViewHolder().checkOff();
+                        listUtility.currentActiveTime = listUtility.getNextActiveProcessTime(checkList);
+                    }
+
+                    activeIndex = listUtility.activeProcessTimeIndex;
+
                 }
 
-                if(listUtility.currentActiveTime.numberValueTime !=0 ){
-                    listUtility.currentActiveTime.getViewHolder().checkOff();
-                    listUtility.currentActiveTime = listUtility.getNextActiveProcessTime(checkList);
-                }
 
-                activeIndex = listUtility.activeProcessTimeIndex;
+            });
 
-            }
-
-
-
-        });
-
-
+        }
 
     });
+
+
+    binding.timerExecuteBtn.setOnLongClickListener(view -> {
+
+        //hideButtons(false);
+
+        mainTimerView.mainTimerViewModel.resetAbsolutely();
+        timerRunning.postValue(false);
+
+//        if(isMyServiceRunning(TimerService.class))
+        getActivity().stopService(getForegroundTimerServiceIntent());
+
+        return  true;
+    });
+
 
     //update time of both View and ViewModel
     mainTimerView.setObserverForMainTextTime(binding.timeTextMain,getViewLifecycleOwner());
@@ -491,13 +509,25 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         mainTimerView.mainTimerViewModel.resetTimeState();
         timerRunning.postValue(false);
-        getActivity().stopService(getForegroundTimerServiceIntent());
+
+
+//        getActivity().stopService(getForegroundTimerServiceIntent());
 
 
     });
 
 
 }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public Intent getForegroundTimerServiceIntent(){
 
