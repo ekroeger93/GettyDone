@@ -69,6 +69,7 @@ import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 import com.example.checkListApp.ui.main.entry_management.entries.Spacer;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -101,11 +102,15 @@ TaDone Prototype
 -add repeatable time, iteration were it will loop back to first entry
 -select sounds on setTimer
 
+-on toggle only, timer pauses until the entry is checked
+
 -image button checkBox
 -change buttons into icons
 
 -animate entry on move and delete, have better indications for user
--fix up the file manager, add transitions
+-fix up the file manager,
+- add transitions
+
 -add duplicate, hold down add
 
 -color code Entry Lists for graphing,
@@ -123,6 +128,7 @@ Post production ideas:
 -? save as pdf/rich text file -> print appMobilityPrint
 -? schedule on calender, notification
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 
 https://stackoverflow.com/questions/43650201/how-to-make-an-android-app-run-in-background-when-the-screen-sleeps
 https://developer.android.com/guide/components/foreground-services
@@ -157,7 +163,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     private static CustomLayoutManager customLayoutManager;
 
     private ArrayList<Entry> checkList = new ArrayList<>();
-    private MutableLiveData< ArrayList<Entry>> _checkList = new MutableLiveData<>();
+    private final MutableLiveData< ArrayList<Entry>> _checkList = new MutableLiveData<>();
 
 
     private final MutableLiveData<Integer> selectedEntry = new MutableLiveData<>();
@@ -215,8 +221,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         return binding.getRoot();
 
     }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -258,6 +263,8 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
             if(AuxiliaryData.loadFile(getArguments()) != null){
                 checkList = AuxiliaryData.loadFile(getArguments());
+
+
                 _checkList.setValue(checkList);
             }else{
                 checkList = _checkList.getValue();
@@ -287,7 +294,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
 
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    
     public void setUpAdapter(){
 
 
@@ -367,14 +374,14 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         customLayoutManager.scrollToPositionWithOffset(position,100);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    
     public void startService(){
 
         getActivity().startForegroundService(getForegroundTimerServiceIntent());
         //service.startService(intent);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    
     public void configureMainTimer(){
 
 
@@ -518,7 +525,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    
     public int setTimer(MainTimerView mainTimerView){
 
         if(mainTimerView.mainTimerViewModel.getNumberValueTime() == 0) {
@@ -541,7 +548,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    
     @SuppressLint("ClickableViewAccessibility")
     public void assignButtonListeners(){
 
@@ -714,7 +721,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
 
                 adapter.setList(checkList);
-
                 recordHelper.update(checkList);
 
                 if(!isSorting){
@@ -849,7 +855,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    
     @Override
     public void clickPosition(RecyclerAdapter.ViewHolder viewHolder,View view, int position) {
 

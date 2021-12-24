@@ -104,7 +104,7 @@ public class EntryItemManager {
 
 //TODO: fix memory leak here:
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    
     public void sortSelected(SelectionTracker<Long> tracker){
 
 
@@ -127,7 +127,7 @@ public class EntryItemManager {
             this.mainFragment = mainFragment;
         }
 
-        @RequiresApi(api = Build.VERSION_CODES.O)
+        
         public void executeAsync() {
             executor.execute(() -> {
 
@@ -200,7 +200,7 @@ public class EntryItemManager {
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    
      void assignSorted(ArrayList<Entry> entries){
 
         for(Entry entry : entries){

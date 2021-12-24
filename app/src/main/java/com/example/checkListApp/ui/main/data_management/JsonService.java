@@ -83,6 +83,8 @@ public final class JsonService {
 
         entryArrayList = gson.fromJson(String.valueOf(json), userListType);
 
+
+
         return entryArrayList;
     }
 

@@ -24,7 +24,7 @@ public class Entry {
     @ColumnInfo(name = "entryID")
     private int entryID = 0;
     @ColumnInfo(name = "textEntry")
-    public MutableLiveData<String> textEntry = new MutableLiveData<String>("o") ;
+    public MutableLiveData<String> textEntry = new MutableLiveData<>("o") ;
     @ColumnInfo(name = "isChecked")
     public MutableLiveData<Boolean> checked = new MutableLiveData<>(false);
     @ColumnInfo(name = "timerLabel")

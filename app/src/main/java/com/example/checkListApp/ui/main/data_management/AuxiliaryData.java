@@ -45,27 +45,6 @@ public final class AuxiliaryData {
 
     }
 
-    public  TimeParcel getTimeParcel() {
-        return timeParcel;
-    }
-
-    public static  void loadParcelTime(ArrayList<Entry> data, int index, String time){
-
-
-//        new Handler(Looper.getMainLooper()).post(new Runnable() {
-//            @Override
-//            public void run() {
-
-                data.get(index).countDownTimer.postValue(time);
-
-//            }
-//        });
-
-        Log.d("timerTest",":: " + data.get(timeParcel.getTimeIndex()).countDownTimer.getValue());
-
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public static ArrayList<Entry> loadFile(Bundle bundle){
 
 
@@ -81,6 +60,7 @@ public final class AuxiliaryData {
                 }
 
 
+
                 return loadedCheckList;
 
             }
@@ -89,6 +69,7 @@ public final class AuxiliaryData {
 
         return null;
     }
+
 
 
 
