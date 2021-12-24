@@ -21,7 +21,7 @@ public final class AuxiliaryData {
     static TimeParcel timeParcel;
 
 
-    public static ArrayList<Entry> receiveParcelTime(ArrayList<Entry> data, Bundle bundle) {
+    public static void receiveParcelTime(ArrayList<Entry> data, Bundle bundle) {
 
 
         try {
@@ -35,13 +35,13 @@ public final class AuxiliaryData {
 
             Log.d("timerTest", "" + timeParcel.getTimeStringVal());
 
-            return  data;
+          ///  return  data;
 
         }catch (NullPointerException e){
             e.printStackTrace();
         }
 
-        return data;
+       // return data;
 
     }
 
@@ -49,25 +49,22 @@ public final class AuxiliaryData {
 
 
             MainFragmentArgs args = MainFragmentArgs.fromBundle(bundle);
+            ArrayList<Entry> loadedCheckList;
 
-            ArrayList<Entry> loadedCheckList = JsonService.getJsonGeneratedArray(args.getJsonData());
-
-            if(loadedCheckList != null){
-
-                for(Entry entry : loadedCheckList){
-                    entry.textEntry.setValue(entry.textEntry.getValue().replaceAll("\"" , ""));
-                    entry.countDownTimer.setValue(entry.countDownTimer.getValue().replaceAll("\"",""));
-                }
-
-
-
-                return loadedCheckList;
-
+            try {
+              loadedCheckList = JsonService.getJsonGeneratedArray(args.getJsonData());
+            }catch (NullPointerException e){
+                return  null;
             }
 
+        for(Entry entry : loadedCheckList){
+            entry.textEntry.setValue(entry.textEntry.getValue().replaceAll("\"" , ""));
+            entry.countDownTimer.setValue(entry.countDownTimer.getValue().replaceAll("\"",""));
+        }
+
+        return loadedCheckList;
 
 
-        return null;
     }
 
 

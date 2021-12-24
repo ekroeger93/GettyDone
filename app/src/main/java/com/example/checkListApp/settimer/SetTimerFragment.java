@@ -92,8 +92,13 @@ public class SetTimerFragment extends Fragment {
 
              */
 
+
+
             SetTimerFragmentDirections.ActionSetTimerFragmentToMainFragment action =
                     SetTimerFragmentDirections.actionSetTimerFragmentToMainFragment(JsonService.getJsonCheckArrayList());
+
+//            SetTimerFragmentDirections.ActionSetTimerFragmentToMainFragment action =
+//                    SetTimerFragmentDirections.actionSetTimerFragmentToMainFragment("");
 
 
             Log.d("timerTest",":: " +action.getJsonData());

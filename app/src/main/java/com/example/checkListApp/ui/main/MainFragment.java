@@ -85,8 +85,6 @@ TaDone Prototype
 
 //TODO: BUGS
 
- loaded checklist is sometimes out of order,
-  use jackson instead @JsonPropertyOrder
 
  toggle switch ordering may have leaks and complications
 
@@ -255,29 +253,37 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         if(!getArguments().isEmpty()) {
 
-            Log.d("loadTest", ""+ (getArguments().get(KeyHelperClass.TIME_PARCEL_DATA) == null));
+//            Log.d("loadTest", ""+ (getArguments().get(KeyHelperClass.TIME_PARCEL_DATA) == null));
 
 //            Log.d("loadTest","json "+JsonService.getJsonGeneratedArray());
 
-            mViewModel.deleteAllEntries(checkList);
+            Log.d("loadTest", " "+ MainFragmentArgs.fromBundle(getArguments()).getJsonData().isEmpty());
 
-            if(AuxiliaryData.loadFile(getArguments()) != null){
+
+
+            if(
+                    //AuxiliaryData.loadFile(getArguments()) != null
+                    !MainFragmentArgs.fromBundle(getArguments()).getJsonData().isEmpty()
+            ){
+
+                mViewModel.deleteAllEntries(checkList);
                 checkList = AuxiliaryData.loadFile(getArguments());
-
                 _checkList.setValue(checkList);
-            }else{
-                checkList = _checkList.getValue();
+                for(Entry entry : getCheckList()) mViewModel.loadEntry(entry);
+                updateIndexes();
+
             }
 
             AuxiliaryData.receiveParcelTime(checkList, getArguments());
 
             Log.d("loadTest","load: "+checkList);
 
-            for(Entry entry : getCheckList()) mViewModel.loadEntry(entry);
+
+//            for(Entry entry : getCheckList()) mViewModel.updateEntry(entry);
         }
 
-        mViewModel.sortIndexes();
-       updateIndexes();
+
+
 
     }
 
@@ -285,7 +291,9 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     public void onPrimaryNavigationFragmentChanged(boolean isPrimaryNavigationFragment) {
         super.onPrimaryNavigationFragmentChanged(isPrimaryNavigationFragment);
 
-        for(Entry entry : getCheckList()) mViewModel.updateEntry(entry);
+
+//        for(Entry entry : getCheckList()) mViewModel.updateEntry(entry);
+
 
 
     }
@@ -396,8 +404,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     binding.timerExecuteBtn.setOnClickListener(view -> {
 
         int setTime = setTimer(mainTimerView);
-
-
 
 
         startService();
@@ -701,6 +707,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         }
 
 
+        mViewModel.sortIndexes();
     }
 
     public void assignObservers(){
@@ -734,16 +741,18 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
                 checkList = (ArrayList<Entry>) entries;
 
-                for(Entry n :checkList)
-                {
-//                    if(n.orderIndex.getValue() == -1)
-                        n.orderIndex.setValue( checkList.indexOf(n));
-
-                }
+//                for(Entry n :checkList)
+//                {
+////                    if(n.orderIndex.getValue() == -1)
+//                        n.orderIndex.setValue( checkList.indexOf(n));
+//
+//                }
 
                 checkList.add(0, new Spacer());
                 checkList.add(checkList.size(), new Spacer());
 
+
+                updateIndexes();
 
 
                 adapter.setList(checkList);
@@ -761,6 +770,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 //                for(Entry entry : checkList) {
 //                    Log.d("checkListTest", "..." + entry);
 //                }
+
 
 
                 JsonService.buildJson(checkList);
