@@ -59,19 +59,22 @@ public class EntryItemManager {
     }
 
     public void add(){
+//(String text, boolean isChecked, String timeText, int orderIndex) {
 
-        Entry entry = new Entry();
+        Entry entry = new Entry("o",false,"00:00:05",mainFragment.getCheckList().size()-1);
         mViewModel.insertEntry(entry);
 
-       // operator.adapter.notifyItemInserted(MainFragment.getCheckList().size() );
+        operator.adapter.notifyItemInserted(mainFragment.getCheckList().size());
 
-        operator.adapter.notifyItemChanged(mainFragment.getCheckList().size());
+       // operator.adapter.notifyItemChanged(mainFragment.getCheckList().size());
 
         operator.refreshSelection(false);
+
 
         //TODO BUG AFTER MOVING ITEM IT UNDOS THE NEW ARRANGEMENT
         //NOTE: SOMETHING PROCEEDING THIS MAY BE EFFECTING IT
 
+        mainFragment.updateIndexes();
     }
 
     public void deleteSelected(SelectionTracker<Long> tracker){
@@ -98,6 +101,9 @@ public class EntryItemManager {
 
         }
         tracker.clearSelection();
+
+        mainFragment.updateIndexes();
+
     }
 
 
@@ -111,6 +117,7 @@ public class EntryItemManager {
 //        TaskSortEntries.executeAsync();
 
         taskSortEntries.executeAsync();
+
 
 //  notifyDataSetChanged();
 
@@ -226,13 +233,16 @@ public class EntryItemManager {
                 mainFragment.getCheckList().get(index).setEntry(entry);
 
 
+
+
             }catch (IndexOutOfBoundsException | NullPointerException e){
 
             }
 
         }
 
-        System.gc();
+mainFragment.updateIndexes();
+
     }
 
 
@@ -267,6 +277,7 @@ public class EntryItemManager {
                             operator.adapter.notifyItemRemoved(operator.selection - 1);
                             operator.adapter.notifyItemChanged(mainFragment.getCheckList().size());
 
+                            mainFragment.updateIndexes();
                             buttonPanelToggle.toggleDisable();
                         }
 
@@ -300,6 +311,9 @@ public class EntryItemManager {
             operator.movingItem.getViewHolder().itemView.setBackgroundColor(Color.BLUE);
             operator.moveItem(operator.movingItem);
 
+
+
+            mainFragment.updateIndexes();
 
          //   buttonPanelToggle.toggleDisableToButton();
 

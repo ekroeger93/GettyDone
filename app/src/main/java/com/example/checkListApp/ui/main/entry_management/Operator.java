@@ -144,11 +144,14 @@ public class Operator {
                 Entry entrySwap = mainFragment.getCheckList().get(oldPosition);
 
                 movingItem.swapIds(entrySwap);
+                //entrySwap.swapIds(movingItem);
 
                 adapter.notifyItemMoved(oldMovePosition,selection-1);
                 adapter.notifyItemChanged(oldMovePosition);
                 adapter.notifyItemChanged(selection-1);
 
+
+                mainFragment.updateIndexes();
 
                 oldMovePosition = selection-1;
 
@@ -158,6 +161,8 @@ public class Operator {
         catch (NullPointerException e){
             Log.d("Error","error");
         }
+
+
 
     }
 

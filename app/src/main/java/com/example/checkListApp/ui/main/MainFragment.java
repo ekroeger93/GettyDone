@@ -264,7 +264,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
             if(AuxiliaryData.loadFile(getArguments()) != null){
                 checkList = AuxiliaryData.loadFile(getArguments());
 
-
                 _checkList.setValue(checkList);
             }else{
                 checkList = _checkList.getValue();
@@ -277,8 +276,8 @@ public class MainFragment extends Fragment implements ListItemClickListener {
             for(Entry entry : getCheckList()) mViewModel.loadEntry(entry);
         }
 
-
-
+        mViewModel.sortIndexes();
+       updateIndexes();
 
     }
 
@@ -570,6 +569,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                             adapter.trackerOn(false);
                         });
 
+                        updateIndexes();
                         adapter.trackerOn(true);
                         buttonPanelToggle.toggleDisableToButton();
 
@@ -609,6 +609,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                             //thread may still be running!!!
                             selectionTracker.clearSelection();
                             listUtility.reInitializeAllSelection(checkList);
+                            updateIndexes();
 
                             isSorting = false;
 
@@ -633,7 +634,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         if(operator.isMovingItem) {
 
             operator.moveItem(operator.movingItem);
-
 
         }
     });
@@ -686,15 +686,22 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
 }
 
-    public static class CompareIds implements Comparator<Entry> {
 
-        @Override
-        public int compare(Entry o1, Entry o2) {
-            return o1.getEntryID() - o2.getEntryID();
+    public void updateIndexes(){
+
+        for(Entry n :checkList) {
+
+            if(Thread.currentThread() == Looper.getMainLooper().getThread()) {
+                n.orderIndex.setValue(checkList.indexOf(n));
+            }else{
+                n.orderIndex.postValue(checkList.indexOf(n));
+            }
+                mViewModel.updateIndex(n, checkList.indexOf(n));
+//            Log.d("orderingTest", ""+n.orderIndex.getValue());
         }
 
-    }
 
+    }
 
     public void assignObservers(){
 
@@ -726,10 +733,17 @@ public class MainFragment extends Fragment implements ListItemClickListener {
             ) {
 
                 checkList = (ArrayList<Entry>) entries;
-                checkList.sort(new CompareIds());
+
+                for(Entry n :checkList)
+                {
+//                    if(n.orderIndex.getValue() == -1)
+                        n.orderIndex.setValue( checkList.indexOf(n));
+
+                }
 
                 checkList.add(0, new Spacer());
                 checkList.add(checkList.size(), new Spacer());
+
 
 
                 adapter.setList(checkList);

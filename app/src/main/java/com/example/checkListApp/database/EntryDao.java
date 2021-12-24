@@ -1,7 +1,6 @@
 package com.example.checkListApp.database;
 
 import androidx.lifecycle.LiveData;
-import androidx.room.AutoMigration;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -10,7 +9,6 @@ import androidx.room.Update;
 
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Dao
@@ -39,17 +37,18 @@ public interface EntryDao {
     @Update
     void updateEntry(Entry entry);
 
+
+    @Query("UPDATE entries SET orderIndex = :index WHERE entryID = :id")
+    void updateEntryIndex(int id, int index);
+
+    @Query( "SELECT * FROM entries ORDER BY orderIndex ASC")
+    LiveData<List<Entry>>  sortIndexes();
+
     @Query("UPDATE entries " +
             "SET entryID = (CASE WHEN entryID = :idOne THEN :idTwo ELSE :idOne END)" +
             "WHERE entryID IN (:idOne,:idTwo)")
     void swapRowId(int idOne, int idTwo);
 
-
-//    @Query("UPDATE entries SET textEntry = :textEntry" +
-//            " AND isChecked = :checked" +
-//            " AND timerLabel = timerLabel" +
-//            " WHERE entryID = :id ")
-//    void updateSelect(String textEntry, boolean checked, String timeLabel, int id);
 
     @Query("UPDATE entries " +
             "SET textEntry = CASE WHEN textEntry = :textEntry THEN :textEntry2 END, " +
@@ -57,7 +56,6 @@ public interface EntryDao {
             "timerLabel = CASE WHEN timerLabel = :timerLabel THEN :timerLabel2 END " +
             "WHERE entryID = :idOne " +
             "AND entryID = :idTwo ")
-
     void swapEntries(
             boolean checked, boolean checked2,
             String textEntry, String textEntry2,

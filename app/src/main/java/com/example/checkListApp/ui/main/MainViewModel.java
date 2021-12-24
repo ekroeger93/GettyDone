@@ -32,6 +32,15 @@ public class MainViewModel extends AndroidViewModel {
         return allEntries;
     }
 
+
+    public void updateIndex(Entry n, int index){
+        repository.updateEntryIndex(n, index);
+    }
+
+    public void sortIndexes(){
+        repository.sortIndexes();
+    }
+
     public void insertEntry(Entry n){
         repository.insertEntry(n);
     }

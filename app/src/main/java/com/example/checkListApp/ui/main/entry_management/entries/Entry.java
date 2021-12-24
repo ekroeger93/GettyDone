@@ -29,6 +29,9 @@ public class Entry {
     public MutableLiveData<Boolean> checked = new MutableLiveData<>(false);
     @ColumnInfo(name = "timerLabel")
     public MutableLiveData<String> countDownTimer = new MutableLiveData<>("00:00:00");
+    @ColumnInfo(name="orderIndex")
+    public MutableLiveData<Integer> orderIndex = new MutableLiveData<>(-1);
+
 
     @Ignore
     private RecyclerAdapter.ViewHolder viewHolder;
@@ -91,6 +94,27 @@ public class Entry {
         //    numberValueTime = new TimeState(timeText).getTimeNumberValueDecimalTruncated();
     }
 
+    public Entry(String text, boolean isChecked, String timeText, int orderIndex) {
+
+        textEntry.setValue(text);
+        checked.setValue(isChecked);
+        countDownTimer.setValue(timeText);
+
+        this.orderIndex.setValue(orderIndex);
+
+        textTemp = text;
+
+        setNumberValueTime(timeText);
+        int numberTime = new TimeState(timeText).getTimeNumberValue();
+        numberValueTime = numberTime;
+        timeAccumulated = new TimeState(numberTime).getTimeNumberValue();//numberTime;//extractNumberValueTime(time);
+
+
+
+        //    numberValueTime = new TimeState(timeText).getTimeNumberValueDecimalTruncated();
+    }
+
+
     public int getNumberValueTime(){
         String timeText;
 
@@ -135,8 +159,7 @@ public class Entry {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void setEntry(Entry entry){
 
-        entryID = entry.getEntryID();
-
+//        entryID = entry.getEntryID();
         textEntry.postValue(entry.textEntry.getValue());
         checked.postValue(entry.checked.getValue());
         countDownTimer.postValue(entry.countDownTimer.getValue());
@@ -144,6 +167,8 @@ public class Entry {
         textTemp = entry.textTemp;
 
         setNumberValueTime(countDownTimer.getValue());
+
+        swapIds(entry);
     }
 
 

@@ -27,7 +27,9 @@ public EntryRepository(Application application, MainViewModel mainViewModel){
     db = EntryRoomDatabase.getDatabase(application, mainViewModel);
     entryDao = db.entryDao();
 
-    allEntries = entryDao.getAllEntries();
+    //allEntries = entryDao.getAllEntries();
+
+    allEntries = entryDao.sortIndexes();
 
 }
 
@@ -206,6 +208,7 @@ public static class TaskUpdateEntry {
         }
     }
 
+
 public static class TaskInsertSpace{
 
     private final Executor executor = Executors.newSingleThreadExecutor();
@@ -226,6 +229,50 @@ public static class TaskInsertSpace{
 
     }
 }
+
+public static class TaskUpdateEntryIndex{
+
+    private final Executor executor = Executors.newSingleThreadExecutor();
+    private final EntryDao asyncDao;
+    private final Entry entry;
+    private final int index;
+
+    TaskUpdateEntryIndex(EntryDao dao, Entry e, int i){
+        asyncDao = dao;
+        entry = e;
+        index = i;
+    }
+
+    public  void executeAsync() {
+        executor.execute(() -> {
+            asyncDao.updateEntryIndex(entry.getEntryID(),index);
+        });
+
+    }
+}
+
+
+
+public static class TaskSortIndexes {
+
+        private final Executor executor = Executors.newSingleThreadExecutor();
+        private final EntryDao asyncDao;
+
+
+        TaskSortIndexes(EntryDao dao){
+            asyncDao = dao;
+        }
+
+        public  void executeAsync() {
+            executor.execute(asyncDao::sortIndexes);
+
+        }
+    }
+
+
+    public void updateEntryIndex(Entry entry , int index){ new  TaskUpdateEntryIndex(entryDao,entry,index).executeAsync();}
+
+    public void sortIndexes(){ new TaskSortIndexes(entryDao).executeAsync();}
 
     public void insertEntry(Entry entry){
         new TaskInsertEntry(entryDao,entry).executeAsync();

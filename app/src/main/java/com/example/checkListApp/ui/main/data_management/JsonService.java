@@ -90,7 +90,7 @@ public final class JsonService {
 
         @Override
         public int compare(Entry o1, Entry o2) {
-            return o1.getEntryID() - o2.getEntryID();
+            return o1.orderIndex.getValue() - o2.orderIndex.getValue();
         }
 
     }
@@ -120,6 +120,7 @@ public final class JsonService {
     jsonObject.addProperty("textEntry", src.textEntry.getValue());
     jsonObject.addProperty("isChecked", src.checked.getValue());
     jsonObject.addProperty("timerLabel", src.countDownTimer.getValue());
+    jsonObject.addProperty("orderIndex", src.orderIndex.getValue());
 
 //}
                 return jsonObject;
@@ -141,13 +142,14 @@ public final class JsonService {
             String textEntry = jsonObject.get("textEntry").toString();
             boolean isChecked = jsonObject.get("isChecked").getAsBoolean();
             String timeText = jsonObject.get("timerLabel").toString();
+            int orderIndex = jsonObject.get("orderIndex").getAsInt();
             Log.d("checkListTime",">>> "+timeText);
 
             //TODO:fix this
             textEntry = textEntry.replaceAll("\"","").trim();
             timeText = timeText.replaceAll("\"","").trim();
 
-            return new Entry(textEntry,isChecked,timeText);
+            return new Entry(textEntry,isChecked,timeText,orderIndex);
 
 
         }
