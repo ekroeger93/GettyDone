@@ -686,6 +686,16 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
 }
 
+    public static class CompareIds implements Comparator<Entry> {
+
+        @Override
+        public int compare(Entry o1, Entry o2) {
+            return o1.getEntryID() - o2.getEntryID();
+        }
+
+    }
+
+
     public void assignObservers(){
 
         Observer<Boolean> onTimerRunning = new Observer<Boolean>() {
@@ -716,6 +726,8 @@ public class MainFragment extends Fragment implements ListItemClickListener {
             ) {
 
                 checkList = (ArrayList<Entry>) entries;
+                checkList.sort(new CompareIds());
+
                 checkList.add(0, new Spacer());
                 checkList.add(checkList.size(), new Spacer());
 
@@ -747,6 +759,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         }
 
     });
+
 
 
 

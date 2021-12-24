@@ -19,12 +19,13 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public final class JsonService {
 
     private static String jsonCheckArrayList;
 
-    //TODO: jackson instead @JsonPropertyOrder
     private static final Gson gson;
 
     static { gson = new GsonBuilder()
@@ -46,7 +47,6 @@ public final class JsonService {
 //                .registerTypeAdapter(Entry.class, new DeserializeJsonToEntry())
 //                .create();
 
-
         StringBuilder jsonCheckList = new StringBuilder();
 
 
@@ -62,9 +62,6 @@ public final class JsonService {
 
         jsonCheckList.deleteCharAt(jsonCheckList.length()-1);
         jsonCheckList.append("]");
-
-        Log.d("checkListTest","gen: "+jsonCheckList);
-
 
         jsonCheckArrayList = String.valueOf(jsonCheckList);
 
@@ -83,9 +80,19 @@ public final class JsonService {
 
         entryArrayList = gson.fromJson(String.valueOf(json), userListType);
 
+        entryArrayList.sort(new CompareIds());
 
 
         return entryArrayList;
+    }
+
+    public static class CompareIds implements Comparator<Entry> {
+
+        @Override
+        public int compare(Entry o1, Entry o2) {
+            return o1.getEntryID() - o2.getEntryID();
+        }
+
     }
 
 
