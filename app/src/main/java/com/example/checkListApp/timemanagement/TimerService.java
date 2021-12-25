@@ -79,9 +79,14 @@ public class TimerService extends Service {
             channel = "";
         }
 
+        TimeState countTime = new TimeState(0);
 
+        try {
+             countTime = new TimeState(data);
+        }catch (NumberFormatException e){
+            stopSelf();
+        }
 
-        TimeState countTime = new TimeState(data);
         TimeState expireTime = new TimeState( Math.abs(entry.timeAccumulated));
 
         int timeRemainder =  expireTime.getTimeNumberValue() - countTime.getTimeNumberValue();

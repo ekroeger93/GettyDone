@@ -90,18 +90,21 @@ TaDone Prototype
 
  toggle switch ordering may have leaks and complications
 
- when a time is set to 0, needs to toggle timer again when checked (on toggle only feature)
- or force all zero set times to be one
+ rapidly resetting timer, the Timer time is zeroed instead of set time,
+ ->
+ numberFormat exception in TimeState, from makeNotification, TimerService
+ suspect it from background thread (Timer time is zeroed)
 
- don't unhide/enable buttons on timer pause, but on reset
+ check the database table for further testing
+
+
 
 //TODO: Features
 
--add reset timer
--add buttons for notification service (pause, reset, quit)
+
+-add buttons for notification service (pause, reset/quit)
 -add repeatable time, iteration were it will loop back to first entry
 -select sounds on setTimer
-
 -on toggle only, timer pauses until the entry is checked
 
 -image button checkBox
@@ -197,6 +200,8 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     private final ListUtility listUtility = new ListUtility();
 
     public static int activeIndex = 0;
+
+    private final Context context = getContext();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -489,22 +494,40 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         shortBell.start();
 
-        new Handler(Looper.getMainLooper()).post(new Runnable () {
-
-            @Override public void run() {
+        if(getActivity() != null) {//fine bitch don't work
+            getActivity().runOnUiThread(() -> {
 
                 String message = checkList.get(
                         listUtility.activeProcessTimeIndex
                 ).textEntry.getValue();
 
+
                 Toast toast = Toast.makeText(getContext(), message + " done!", Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.TOP,0,0);
+                toast.setGravity(Gravity.TOP, 0, 0);
                 toast.show();
-            }
 
 
-
-        });
+            });
+        }
+//        new Handler(Looper.getMainLooper()).post(new Runnable () {
+//            @Override public void run() {
+//
+//                String message = checkList.get(
+//                        listUtility.activeProcessTimeIndex
+//                ).textEntry.getValue();
+//
+//                Toast toast = Toast.makeText(
+//                        getContext(),
+//                        message +
+//                                " done!",
+//                        Toast.LENGTH_SHORT);
+//                toast.setGravity(Gravity.TOP,0,0);
+//                toast.show();
+//            }
+//
+//
+//
+//        });
 
 
         mainTimerView.mainTimerViewModel.resetTimeState();
