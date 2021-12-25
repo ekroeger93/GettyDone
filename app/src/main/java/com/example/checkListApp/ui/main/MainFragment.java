@@ -90,6 +90,9 @@ TaDone Prototype
 
  toggle switch ordering may have leaks and complications
 
+ Context.startForegroundService() did not then call Service.startForeground()
+ https://medium.com/geekculture/context-startforegroundservice-did-not-then-call-service-startforeground-solved-7640d5ba394a
+
  rapidly resetting timer, the Timer time is zeroed instead of set time,
  ->
  numberFormat exception in TimeState, from makeNotification, TimerService
@@ -117,7 +120,8 @@ TaDone Prototype
 add legend keys,
 change Y axis value to number of times submitted completion,
 within a month period
-
+-
+use calendar view instead
 
 -add in pull down/up to extender, change the recycler view Y size
     -use anchor points when dragging

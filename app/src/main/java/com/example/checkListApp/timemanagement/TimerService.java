@@ -94,6 +94,8 @@ public final class TimerService extends Service {
 
         int timeRemainder =  expireTime.getTimeNumberValue() - countTime.getTimeNumberValue();
 
+        if(timeRemainder < 0 )stopSelf();
+
         Intent toggleTimeIntent = new Intent(this, TimerBroadcastReceiver.class);
             toggleTimeIntent.setAction(KeyHelperClass.BROADCAST_ACTION_TOGGLE_TIMER);
 
