@@ -101,8 +101,6 @@ TaDone Prototype
 
 //TODO: Features
 
-
--add buttons for notification service (pause, reset/quit)
 -add repeatable time, iteration were it will loop back to first entry
 -select sounds on setTimer
 -on toggle only, timer pauses until the entry is checked
@@ -114,11 +112,11 @@ TaDone Prototype
 -fix up the file manager,
 - add transitions
 
--add duplicate, hold down add
-
+-
 -color code Entry Lists for graphing,
 add legend keys,
 change Y axis value to number of times submitted completion,
+within a month period
 
 
 -add in pull down/up to extender, change the recycler view Y size
@@ -204,12 +202,18 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     private final Context context = getContext();
 
+    private Activity activity;
+    private Intent serviceIntent;
+
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
     shortBell = MediaPlayer.create(getContext(), R.raw.short_bell);
 
+    activity = getActivity();
 
     }
 
@@ -392,7 +396,9 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     
     public void startService(){
 
-        getActivity().startForegroundService(getForegroundTimerServiceIntent());
+        serviceIntent = getForegroundTimerServiceIntent();
+
+        activity.startForegroundService(getForegroundTimerServiceIntent());
         //service.startService(intent);
     }
 
@@ -479,7 +485,8 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         timerRunning.postValue(false);
 
 //        if(isMyServiceRunning(TimerService.class))
-        getActivity().stopService(getForegroundTimerServiceIntent());
+       // getActivity().stopService(getForegroundTimerServiceIntent());
+        activity.stopService(serviceIntent);
 
         return  true;
     });
@@ -532,7 +539,9 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         mainTimerView.mainTimerViewModel.resetTimeState();
         timerRunning.postValue(false);
 
-        getActivity().stopService(getForegroundTimerServiceIntent());
+//        getActivity().stopService(getForegroundTimerServiceIntent());
+        activity.stopService(serviceIntent);
+
 
 
     });

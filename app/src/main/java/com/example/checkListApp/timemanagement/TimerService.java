@@ -120,16 +120,12 @@ public final class TimerService extends Service {
                                 resetTimePendingIntent)
                         .addAction(android.R.drawable.btn_star, "Toggle",
                                 toggleTimePendingIntent)
-
-                        .setProgress(expireTime.getTimeNumberValue(),timeRemainder,false)
+                        .setProgress(entry.numberValueTime,timeRemainder,false)
+                        .setAutoCancel(true)
 
                         .setColor(Color.BLUE)
-                        .setContentText(
-                               // "time: " +data+ " expires: " +expireTime.getTimeFormat() +
-                                " expires: "+ new TimeState(timeRemainder).getTimeFormat() +
-                                        " || "+ entry.textEntry.getValue()
-
-                        );
+                        .setSubText(" "+ new TimeState(timer).getTimeFormat())
+                        .setContentText( entry.textEntry.getValue() + "  "+ new TimeState(timeRemainder).getTimeFormat());
 
 
 //        Log.d("serviceTest",""+timer );
