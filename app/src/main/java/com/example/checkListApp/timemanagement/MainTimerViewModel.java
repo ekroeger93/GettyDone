@@ -66,10 +66,12 @@ public class MainTimerViewModel extends ViewModel {
     }
 
     public void setTaskCustom(CountDownTimerAsync.CountDownTask countDownTask){
+
         countTimer.setCountDownTask((n) -> {
             _countDownTimer.postValue(countTimer.getRunTime());
             countDownTask.execute(countTimer.getNumberTime());
         });
+
     }
 
     public void setObserver(Observer<String> observer, LifecycleOwner owner){
@@ -107,7 +109,6 @@ public class MainTimerViewModel extends ViewModel {
                             countTimer.setTimer( new TimeState(countTimer.getNumberTime()));
                         }
 
-                        setTask();
                     }else {
                         timeState = new TimeState(countTimer.getNumberTime());
                        _countDownTimer.postValue(timeState.getTimeFormat());

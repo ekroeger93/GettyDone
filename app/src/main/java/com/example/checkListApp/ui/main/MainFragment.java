@@ -288,10 +288,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
             AuxiliaryData.receiveParcelTime(checkList, getArguments());
 
-            Log.d("loadTest","load: "+checkList);
-
-
-//            for(Entry entry : getCheckList()) mViewModel.updateEntry(entry);
         }
 
 
@@ -302,9 +298,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     @Override
     public void onPrimaryNavigationFragmentChanged(boolean isPrimaryNavigationFragment) {
         super.onPrimaryNavigationFragmentChanged(isPrimaryNavigationFragment);
-
-
-//        for(Entry entry : getCheckList()) mViewModel.updateEntry(entry);
 
 
 
@@ -424,24 +417,12 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         if(setTime > 0 ) {
             startService();
 
-            timerRunning.postValue(true//!timerRunning.getValue()
-            );
+            timerRunning.postValue(true );
 
-            // Log.d("timeRunning", ""+timerRunning);
-//                for(Entry e: checkList) {
-//                    Log.d(
-//                            "timerTestAcc",
-//                            "acc: " + e.timeAccumulated +
-//                                    " set: "+setTime +
-//                                    " ela: "+elapsedTime +
-//                                    " time: "+time);
-//                }
-
-            mainTimerView.mainTimerViewModel.setTaskCustom(time -> {
+            MainTimerView.mainTimerViewModel.setTaskCustom(time -> {
 
                 int elapsedTime = setTime - time;
                 if (listUtility.currentActiveTime.timeElapsed(elapsedTime)) {
-
 
                     shortBell.start();
 
@@ -470,7 +451,8 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                 }
             });
 
-            mainTimerView.mainTimerViewModel.toggleTime();
+
+            MainTimerView.mainTimerViewModel.toggleTime();
 
         }
 
@@ -481,7 +463,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         //hideButtons(false);
 
-        mainTimerView.mainTimerViewModel.resetAbsolutely();
+        MainTimerView.mainTimerViewModel.resetAbsolutely();
         timerRunning.postValue(false);
 
 //        if(isMyServiceRunning(TimerService.class))
