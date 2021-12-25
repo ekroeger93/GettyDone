@@ -183,7 +183,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     private boolean isSorting = false;
 
-    private final MutableLiveData<Boolean> timerRunning = new MutableLiveData<>(false);
+    private static final MutableLiveData<Boolean> timerRunning = new MutableLiveData<>(false);
     public Boolean isTimerRunning()   { return timerRunning.getValue();}
     public MutableLiveData<Boolean> getTimerRunning() { return timerRunning;}
 
@@ -195,6 +195,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     private MediaPlayer shortBell;
 
     private final MainTimerView mainTimerView = new MainTimerView();
+
     ListTimersParcel listTimersParcel;
 
     private final ListUtility listUtility = new ListUtility();
@@ -421,14 +422,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
             );
 
             // Log.d("timeRunning", ""+timerRunning);
-
-            mainTimerView.mainTimerViewModel.toggleTimeWithCustomTask(time -> {
-
-
-                int elapsedTime = setTime - time;
-                if (listUtility.currentActiveTime.timeElapsed(elapsedTime)) {
-
-
 //                for(Entry e: checkList) {
 //                    Log.d(
 //                            "timerTestAcc",
@@ -437,6 +430,12 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 //                                    " ela: "+elapsedTime +
 //                                    " time: "+time);
 //                }
+
+            mainTimerView.mainTimerViewModel.setTaskCustom(time -> {
+
+                int elapsedTime = setTime - time;
+                if (listUtility.currentActiveTime.timeElapsed(elapsedTime)) {
+
 
                     shortBell.start();
 
@@ -463,9 +462,9 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                     activeIndex = listUtility.activeProcessTimeIndex;
 
                 }
-
-
             });
+
+            mainTimerView.mainTimerViewModel.toggleTime();
 
         }
 
@@ -533,14 +532,20 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         mainTimerView.mainTimerViewModel.resetTimeState();
         timerRunning.postValue(false);
 
-
-//        getActivity().stopService(getForegroundTimerServiceIntent());
+        getActivity().stopService(getForegroundTimerServiceIntent());
 
 
     });
 
 
 }
+
+    public static void resetTime(){
+
+        MainTimerView.mainTimerViewModel.resetAbsolutely();
+        timerRunning.postValue(false);
+
+    }
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);

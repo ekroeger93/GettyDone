@@ -9,6 +9,7 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
+import com.example.checkListApp.MainActivity;
 import com.example.checkListApp.timer.CountDownTimerAsync;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 
@@ -16,11 +17,12 @@ import java.util.ArrayList;
 
 public final class MainTimerView {
 
-    public MainTimerViewModel mainTimerViewModel = new MainTimerViewModel();
+    public static MainTimerViewModel mainTimerViewModel = new MainTimerViewModel();
 
-    public MainTimerViewModel getGlobalTimeViewModel() {
-        return mainTimerViewModel;
-    }
+//    public MainTimerViewModel mainTimerViewModel = MainActivity.timerViewModel;
+//    public static MainTimerViewModel getGlobalTimeViewModel() {
+//        return mainTimerViewModel;
+//    }
 
     public Observer<Integer> getObserver(ArrayList<Entry> checkList) {
 
@@ -52,23 +54,23 @@ public final class MainTimerView {
 
 
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public void setListener(Button executeTime) {
-
-        executeTime.setOnClickListener(view -> {
-             mainTimerViewModel.toggleTime();
-        });
-
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public void setListenerWithTask(Button executeTime, CountDownTimerAsync.CountDownTask task){
-
-        executeTime.setOnClickListener( view ->{
-            mainTimerViewModel.toggleTimeWithCustomTask(task);
-        });
-
-    }
+//    @RequiresApi(api = Build.VERSION_CODES.O)
+//    public void setListener(Button executeTime) {
+//
+//        executeTime.setOnClickListener(view -> {
+//             mainTimerViewModel.toggleTime();
+//        });
+//
+//    }
+//
+//    @RequiresApi(api = Build.VERSION_CODES.O)
+//    public void setListenerWithTask(Button executeTime, CountDownTimerAsync.CountDownTask task){
+//
+//        executeTime.setOnClickListener( view ->{
+//            mainTimerViewModel.toggleTimeWithCustomTask(task);
+//        });
+//
+//    }
 
     public void setPostExecute( CountDownTimerAsync.PostExecute postExecute) {
         mainTimerViewModel.setPostExecute(postExecute);

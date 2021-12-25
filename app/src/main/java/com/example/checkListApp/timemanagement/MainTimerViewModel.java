@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
 public class MainTimerViewModel extends ViewModel {
 
     private final TimeToggler timeToggler = new TimeToggler();//TimeToggler.getTimeToggler();
-     private final CountDownTimerAsync countTimer = CountDownTimerAsync.getInstanceToToggle(timeToggler);
+    private final CountDownTimerAsync countTimer = CountDownTimerAsync.getInstanceToToggle(timeToggler);
     private TimeState timeState = new TimeState(0);
 
     private  boolean toggled = false;
@@ -27,6 +27,8 @@ public class MainTimerViewModel extends ViewModel {
     public boolean isToggled(){
         return toggled;
     }
+
+    CountDownTimerAsync.CountDownTask task;
 
     public void setPostExecute(CountDownTimerAsync.PostExecute postExecute) {
         countTimer.setPostExecute(postExecute);
@@ -64,12 +66,10 @@ public class MainTimerViewModel extends ViewModel {
     }
 
     public void setTaskCustom(CountDownTimerAsync.CountDownTask countDownTask){
-
         countTimer.setCountDownTask((n) -> {
             _countDownTimer.postValue(countTimer.getRunTime());
             countDownTask.execute(countTimer.getNumberTime());
         });
-
     }
 
     public void setObserver(Observer<String> observer, LifecycleOwner owner){
@@ -88,15 +88,12 @@ public class MainTimerViewModel extends ViewModel {
     }
 
     public void setServiceTask(CountDownTimerAsync.ServiceTask serviceTask){
-
         countTimer.setServiceTask((n) ->{
             serviceTask.execute(countTimer.getNumberTime());
         });
 
     }
 
-    //TODO: ASYNC FOR WHEN APP IS IN THE BACKGROUND
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public void toggleTime(){
 
         timeToggler.toggleTime(countTimer,
@@ -121,30 +118,31 @@ public class MainTimerViewModel extends ViewModel {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public void toggleTimeWithCustomTask(CountDownTimerAsync.CountDownTask task){
-
-        timeToggler.toggleTime(countTimer,
-                (toggle) -> {
-                    toggled = toggle;
-                    if(toggle){
-
-                        if(countTimer.getNumberTime() == 0){
-                            countTimer.setTimer(timeState);
-                        }else{
-                            countTimer.setTimer( new TimeState(countTimer.getNumberTime()));
-                        }
-
-                        setTaskCustom(task);
-
-                    }else {
-                        timeState = new TimeState(countTimer.getNumberTime());
-                        _countDownTimer.postValue(timeState.getTimeFormat());
-                    }
-                }
-        );
-
-    }
+//
+//    @RequiresApi(api = Build.VERSION_CODES.O)
+//    public void toggleTimeWithCustomTask(){
+//
+//
+//        timeToggler.toggleTime(countTimer,
+//                (toggle) -> {
+//                    toggled = toggle;
+//                    if(toggle){
+//
+//                        if(countTimer.getNumberTime() == 0){
+//                            countTimer.setTimer(timeState);
+//                        }else{
+//                            countTimer.setTimer( new TimeState(countTimer.getNumberTime()));
+//                        }
+//
+//
+//                    }else {
+//                        timeState = new TimeState(countTimer.getNumberTime());
+//                        _countDownTimer.postValue(timeState.getTimeFormat());
+//                    }
+//                }
+//        );
+//
+//    }
 
 
     public void resetTimeState(){
@@ -157,7 +155,8 @@ public class MainTimerViewModel extends ViewModel {
         _countDownTimer.postValue(timeState.getTimeFormat());//
         countTimer.setTimer(timeState);
         countTimer.resetAll();
-        timeToggler.shutDown();//
+        countTimer.postTimeExpire();
+        timeToggler.shutDown();
 
     }
 

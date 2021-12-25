@@ -10,7 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Practice7"
         >
-        <activity android:name="com.example.checkListApp.MainActivity">
+        <activity
+            android:name="com.example.checkListApp.MainActivity"
+            android:exported="true">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,7 +22,16 @@
         </activity>
           <service android:name=".timemanagement.TimerService"/>
 
+        <receiver android:name=".timemanagement.TimerBroadcastReceiver"  android:exported="true"
+            android:permission="BROADCAST_STICKY">
+            <intent-filter>
+                <action android:name="TOGGLE_TIME"/>
+            </intent-filter>
+        </receiver>
+
+
     </application>
+
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 </manifest>

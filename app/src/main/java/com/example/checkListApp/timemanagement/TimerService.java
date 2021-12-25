@@ -19,6 +19,7 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 import com.example.checkListApp.MainActivity;
+import com.example.checkListApp.R;
 import com.example.checkListApp.timemanagement.parcel.ListTimersParcel;
 import com.example.checkListApp.timemanagement.utilities.KeyHelperClass;
 import com.example.checkListApp.timemanagement.utilities.ListTimerUtility;
@@ -32,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class TimerService extends Service {
+public final class TimerService extends Service {
 
    public static int activeTimeIndex=0;
 
@@ -65,9 +66,11 @@ public class TimerService extends Service {
         startForeground(FOREGROUND_SERVICE_ID, foregroundTimerService.createTimer(notificationManager));
 
 
-      //  return (START_NOT_STICKY);
-        return START_REDELIVER_INTENT;
+        return (START_NOT_STICKY);
+//        return START_REDELIVER_INTENT;
     }
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public Notification makeNotification(String data, int timer, Entry entry, PendingIntent pendingIntent) {
@@ -91,6 +94,21 @@ public class TimerService extends Service {
 
         int timeRemainder =  expireTime.getTimeNumberValue() - countTime.getTimeNumberValue();
 
+        Intent toggleTimeIntent = new Intent(this, TimerBroadcastReceiver.class);
+            toggleTimeIntent.setAction(KeyHelperClass.BROADCAST_ACTION_TOGGLE_TIMER);
+
+        PendingIntent toggleTimePendingIntent =
+                PendingIntent.getBroadcast(this, 0, toggleTimeIntent, 0);
+
+        Intent resetTimeIntent = new Intent(this, TimerBroadcastReceiver.class);
+            resetTimeIntent.setAction(KeyHelperClass.BROADCAST_ACTION_RESET_TIMER);
+
+         PendingIntent resetTimePendingIntent =
+                PendingIntent.getBroadcast(this,0, resetTimeIntent,0);
+
+        //https://developer.android.com/guide/components/broadcasts
+        //https://developer.android.com/training/notify-user/build-notification.html#java
+
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this, channel)
@@ -98,6 +116,14 @@ public class TimerService extends Service {
                         .setSmallIcon(android.R.drawable.star_on)
                         .setOnlyAlertOnce(true)
                         .setContentTitle("CountDownTime")
+                        .addAction(android.R.drawable.btn_minus, "Reset",
+                                resetTimePendingIntent)
+                        .addAction(android.R.drawable.btn_star, "Toggle",
+                                toggleTimePendingIntent)
+
+                        .setProgress(expireTime.getTimeNumberValue(),timeRemainder,false)
+
+                        .setColor(Color.BLUE)
                         .setContentText(
                                // "time: " +data+ " expires: " +expireTime.getTimeFormat() +
                                 " expires: "+ new TimeState(timeRemainder).getTimeFormat() +
@@ -106,12 +132,13 @@ public class TimerService extends Service {
                         );
 
 
-        Log.d("serviceTest",""+timer );
-        if (timer <= 0) stopSelf();
+//        Log.d("serviceTest",""+timer );
+
+//        if (timer <= 0) stopSelf();
 
 
         return mBuilder
-                .setPriority(1)
+                .setPriority(2)
                 .setCategory(Notification.CATEGORY_SERVICE)
                 .build(); // foregroundTimerService.createTimer(notification);
 
