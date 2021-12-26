@@ -108,6 +108,9 @@ TaDone Prototype
 -select sounds on setTimer
 -on toggle only, timer pauses until the entry is checked
 
+
+-send a post notification for service
+
 -image button checkBox
 -change buttons into icons
 
