@@ -34,6 +34,7 @@ public class SetTimerFragment extends Fragment {
 
     TextView setTimerText;
     Button submitTimeButton;
+    Button onToggleOnlySubmit;
 
     private static Integer timeIndexPosition;
 
@@ -80,6 +81,8 @@ public class SetTimerFragment extends Fragment {
 
         setTimerText = binding.setTimeText;
         submitTimeButton = binding.submitTime;
+        onToggleOnlySubmit = binding.toggleOnlyBtn;
+
 
         submitTimeButton.setOnClickListener( v->{
 
@@ -126,6 +129,24 @@ public class SetTimerFragment extends Fragment {
 //            );
 //
 //            startActivity(intent);
+        });
+
+        onToggleOnlySubmit.setOnClickListener( view1 -> {
+
+            SetTimerFragmentDirections.ActionSetTimerFragmentToMainFragment action =
+                    SetTimerFragmentDirections.actionSetTimerFragmentToMainFragment(JsonService.getJsonCheckArrayList());
+
+            action.setTimeParcel(
+                    new TimeParcelBuilder()
+                            .setTimeIndexValue(timeIndexPosition)
+                            .setTimeStringValue("OTO")
+                            .setTimeNumberValue(-1)
+//                            .setRetainJsonData(jsonData)
+                            .build()
+            );
+
+            Navigation.findNavController(view).navigate(action);
+
         });
 
         observerInit();

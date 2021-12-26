@@ -296,17 +296,17 @@
             android:id="@+id/inputTimeBtnBackspace"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
             android:elevation="10dp"
-            android:text="bs"
+            android:onClick='@{() -> viewModel.removeText()}'
             android:textColor="#FFFFFF"
             app:cornerRadius="10dp"
-            android:onClick='@{() -> viewModel.removeText()}'
-            android:layout_marginStart="10dp"
+            app:icon="@drawable/abc_vector_test"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/inputTimeBtn0"
             app:layout_constraintTop_toTopOf="parent"
-            />
+            tools:ignore="SpeakableTextPresentCheck" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -321,13 +321,43 @@
 
     <Button
         android:id="@+id/submitTime"
-        android:layout_width="184dp"
-        android:layout_height="54dp"
+        android:layout_width="198dp"
+        android:layout_height="64dp"
         android:text="Submit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tableRowFour" />
+        app:layout_constraintTop_toBottomOf="@+id/tableRowFour"
+        app:layout_constraintVertical_bias="0.376" />
+
+    <Button
+        android:id="@+id/toggleOnlyBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="19dp"
+        android:layout_marginBottom="16dp"
+        android:text="toggle only"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/submitTime" />
+
+    <ImageButton
+        android:id="@+id/informationBtn"
+        android:layout_width="34dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="11dp"
+        android:layout_marginBottom="36dp"
+        android:src="@android:drawable/ic_dialog_info"
+        android:tint="#039BE5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/submitTime"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/toggleOnlyBtn"
+        app:layout_constraintTop_toBottomOf="@+id/submitTime"
+        app:layout_constraintVertical_bias="1.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -530,8 +530,11 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         timerRunning.postValue(false);
 
 //        getActivity().stopService(getForegroundTimerServiceIntent());
-        activity.stopService(serviceIntent);
+    //    activity.stopService(serviceIntent);
 
+        if(isMyServiceRunning(TimerService.class))
+        // getActivity().stopService(getForegroundTimerServiceIntent());
+        activity.stopService(serviceIntent);
 
 
     });
