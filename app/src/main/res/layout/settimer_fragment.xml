@@ -18,10 +18,11 @@
     android:layout_height="match_parent"
    >
 
+
     <TextView
         android:id="@+id/setTimeText"
         android:layout_width="305dp"
-        android:layout_height="108dp"
+        android:layout_height="80dp"
         android:fontFamily="sans-serif-black"
         android:letterSpacing=".06"
         android:shadowColor="#1E88E5"
@@ -38,9 +39,10 @@
         android:typeface="monospace"
         app:layout_constraintBottom_toTopOf="@+id/rowOne"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.509"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.10" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/rowOne"
@@ -48,7 +50,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintGuide_begin="130dp"
+        app:layout_constraintGuide_begin="100dp"
         app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -115,7 +117,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintGuide_begin="216dp"
+        app:layout_constraintGuide_begin="186dp"
         app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -182,7 +184,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintGuide_begin="284dp"
+        app:layout_constraintGuide_begin="254dp"
         app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -250,7 +252,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintGuide_begin="369dp"
+        app:layout_constraintGuide_begin="339dp"
         app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -316,7 +318,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintGuide_begin="436dp"
+        app:layout_constraintGuide_begin="406dp"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
@@ -329,7 +331,7 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tableRowFour"
-        app:layout_constraintVertical_bias="0.376" />
+        app:layout_constraintVertical_bias="0.18" />
 
     <Button
         android:id="@+id/toggleOnlyBtn"
@@ -354,10 +356,10 @@
         android:tint="#039BE5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/submitTime"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias=".5"
         app:layout_constraintStart_toEndOf="@+id/toggleOnlyBtn"
         app:layout_constraintTop_toBottomOf="@+id/submitTime"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.2" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

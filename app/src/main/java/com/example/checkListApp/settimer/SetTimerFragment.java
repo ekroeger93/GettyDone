@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 
+import com.example.checkListApp.MainActivity;
 import com.example.checkListApp.R;
 import com.example.checkListApp.timemanagement.parcel.TimeParcel;
 import com.example.checkListApp.timemanagement.parcel.TimeParcelBuilder;
@@ -83,6 +84,7 @@ public class SetTimerFragment extends Fragment {
         submitTimeButton = binding.submitTime;
         onToggleOnlySubmit = binding.toggleOnlyBtn;
 
+        MainActivity.tabLayout.setVisibility(View.GONE);
 
         submitTimeButton.setOnClickListener( v->{
 

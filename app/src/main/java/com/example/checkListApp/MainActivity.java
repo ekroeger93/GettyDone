@@ -21,7 +21,7 @@ import com.example.checkListApp.timemanagement.MainTimerViewModel;
 import com.example.checkListApp.ui.main.progress.ProgressFragment;
 import com.google.android.material.tabs.TabLayout;
 
-public class MainActivity extends AppCompatActivity implements FileListFragment.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements FileListFragment.OnFragmentInteractionListener {
 
     public MainActivityBinding activityBinding;
     static public final MainTimerViewModel timerViewModel = new MainTimerViewModel();
@@ -39,16 +39,17 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-     //   setContentView(R.layout.main_activity);
+        //   setContentView(R.layout.main_activity);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
 
-        activityBinding = DataBindingUtil.setContentView(this,R.layout.main_activity);
-                ///DataBindingUtil.inflate(inflater,R.layout.fragment_file_list, (ViewGroup) container, false);
+        activityBinding = DataBindingUtil.setContentView(this, R.layout.main_activity);
+        ///DataBindingUtil.inflate(inflater,R.layout.fragment_file_list, (ViewGroup) container, false);
 
         activityBinding.setMMainActivity(this);
 
-        navHostFragment  = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.entryListFragment);
+        navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.entryListFragment);
         mainFragment = (MainFragment) navHostFragment.getChildFragmentManager().getFragments().get(0);
+
 
         tabLayout = findViewById(R.id.tabs);
 
@@ -132,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
     }
 
 
-    public void setObserver(){
+    public void setObserver() {
 
 //        Observer<Boolean> onTimerRunning = new Observer<Boolean>() {
 //            @Override
@@ -152,9 +153,7 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
 //        mainFragment.getTimerRunning().observe(navHostFragment, onTimerRunning);
 
 
-
     }
-
 
 
     @Override
@@ -164,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
 
     }
 
+
     @Override
     public void onFragmentInteraction(Uri uri) {
 
@@ -171,8 +171,7 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
 
     @Override
     public void onBackPressed() {
-
+        super.onBackPressed();
     }
-
 
 }
