@@ -140,7 +140,8 @@ public class SetTimerFragment extends Fragment {
             action.setTimeParcel(
                     new TimeParcelBuilder()
                             .setTimeIndexValue(timeIndexPosition)
-                            .setTimeStringValue("00:00:00")
+                            .setTimeStringValue("00:00:01")
+                            .setTimeNumberValue(1)
                             .setTimeNumberValue(mViewModel.getTimerValue())
                             .setTogglePrimer(true)
 //                            .setRetainJsonData(jsonData)
