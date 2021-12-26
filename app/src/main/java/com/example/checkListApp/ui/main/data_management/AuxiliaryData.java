@@ -30,8 +30,8 @@ public final class AuxiliaryData {
 
             int index = timeParcel.getTimeIndex()-1;
             String time = timeParcel.getTimeStringVal();
-
             data.get(index).countDownTimer.postValue(time);
+            data.get(index).onTogglePrimer.postValue(timeParcel.getOnTogglePrimer());
 
             Log.d("timerTest", "" + timeParcel.getTimeStringVal());
 

@@ -8,6 +8,7 @@ public class TimeParcel implements Parcelable{
      protected String timeStringVal;
      protected int timeNumberValue;
      protected int timeIndex;
+     protected boolean onTogglePrimer;
 
      protected String retainedJsonData;
 
@@ -19,6 +20,8 @@ public class TimeParcel implements Parcelable{
     public int getTimeIndex() {
         return timeIndex;
     }
+
+    public boolean getOnTogglePrimer(){return onTogglePrimer;}
 
     public String getRetainedJsonData() {
         return retainedJsonData;
@@ -38,6 +41,7 @@ public class TimeParcel implements Parcelable{
         timeStringVal = in.readString();
         timeNumberValue = in.readInt();
         timeIndex  = in.readInt();
+        onTogglePrimer = in.readBoolean();
 
         retainedJsonData = in.readString();
     }
@@ -47,6 +51,7 @@ public class TimeParcel implements Parcelable{
         dest.writeString(timeStringVal);
         dest.writeInt(timeNumberValue);
         dest.writeInt(timeIndex);
+        dest.writeBoolean(onTogglePrimer);
 
         dest.writeString(retainedJsonData);
     }

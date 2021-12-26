@@ -32,6 +32,8 @@ public class Entry {
     @ColumnInfo(name="orderIndex")
     public MutableLiveData<Integer> orderIndex = new MutableLiveData<>(-1);
 
+    @ColumnInfo(name="onTogglePrimer")
+    public MutableLiveData<Boolean> onTogglePrimer = new MutableLiveData<>(false);
 
     @Ignore
     private RecyclerAdapter.ViewHolder viewHolder;
@@ -60,6 +62,7 @@ public class Entry {
         textEntry.postValue(entry.textEntry.getValue());
         checked.postValue(entry.checked.getValue());
         countDownTimer.postValue(entry.countDownTimer.getValue());
+        onTogglePrimer.postValue(entry.onTogglePrimer.getValue());
 
 
         int numberTime = new TimeState(countDownTimer.getValue()).getTimeNumberValue();
@@ -75,7 +78,7 @@ public class Entry {
         this.countDownTimer.setValue(countDownTimer.getValue());
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
     public Entry(String text, boolean isChecked, String timeText) {
 
         textEntry.setValue(text);
@@ -94,11 +97,16 @@ public class Entry {
         //    numberValueTime = new TimeState(timeText).getTimeNumberValueDecimalTruncated();
     }
 
-    public Entry(String text, boolean isChecked, String timeText, int orderIndex) {
+    public Entry(String text,
+                 boolean isChecked,
+                 String timeText,
+                 int orderIndex,
+                 boolean onToggle) {
 
         textEntry.setValue(text);
         checked.setValue(isChecked);
         countDownTimer.setValue(timeText);
+        onTogglePrimer.setValue(onToggle);
 
         this.orderIndex.setValue(orderIndex);
 
@@ -163,6 +171,7 @@ public class Entry {
         textEntry.postValue(entry.textEntry.getValue());
         checked.postValue(entry.checked.getValue());
         countDownTimer.postValue(entry.countDownTimer.getValue());
+        onTogglePrimer.postValue(entry.onTogglePrimer.getValue());
 
         textTemp = entry.textTemp;
 

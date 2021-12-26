@@ -213,8 +213,6 @@ public final class TimerService extends Service {
 
             int setTime = setTimer(timeViewModel);// getSummationTime(timerViewModelList);
 
-
-
             currentActiveTime = timerViewModelList.get(activeProcessTimeIndex);
 
             //TODO: BUG HERE RAPIDLY RESETING TIME
@@ -222,11 +220,14 @@ public final class TimerService extends Service {
                 elapsedTime = setTime - time;
 
 //
-                if (currentActiveTime.timeElapsed(elapsedTime)// || elapsedTime == setTime
-                ) {
-                    currentActiveTime =  getNextActiveProcessTime(timerViewModelList);
-               }
+           //      if(!currentActiveTime.onTogglePrimer.getValue()) {
 
+                     if (currentActiveTime.timeElapsed(elapsedTime)// || elapsedTime == setTime
+                     ) {
+                         currentActiveTime = getNextActiveProcessTime(timerViewModelList);
+                     }
+
+            //     }
 
                 //rebuild notification here
                 notification.set(timerService.makeNotification(

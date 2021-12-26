@@ -111,6 +111,7 @@ public class SetTimerFragment extends Fragment {
                             .setTimeIndexValue(timeIndexPosition)
                             .setTimeStringValue(setTimerText.getText().toString())
                             .setTimeNumberValue(mViewModel.getTimerValue())
+                            .setTogglePrimer(false)
 //                            .setRetainJsonData(jsonData)
                             .build()
             );
@@ -139,8 +140,9 @@ public class SetTimerFragment extends Fragment {
             action.setTimeParcel(
                     new TimeParcelBuilder()
                             .setTimeIndexValue(timeIndexPosition)
-                            .setTimeStringValue("OTO")
-                            .setTimeNumberValue(-1)
+                            .setTimeStringValue("00:00:00")
+                            .setTimeNumberValue(mViewModel.getTimerValue())
+                            .setTogglePrimer(true)
 //                            .setRetainJsonData(jsonData)
                             .build()
             );

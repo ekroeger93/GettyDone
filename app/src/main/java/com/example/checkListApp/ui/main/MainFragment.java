@@ -430,14 +430,16 @@ public class MainFragment extends Fragment implements ListItemClickListener {
             MainTimerView.mainTimerViewModel.setTaskCustom(time -> {
 
                 int elapsedTime = setTime - time;
+
+                if(!listUtility.currentActiveTime.onTogglePrimer.getValue()){
                 if (listUtility.currentActiveTime.timeElapsed(elapsedTime)) {
 
                     shortBell.start();
 
-                    String messageB = checkList.get(listUtility.activeProcessTimeIndex).textEntry.getValue();
-
-                    if (getActivity() != null) {
+                    if (getActivity() != null && getContext() !=null) {
                         getActivity().runOnUiThread(() -> {
+
+                            String messageB = checkList.get(listUtility.activeProcessTimeIndex).textEntry.getValue();
 
                             scrollPosition(listUtility.activeProcessTimeIndex);
 
@@ -453,10 +455,18 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                         listUtility.currentActiveTime.getViewHolder().checkOff();
                         listUtility.currentActiveTime = listUtility.getNextActiveProcessTime(checkList);
                     }
-
                     activeIndex = listUtility.activeProcessTimeIndex;
 
                 }
+                }else{
+                    MainTimerView.mainTimerViewModel.toggleTime();
+
+                    listUtility.currentActiveTime.getViewHolder().checkOff();
+                    listUtility.currentActiveTime = listUtility.getNextActiveProcessTime(checkList);
+                    activeIndex = listUtility.activeProcessTimeIndex;
+
+                }
+
             });
 
 
@@ -501,6 +511,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                 Toast toast = Toast.makeText(getContext(), message + " done!", Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.TOP, 0, 0);
                 toast.show();
+
 
 
             });
@@ -550,12 +561,17 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     }
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
+
+        try{
         ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (serviceClass.getName().equals(service.service.getClassName())) {
                 return true;
             }
+        }}catch (NullPointerException e){
+            return false;
         }
+
         return false;
     }
 
@@ -960,6 +976,12 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         if(view.getId() == R.id.checkBtn){
 
             viewHolder.getEntry().checked.postValue( !viewHolder.getEntry().checked.getValue());
+
+//            if(viewHolder.getEntry().onTogglePrimer.getValue() && timerRunning.getValue()){
+//                MainTimerView.mainTimerViewModel.toggleTime();
+//                listUtility.currentActiveTime = listUtility.getNextActiveProcessTime(checkList);
+//                activeIndex = listUtility.activeProcessTimeIndex;
+//            }
 
 //            Toast toast = Toast.makeText(getContext(), ""+position,Toast.LENGTH_SHORT );
 //            toast.show();

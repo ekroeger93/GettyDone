@@ -20,6 +20,11 @@ public class TimeParcelBuilder implements TimeParcelImpl {
          return this;
      }
 
+     public TimeParcelBuilder setTogglePrimer(boolean set){
+        transactionParcelable.onTogglePrimer= set;
+        return this;
+     }
+
      public TimeParcelBuilder setRetainJsonData(String data){
         transactionParcelable.retainedJsonData  = data;
                 return this;

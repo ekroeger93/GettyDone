@@ -386,6 +386,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                                 Color.parseColor("#95FF8D")
                         );
 
+
                         entry.checkTemp = aBoolean;
 
                         recordHelper.update(mList);
@@ -403,6 +404,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         JsonService.buildJson((ArrayList<Entry>) mList);
                     };
 
+                    Observer<Boolean> onChangeTogglePrimer = o->{
+
+                        if(o) {
+                            setTimeButton.setBackgroundColor(Color.LTGRAY);
+                            setTimeButton.setText("Toggle Only");
+                        }else{
+
+                        }
+                        repository.updateEntry(entry);
+                        JsonService.buildJson((ArrayList<Entry>) mList);
+                    };
 
 
                     Observer<Integer> selectOrderObs = o -> {
@@ -426,6 +438,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                             getEntry().textEntry.observe(owner, onChangeEntryText);
                             getEntry().checked.observe(owner, onChangeEntryChecked);
                             getEntry().countDownTimer.observe(owner, onChangeTimeValue);
+                            getEntry().onTogglePrimer.observe(owner, onChangeTogglePrimer);
 
 
                     }catch (NullPointerException e){

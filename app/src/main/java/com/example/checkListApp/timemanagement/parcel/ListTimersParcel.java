@@ -17,6 +17,7 @@ public class ListTimersParcel implements Parcelable {
 
    public boolean[] listOfChecked;
    public String[] listOfText;
+   public boolean[] listOfOnToggle;
 
     public String globalSetTimer = "";
     int activeTimeIndex= 0;
@@ -87,6 +88,14 @@ public class ListTimersParcel implements Parcelable {
         }
         in.createStringArray();
 
+        listOfOnToggle = new boolean[size];
+
+        for(Entry n : entryTimerViewModels){
+            int index = entryTimerViewModels.indexOf(n);
+            listOfOnToggle[index]= n.onTogglePrimer.getValue();
+        }
+        in.createBooleanArray();
+
         globalSetTimer = in.readString();
         activeTimeIndex = in.readInt();
 
@@ -103,6 +112,7 @@ public class ListTimersParcel implements Parcelable {
 
         parcel.writeBooleanArray(listOfChecked);
         parcel.writeStringArray(listOfText);
+        parcel.writeBooleanArray(listOfOnToggle);
 
         parcel.writeString(globalSetTimer);
         parcel.writeInt(activeTimeIndex);

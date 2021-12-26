@@ -17,7 +17,7 @@ public abstract class ListTimerUtility {
     public int activeProcessTimeIndex = 1;
     public Entry currentActiveTime;
 
-   @RequiresApi(api = Build.VERSION_CODES.O)
+
    public void accumulation(ArrayList<Entry> list){
 
        for(int i = 0; i <= list.size()-2; i++){
@@ -33,7 +33,7 @@ public abstract class ListTimerUtility {
 
 
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
    public ArrayList<Entry> generateEntryList(ListTimersParcel parcel){
 
       //  int size = MainFragment.getCheckList().size();// parcel.listOfCountDownTimers.length;
@@ -64,7 +64,7 @@ public abstract class ListTimerUtility {
 
     }
 
-   @RequiresApi(api = Build.VERSION_CODES.O)
+
    public  int getSummationTime(ArrayList<Entry> list){
 
        int sum = 0;

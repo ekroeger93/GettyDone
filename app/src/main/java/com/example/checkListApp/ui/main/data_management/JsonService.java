@@ -121,6 +121,7 @@ public final class JsonService {
     jsonObject.addProperty("isChecked", src.checked.getValue());
     jsonObject.addProperty("timerLabel", src.countDownTimer.getValue());
     jsonObject.addProperty("orderIndex", src.orderIndex.getValue());
+    jsonObject.addProperty("onTogglePrimer",src.onTogglePrimer.getValue());
 
 //}
                 return jsonObject;
@@ -143,13 +144,14 @@ public final class JsonService {
             boolean isChecked = jsonObject.get("isChecked").getAsBoolean();
             String timeText = jsonObject.get("timerLabel").toString();
             int orderIndex = jsonObject.get("orderIndex").getAsInt();
+            boolean onToggle = jsonObject.get("onTogglePrimer").getAsBoolean();
             Log.d("checkListTime",">>> "+timeText);
 
             //TODO:fix this
             textEntry = textEntry.replaceAll("\"","").trim();
             timeText = timeText.replaceAll("\"","").trim();
 
-            return new Entry(textEntry,isChecked,timeText,orderIndex);
+            return new Entry(textEntry,isChecked,timeText,orderIndex,onToggle);
 
 
         }
