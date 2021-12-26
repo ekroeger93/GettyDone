@@ -100,7 +100,8 @@ TaDone Prototype
 
  check the database table for further testing
 
-
+ service notification sometimes doesn't terminate itself and shows negative value
+ of set time
 
 //TODO: Features
 
