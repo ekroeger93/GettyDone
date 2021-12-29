@@ -13,9 +13,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -479,16 +482,19 @@ public class MainFragment extends Fragment implements ListItemClickListener {
        // int setTime =
                 setTimer(mainTimerView);
 
-        MainTimerView.mainTimerViewModel.setRepeaterTime(2);
+//        MainTimerView.mainTimerViewModel.setRepeaterTime(2);
 
         if( listUtility.getSummationTime(checkList)  > 0 ) {
 
             if (!isMyServiceRunning(TimerService.class))
             startService();
 
+            if(binding.repeatTimer.getText().toString().isEmpty()){
+                binding.repeatTimer.setText("0");
+            }
 
-//                int repeater = Integer.parseInt(binding.repeatTimer.getText().toString());
-//                MainTimerView.mainTimerViewModel.setRepeaterTime(repeater);
+                int repeater = Integer.parseInt(binding.repeatTimer.getText().toString());
+                MainTimerView.mainTimerViewModel.setRepeaterTime(repeater);
 
 
             timerRunning.postValue(true);
@@ -666,6 +672,31 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     
     @SuppressLint("ClickableViewAccessibility")
     public void assignButtonListeners(){
+
+
+        binding.repeatTimer.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                binding.repeatTimer.setSelection(0);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                binding.repeatTimer.setSelection(0);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+                if(binding.repeatTimer.getText().length()>1){
+                    String text = binding.repeatTimer.getText().toString();
+                    binding.repeatTimer.setText(text.substring(0,text.length()-1));
+                }
+
+
+            }
+        });
+
 
         buttonPanel.addButtonWithLeaf(
             binding.addDeleteBtn
