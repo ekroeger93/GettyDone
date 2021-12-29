@@ -109,9 +109,7 @@ TaDone Prototype
 
 //TODO: Features
 
--add repeatable time, iteration were it will loop back to first entry
 -select sounds on setTimer
-
 
 -send a post notification for service at end
 

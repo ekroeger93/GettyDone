@@ -333,13 +333,14 @@
         app:layout_constraintTop_toBottomOf="@+id/tableRowFour"
         app:layout_constraintVertical_bias="0.18" />
 
+
+
     <Button
         android:id="@+id/toggleOnlyBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="19dp"
-        android:layout_marginBottom="16dp"
         android:text="toggle only"
+        app:layout_constraintVertical_bias="0.1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -347,19 +348,16 @@
 
     <ImageButton
         android:id="@+id/informationBtn"
-        android:layout_width="34dp"
+        android:layout_width="36dp"
         android:layout_height="36dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="11dp"
-        android:layout_marginBottom="36dp"
         android:src="@android:drawable/ic_dialog_info"
         android:tint="#039BE5"
+        android:layout_marginStart="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/submitTime"
-        app:layout_constraintHorizontal_bias=".5"
         app:layout_constraintStart_toEndOf="@+id/toggleOnlyBtn"
         app:layout_constraintTop_toBottomOf="@+id/submitTime"
-        app:layout_constraintVertical_bias="0.2" />
+        app:layout_constraintVertical_bias="0.13" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
