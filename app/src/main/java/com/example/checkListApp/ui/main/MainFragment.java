@@ -52,6 +52,7 @@ import com.example.checkListApp.timemanagement.TimerService;
 import com.example.checkListApp.timemanagement.parcel.ListTimersParcel;
 import com.example.checkListApp.timemanagement.parcel.ListTimersParcelBuilder;
 import com.example.checkListApp.timemanagement.utilities.KeyHelperClass;
+import com.example.checkListApp.timer.CountDownTimerAsync;
 import com.example.checkListApp.timer.TimeState;
 import com.example.checkListApp.ui.main.entry_management.ButtonPanel.ButtonPanel;
 import com.example.checkListApp.ui.main.entry_management.ButtonPanel.ButtonPanelToggle;
@@ -107,10 +108,9 @@ TaDone Prototype
 
 -add repeatable time, iteration were it will loop back to first entry
 -select sounds on setTimer
--on toggle only, timer pauses until the entry is checked
 
 
--send a post notification for service
+-send a post notification for service at end
 
 -image button checkBox
 -change buttons into icons
@@ -126,6 +126,11 @@ change Y axis value to number of times submitted completion,
 within a month period
 -
 use calendar view instead
+
+
+use graph to represent the month (4 week) of being active (default)
+use calendar to show completed tasks
+ - on click date changes graph
 
 -add in pull down/up to extender, change the recycler view Y size
     -use anchor points when dragging
@@ -399,7 +404,12 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         serviceIntent = getForegroundTimerServiceIntent();
 
-        activity.startForegroundService(getForegroundTimerServiceIntent());
+        try {
+//            activity.startForegroundService(getForegroundTimerServiceIntent());
+            activity.startService(serviceIntent);
+        }catch ( Exception i){
+
+        }
         //service.startService(intent);
     }
 
@@ -413,51 +423,43 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     //bind listener to button to toggle Time
     //mainTimerView.setListener(binding.timerExecuteBtn);
 
+        CountDownTimerAsync.CountDownTask countDownTask = time -> {
+         {
 
+//                int elapsedTime = setTime - time;
+                int elapsedTime = listUtility.getSummationTime(checkList) - time;
 
-
-    binding.timerExecuteBtn.setOnClickListener(view -> {
-
-        int setTime = setTimer(mainTimerView);
-
-     //   hideButtons(true);
-
-        if(setTime > 0 ) {
-            startService();
-
-            timerRunning.postValue(true );
-
-            MainTimerView.mainTimerViewModel.setTaskCustom(time -> {
-
-                int elapsedTime = setTime - time;
+                Log.d("listUtilityTest",""+elapsedTime);
 
                 if(!listUtility.currentActiveTime.onTogglePrimer.getValue()){
-                if (listUtility.currentActiveTime.timeElapsed(elapsedTime)) {
+                    if (listUtility.currentActiveTime.timeElapsed(elapsedTime)) {
 
-                    shortBell.start();
+                        shortBell.start();
 
-                    if (getActivity() != null && getContext() !=null) {
-                        getActivity().runOnUiThread(() -> {
+                        if (getActivity() != null && getContext() !=null) {
+                            getActivity().runOnUiThread(() -> {
 
-                            String messageB = checkList.get(listUtility.activeProcessTimeIndex).textEntry.getValue();
+                                String messageB = checkList.get(listUtility.activeProcessTimeIndex).textEntry.getValue();
 
-                            scrollPosition(listUtility.activeProcessTimeIndex);
+                                scrollPosition(listUtility.activeProcessTimeIndex);
 
-                            Toast toast = Toast.makeText(getContext(), messageB + " done!", Toast.LENGTH_SHORT);
-                            toast.setGravity(Gravity.TOP, 0, 0);
-                            toast.show();
+                                Toast toast = Toast.makeText(getContext(), messageB + " done!", Toast.LENGTH_SHORT);
+                                toast.setGravity(Gravity.TOP, 0, 0);
+                                toast.show();
 
 
-                        });
+                            });
+                        }
+
+                        if (listUtility.currentActiveTime.numberValueTime != 0) {
+                            listUtility.currentActiveTime.getViewHolder().checkOff();
+                            listUtility.currentActiveTime = listUtility.getNextActiveProcessTime(checkList);
+                        }
+                        activeIndex = listUtility.activeProcessTimeIndex;
+
+
+
                     }
-
-                    if (listUtility.currentActiveTime.numberValueTime != 0) {
-                        listUtility.currentActiveTime.getViewHolder().checkOff();
-                        listUtility.currentActiveTime = listUtility.getNextActiveProcessTime(checkList);
-                    }
-                    activeIndex = listUtility.activeProcessTimeIndex;
-
-                }
                 }else{
                     MainTimerView.mainTimerViewModel.toggleTime();
 
@@ -467,8 +469,31 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
                 }
 
-            });
+            };
 
+        };
+
+
+    binding.timerExecuteBtn.setOnClickListener(view -> {
+
+       // int setTime =
+                setTimer(mainTimerView);
+
+        MainTimerView.mainTimerViewModel.setRepeaterTime(2);
+
+        if( listUtility.getSummationTime(checkList)  > 0 ) {
+
+            if (!isMyServiceRunning(TimerService.class))
+            startService();
+
+
+//                int repeater = Integer.parseInt(binding.repeatTimer.getText().toString());
+//                MainTimerView.mainTimerViewModel.setRepeaterTime(repeater);
+
+
+            timerRunning.postValue(true);
+
+            MainTimerView.mainTimerViewModel.setTaskCustom(countDownTask);
 
             MainTimerView.mainTimerViewModel.toggleTime();
 
@@ -481,6 +506,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         //hideButtons(false);
 
+
         MainTimerView.mainTimerViewModel.resetAbsolutely();
         timerRunning.postValue(false);
 
@@ -490,7 +516,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         return  true;
     });
-
 
     //update time of both View and ViewModel
     mainTimerView.setObserverForMainTextTime(binding.timeTextMain,getViewLifecycleOwner());
@@ -511,7 +536,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                 Toast toast = Toast.makeText(getContext(), message + " done!", Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.TOP, 0, 0);
                 toast.show();
-
 
 
             });
@@ -536,17 +560,27 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 //
 //        });
 
-
-        mainTimerView.mainTimerViewModel.resetTimeState();
-        timerRunning.postValue(false);
-
 //        getActivity().stopService(getForegroundTimerServiceIntent());
-    //    activity.stopService(serviceIntent);
+        //    activity.stopService(serviceIntent);
 
-        if(isMyServiceRunning(TimerService.class))
-        // getActivity().stopService(getForegroundTimerServiceIntent());
-        activity.stopService(serviceIntent);
+        if (MainTimerView.mainTimerViewModel.getRepeaterTime() <= -1) {
 
+            Log.d("repeaterTest",":here "+MainTimerView.mainTimerViewModel.getRepeaterTime());
+
+            mainTimerView.mainTimerViewModel.resetTimeState();
+            timerRunning.postValue(false);
+
+//            if (isMyServiceRunning(TimerService.class))
+//                activity.stopService(serviceIntent);
+
+        }else {
+
+            Log.d("repeaterTest","here "+MainTimerView.mainTimerViewModel.getRepeaterTime());
+            listUtility.revertTimeIndex();
+            listUtility.currentActiveTime = checkList.get(1);
+            MainTimerView.mainTimerViewModel.setTaskCustom(countDownTask);
+
+        }
 
     });
 
@@ -991,14 +1025,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         if(view.getId() == R.id.setEntryTimeBtn){
 
             if(!isTimerRunning()) {
-
-           //     binding.timeTextMain.setText("00:00:00");
-                mainTimerView.mainTimerViewModel.resetAbsolutely();
-            //    timerRunning.postValue(false);
-                getActivity().stopService(getForegroundTimerServiceIntent());
-
-                //   getActivity().stopService(getForegroundTimerServiceIntent());
-
                 viewHolder.transitionToSetTimer();
             }
         }

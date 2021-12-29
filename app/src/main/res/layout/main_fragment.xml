@@ -25,6 +25,23 @@
         tools:context=".ui.main.MainFragment"
         >
 
+        <EditText
+            android:id="@+id/repeatTimer"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:ellipsize="none"
+            android:inputType="number"
+            android:selectAllOnFocus="false"
+            android:singleLine="true"
+            android:text="0"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toTopOf="@+id/guideline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias=".9"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.04" />
+
         <LinearLayout
             android:id="@+id/windowBox"
             android:layout_width="match_parent"
@@ -38,10 +55,13 @@
 
 <!--scrollSize: 250-->
 
+
             <TextView
                 android:id="@+id/timeTextMain"
-                android:layout_width="match_parent"
+                android:layout_width="200dp"
+                android:layout_marginStart="100dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:fontFamily="sans-serif-black"
                 android:text="00:00:00"
                 android:textAlignment="center"
@@ -50,12 +70,7 @@
                 android:textSize="40sp"
                 android:textStyle="italic"
                 android:typeface="monospace"
-                android:layout_marginTop="10dp"
-
-
-
                 />
-
 
 
             <androidx.recyclerview.widget.RecyclerView
@@ -143,7 +158,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
         </LinearLayout>
 
 
@@ -160,7 +174,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_begin="240dp" />
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -22,6 +22,7 @@ public class MainTimerViewModel extends ViewModel {
     private final CountDownTimerAsync countTimer = CountDownTimerAsync.getInstanceToToggle(timeToggler);
     private TimeState timeState = new TimeState(0);
 
+
     private  boolean toggled = false;
 
     public boolean isToggled(){
@@ -30,9 +31,22 @@ public class MainTimerViewModel extends ViewModel {
 
     CountDownTimerAsync.CountDownTask task;
 
+    public void setRepeaterTime(int repeaterTime){
+        countTimer.setRepeater(repeaterTime);
+    }
+
+    public int getRepeaterTime(){
+        return countTimer.getRepeater();
+    }
+
     public void setPostExecute(CountDownTimerAsync.PostExecute postExecute) {
         countTimer.setPostExecute(postExecute);
     }
+
+    public void setServicePostExecute(CountDownTimerAsync.PostExecute postExecute){
+        countTimer.setServicePostExecute(postExecute);
+    }
+
 
     //junction link to activity text Time ON BUTTON SET
     private final MutableLiveData<String> _countDownTimer = new MutableLiveData<>("00:00:00");
@@ -154,10 +168,12 @@ public class MainTimerViewModel extends ViewModel {
     public void resetAbsolutely(){
         timeState = new TimeState(0);
         _countDownTimer.postValue(timeState.getTimeFormat());//
+        setRepeaterTime(0);
         countTimer.setTimer(timeState);
         countTimer.resetAll();
         countTimer.postTimeExpire();
         timeToggler.shutDown();
+
 
     }
 

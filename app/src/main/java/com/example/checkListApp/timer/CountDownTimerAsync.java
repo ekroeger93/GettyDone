@@ -56,6 +56,10 @@ public class CountDownTimerAsync {
 
         };
 
+        private PostExecute servicePostExecute= () -> {
+
+        };
+
         private String runTime;
 
         private int numberTime;
@@ -63,9 +67,19 @@ public class CountDownTimerAsync {
         private int elapsedTime;
         private int countDownTime;
 
+        private int repeater = -1 ;
+        private TimeState holdingState;
 
+        public void setRepeater(int repeater) {
+            if(this.repeater == -1)
+            this.repeater = repeater;
+        }
 
-        public CountDownTimerAsync() {
+        public int getRepeater() {
+            return repeater;
+        }
+
+    public CountDownTimerAsync() {
         }
 
 
@@ -86,7 +100,8 @@ public class CountDownTimerAsync {
            this.postExecute = postExecute;
         }
 
-        @RequiresApi(api = Build.VERSION_CODES.O)
+        public void setServicePostExecute(PostExecute postExecute) { this.servicePostExecute = postExecute;}
+
         public void setTimer(TimeState timeState){
             futureTime = LocalDateTime.now()
                     .plusHours(timeState.hours)
@@ -96,12 +111,13 @@ public class CountDownTimerAsync {
 
             setTime = timeState.getTimeNumberValueDecimalTruncated();
 
+            if (holdingState == null) holdingState = timeState;
+
         }
 
         public void execute() {
             executor.execute(new Runnable() {
 
-                @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void run() {
 
@@ -131,11 +147,25 @@ public class CountDownTimerAsync {
 
                         if(countingDown.getSeconds() <= 0) {
 
-                            countDownTask.execute(0);
-                            serviceTask.execute(0);
+                            if(repeater <= 0) {
 
-                            postTimeExpire();
-                            break;
+                                countDownTask.execute(0);
+                                serviceTask.execute(0);
+                                repeater = -1;
+                                holdingState = null;
+                                postTimeExpire();
+                                break;
+                            }else {
+                                repeater--;
+                                setTimer(holdingState);
+//                                countDownTask.execute(elapsedTime);
+//                                serviceTask.execute(elapsedTime);
+                                postExecute.execute();
+                                servicePostExecute.execute();
+                            }
+
+
+
                         }
 
                         countDownTask.execute(elapsedTime);
@@ -151,6 +181,7 @@ public class CountDownTimerAsync {
 
         public void postTimeExpire(){
             postExecute.execute();
+            servicePostExecute.execute();
             timeToggler.shutDown();
         }
 
@@ -190,6 +221,7 @@ public class CountDownTimerAsync {
         public interface CountDownTask{
             void execute(int timeValue);
         }
+
 
         @FunctionalInterface
         public interface ServiceTask{
