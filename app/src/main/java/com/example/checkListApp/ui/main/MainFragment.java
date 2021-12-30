@@ -118,7 +118,7 @@ TaDone Prototype
 
 -animate entry on move and delete, have better indications for user
 -fix up the file manager,
-- add transitions
+-add transitions
 
 
 -color code Entry Lists for graphing,
@@ -213,8 +213,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     private final ListUtility listUtility = new ListUtility();
 
     public static int activeIndex = 0;
-
-    private final Context context = getContext();
 
     private Activity activity;
     private Intent serviceIntent;
