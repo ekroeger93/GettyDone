@@ -2,4 +2,12 @@
     <string name="app_name">TaDone</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="audio_blow_whistle">blow whistle</string>
+    <string name="audio_double_clap">double clap</string>
+    <string name="audio_long_bell">long bell</string>
+    <string name="audio_short_bell">short bell</string>
+
+    <string name="_submit">submit</string>
+
 </resources>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ScrollView
+        android:id="@+id/select_audio_scrollView"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="100dp"
+        >
+        <androidx.appcompat.widget.LinearLayoutCompat
+
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:scrollbars="vertical"
+            android:scrollbarAlwaysDrawVerticalTrack="true">
+
+
+            <TextView
+                android:id="@+id/select_short_bell_audio"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="@string/audio_short_bell"
+                android:textAlignment="center"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/select_long_bell_audio"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="@string/audio_long_bell"
+                android:textAlignment="center"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/select_blow_whistle_audio"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="@string/audio_blow_whistle"
+                android:textAlignment="center"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/select_double_clap_audio"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="@string/audio_double_clap"
+                android:textAlignment="center"
+                android:textSize="24sp" />
+
+
+            <Button
+                android:id="@+id/select_audio_submitBtn"
+                android:text="@string/_submit"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_gravity="bottom"
+                />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </ScrollView>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

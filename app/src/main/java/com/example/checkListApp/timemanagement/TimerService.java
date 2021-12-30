@@ -32,15 +32,17 @@ import java.util.concurrent.atomic.AtomicReference;
 public final class TimerService extends Service {
 
    public static int activeTimeIndex=0;
+   private Intent serviceIntent;
 
     @Override
     public void onCreate() {
         super.onCreate();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        serviceIntent =intent;
 
         PendingIntent pendingIntent =
                 PendingIntent.getActivity(this, 0, intent,  PendingIntent.FLAG_UPDATE_CURRENT);
@@ -63,20 +65,13 @@ public final class TimerService extends Service {
 
 
         return (START_NOT_STICKY);
-//        return START_REDELIVER_INTENT;
     }
 
 
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public Notification makeNotification(String data, int timer, MainTimerViewModel timeViewModel, Entry entry, PendingIntent pendingIntent) {
         String channel;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            channel = createChannel();
-        else {
-            channel = "";
-        }
+        channel = createChannel();
 
         TimeState countTime = new TimeState(0);
 
@@ -111,7 +106,7 @@ public final class TimerService extends Service {
                         .setContentIntent(pendingIntent)
                         .setSmallIcon(android.R.drawable.star_on)
                         .setOnlyAlertOnce(true)
-                        .setContentTitle("CountDownTime")
+                        .setContentTitle("Countdown Timer")
                         .addAction(android.R.drawable.btn_minus, "Reset",
                                 resetTimePendingIntent)
                         .addAction(android.R.drawable.btn_star, "Toggle",
@@ -123,12 +118,9 @@ public final class TimerService extends Service {
                         .setContentText( entry.textEntry.getValue() + "  "+ new TimeState(timeRemainder).getTimeFormat());
 
 
-//        Log.d("serviceTest",""+timer );
-
-//        if (timer <= 0) stopSelf();
-
-        if(timeRemainder <= 1 && timeViewModel.getRepeaterTime() <= 0 )stopSelf();
-
+        if(timer <= 0 && timeViewModel.getRepeaterTime() <= 0 ) {
+           stopService(serviceIntent);
+        }
 
         return mBuilder
                 .setPriority(2)
@@ -137,9 +129,14 @@ public final class TimerService extends Service {
 
     }
 
-    @NonNull
-    @TargetApi(26)
-    private synchronized String createChannel() {
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+
+    //synchronized
+    private String createChannel() {
 
         NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -181,7 +178,6 @@ public final class TimerService extends Service {
         private int elapsedTime;
 
 
-        @RequiresApi(api = Build.VERSION_CODES.O)
         protected ForegroundTimerService(TimerService timerService, ListTimersParcel parcel, PendingIntent pendingIntent) {
             this.timerService = timerService;
 
@@ -196,12 +192,12 @@ public final class TimerService extends Service {
 
         }
 
-        @RequiresApi(api = Build.VERSION_CODES.O)
+
         public Notification preSetNotification() {
             return timerService.makeNotification("00:00:00", 1, timeViewModel, new Entry(), pendingIntent);
         }
 
-        @RequiresApi(api = Build.VERSION_CODES.O)
+
         public Notification createTimer(NotificationManager mgr) {
 
             AtomicReference<Notification> notification = new AtomicReference<>(preSetNotification());
@@ -216,6 +212,8 @@ public final class TimerService extends Service {
                 accumulation(timerViewModelList);
                 revertTimeIndex();
                 currentActiveTime = timerViewModelList.get(1);
+
+
 
             });
 

@@ -110,8 +110,8 @@ TaDone Prototype
 //TODO: Features
 
 -select sounds on setTimer
-
 -send a post notification for service at end
+-progress (see below)
 
 -image button checkBox
 -change buttons into icons
@@ -120,7 +120,7 @@ TaDone Prototype
 -fix up the file manager,
 - add transitions
 
--
+
 -color code Entry Lists for graphing,
 add legend keys,
 change Y axis value to number of times submitted completion,
@@ -440,7 +440,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                         if (getActivity() != null && getContext() !=null) {
                             getActivity().runOnUiThread(() -> {
 
-                                String messageB = checkList.get(listUtility.activeProcessTimeIndex).textEntry.getValue();
+                                String messageB = checkList.get(listUtility.activeProcessTimeIndex-1).textEntry.getValue();
 
                                 scrollPosition(listUtility.activeProcessTimeIndex);
 
@@ -533,7 +533,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
             getActivity().runOnUiThread(() -> {
 
                 String message = checkList.get(
-                        listUtility.activeProcessTimeIndex
+                        listUtility.activeProcessTimeIndex-1
                 ).textEntry.getValue();
 
 
@@ -672,6 +672,12 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     public void assignButtonListeners(){
 
 
+        binding.repeatTimer.setOnClickListener(view -> {
+            binding.repeatTimer.setSelection(0);
+        });
+
+//        binding.repeatTimer.onKeyPreIme(KeyEvent.KEYCODE_ENTER,new KeyEvent(KeyEvent.KEYCODE_ENTER,KeyEvent.ACTION_DOWN));
+
         binding.repeatTimer.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -701,8 +707,9 @@ public class MainFragment extends Fragment implements ListItemClickListener {
             , view -> entryItemManager.add()
             , view -> entryItemManager.delete(),
 
-            new LeafButton(getContext())
+            new LeafButton(getContext(),binding)
                     .setViewGroup(binding.main)
+                    .setAttachedView(binding.addDeleteBtn)
                     //assign a onClickListener for leaf button
                     .assignListener(view -> {
 
@@ -726,8 +733,9 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                         binding.editMoveBtn,
                         view -> entryItemManager.edit(),
                         view -> entryItemManager.move(),
-                        new LeafButton(getContext())
+                        new LeafButton(getContext(),binding)
                                 .setViewGroup(binding.main)
+                                .setAttachedView(binding.editMoveBtn)
                         .assignListener(view ->{
 
                             //I'm having a tough time with the recyclerView

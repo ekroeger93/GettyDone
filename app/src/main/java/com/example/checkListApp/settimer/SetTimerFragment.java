@@ -1,5 +1,9 @@
 package com.example.checkListApp.settimer;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -7,6 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,6 +34,8 @@ import com.example.checkListApp.timemanagement.parcel.TimeParcelBuilder;
 import com.example.checkListApp.databinding.SettimerFragmentBinding;
 import com.example.checkListApp.ui.main.data_management.JsonService;
 
+import java.util.ArrayList;
+
 public class SetTimerFragment extends Fragment {
 
     private com.example.checkListApp.settimer.SetTimerViewModel mViewModel;
@@ -36,6 +45,8 @@ public class SetTimerFragment extends Fragment {
     TextView setTimerText;
     Button submitTimeButton;
     Button onToggleOnlySubmit;
+
+    ImageButton soundSelection;
 
     private static Integer timeIndexPosition;
 
@@ -83,8 +94,48 @@ public class SetTimerFragment extends Fragment {
         setTimerText = binding.setTimeText;
         submitTimeButton = binding.submitTime;
         onToggleOnlySubmit = binding.toggleOnlyBtn;
+        soundSelection = binding.soundSelectBtn;
+
 
         MainActivity.tabLayout.setVisibility(View.GONE);
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+        AlertDialog alertDialog = dialogBuilder.create();
+
+        alertDialog.setMessage("select alert sound");
+        alertDialog.setView(LayoutInflater.from(getContext())
+                .inflate(
+                        R.layout.dialog_sound_selection,
+                        (ViewGroup) view,
+                        false));
+
+
+
+        soundSelection.setOnClickListener(view1 -> {
+            alertDialog.show();
+
+            TextView shortBellAudio = alertDialog.findViewById(R.id.select_short_bell_audio);
+            TextView longBellAudio = alertDialog.findViewById(R.id.select_long_bell_audio);
+            TextView blowWhistleAudio = alertDialog.findViewById(R.id.select_blow_whistle_audio);
+            TextView doubleClapAudio = alertDialog.findViewById(R.id.select_double_clap_audio);
+
+            Button submit = alertDialog.findViewById(R.id.select_audio_submitBtn);
+
+            SelectAudio selectAudio = new SelectAudio();
+
+            selectAudio.add(shortBellAudio);
+            selectAudio.add(longBellAudio);
+            selectAudio.add(blowWhistleAudio);
+            selectAudio.add(doubleClapAudio);
+
+
+            submit.setOnClickListener(view2 -> {
+                alertDialog.dismiss();
+            });
+
+
+        });
+
 
         submitTimeButton.setOnClickListener( v->{
 
@@ -134,6 +185,8 @@ public class SetTimerFragment extends Fragment {
 //            startActivity(intent);
         });
 
+
+
         onToggleOnlySubmit.setOnClickListener( view1 -> {
 
             SetTimerFragmentDirections.ActionSetTimerFragmentToMainFragment action =
@@ -160,6 +213,43 @@ public class SetTimerFragment extends Fragment {
     }
 
 
+
+    private static final class SelectAudio{
+
+        ArrayList<TextView> listOfAudio = new ArrayList<>();
+        public int selection;
+
+
+        public void add(TextView textView){
+
+         textView.setOnClickListener(view -> {
+           selection =  select(view);
+             Log.d("scrollViewTest",""+selection);
+         });
+
+            listOfAudio.add(textView);
+
+        }
+
+        public int select(View view){
+
+            int selection = 0;
+
+            for(TextView textView : listOfAudio){
+                if(view == textView) {
+                    textView.setBackgroundColor(Color.LTGRAY);
+                selection = listOfAudio.indexOf(textView);
+                }
+                else {
+                    textView.setBackgroundColor(Color.WHITE);
+                }
+            }
+
+            return selection;
+        }
+
+
+    }
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
