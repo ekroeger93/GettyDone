@@ -32,6 +32,7 @@ public final class AuxiliaryData {
             String time = timeParcel.getTimeStringVal();
             data.get(index).countDownTimer.postValue(time);
             data.get(index).onTogglePrimer.postValue(timeParcel.getOnTogglePrimer());
+            data.get(index).selectedAudio.postValue(timeParcel.getSelectAudio());
 
             Log.d("timerTest", "" + timeParcel.getTimeStringVal());
 

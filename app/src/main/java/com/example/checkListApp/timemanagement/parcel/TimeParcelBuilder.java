@@ -25,6 +25,11 @@ public class TimeParcelBuilder implements TimeParcelImpl {
         return this;
      }
 
+     public TimeParcelBuilder setSelectAudio(int audio){
+        transactionParcelable.selectAudio = audio;
+        return this;
+     }
+
      public TimeParcelBuilder setRetainJsonData(String data){
         transactionParcelable.retainedJsonData  = data;
                 return this;

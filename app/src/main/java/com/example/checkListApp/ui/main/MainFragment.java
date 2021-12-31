@@ -202,9 +202,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
 
 
-    private MediaPlayer selectedAudio;
-
-    private MediaPlayer shortBell;
+    private MediaPlayer[] selectedAudio;
 
     private final MainTimerView mainTimerView = new MainTimerView();
 
@@ -218,12 +216,22 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     private Intent serviceIntent;
 
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-    shortBell = MediaPlayer.create(getContext(), R.raw.short_bell);
+        MediaPlayer shortBell = MediaPlayer.create(getContext(), R.raw.short_bell);
+        MediaPlayer longBell = MediaPlayer.create(getContext(), R.raw.long_bell);
+        MediaPlayer doubleClap = MediaPlayer.create(getContext(), R.raw.double_clap);
+        MediaPlayer blowWhistle = MediaPlayer.create(getContext(), R.raw.blow_whistle);
+
+    selectedAudio = new MediaPlayer[4];
+
+    selectedAudio[0] = shortBell;
+    selectedAudio[1] = longBell;
+    selectedAudio[2] = blowWhistle;
+    selectedAudio[3] = doubleClap;
+
 
     activity = getActivity();
 
@@ -433,7 +441,8 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                 if(!listUtility.currentActiveTime.onTogglePrimer.getValue()){
                     if (listUtility.currentActiveTime.timeElapsed(elapsedTime)) {
 
-                        shortBell.start();
+
+                        selectedAudio[checkList.get(listUtility.activeProcessTimeIndex).getSelectAudio()].start();
 
                         if (getActivity() != null && getContext() !=null) {
                             getActivity().runOnUiThread(() -> {
@@ -465,6 +474,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                     listUtility.currentActiveTime.getViewHolder().checkOff();
                     listUtility.currentActiveTime = listUtility.getNextActiveProcessTime(checkList);
                     activeIndex = listUtility.activeProcessTimeIndex;
+
 
                 }
 
@@ -525,7 +535,8 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     //set a post execution after timer expires, proceeds to next Entry
     mainTimerView.setPostExecute(() -> {
 
-        shortBell.start();
+//        shortBell.start();
+//        selectedAudio[listUtility.currentActiveTime.getSelectAudio()].start();
 
         if(getActivity() != null) {//fine bitch don't work
             getActivity().runOnUiThread(() -> {

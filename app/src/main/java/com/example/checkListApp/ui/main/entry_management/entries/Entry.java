@@ -34,6 +34,8 @@ public class Entry {
 
     @ColumnInfo(name="onTogglePrimer")
     public MutableLiveData<Boolean> onTogglePrimer = new MutableLiveData<>(false);
+    @ColumnInfo(name="selectedAudio")
+    public MutableLiveData<Integer> selectedAudio = new MutableLiveData<>(0);
 
     @Ignore
     private RecyclerAdapter.ViewHolder viewHolder;
@@ -63,6 +65,7 @@ public class Entry {
         checked.postValue(entry.checked.getValue());
         countDownTimer.postValue(entry.countDownTimer.getValue());
         onTogglePrimer.postValue(entry.onTogglePrimer.getValue());
+        selectedAudio.postValue(entry.selectedAudio.getValue());
 
 
         int numberTime = new TimeState(countDownTimer.getValue()).getTimeNumberValue();
@@ -101,12 +104,13 @@ public class Entry {
                  boolean isChecked,
                  String timeText,
                  int orderIndex,
-                 boolean onToggle) {
+                 boolean onToggle, int audioSelect) {
 
         textEntry.setValue(text);
         checked.setValue(isChecked);
         countDownTimer.setValue(timeText);
         onTogglePrimer.setValue(onToggle);
+        selectedAudio.setValue(audioSelect);
 
         this.orderIndex.setValue(orderIndex);
 
@@ -172,6 +176,7 @@ public class Entry {
         checked.postValue(entry.checked.getValue());
         countDownTimer.postValue(entry.countDownTimer.getValue());
         onTogglePrimer.postValue(entry.onTogglePrimer.getValue());
+        selectedAudio.postValue(entry.selectedAudio.getValue());
 
         textTemp = entry.textTemp;
 
@@ -192,6 +197,9 @@ public class Entry {
 
     }
 
+    public int getSelectAudio(){
+        return selectedAudio.getValue();
+    }
 
     public int getEntryID() {
         return this.entryID;

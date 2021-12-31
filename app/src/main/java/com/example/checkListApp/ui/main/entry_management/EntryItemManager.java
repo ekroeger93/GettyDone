@@ -61,7 +61,15 @@ public class EntryItemManager {
     public void add(){
 //(String text, boolean isChecked, String timeText, int orderIndex) {
 
-        Entry entry = new Entry("o",false,"00:00:05",mainFragment.getCheckList().size()-1,false);
+        Entry entry = new Entry(
+                "o",
+                false,
+                "00:00:05",
+                mainFragment.getCheckList().size()-1,
+                false,
+                0);
+
+
         mViewModel.insertEntry(entry);
 
         operator.adapter.notifyItemInserted(mainFragment.getCheckList().size());

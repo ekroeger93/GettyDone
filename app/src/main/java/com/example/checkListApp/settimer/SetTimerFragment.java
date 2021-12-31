@@ -50,6 +50,8 @@ public class SetTimerFragment extends Fragment {
 
     private static Integer timeIndexPosition;
 
+    int selectAudioIndex = 0;
+
     TimeParcel parcelable;
     String jsonData;
 
@@ -130,6 +132,7 @@ public class SetTimerFragment extends Fragment {
 
 
             submit.setOnClickListener(view2 -> {
+                selectAudioIndex= selectAudio.selection;
                 alertDialog.dismiss();
             });
 
@@ -165,6 +168,7 @@ public class SetTimerFragment extends Fragment {
                             .setTimeStringValue(setTimerText.getText().toString())
                             .setTimeNumberValue(mViewModel.getTimerValue())
                             .setTogglePrimer(false)
+                            .setSelectAudio(selectAudioIndex)
 //                            .setRetainJsonData(jsonData)
                             .build()
             );
@@ -199,6 +203,7 @@ public class SetTimerFragment extends Fragment {
                             .setTimeNumberValue(1)
                             .setTimeNumberValue(mViewModel.getTimerValue())
                             .setTogglePrimer(true)
+                            .setSelectAudio(selectAudioIndex)
 //                            .setRetainJsonData(jsonData)
                             .build()
             );
