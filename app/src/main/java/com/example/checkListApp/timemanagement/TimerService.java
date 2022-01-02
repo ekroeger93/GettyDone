@@ -33,6 +33,7 @@ public final class TimerService extends Service {
 
    public static int activeTimeIndex=0;
    private Intent serviceIntent;
+   public static boolean reset= false;
 
     @Override
     public void onCreate() {
@@ -80,6 +81,7 @@ public final class TimerService extends Service {
         }catch (NumberFormatException e){
             stopSelf();
         }
+
 
         TimeState expireTime = new TimeState( Math.abs(entry.timeAccumulated));
 
@@ -164,6 +166,7 @@ public final class TimerService extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
+
 
 
     static class ForegroundTimerService extends ListTimerUtility {

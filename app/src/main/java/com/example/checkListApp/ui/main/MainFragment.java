@@ -109,9 +109,7 @@ TaDone Prototype
 
 //TODO: Features
 
--select sounds on setTimer
 -send a post notification for service at end
--progress (see below)
 
 -image button checkBox
 -change buttons into icons
@@ -126,8 +124,10 @@ add legend keys,
 change Y axis value to number of times submitted completion,
 within a month period
 -
-use calendar view instead
 
+
+-progress (see below)
+use calendar view instead
 
 use graph to represent the month (4 week) of being active (default)
 use calendar to show completed tasks
@@ -136,7 +136,6 @@ use calendar to show completed tasks
 -add in pull down/up to extender, change the recycler view Y size
     -use anchor points when dragging
     or fullscreen mode
-
 
 Post production ideas:
 -? save to google drive, share data
@@ -432,6 +431,9 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         CountDownTimerAsync.CountDownTask countDownTask = time -> {
          {
 
+
+
+
 //                int elapsedTime = setTime - time;
                 int elapsedTime = listUtility.getSummationTime(checkList) - time;
 
@@ -489,7 +491,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         if( listUtility.getSummationTime(checkList)  > 0 ) {
 
-            if (!isMyServiceRunning(TimerService.class))
+//            if (!isMyServiceRunning(TimerService.class))
             startService();
 
             if(binding.repeatTimer.getText().toString().isEmpty()){
@@ -606,6 +608,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         timerRunning.postValue(false);
 
     }
+
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
 
