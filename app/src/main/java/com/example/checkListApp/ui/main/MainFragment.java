@@ -90,8 +90,6 @@ TaDone Prototype
 -------------------------------------------------------------
 
 //TODO: BUGS
-
-
  toggle switch ordering may have leaks and complications
 
  Context.startForegroundService() did not then call Service.startForeground()
@@ -107,27 +105,28 @@ TaDone Prototype
  service notification sometimes doesn't terminate itself and shows negative value
  of set time
 
+
+//TODO: DESIGN
+
+- ICONS/IMAGES FOR BUTTONS
+- entry Animation for move/delete/add
+- file manager
+- themes
+
+
 //TODO: Features
 
 -send a post notification for service at end
 
--image button checkBox
--change buttons into icons
 
--animate entry on move and delete, have better indications for user
--fix up the file manager,
--add transitions
-
+-progress (see below)
+use calendar view instead
 
 -color code Entry Lists for graphing,
 add legend keys,
 change Y axis value to number of times submitted completion,
 within a month period
--
 
-
--progress (see below)
-use calendar view instead
 
 use graph to represent the month (4 week) of being active (default)
 use calendar to show completed tasks
@@ -141,6 +140,7 @@ Post production ideas:
 -? save to google drive, share data
 -? save as pdf/rich text file -> print appMobilityPrint
 -? schedule on calender, notification
+-? make timelabel editText instead, /w custom keyboard
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 
