@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -54,11 +55,14 @@
 
             <Button
                 android:id="@+id/select_audio_submitBtn"
-                android:text="@string/_submit"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_gravity="bottom"
-                />
+                android:insetTop="1dp"
+                app:icon="@drawable/outline_done_black_36"
+                app:iconGravity="textEnd"
+                app:iconPadding="10dp"
+                app:iconSize="65dp" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

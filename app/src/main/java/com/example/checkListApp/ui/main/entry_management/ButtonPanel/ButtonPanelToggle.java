@@ -7,6 +7,7 @@ import android.view.View.OnClickListener;
 
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.core.content.ContextCompat;
 
 import com.example.checkListApp.R;
 import com.example.checkListApp.databinding.MainFragmentBinding;
@@ -90,7 +91,12 @@ public class ButtonPanelToggle{
 
          if(button.getParent() ==null) {
              button.setId(R.id.buttonPanelID);
-             button.setText("place");
+//             button.setText("place");
+
+
+             button.setBackground(ContextCompat.getDrawable(
+                     binding.addDeleteBtn.getContext(),
+                     R.drawable.outline_done_black_48));
 
              button.setWidth(200);
              button.setHeight(100);

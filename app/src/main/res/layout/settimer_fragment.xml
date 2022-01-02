@@ -303,7 +303,7 @@
             android:onClick='@{() -> viewModel.removeText()}'
             android:textColor="#FFFFFF"
             app:cornerRadius="10dp"
-            app:icon="@drawable/abc_vector_test"
+            app:icon="@drawable/outline_backspace_black_48"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/inputTimeBtn0"
@@ -325,7 +325,9 @@
         android:id="@+id/submitTime"
         android:layout_width="198dp"
         android:layout_height="64dp"
-        android:text="Submit"
+        android:textAlignment="center"
+        app:icon="@drawable/outline_alarm_add_black_48"
+        app:iconGravity="textStart"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
@@ -334,17 +336,18 @@
         app:layout_constraintVertical_bias="0.18" />
 
 
-
     <Button
         android:id="@+id/toggleOnlyBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="toggle only"
-        app:layout_constraintVertical_bias="0.1"
+        android:textAlignment="textStart"
+        app:icon="@drawable/outline_radio_button_checked_24"
+        app:iconGravity="textStart"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/submitTime" />
+        app:layout_constraintTop_toBottomOf="@+id/submitTime"
+        app:layout_constraintVertical_bias="0.1" />
 
     <ImageButton
         android:id="@+id/informationBtn"
@@ -363,14 +366,13 @@
         android:id="@+id/soundSelectBtn"
         android:layout_width="60dp"
         android:layout_height="60dp"
+        android:background="@drawable/outline_audio_file_black_36"
         android:tint="#039BE5"
-        android:src="@android:drawable/ic_lock_silent_mode_off"
-        app:layout_constraintStart_toEndOf="@+id/submitTime"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/submitTime"
         app:layout_constraintBottom_toBottomOf="@+id/submitTime"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias=".1"
-        />
+        app:layout_constraintStart_toEndOf="@+id/submitTime"
+        app:layout_constraintTop_toTopOf="@+id/submitTime" />
 
 
 

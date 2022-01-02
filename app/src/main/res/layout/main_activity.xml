@@ -31,26 +31,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|enterAlways"
-
             app:tabMode="scrollable">
 
 
             <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/TabList"
-                android:text="List" />
-
-            <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:icon="@drawable/outline_list_black_48" />
+
+            <com.google.android.material.tabs.TabItem
                 android:id="@+id/TabFile"
-                android:text="File" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:icon="@drawable/outline_folder_black_48"
+               />
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Progress" />
+                android:icon="@drawable/outline_insert_chart_black_48" />
 
         </com.google.android.material.tabs.TabLayout>
 

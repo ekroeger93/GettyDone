@@ -6,9 +6,12 @@ import android.view.View;
 import android.view.animation.BounceInterpolator;
 import android.widget.Button;
 
+import androidx.core.content.ContextCompat;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.checkListApp.R;
 import com.example.checkListApp.databinding.MainFragmentBinding;
 
 
@@ -151,8 +154,21 @@ public class ButtonPanel {
     public void animationHandler(int motionEvent, float touch_x, MainFragmentBinding binding) {
 
 
-        binding.addDeleteBtn.setText((CharSequence) "DELETE");
-        binding.editMoveBtn.setText((CharSequence)"MOVE");
+
+        binding.addDeleteBtn.setBackground(ContextCompat.getDrawable(
+                binding.addDeleteBtn.getContext(),
+                R.drawable.outline_remove_circle_outline_black_48));
+
+        binding.editMoveBtn.setBackground(
+                ContextCompat.getDrawable(
+                        binding.addDeleteBtn.getContext(),
+                        R.drawable.outline_swap_vertical_circle_black_48)
+        );
+
+
+
+//        binding.addDeleteBtn.setText((CharSequence) "DELETE");
+//        binding.editMoveBtn.setText((CharSequence)"MOVE");
 
 
       try {
@@ -167,8 +183,21 @@ public class ButtonPanel {
                       .start();
 
 
-              binding.addDeleteBtn.setText((CharSequence) "ADD");
-              binding.editMoveBtn.setText((CharSequence)"EDIT");
+              binding.addDeleteBtn.setBackground(
+                      ContextCompat.getDrawable(
+                              binding.addDeleteBtn.getContext(),
+                              R.drawable.outline_add_circle_outline_black_48)
+              );
+
+              binding.editMoveBtn.setBackground(
+                      ContextCompat.getDrawable(
+                      binding.addDeleteBtn.getContext(),
+                      R.drawable.outline_edit_black_48)
+              );
+
+//              binding.addDeleteBtn.setText((CharSequence) "ADD");
+//              binding.editMoveBtn.setText((CharSequence)"EDIT");
+
           }
       } catch (NullPointerException e){
 

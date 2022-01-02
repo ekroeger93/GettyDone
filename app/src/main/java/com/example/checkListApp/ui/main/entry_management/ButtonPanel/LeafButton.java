@@ -1,6 +1,7 @@
 package com.example.checkListApp.ui.main.entry_management.ButtonPanel;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.BounceInterpolator;
@@ -10,7 +11,9 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.core.content.ContextCompat;
 
+import com.example.checkListApp.R;
 import com.example.checkListApp.databinding.MainFragmentBinding;
 
 public class LeafButton implements iButtonComponent {
@@ -68,25 +71,11 @@ public class LeafButton implements iButtonComponent {
     public LeafButton create(){
 
         //TODO: Modify
-        button.setText("multiple");;
+//        button.setText("multiple");;
 
-
-        ConstraintSet set = new ConstraintSet();
-
-        set.constrainHeight(button.getId(),
-                ConstraintSet.WRAP_CONTENT);
-        set.constrainWidth(button.getId(),
-                ConstraintSet.WRAP_CONTENT);
-        set.connect(button.getId(), ConstraintSet.START,
-                attachedView.getId(), ConstraintSet.START, 0);
-        set.connect(button.getId(), ConstraintSet.END,
-                attachedView.getId(), ConstraintSet.END, 0);
-        set.connect(button.getId(), ConstraintSet.TOP,
-                binding.buttonPanel.getId(), ConstraintSet.TOP, 0);
-        set.connect(button.getId(), ConstraintSet.BOTTOM,
-                attachedView.getId(), ConstraintSet.BOTTOM, 0);
-
-        set.applyTo(binding.buttonPanel);
+        button.setBackground(ContextCompat.getDrawable(
+                binding.addDeleteBtn.getContext(),
+                R.drawable.outline_format_list_numbered_black_48));
 
 
         viewGroup.addView(button);
@@ -107,6 +96,27 @@ public class LeafButton implements iButtonComponent {
         toggleLeaf(true);
 
     }
+
+    public void setConstraint(Button leaf){
+
+
+        ConstraintSet set = new ConstraintSet();
+
+        set.connect(leaf.getId(), ConstraintSet.START,
+                ConstraintSet.PARENT_ID, ConstraintSet.START, 0);
+        set.connect(leaf.getId(), ConstraintSet.END,
+                ConstraintSet.PARENT_ID, ConstraintSet.END, 0);
+        set.connect(leaf.getId(), ConstraintSet.TOP,
+                ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
+        set.connect(leaf.getId(), ConstraintSet.BOTTOM,
+                ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
+
+        set.applyTo(binding.buttonPanel);
+
+
+    }
+
+
 
     public void setListener(){
 

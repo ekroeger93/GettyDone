@@ -57,9 +57,9 @@
 
     <Button
         android:id="@+id/saveAsBtn"
-        android:layout_width="113dp"
-        android:layout_height="62dp"
-        android:text="Save As"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:background="@drawable/outline_save_as_black_48"
         app:layout_constraintBottom_toTopOf="@+id/fileListView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.461"
@@ -69,9 +69,9 @@
 
     <Button
         android:id="@+id/loadFileBtn"
-        android:layout_width="206dp"
-        android:layout_height="wrap_content"
-        android:text="Load"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="@drawable/outline_file_open_black_48"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.488"
@@ -81,13 +81,12 @@
 
     <Button
         android:id="@+id/deleteFileBtn"
-        android:layout_width="112dp"
-        android:layout_height="62dp"
-        android:text="Delete"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:background="@drawable/outline_delete_black_48"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.888"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/saveAsBtn"
+        app:layout_constraintStart_toStartOf="@id/saveAsBtn"
         app:layout_constraintTop_toBottomOf="@+id/fileListView"
         app:layout_constraintVertical_bias="0.051" />
 

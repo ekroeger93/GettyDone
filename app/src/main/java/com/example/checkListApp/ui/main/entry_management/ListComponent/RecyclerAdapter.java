@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -14,6 +15,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.LifecycleObserver;
@@ -370,21 +372,30 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
                     Observer<Boolean> onChangeEntryChecked = aBoolean -> {
 
-                        if (enforceChecked){
-                            textView.setBackgroundColor(Color.GRAY);
-                            tEntryViewRow.setBackgroundColor(Color.GRAY);
+//                        if (enforceChecked){
+//                            textView.setBackgroundColor(Color.GRAY);
+//                            tEntryViewRow.setBackgroundColor(Color.GRAY);
+//                        }
 
-                        }
+                        checkButton.setBackground( entry.checked.getValue() ?
+                                        ContextCompat.getDrawable(
+                                                binding.entry.getContext(),
+                                                R.drawable.outline_check_box_black_48)
+                                        :
+                                        ContextCompat.getDrawable(
+                                                binding.entry.getContext(),
+                                                R.drawable.outline_check_box_outline_blank_black_48)
+                                );
 
-                        textView.setBackgroundColor( entry.checked.getValue() ?
-                                Color.GRAY:
-                                Color.parseColor("#FFF7B4")
-                        );
-
-                        tEntryViewRow.setBackgroundColor( entry.checked.getValue() ?
-                                Color.GRAY:
-                                Color.parseColor("#95FF8D")
-                        );
+//                        textView.setBackgroundColor( entry.checked.getValue() ?
+//                                Color.GRAY:
+//                                Color.parseColor("#FFF7B4")
+//                        );
+//
+//                        tEntryViewRow.setBackgroundColor( entry.checked.getValue() ?
+//                                Color.GRAY:
+//                                Color.parseColor("#95FF8D")
+//                        );
 
 
                         entry.checkTemp = aBoolean;

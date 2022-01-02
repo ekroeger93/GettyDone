@@ -27,13 +27,19 @@
 
             <Button
                 android:id="@+id/checkBtn"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/outline_check_box_outline_blank_black_48"
+                android:backgroundTint="#0097A7"
+                android:backgroundTintMode="add"
                 android:focusable="true"
                 android:focusableInTouchMode="false"
-                />
+                app:cornerRadius="10dp"
+                app:rippleColor="#D81B60"
+                app:strokeColor="#000000"
+                app:strokeWidth="5dp" />
 
 
             <LinearLayout
@@ -59,11 +65,15 @@
 
             <Button
                 android:id="@+id/setEntryTimeBtn"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
-                android:layout_width="100dp"
                 android:textSize="14sp"
-                android:layout_height="match_parent" />
+                app:cornerRadius="45dp"
+                app:strokeColor="@color/black"
+                app:strokeWidth="0dp" />
 
         </TableRow>
 </layout>
