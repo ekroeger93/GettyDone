@@ -406,7 +406,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         customLayoutManager.scrollToPositionWithOffset(position,100);
     }
 
-    
     public void startService(){
 
         serviceIntent = getForegroundTimerServiceIntent();
@@ -485,10 +484,8 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     binding.timerExecuteBtn.setOnClickListener(view -> {
 
-       // int setTime =
-                setTimer(mainTimerView);
 
-//        MainTimerView.mainTimerViewModel.setRepeaterTime(2);
+        setTimer(mainTimerView);
 
         if( listUtility.getSummationTime(checkList)  > 0 ) {
 
@@ -587,6 +584,9 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 //                activity.stopService(serviceIntent);
 
         }else {
+
+            selectedAudio[checkList.get(listUtility.activeProcessTimeIndex).getSelectAudio()].start();
+            listUtility.currentActiveTime.getViewHolder().checkOff();
 
             Log.d("repeaterTest","here "+MainTimerView.mainTimerViewModel.getRepeaterTime());
             listUtility.revertTimeIndex();
@@ -704,8 +704,16 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                 if(binding.repeatTimer.getText().length()>1){
                     String text = binding.repeatTimer.getText().toString();
                     binding.repeatTimer.setText(text.substring(0,text.length()-1));
-                }
 
+
+                }
+                int value = 0;
+
+                if(!binding.repeatTimer.getText().toString().isEmpty())
+                    value = Integer.parseInt(binding.repeatTimer.getText().toString());
+
+                Entry.repeater = value;
+                JsonService.buildJson(checkList);
 
             }
         });
@@ -848,7 +856,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
 }
 
-
     public void updateIndexes(){
 
         for(Entry n :checkList) {
@@ -928,8 +935,9 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 //                }
 
 
-
                 JsonService.buildJson(checkList);
+
+                binding.repeatTimer.setText(""+Entry.repeater);
 
             }
 

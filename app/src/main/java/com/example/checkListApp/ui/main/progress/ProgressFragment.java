@@ -13,9 +13,11 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CalendarView;
 import android.widget.TextView;
 
 import com.example.checkListApp.R;
@@ -36,6 +38,7 @@ import org.jetbrains.annotations.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -53,7 +56,7 @@ public class ProgressFragment extends Fragment {
     private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Canvas canvas = new Canvas();
 
-    TextView textView;
+    CalendarView calendarView;
 
 
     // TODO: Rename and change types of parameters
@@ -113,18 +116,16 @@ public class ProgressFragment extends Fragment {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         BarChart barChart = (BarChart) view.findViewById(R.id.chart);
+        calendarView = view.findViewById(R.id.calendar);
 
-        List<BarEntry> someEntries = new ArrayList<>();
-
-        ArrayList<Record> listRecord = RecordHelper.getJsonRecordGeneratedArray(ProgressProvider.loadProgress(requireContext()));
-
-        textView = view.findViewById(R.id.dateChartValue);
+        ArrayList<Record> listRecord = RecordHelper
+                .getJsonRecordGeneratedArray(
+                        ProgressProvider.loadProgress(getContext()));
 
         RecordHelper.recordArrayList = listRecord;
         RecordHelper.buildRecordListJson();
@@ -132,66 +133,30 @@ public class ProgressFragment extends Fragment {
         mPaint.setColor(Color.BLACK);
         mPaint.setTextSize(100);
 
-        int index = 0;
-        String prevCheckDate="";
-
-        Calendar cal = Calendar.getInstance();
-
-        for (Record record : listRecord) {
-
-            StringBuilder date =  new StringBuilder(
-                    record.getCurrentDate().replaceAll("[^0-9 .]", ""));
-
-
-            String[] holdDate;
-            holdDate = date.toString().split("\\.");
-
-            int year = Integer.parseInt(holdDate[0]);
-            int month = Integer.parseInt(holdDate[1]);
-            int day = Integer.parseInt(holdDate[2]);
-
-
-            date.append(" : "+  LocalDate.of(year,month,day).getDayOfWeek());
-
-            if(!date.toString().equals(prevCheckDate) && !prevCheckDate.isEmpty()){
-                index++;
-            }
-
-
-
-            BarEntry barEntry = new BarEntry(
-                    index
-                    , record.getNumberOfGoals(), date);
-
-            prevCheckDate = date.toString();
-
-            someEntries.add(barEntry);
-
-        }
-
-
         barChart.setFitBars(true);
 
-        BarDataSet dataSet = new BarDataSet(someEntries, "Label"); // add entries to dataset
+        BarDataSet dataSet = new BarDataSet(generateEntries(listRecord), "Label"); // add entries to dataset
             dataSet.setColor(Color.RED);
             dataSet.setValueTextColor(Color.BLACK);
-
 
             BarData barData = new BarData(dataSet);
             barChart.setData(barData);
 
 
-            /*
-            * update date via get scroll X to bar position, detect with gesture
-            * */
 
-         //   barChart.getScrollX();
+        calendarView.setOnDateChangeListener((calendarView1, year, month, day) -> {
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(year, month, day);
+
+        });
+
 
             barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
                 @Override
                 public void onValueSelected(Entry e, Highlight h) {
 
-                    textView.setText((CharSequence) e.getData().toString());
+//                    textView.setText((CharSequence) e.getData().toString());
                 }
 
                 @Override
@@ -202,6 +167,53 @@ public class ProgressFragment extends Fragment {
 
 
             barChart.invalidate();
+
+
+    }
+
+
+
+    public List<BarEntry> generateEntries(ArrayList<Record> listRecord){
+
+        List<BarEntry> chartEntries = new ArrayList<>();
+
+        int index = 0;
+        String prevCheckDate="";
+
+        for (Record record : listRecord) {
+
+            StringBuilder date =  new StringBuilder(
+                    record.getCurrentDate().replaceAll("[^0-9 .]", ""));
+
+            String[] holdDate;
+            holdDate = date.toString().split("\\.");
+
+            int year = Integer.parseInt(holdDate[0]);
+            int month = Integer.parseInt(holdDate[1]);
+            int day = Integer.parseInt(holdDate[2]);
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(year,month,day);
+
+            calendar.getWeekYear();
+
+
+            date.append(" : "+  LocalDate.of(year,month,day).getDayOfWeek());
+
+            if(!date.toString().equals(prevCheckDate) && !prevCheckDate.isEmpty()){
+                index++;
+            }
+
+
+
+            BarEntry barEntry = new BarEntry(index, record.getNumberOfGoals(), date);
+            prevCheckDate = date.toString();
+
+            chartEntries.add(barEntry);
+
+        }
+
+        return chartEntries;
 
 
     }

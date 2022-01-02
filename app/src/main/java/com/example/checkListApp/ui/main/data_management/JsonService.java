@@ -123,6 +123,7 @@ public final class JsonService {
     jsonObject.addProperty("orderIndex", src.orderIndex.getValue());
     jsonObject.addProperty("onTogglePrimer",src.onTogglePrimer.getValue());
     jsonObject.addProperty("selectedAudio", src.selectedAudio.getValue());
+    jsonObject.addProperty("repeater", Entry.repeater);
 
 //}
                 return jsonObject;
@@ -147,12 +148,15 @@ public final class JsonService {
             int orderIndex = jsonObject.get("orderIndex").getAsInt();
             boolean onToggle = jsonObject.get("onTogglePrimer").getAsBoolean();
             int selectAudio = jsonObject.get("selectedAudio").getAsInt();
+            int repeaterVal = jsonObject.get("repeater").getAsInt();
 
             Log.d("checkListTime",">>> "+timeText);
 
             //TODO:fix this
             textEntry = textEntry.replaceAll("\"","").trim();
             timeText = timeText.replaceAll("\"","").trim();
+
+            Entry.repeater = repeaterVal;
 
             return new Entry(textEntry,isChecked,timeText,orderIndex,onToggle,selectAudio);
 

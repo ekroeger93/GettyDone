@@ -54,6 +54,9 @@ public class Entry {
     @Ignore
     public int timeAccumulated = 0;
 
+    @Ignore
+    static public int repeater = 0;
+
     public Entry(){
 
     }

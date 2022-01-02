@@ -14,20 +14,13 @@
 
 
     <CalendarView
+        android:id="@+id/calendar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         />
 
-    <TextView
-        android:id="@+id/dateChartValue"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:text="select for date"
-        android:textAlignment="center"
-        android:textSize="24sp"
-        android:textStyle="bold" >
-    </TextView>
+
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/chart"
         android:layout_width="match_parent"
