@@ -111,12 +111,13 @@ TaDone Prototype
 - ICONS/IMAGES FOR BUTTONS
 - entry Animation for move/delete/add
 - file manager
-- themes
+- color theme
 
 
 //TODO: Features
 
 -send a post notification for service at end
+-tips
 
 
 -progress (see below)
