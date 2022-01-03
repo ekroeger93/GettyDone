@@ -35,6 +35,7 @@
             android:inputType="number"
             android:selectAllOnFocus="false"
             android:singleLine="true"
+            android:longClickable="false"
             android:text="0"
             android:textAlignment="center"
             android:textSize="16sp"
@@ -50,6 +51,8 @@
             android:layout_width="match_parent"
             android:background="#9703A9F4"
             android:orientation="vertical"
+            android:clickable="false"
+            android:longClickable="false"
             app:layout_constraintBottom_toTopOf="@+id/guideline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -83,6 +86,8 @@
                 android:layout_marginBottom="0dp"
                 android:overScrollMode="always"
                 android:background="#4600BCD4"
+                android:longClickable="false"
+                android:clickable="false"
                 tools:listitem="@layout/entry"
                 >
 

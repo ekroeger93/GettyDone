@@ -338,11 +338,12 @@
 
     <Button
         android:id="@+id/toggleOnlyBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="140dp"
+        android:layout_height="60dp"
         android:textAlignment="textStart"
-        app:icon="@drawable/outline_radio_button_checked_24"
+        app:icon="@drawable/ic_ontogglecustom"
         app:iconGravity="textStart"
+        app:iconSize="45dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

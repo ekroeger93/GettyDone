@@ -98,12 +98,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     public RecyclerAdapter(MainFragment fragment){
 
-        gestureDetector = new GestureDetector.SimpleOnGestureListener();
+//        gestureDetector = new GestureDetector.SimpleOnGestureListener();
 
         this.owner = fragment.getViewLifecycleOwner();
         this.repository = fragment.getmViewModel().getRepository();
         this.activity = fragment.getActivity();
         this.recordHelper = fragment.getRecordHelper();
+
 
         this.listItemClickListener = fragment;
 
@@ -154,14 +155,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         Context context = parent.getContext();
         setTimerView = new View(context);
 
+
         //LayoutInflater.from(parent.context).inflate(R.layout.log,parent,false);
 
         View view  = LayoutInflater.from(context).inflate( R.layout.entry,parent, false);
 
         EntryBinding entryBinding =  EntryBinding.inflate(LayoutInflater.from(context), parent, false);
 
+        view.setLongClickable(false);
+
         ViewHolder viewHolder = new ViewHolder(entryBinding,listItemClickListener);
-        viewHolder.onClick(view);
+//        viewHolder.onClick(view);
 
 
 
@@ -195,6 +199,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         //holder.setViewHolder();
 
         holder.setIsRecyclable(!toggleTracker);
+
+        holder.itemView.setLongClickable(false);
 
         Entry entry = mList.get(position);
 
@@ -257,8 +263,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
 
     public class ViewHolder extends RecyclerView.ViewHolder
-            implements View.OnClickListener,
-            View.OnLongClickListener{
+            implements View.OnClickListener
+            , View.OnLongClickListener
+    {
 
         public TextView textView;
         public TableRow tEntryViewRow;
@@ -287,6 +294,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     binding = itemView;
                     details = new TrackerHelper.Details(trackerHelper);
 
+                    itemView.getRoot().setLongClickable(false);
+
                     tEntryViewRow = binding.entry;
                     checkButton = binding.checkBtn;
                     setTimeButton = binding.setEntryTimeBtn;
@@ -295,7 +304,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     itemView.getRoot().setOnClickListener(this);
                     checkButton.setOnClickListener(this);
                     setTimeButton.setOnClickListener(this);
-
                     textView.setOnLongClickListener(this);
 
                     this.listItemClickListener = listItemClickListener;
@@ -493,8 +501,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         @Override
         public boolean onLongClick(View view) {
-                    listItemClickListener.clickPosition(this,view,getBindingAdapterPosition());
-            return false;
+                   listItemClickListener.clickPosition(this,view,getBindingAdapterPosition());
+            return true;
         }
 
 

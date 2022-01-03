@@ -105,13 +105,35 @@ TaDone Prototype
  service notification sometimes doesn't terminate itself and shows negative value
  of set time
 
+ -pass in the timerLabel time to setTimer
+ -fix service
+ -button lock up when hold edit on entry?
+ -obscure bug after sorting
+ -hitting back button from setTimer causes issues
+ -fix leaf buttons, it would offset on other screens
 
 //TODO: DESIGN
 
 - ICONS/IMAGES FOR BUTTONS
+
+- entry time label redesign
+
 - entry Animation for move/delete/add
+    move - shake up and down
+    delete - swipe right, show trash icon on left
+    add - popup, scroll to bottom
+
+-? may move execute timer to middle of touch expander
+- need to move submit record button and have design icon
+- show swiping hand icon for hint
+
+- transition between fragments
 - file manager
+    -each viewholder have trash icon to delete
+    -prompt confirm
+
 - color theme
+
 
 
 //TODO: Features
@@ -350,6 +372,8 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         adapter.setList(tempArray);
 
         adapter.setTrackerHelper(recyclerView);
+
+        recyclerView.setLongClickable(false);
 
 //        //TODO: DISABLE SELECTION TRACKER
         selectionTracker = new SelectionTracker.Builder<>(
@@ -678,7 +702,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
             return listUtility.getSummationTime(checkList);
         }
 }
-
 
     
     @SuppressLint("ClickableViewAccessibility")
@@ -1096,12 +1119,14 @@ public class MainFragment extends Fragment implements ListItemClickListener {
             scrollPosition(position);
 
             CustomEditText editHolderText = itemView.findViewById(R.id.entryEditTxt);
+
             new DetectKeyboardBack(
                     itemView.getContext(),
                     editHolderText,
-                    viewHolder.textView, entry
-
+                    viewHolder.textView,
+                    entry
             );
+
 
 
         }

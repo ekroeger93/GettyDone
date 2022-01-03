@@ -96,6 +96,8 @@ public class RecordHelper {
         StringBuilder jsonCheckList = new StringBuilder();
 
         jsonCheckList.append("[");
+
+
         for(Record record : recordArrayList){
                 jsonCheckList.append(gson.toJson(record)).append(",");
         }

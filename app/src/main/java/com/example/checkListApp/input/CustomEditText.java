@@ -51,6 +51,12 @@ public class CustomEditText extends androidx.appcompat.widget.AppCompatEditText{
     }
 
 
+    @Override
+    public boolean hasOnLongClickListeners() {
+//        return super.hasOnLongClickListeners();
+    return false;
+    }
+
 }
 
 interface EditTextImeBackListener {

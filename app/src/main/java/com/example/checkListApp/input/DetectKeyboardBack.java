@@ -56,6 +56,7 @@ public class DetectKeyboardBack implements LifecycleObserver{
 
         imm.hideSoftInputFromWindow(customEditText.getWindowToken(),0);
 
+        customEditText.clearFocus();
 
 
     }

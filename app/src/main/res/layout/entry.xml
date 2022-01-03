@@ -14,7 +14,6 @@
 
 
         <TableRow
-
             android:id="@+id/entry"
             tools:context="ui.main.MainFragment"
             android:layout_width="match_parent"
@@ -23,6 +22,10 @@
             android:layout_marginBottom="@dimen/entryMarginBottom"
             android:orientation="horizontal"
             android:background="#95FF8D"
+
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+
             >
 
             <Button
@@ -35,7 +38,6 @@
                 android:backgroundTint="#0097A7"
                 android:backgroundTintMode="add"
                 android:focusable="true"
-                android:focusableInTouchMode="false"
                 app:cornerRadius="10dp"
                 app:rippleColor="#D81B60"
                 app:strokeColor="#000000"
@@ -46,9 +48,12 @@
                 android:layout_width="200dp"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
+                android:focusable="false"
+                android:longClickable="false"
                 >
                 <TextView
                     android:id="@+id/entryText"
+                    android:longClickable="false"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="#FFF7B4"
@@ -56,7 +61,8 @@
 
                 <com.example.checkListApp.input.CustomEditText
                 android:id="@+id/entryEditTxt"
-                android:layout_width="match_parent"
+                    android:longClickable="false"
+                    android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#FFF7B4"
                 android:visibility="invisible"
