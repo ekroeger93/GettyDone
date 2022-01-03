@@ -192,7 +192,7 @@ public class ButtonPanel {
               binding.editMoveBtn.setBackground(
                       ContextCompat.getDrawable(
                       binding.addDeleteBtn.getContext(),
-                      R.drawable.outline_edit_black_48)
+                      R.drawable.ic_editcustom)
               );
 
 //              binding.addDeleteBtn.setText((CharSequence) "ADD");
