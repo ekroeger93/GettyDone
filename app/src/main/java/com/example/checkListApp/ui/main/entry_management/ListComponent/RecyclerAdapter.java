@@ -294,14 +294,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     binding = itemView;
                     details = new TrackerHelper.Details(trackerHelper);
 
-                    itemView.getRoot().setLongClickable(false);
+//                    itemView.getRoot().setLongClickable(false);
 
                     tEntryViewRow = binding.entry;
                     checkButton = binding.checkBtn;
                     setTimeButton = binding.setEntryTimeBtn;
                     textView = binding.entryText;
 
-                    itemView.getRoot().setOnClickListener(this);
+//                    itemView.getRoot().setOnClickListener(this);
                     checkButton.setOnClickListener(this);
                     setTimeButton.setOnClickListener(this);
                     textView.setOnLongClickListener(this);
@@ -373,6 +373,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
                         textView.setText(o);
                         entry.textTemp = o;
+
                         repository.updateEntry(entry);
                         JsonService.buildJson(mList);
 
@@ -426,10 +427,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     Observer<Boolean> onChangeTogglePrimer = o->{
 
                         if(o) {
-                            setTimeButton.setBackgroundColor(Color.LTGRAY);
+//                            setTimeButton.setBackgroundColor(Color.LTGRAY);
+                            setTimeButton.setBackground( ContextCompat.getDrawable(
+                                    binding.entry.getContext(),
+                                    R.drawable.ic_ontogglecustom));
                             setTimeButton.setText("Toggle Only");
-                        }else{
 
+                        }else{
+                            setTimeButton.setBackground( ContextCompat.getDrawable(
+                                    binding.entry.getContext(),
+                                    R.drawable.outline_timer_black_48));
                         }
                         repository.updateEntry(entry);
                         JsonService.buildJson((ArrayList<Entry>) mList);
@@ -502,6 +509,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         @Override
         public boolean onLongClick(View view) {
                    listItemClickListener.clickPosition(this,view,getBindingAdapterPosition());
+
             return true;
         }
 

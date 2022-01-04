@@ -4,6 +4,8 @@
     <item name="buttonPanelID" type="id"/>
     <item name="finishButtonID" type="id"/>
 
+    <item name="leafButtonID" type="id"/>
+
     <item name="dates" type="id"/>
 
     <item name="item_click_support" type="id" />

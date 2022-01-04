@@ -55,7 +55,6 @@ public class DetectKeyboardBack implements LifecycleObserver{
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
 
         imm.hideSoftInputFromWindow(customEditText.getWindowToken(),0);
-
         customEditText.clearFocus();
 
 
@@ -73,13 +72,14 @@ public class DetectKeyboardBack implements LifecycleObserver{
 
         customEditText.setOnEditTextImeBackListener((editText, text) -> {
 
-            if(!customEditText.getText().toString().equals("")){
-                entry.textEntry.postValue(Objects.requireNonNull(customEditText.getText()).toString());
+            if(!editText.getText().toString().isEmpty()){
+                entry.textEntry.postValue(text);
             }
             //then calls the observer set in RecycleAdapter to set UI text
 
             textView.setVisibility(View.VISIBLE);
             customEditText.setVisibility(View.INVISIBLE);
+
         });
 
         customEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -103,6 +103,7 @@ public class DetectKeyboardBack implements LifecycleObserver{
                 }
             }
         });
+
 
     }
 

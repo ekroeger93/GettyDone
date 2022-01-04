@@ -77,8 +77,9 @@ public class LeafButton implements iButtonComponent {
                 binding.addDeleteBtn.getContext(),
                 R.drawable.outline_format_list_numbered_black_48));
 
-
         viewGroup.addView(button);
+        setConstraint(button);
+
         return  this;
     }
 
@@ -102,17 +103,25 @@ public class LeafButton implements iButtonComponent {
 
         ConstraintSet set = new ConstraintSet();
 
-        set.connect(leaf.getId(), ConstraintSet.START,
-                ConstraintSet.PARENT_ID, ConstraintSet.START, 0);
-        set.connect(leaf.getId(), ConstraintSet.END,
-                ConstraintSet.PARENT_ID, ConstraintSet.END, 0);
-        set.connect(leaf.getId(), ConstraintSet.TOP,
-                ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
-        set.connect(leaf.getId(), ConstraintSet.BOTTOM,
-                ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
+        leaf.setId(R.id.leafButtonID + ((attachedView.getId())/100000)
+        );
 
-        set.applyTo(binding.buttonPanel);
-
+//        set.constrainHeight(leaf.getId(),
+//                ConstraintSet.WRAP_CONTENT);
+//        set.constrainWidth(leaf.getId(),
+//                ConstraintSet.WRAP_CONTENT);
+//
+//        set.connect(leaf.getId(), ConstraintSet.START,
+//                ConstraintSet.PARENT_ID, ConstraintSet.START, 0);
+//        set.connect(leaf.getId(), ConstraintSet.END,
+//                binding.timerExecuteBtn.getId(), ConstraintSet.END, 0);
+//        set.connect(leaf.getId(), ConstraintSet.TOP,
+//                binding.upperButtonPanel.getId(), ConstraintSet.TOP, 0);
+//        set.connect(leaf.getId(), ConstraintSet.BOTTOM,
+//                binding.upperButtonPanel.getId(), ConstraintSet.TOP, 0);
+//
+////        set.applyTo(binding.buttonPanel);
+//        set.applyTo(binding.upperButtonPanel);
 
     }
 

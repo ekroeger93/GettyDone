@@ -90,27 +90,33 @@ TaDone Prototype
 -------------------------------------------------------------
 
 //TODO: BUGS
- toggle switch ordering may have leaks and complications
+
+ -pass in the timerLabel time to setTimer
+ -hitting back button from setTimer causes issues
+
+ -fix service
+  service notification sometimes doesn't terminate itself and shows negative value
+ of set time
+
+ -button lock up when hold edit on entry?
+  tried focus, tried backIME, tried disabling
+  double clicks on hold for some reason
+  -may resort to using EditText instead of Text
+
+ -fix leaf buttons, it would offset on other screens
+  only works bindng.main and sucks doing it,
+  -may have to resort to actual buttons,instead of generated
+
+  -on toggle mode at end of list is sketchy
+
+  -obscure bug after sorting
+  toggle switch ordering may have leaks and complications
+
 
  Context.startForegroundService() did not then call Service.startForeground()
  https://medium.com/geekculture/context-startforegroundservice-did-not-then-call-service-startforeground-solved-7640d5ba394a
-
- rapidly resetting timer, the Timer time is zeroed instead of set time,
- ->
- numberFormat exception in TimeState, from makeNotification, TimerService
- suspect it from background thread (Timer time is zeroed)
-
  check the database table for further testing
 
- service notification sometimes doesn't terminate itself and shows negative value
- of set time
-
- -pass in the timerLabel time to setTimer
- -fix service
- -button lock up when hold edit on entry?
- -obscure bug after sorting
- -hitting back button from setTimer causes issues
- -fix leaf buttons, it would offset on other screens
 
 //TODO: DESIGN
 
@@ -1126,6 +1132,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                     viewHolder.textView,
                     entry
             );
+
 
 
 
