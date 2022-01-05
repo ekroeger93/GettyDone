@@ -24,6 +24,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.selection.SelectionTracker;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.ItemTouchUIUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
@@ -34,6 +36,7 @@ import com.example.checkListApp.input.CustomEditText;
 import com.example.checkListApp.input.DetectKeyboardBack;
 import com.example.checkListApp.timemanagement.parcel.TimeParcelBuilder;
 import com.example.checkListApp.ui.main.MainFragment;
+import com.example.checkListApp.ui.main.entry_management.ListComponent.item_touch_helper.ItemTouchHelperAdapter;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 import com.example.checkListApp.ui.main.entry_management.Record.RecordHelper;
 import com.example.checkListApp.ui.main.MainFragmentDirections;
@@ -43,10 +46,13 @@ import com.example.checkListApp.ui.main.data_management.JsonService;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
+public class RecyclerAdapter
+        extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder>
+implements ItemTouchHelperAdapter {
 
 
     private ArrayList<Entry> mList;
@@ -54,6 +60,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     private final RecordHelper recordHelper;
     private final LifecycleOwner owner;
     private final EntryRepository repository;
+    private final MainFragment mainFragment;
 
     GestureDetector.SimpleOnGestureListener gestureDetector;
 
@@ -99,6 +106,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public RecyclerAdapter(MainFragment fragment){
 
 //        gestureDetector = new GestureDetector.SimpleOnGestureListener();
+
+        mainFragment = fragment;
 
         this.owner = fragment.getViewLifecycleOwner();
         this.repository = fragment.getmViewModel().getRepository();
@@ -260,6 +269,31 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     }
 
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(mList, i, i + 1);
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(mList, i, i - 1);
+            }
+        }
+        notifyItemMoved(fromPosition, toPosition);
+        return true;
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+
+//        mList.remove(position);
+        mainFragment.getmViewModel().deleteEntry(mainFragment.getCheckList().get(position));
+        mainFragment.updateIndexes();
+
+        notifyItemRemoved(position);
+
+    }
 
 
     public class ViewHolder extends RecyclerView.ViewHolder
@@ -301,10 +335,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     setTimeButton = binding.setEntryTimeBtn;
                     textView = binding.entryText;
 
-//                    itemView.getRoot().setOnClickListener(this);
+                    itemView.getRoot().setOnClickListener(this);
+                    itemView.getRoot().setOnLongClickListener(this);
+
                     checkButton.setOnClickListener(this);
                     setTimeButton.setOnClickListener(this);
                     textView.setOnLongClickListener(this);
+
 
                     this.listItemClickListener = listItemClickListener;
 
@@ -428,10 +465,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
                         if(o) {
 //                            setTimeButton.setBackgroundColor(Color.LTGRAY);
-                            setTimeButton.setBackground( ContextCompat.getDrawable(
+                            setTimeButton.setBackground(
+                                    ContextCompat.getDrawable(
                                     binding.entry.getContext(),
-                                    R.drawable.ic_ontogglecustom));
-                            setTimeButton.setText("Toggle Only");
+                                    R.drawable.ic_ontogglecustom)
+                            );
+                            setTimeButton.setText(R.string.toggle_only);
 
                         }else{
                             setTimeButton.setBackground( ContextCompat.getDrawable(
@@ -509,7 +548,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         @Override
         public boolean onLongClick(View view) {
                    listItemClickListener.clickPosition(this,view,getBindingAdapterPosition());
-
             return true;
         }
 

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.media.Image;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,12 +26,17 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationSet;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.CycleInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
@@ -41,6 +47,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.selection.SelectionTracker;
 import androidx.recyclerview.selection.StorageStrategy;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.checkListApp.MainActivity;
@@ -65,6 +72,7 @@ import com.example.checkListApp.ui.main.entry_management.ListComponent.CustomLay
 import com.example.checkListApp.ui.main.entry_management.ListComponent.ListItemClickListener;
 import com.example.checkListApp.ui.main.entry_management.ListComponent.ListItemObserver;
 import com.example.checkListApp.ui.main.entry_management.ListComponent.RecyclerAdapter;
+import com.example.checkListApp.ui.main.entry_management.ListComponent.item_touch_helper.ItemTouchCallback;
 import com.example.checkListApp.ui.main.entry_management.Operator;
 import com.example.checkListApp.ui.main.entry_management.Record.RecordHelper;
 import com.example.checkListApp.ui.main.data_management.AuxiliaryData;
@@ -98,10 +106,6 @@ TaDone Prototype
   service notification sometimes doesn't terminate itself and shows negative value
  of set time
 
- -button lock up when hold edit on entry?
-  tried focus, tried backIME, tried disabling
-  double clicks on hold for some reason
-  -may resort to using EditText instead of Text
 
  -fix leaf buttons, it would offset on other screens
   only works bindng.main and sucks doing it,
@@ -119,6 +123,16 @@ TaDone Prototype
 
 
 //TODO: DESIGN
+
+well shit if I known
+https://medium.com/@ipaulpro/drag-and-swipe-with-recyclerview-b9456d2b1aaf
+i can get rid of touch expander completely
+
+-double tap could be used as edit
+-swipe is delete
+-drag is move
+-add button at the end of list to add
+
 
 - ICONS/IMAGES FOR BUTTONS
 
@@ -243,6 +257,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     private Activity activity;
     private Intent serviceIntent;
 
+    private ViewGroup viewGroup;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -300,6 +315,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         configureMainTimer();
 
         RecordHelper.createButton(getContext(),binding);
+
 
 
 
@@ -391,6 +407,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                 .withSelectionPredicate( adapter.trackerHelper.predicate)
                 .build();
 
+
         adapter.setTracker(selectionTracker);
         adapter.trackerOn(false);
 
@@ -399,6 +416,10 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         buttonPanel = new ButtonPanel(getContext(), binding);
         buttonPanelToggle  = buttonPanel.buttonPanelToggle;
 
+        ItemTouchHelper.Callback callback =
+                new ItemTouchCallback(adapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(recyclerView);
 
 
 //        adapter.registerAdapterDataObserver();
@@ -841,6 +862,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         }
     });
 
+
     binding.touchExpander.setOnTouchListener((view, motionEvent) -> {
 
         float touch_X = motionEvent.getRawX();
@@ -857,8 +879,40 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         float xMove = operator.currentViewHolder.itemView.getX() + (velocityTracker.getXVelocity()*40);
 
-        operator.currentViewHolder.itemView.setTranslationX(xMove);
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(0,20,0,-20,0);
+        valueAnimator.setDuration(2000);
+        valueAnimator.setInterpolator(new OvershootInterpolator());
+        valueAnimator.addUpdateListener(valueAnimator1 -> {
+
+            operator.currentViewHolder.itemView.setTranslationY(
+                    (Integer) valueAnimator1.getAnimatedValue()
+            );
+
+        });
+
+
+      if(touch_X > binding.touchExpander.getX()+ (binding.touchExpander.getWidth()/1.5) ) {
+
+
+          operator.currentViewHolder.itemView.setTranslationX(xMove);
+
+      }else{
+          operator.currentViewHolder.itemView.setTranslationX(0);
+      }
+
+      if(
+              touch_X < binding.touchExpander.getX()
+                      - (binding.touchExpander.getWidth()/3) &&
+                      onButton &&
+                      !valueAnimator.isRunning()
+      ) {
+          valueAnimator.start();
+      }else{
+         valueAnimator.pause();
+      }
+
         velocityTracker.recycle();
+
 
         if (motionEvent.getAction() == MotionEvent.ACTION_UP ||
                 motionEvent.getAction() == MotionEvent.ACTION_CANCEL
@@ -1133,10 +1187,12 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                     entry
             );
 
-
+            selectionTracker.clearSelection();
 
 
         }
+
+
     }
 
     public void hideButtons(boolean hide){

@@ -20,7 +20,7 @@ public class TrackerHelper {
    public KeyProvider keyProvider;
    public Predicate predicate;
 
-    boolean isMotionActive = true;
+    static boolean isMotionActive = true;
 
 
     public TrackerHelper(RecyclerView recyclerView, RecyclerView.Adapter  adapter){
@@ -58,7 +58,7 @@ public class TrackerHelper {
 
         @Override
         public boolean inSelectionHotspot(@NonNull MotionEvent e) {
-            return trackerHelper.isMotionActive;
+            return isMotionActive;
         }
     }
 
@@ -75,16 +75,17 @@ public class TrackerHelper {
         @Override
         public ItemDetails<Long> getItemDetails(@NonNull MotionEvent event) {
 
-            View view = recyclerView.findChildViewUnder( event.getX(), event.getY());
+     if(isMotionActive) {
+         View view = recyclerView.findChildViewUnder(event.getX(), event.getY());
 
-            if(view != null){
-                RecyclerView.ViewHolder viewHolder = recyclerView.getChildViewHolder(view);
-                if (viewHolder instanceof RecyclerAdapter.ViewHolder) {
-                    if(((RecyclerAdapter.ViewHolder) viewHolder).getEntry() != null)
-                        return ((RecyclerAdapter.ViewHolder) viewHolder).getItemDetails();
-                }
-            }
-
+         if (view != null) {
+             RecyclerView.ViewHolder viewHolder = recyclerView.getChildViewHolder(view);
+             if (viewHolder instanceof RecyclerAdapter.ViewHolder) {
+                 if (((RecyclerAdapter.ViewHolder) viewHolder).getEntry() != null)
+                     return ((RecyclerAdapter.ViewHolder) viewHolder).getItemDetails();
+             }
+         }
+     }
             return null;
 
         }

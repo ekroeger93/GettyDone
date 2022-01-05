@@ -74,6 +74,9 @@ dependencies {
     implementation "com.google.code.gson:gson:2.8.6"
     implementation 'androidx.recyclerview:recyclerview-selection:1.1.0'
 
+    //noinspection GradleCompatible
+    implementation 'com.android.support:recyclerview-v7:28'
+
 
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
