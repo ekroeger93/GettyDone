@@ -301,11 +301,21 @@ mainFragment.updateIndexes();
         int selection = operator.selection;
         int oldMovePosition = operator.oldMovePosition;
 
-        buttonPanelToggle.setOnClickListener(    new View.OnClickListener() {
+
+        buttonPanelToggle.setSubmitBtnOnClickListener(    new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 move();
+//                mainFragment.getCustomLayoutManager().setScrollEnabled(true);
+
             }
+        });
+
+        buttonPanelToggle.setMoveUpButtonOnClickListener(view -> {
+
+
+            operator.moveItemUp(operator.movingItem);
+
         });
 
 
@@ -317,7 +327,7 @@ mainFragment.updateIndexes();
             operator.oldMovePosition = selection - 1;
          //   operator.movingItem.setViewHolder(mainFragment.getCheckList().get(selection - 1).getViewHolder());
             operator.movingItem.getViewHolder().itemView.setBackgroundColor(Color.BLUE);
-            operator.moveItem(operator.movingItem);
+//            operator.moveItem(operator.movingItem);
 
 
 
@@ -328,16 +338,18 @@ mainFragment.updateIndexes();
         }else{
 
             mainFragment.hideTimeExecuteBtn(false);
-
             operator.movingItem = null;
         }
 
-         buttonPanelToggle.toggleDisableToButton();
+         buttonPanelToggle.toggleDisableMoveButtons();
         operator.isMovingItem = !isMovingItem;
 
 
 
     }
+
+
+
 
     public void edit(){
 

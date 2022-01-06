@@ -76,7 +76,7 @@ public class Operator {
         }
 
 
-        if(isMovingItem) moveItem(movingItem);
+//        if(isMovingItem) moveItem(movingItem);
 
 
         return selection - 1;
@@ -114,7 +114,6 @@ public class Operator {
     public void moveItem(Entry movingItem){
 
         try {
-
 
             if (oldMovePosition != selection-1
                     && selection > 0
@@ -163,6 +162,38 @@ public class Operator {
         }
 
 
+
+    }
+
+
+    public void moveItemUp(Entry movingItem){
+
+//        mainFragment.getCustomLayoutManager().setScrollEnabled(false);
+
+//        int movingItemIndex = mainFragment.getCheckList().indexOf(movingItem);
+
+        int movingItemIndex = selection-1;
+
+        if (movingItemIndex + 1 <
+                mainFragment.getCheckList().size()-1
+        ) {
+
+            mainFragment.getCheckList().remove(movingItem);
+            mainFragment.getCheckList().add(movingItemIndex+1, movingItem);
+
+            Entry entrySwap = mainFragment.getCheckList().get(movingItemIndex+1);
+
+            movingItem.swapIds(entrySwap);
+            //entrySwap.swapIds(movingItem);
+
+            adapter.notifyItemMoved(movingItemIndex,movingItemIndex+1);
+            adapter.notifyItemChanged(movingItemIndex);
+            adapter.notifyItemChanged(movingItemIndex+1);
+
+
+            mainFragment.updateIndexes();
+
+        }
 
     }
 

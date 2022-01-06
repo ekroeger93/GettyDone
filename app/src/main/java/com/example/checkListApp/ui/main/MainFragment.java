@@ -102,6 +102,9 @@ TaDone Prototype
  -pass in the timerLabel time to setTimer
  -hitting back button from setTimer causes issues
 
+ -fix move
+ resorting to deliberate buttons
+
  -fix service
   service notification sometimes doesn't terminate itself and shows negative value
  of set time
@@ -231,6 +234,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     public RecyclerView     getRecyclerView(){ return recyclerView;}
     public RecyclerAdapter  getAdapter() {return adapter;}
+    public CustomLayoutManager getCustomLayoutManager(){return customLayoutManager;}
 
     public RecordHelper     getRecordHelper() {return recordHelper;}
     public ListUtility      getListUtility() { return listUtility;}
@@ -785,7 +789,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                     .assignListener(view -> {
 
                         //listener for the button panel
-                        buttonPanelToggle.setOnClickListener(
+                        buttonPanelToggle.setSubmitBtnOnClickListener(
                                 view1 -> { //deletes selected Entries
                             entryItemManager.deleteSelected(selectionTracker);
                             buttonPanelToggle.toggleDisableToButton();
@@ -817,7 +821,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                             recyclerView.scrollToPosition(0);
                             recyclerView.setHasFixedSize(true);
 
-                            buttonPanelToggle.setOnClickListener(view1 -> {
+                            buttonPanelToggle.setSubmitBtnOnClickListener(view1 -> {
 
                                 isSorting = true;
                                 entryItemManager.sortSelected(selectionTracker);
@@ -846,21 +850,25 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
 
 
-    binding.ScrollView.setOnScrollChangeListener(   (v, i, i1, i2, i3) -> {
 
-        try {
-          selectedEntry.postValue(operator.getSelection());
+           binding.ScrollView.setOnScrollChangeListener((v, i, i1, i2, i3) -> {
 
-        }catch (NullPointerException e){
-            e.printStackTrace();
-        }
+               try {
+                   selectedEntry.postValue(operator.getSelection());
 
-        if(operator.isMovingItem) {
+               } catch (NullPointerException e) {
+                   e.printStackTrace();
+               }
 
-            operator.moveItem(operator.movingItem);
+               if (operator.isMovingItem) {
 
-        }
-    });
+//                   operator.moveItem(operator.movingItem);
+
+
+               }
+
+
+           });
 
 
     binding.touchExpander.setOnTouchListener((view, motionEvent) -> {
