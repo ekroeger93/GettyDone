@@ -27,6 +27,7 @@ public class ButtonPanelToggle{
 
     public CreateButtonManifest submitManifest;
     public CreateButtonManifest moveUpButtonManifest;
+    public CreateButtonManifest moveDownButtonManifest;
 
 
 
@@ -34,10 +35,13 @@ public class ButtonPanelToggle{
 
         submitButton = new ToggleButton(context);
         moveUpButton = new ToggleButton(context);
+        moveDownButton = new ToggleButton(context);
 
         this.binding = binding;
 
         moveUpButtonManifest = getMoveUpButtonManifest(submitButton);
+        moveDownButtonManifest = getMoveDownButtonManifest(submitButton);
+
         submitManifest = getSubmitManifest();
 
         submitButton
@@ -48,9 +52,14 @@ public class ButtonPanelToggle{
                 .setBinding(binding)
                 .commitCreate(moveUpButtonManifest);
 
+        moveDownButton
+                .setBinding(binding)
+                .commitCreate(moveDownButtonManifest);
+
 
         submitButton.setVisibility(View.GONE);
         moveUpButton.setVisibility(View.GONE);
+        moveDownButton.setVisibility(View.GONE);
 
 
 
@@ -61,7 +70,7 @@ public class ButtonPanelToggle{
 
         return (button, binding, onClickListener) -> {
             if(button.getParent() ==null) {
-                button.setId(R.id.buttonPanelID);
+                button.setId(R.id.submitButtonId);
 //             button.setText("place");
 
 
@@ -69,7 +78,7 @@ public class ButtonPanelToggle{
                         binding.addDeleteBtn.getContext(),
                         R.drawable.outline_done_black_48));
 
-                button.setWidth(200);
+                button.setWidth(100);
                 button.setHeight(100);
 
                 ConstraintSet set = new ConstraintSet();
@@ -100,12 +109,54 @@ public class ButtonPanelToggle{
 
     }
 
+    private CreateButtonManifest getMoveDownButtonManifest(ToggleButton submitButton){
+
+        return (button, binding, onClickListener) -> {
+
+            if(button.getParent() ==null) {
+                button.setId(R.id.moveItemDownId);
+//             button.setText("place");
+
+
+                button.setBackground(ContextCompat.getDrawable(
+                        binding.addDeleteBtn.getContext(),
+                        R.drawable.outline_remove_circle_outline_black_48));
+
+                button.setWidth(100);
+                button.setHeight(100);
+
+                ConstraintSet set = new ConstraintSet();
+                set.constrainHeight(button.getId(),
+                        ConstraintSet.WRAP_CONTENT);
+                set.constrainWidth(button.getId(),
+                        ConstraintSet.WRAP_CONTENT);
+                set.connect(button.getId(), ConstraintSet.END,
+                        submitButton.getId(), ConstraintSet.START, 0);
+                set.connect(button.getId(), ConstraintSet.START,
+                        ConstraintSet.PARENT_ID, ConstraintSet.START, 0);
+                set.connect(button.getId(), ConstraintSet.TOP,
+                        ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
+                set.connect(button.getId(), ConstraintSet.BOTTOM,
+                        ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0);
+
+
+                binding.buttonPanel.addView(button);
+
+
+                set.applyTo(binding.buttonPanel);
+            }
+
+
+            button.setOnClickListener(onClickListener);
+        };
+
+    }
 
     private CreateButtonManifest getMoveUpButtonManifest(ToggleButton submitButton){
         return (button, binding, onClickListener) -> {
 
             if(button.getParent() ==null) {
-                button.setId(R.id.buttonPanelID);
+                button.setId(R.id.moveItemUpId);
 //             button.setText("place");
 
 
@@ -113,7 +164,7 @@ public class ButtonPanelToggle{
                         binding.addDeleteBtn.getContext(),
                         R.drawable.outline_add_circle_black_48));
 
-                button.setWidth(200);
+                button.setWidth(100);
                 button.setHeight(100);
 
                 ConstraintSet set = new ConstraintSet();
@@ -140,6 +191,7 @@ public class ButtonPanelToggle{
 
             button.setOnClickListener(onClickListener);
         };
+
     }
 
     public void setSubmitBtnOnClickListener(OnClickListener onClickListener){
@@ -149,6 +201,10 @@ public class ButtonPanelToggle{
     public void setMoveUpButtonOnClickListener(OnClickListener onClickListener){
         moveUpButton.setListener(onClickListener).setBinding(binding).commitCreate(moveUpButtonManifest);
 
+    }
+
+    public void setMoveDownButtonOnClickListener(OnClickListener onClickListener){
+        moveDownButton.setListener(onClickListener).setBinding(binding).commitCreate(moveDownButtonManifest);
     }
 
 
@@ -207,6 +263,7 @@ public class ButtonPanelToggle{
 
             submitButton.setVisibility(View.VISIBLE);
             moveUpButton.setVisibility(View.VISIBLE);
+            moveDownButton.setVisibility(View.VISIBLE);
 
         }else{
             binding.editMoveBtn.setVisibility(View.VISIBLE);
@@ -215,6 +272,7 @@ public class ButtonPanelToggle{
 
             submitButton.setVisibility(View.GONE);
             moveUpButton.setVisibility(View.GONE);
+            moveDownButton.setVisibility(View.GONE);
 
         }
 

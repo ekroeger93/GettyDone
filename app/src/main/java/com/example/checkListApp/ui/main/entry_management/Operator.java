@@ -165,35 +165,48 @@ public class Operator {
 
     }
 
+    public void moveEntry( int movingItemIndex, int placeIndex){
 
-    public void moveItemUp(Entry movingItem){
+        Entry movingItem = mainFragment.getCheckList().get(movingItemIndex);
+        Entry entrySwap = mainFragment.getCheckList().get(placeIndex);
 
-//        mainFragment.getCustomLayoutManager().setScrollEnabled(false);
+        mainFragment.getCheckList().remove(movingItem);
+        adapter.notifyItemRemoved(movingItemIndex);
+        mainFragment.getCheckList().add(placeIndex, movingItem);
+        adapter.notifyItemInserted(placeIndex);
 
-//        int movingItemIndex = mainFragment.getCheckList().indexOf(movingItem);
+        adapter.notifyItemRangeChanged(movingItemIndex, placeIndex);
+        adapter.notifyItemMoved(movingItemIndex,placeIndex);
+
+        movingItem.swapIds(entrySwap);
+
+        MainFragment.scrollPosition(placeIndex);
+
+        mainFragment.updateIndexes();
+
+    }
+
+
+    public void moveItemUp(){
 
         int movingItemIndex = selection-1;
-
-        if (movingItemIndex + 1 <
-                mainFragment.getCheckList().size()-1
-        ) {
-
-            mainFragment.getCheckList().remove(movingItem);
-            mainFragment.getCheckList().add(movingItemIndex+1, movingItem);
-
-            Entry entrySwap = mainFragment.getCheckList().get(movingItemIndex+1);
-
-            movingItem.swapIds(entrySwap);
-            //entrySwap.swapIds(movingItem);
-
-            adapter.notifyItemMoved(movingItemIndex,movingItemIndex+1);
-            adapter.notifyItemChanged(movingItemIndex);
-            adapter.notifyItemChanged(movingItemIndex+1);
+        int placeIndex = movingItemIndex - 1;
 
 
-            mainFragment.updateIndexes();
+        if (movingItemIndex - 1 >= 1)
+            moveEntry(movingItemIndex,placeIndex);
 
-        }
+
+    }
+
+    public void moveItemDown(){
+
+        int movingItemIndex = selection-1;
+        int placeIndex = movingItemIndex + 1;
+
+        if (movingItemIndex + 1 < mainFragment.getCheckList().size()-1)
+            moveEntry(movingItemIndex, placeIndex);
+
 
     }
 

@@ -313,8 +313,15 @@ mainFragment.updateIndexes();
 
         buttonPanelToggle.setMoveUpButtonOnClickListener(view -> {
 
+//            operator.movingItem = mainFragment.getCheckList().get(selection - 1);
+            operator.moveItemUp();
 
-            operator.moveItemUp(operator.movingItem);
+        });
+
+        buttonPanelToggle.setMoveDownButtonOnClickListener( view -> {
+
+//            operator.movingItem = mainFragment.getCheckList().get(selection -1);
+            operator.moveItemDown();
 
         });
 

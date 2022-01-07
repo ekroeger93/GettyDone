@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="my_Id" type="id"/>
+
     <item name="buttonPanelID" type="id"/>
+
+
+    <item name="submitButtonId" type="id"/>
+    <item name="moveItemUpId" type="id"/>
+    <item name="moveItemDownId" type="id"/>
+
     <item name="finishButtonID" type="id"/>
 
     <item name="leafButtonID" type="id"/>
