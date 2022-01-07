@@ -29,6 +29,8 @@ public class ButtonPanelToggle{
     public CreateButtonManifest moveUpButtonManifest;
     public CreateButtonManifest moveDownButtonManifest;
 
+    private final int buttonSize = 160;
+
 
 
     public ButtonPanelToggle(Context context, MainFragmentBinding binding){
@@ -70,22 +72,21 @@ public class ButtonPanelToggle{
 
         return (button, binding, onClickListener) -> {
             if(button.getParent() ==null) {
-                button.setId(R.id.submitButtonId);
-//             button.setText("place");
+                button.setWidth(buttonSize);
+                button.setHeight(buttonSize);
 
+                button.setId(R.id.submitButtonId);
 
                 button.setBackground(ContextCompat.getDrawable(
                         binding.addDeleteBtn.getContext(),
                         R.drawable.outline_done_black_48));
 
-                button.setWidth(100);
-                button.setHeight(100);
 
                 ConstraintSet set = new ConstraintSet();
                 set.constrainHeight(button.getId(),
                         ConstraintSet.WRAP_CONTENT);
                 set.constrainWidth(button.getId(),
-                        ConstraintSet.WRAP_CONTENT);
+                        buttonSize);
                 set.connect(button.getId(), ConstraintSet.START,
                         ConstraintSet.PARENT_ID, ConstraintSet.START, 0);
                 set.connect(button.getId(), ConstraintSet.END,
@@ -114,22 +115,23 @@ public class ButtonPanelToggle{
         return (button, binding, onClickListener) -> {
 
             if(button.getParent() ==null) {
+                button.setWidth(buttonSize);
+                button.setHeight(buttonSize);
+
                 button.setId(R.id.moveItemDownId);
-//             button.setText("place");
 
 
                 button.setBackground(ContextCompat.getDrawable(
                         binding.addDeleteBtn.getContext(),
                         R.drawable.outline_remove_circle_outline_black_48));
 
-                button.setWidth(100);
-                button.setHeight(100);
+
 
                 ConstraintSet set = new ConstraintSet();
                 set.constrainHeight(button.getId(),
                         ConstraintSet.WRAP_CONTENT);
                 set.constrainWidth(button.getId(),
-                        ConstraintSet.WRAP_CONTENT);
+                        buttonSize);
                 set.connect(button.getId(), ConstraintSet.END,
                         submitButton.getId(), ConstraintSet.START, 0);
                 set.connect(button.getId(), ConstraintSet.START,
@@ -156,22 +158,21 @@ public class ButtonPanelToggle{
         return (button, binding, onClickListener) -> {
 
             if(button.getParent() ==null) {
-                button.setId(R.id.moveItemUpId);
-//             button.setText("place");
+                button.setWidth(buttonSize);
+                button.setHeight(buttonSize);
 
+                button.setId(R.id.moveItemUpId);
 
                 button.setBackground(ContextCompat.getDrawable(
                         binding.addDeleteBtn.getContext(),
                         R.drawable.outline_add_circle_black_48));
 
-                button.setWidth(100);
-                button.setHeight(100);
 
                 ConstraintSet set = new ConstraintSet();
                 set.constrainHeight(button.getId(),
                         ConstraintSet.WRAP_CONTENT);
                 set.constrainWidth(button.getId(),
-                        ConstraintSet.WRAP_CONTENT);
+                        buttonSize);
                 set.connect(button.getId(), ConstraintSet.START,
                         submitButton.getId(), ConstraintSet.END, 0);
                 set.connect(button.getId(), ConstraintSet.END,
