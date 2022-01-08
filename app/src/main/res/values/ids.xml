@@ -11,7 +11,10 @@
 
     <item name="finishButtonID" type="id"/>
 
-    <item name="leafButtonID" type="id"/>
+    <item name="leafOneButtonID" type="id"/>
+
+    <item name="leafTwoButtonID" type="id"/>
+
 
     <item name="dates" type="id"/>
 

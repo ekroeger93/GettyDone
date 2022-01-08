@@ -26,48 +26,62 @@
         tools:context=".ui.main.MainFragment"
         >
 
+        <Button
+            android:id="@+id/finishRecordButton"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+
+            android:background="@drawable/outline_add_chart_black_48"
+            app:layout_constraintBottom_toTopOf="@+id/guideline"
+            app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalCenter"
+            app:layout_constraintHorizontal_bias="0.05"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+
         <EditText
             android:id="@+id/repeatTimer"
             android:layout_width="70dp"
             android:layout_height="70dp"
-             android:cursorVisible="false"
+            android:cursorVisible="false"
             android:drawableTop="@drawable/outline_autorenew_24"
             android:drawableTint="@color/teal_200"
             android:inputType="number"
+            android:longClickable="false"
             android:selectAllOnFocus="false"
             android:singleLine="true"
-            android:longClickable="false"
             android:text="0"
             android:textAlignment="center"
             android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@+id/guideline"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias=".9"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.74"
+            app:layout_constraintStart_toEndOf="@id/guidelineVerticalCenter"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />
 
         <LinearLayout
             android:id="@+id/windowBox"
             android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:background="#9703A9F4"
-            android:orientation="vertical"
             android:clickable="false"
             android:longClickable="false"
+            android:orientation="vertical"
             app:layout_constraintBottom_toTopOf="@+id/guideline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_height="0dp" >
+            app:layout_constraintTop_toTopOf="parent">
 
-<!--scrollSize: 250-->
+            <!--scrollSize: 250-->
 
 
             <TextView
                 android:id="@+id/timeTextMain"
                 android:layout_width="200dp"
-                android:layout_marginStart="100dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="100dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="sans-serif-black"
                 android:text="00:00:00"
@@ -76,8 +90,7 @@
                 android:textColor="#D82C2929"
                 android:textSize="40sp"
                 android:textStyle="italic"
-                android:typeface="monospace"
-                />
+                android:typeface="monospace" />
 
 
             <androidx.recyclerview.widget.RecyclerView
@@ -85,13 +98,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/scrollSize"
                 android:layout_marginBottom="0dp"
-                android:overScrollMode="always"
                 android:background="#4600BCD4"
-                android:longClickable="false"
                 android:clickable="false"
-                tools:listitem="@layout/entry"
-                >
-
+                android:longClickable="false"
+                android:overScrollMode="always"
+                tools:listitem="@layout/entry">
 
 
             </androidx.recyclerview.widget.RecyclerView>
@@ -116,16 +127,15 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
             <androidx.constraintlayout.widget.ConstraintLayout
 
                 android:id="@+id/buttonPanel"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_gravity="bottom"
                 android:layout_marginTop="0dp"
                 android:layout_marginBottom="10dp"
                 android:layout_weight="8"
-                android:layout_gravity="bottom"
 
                 >
 
@@ -135,8 +145,8 @@
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:background="@drawable/ic_editcustom"
-                    app:layout_constraintEnd_toStartOf="@+id/touchExpander"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/touchExpander"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -148,8 +158,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/addDeleteBtn"
                     app:layout_constraintStart_toEndOf="@+id/editMoveBtn"
-                    app:layout_constraintTop_toTopOf="parent"
-                    />
+                    app:layout_constraintTop_toTopOf="parent" />
 
 
                 <Button
@@ -163,11 +172,27 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
 
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         </LinearLayout>
+
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineVerticalCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5"
+            />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineHorizontalCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.5"
+            />
 
 
         <androidx.constraintlayout.widget.Guideline

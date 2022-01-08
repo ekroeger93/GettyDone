@@ -24,15 +24,16 @@ public class RecordHelper {
 
     static int numOfEntries;
     static int numChecked;
-    static RecordFinishButtonToggle recordFinishButtonToggle;
+    RecordFinishButtonToggle recordFinishButtonToggle;
 
     public static ArrayList<Record>recordArrayList = new ArrayList<>();
 
     static String recordListJson= "";
 
-    public static void createButton(Context context, MainFragmentBinding binding){
+    public void createButton(Context context, MainFragmentBinding binding){
         recordFinishButtonToggle = new RecordFinishButtonToggle();
-        RecordFinishButtonToggle.create(context,binding);
+        recordFinishButtonToggle.setFinishButton(binding.finishRecordButton, context);
+//        RecordFinishButtonToggle.create(context,binding);
     }
 
     public void update(ArrayList<Entry> list){
@@ -47,7 +48,7 @@ public class RecordHelper {
                 try {
                     if (entry.checked.getValue()) numChecked++;
                 }catch (NullPointerException e){
-                    continue;
+                    break;
                 }
 
             }
@@ -55,11 +56,12 @@ public class RecordHelper {
         }
 
         if(numOfEntries > 0 && numChecked !=0){
-
-            RecordFinishButtonToggle.toggleHideButton(numOfEntries != numChecked);
-
+            recordFinishButtonToggle.toggleHideButton(numOfEntries != numChecked);
         }
 
+        if(numChecked == 0){
+            recordFinishButtonToggle.toggleHideButton(true);
+        }
 
 
 
@@ -136,6 +138,7 @@ public class RecordHelper {
 
             jsonObject.addProperty("goalCount",src.getNumberOfGoals());
             jsonObject.addProperty("dateFinished",src.getCurrentDate());
+            jsonObject.addProperty("currentWeekOfYear",src.getCurrentWeekOfYear());
 
             return jsonObject;
         }
@@ -153,8 +156,9 @@ public class RecordHelper {
 
             String Date = jsonObject.get("dateFinished").toString();
             int goals = jsonObject.get("goalCount").getAsInt();
+            int weekOfYear = jsonObject.get("currentWeekOfYear").getAsInt();
 
-            return new Record(goals,Date);
+            return new Record(goals,Date, weekOfYear);
 
 
         }

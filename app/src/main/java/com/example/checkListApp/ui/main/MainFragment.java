@@ -143,8 +143,6 @@ i can get rid of touch expander completely
     delete - swipe right, show trash icon on left
     add - popup, scroll to bottom
 
--? may move execute timer to middle of touch expander
-- need to move submit record button and have design icon
 - show swiping hand icon for hint
 
 - transition between fragments
@@ -258,8 +256,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     private Activity activity;
     private Intent serviceIntent;
 
-    private ViewGroup viewGroup;
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -315,7 +311,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         configureMainTimer();
 
-        RecordHelper.createButton(getContext(),binding);
+        recordHelper.createButton(getContext(),binding);
 
 
 
@@ -867,6 +863,13 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
            });
 
+           binding.windowBox.setOnTouchListener((view, motionEvent) -> {
+               float touch_X = motionEvent.getRawX();
+               float touch_Y = motionEvent.getRawY();
+               buttonPanel.checkWithinButtonBoundary(touch_X,touch_Y);
+
+               return true;
+           });
 
     binding.touchExpander.setOnTouchListener((view, motionEvent) -> {
 
@@ -1156,15 +1159,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         if(view.getId() == R.id.checkBtn){
 
             viewHolder.getEntry().checked.postValue( !viewHolder.getEntry().checked.getValue());
-
-//            if(viewHolder.getEntry().onTogglePrimer.getValue() && timerRunning.getValue()){
-//                MainTimerView.mainTimerViewModel.toggleTime();
-//                listUtility.currentActiveTime = listUtility.getNextActiveProcessTime(checkList);
-//                activeIndex = listUtility.activeProcessTimeIndex;
-//            }
-
-//            Toast toast = Toast.makeText(getContext(), ""+position,Toast.LENGTH_SHORT );
-//            toast.show();
 
         }
 

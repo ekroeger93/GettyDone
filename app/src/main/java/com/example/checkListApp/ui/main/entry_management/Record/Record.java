@@ -7,19 +7,22 @@ import java.util.Date;
 
 public class Record {
 
-    private  int numberOfGoals ;
-    private  String currentDate;
+    private final int numberOfGoals ;
+    private final String currentDate;
+    private final int currentWeekOfYear;
 
     Record(int number){
         numberOfGoals = number;
 
         @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
         currentDate = sdf.format(new Date());
+        currentWeekOfYear = sdf.getCalendar().getWeekYear();
     }
 
-    Record(int number, String date){
+    Record(int number, String date, int currentWeekOfYear){
         numberOfGoals = number;
         currentDate =  date;
+        this.currentWeekOfYear = currentWeekOfYear;
     }
 
     public String getCurrentDate() {
@@ -28,5 +31,9 @@ public class Record {
 
     public int getNumberOfGoals() {
         return numberOfGoals;
+    }
+
+    public int getCurrentWeekOfYear() {
+        return currentWeekOfYear;
     }
 }

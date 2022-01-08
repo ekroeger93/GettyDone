@@ -2,6 +2,7 @@ package com.example.checkListApp.ui.main.entry_management.ButtonPanel;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.BounceInterpolator;
@@ -15,6 +16,8 @@ import androidx.core.content.ContextCompat;
 
 import com.example.checkListApp.R;
 import com.example.checkListApp.databinding.MainFragmentBinding;
+
+import java.util.Arrays;
 
 public class LeafButton implements iButtonComponent {
 
@@ -77,8 +80,11 @@ public class LeafButton implements iButtonComponent {
                 binding.addDeleteBtn.getContext(),
                 R.drawable.outline_format_list_numbered_black_48));
 
+
+//        setConstraint(button);
         viewGroup.addView(button);
-        setConstraint(button);
+
+//        setConstraint(button);
 
         return  this;
     }
@@ -87,6 +93,8 @@ public class LeafButton implements iButtonComponent {
 
         int[] location = new int[2];
         button.getLocationInWindow(location);
+//        button.getLocationOnScreen(location);
+//        button.getLocationInSurface(location);
 
         this.Button_X = location[0];
         this.Button_Y = location[1];
@@ -103,25 +111,53 @@ public class LeafButton implements iButtonComponent {
 
         ConstraintSet set = new ConstraintSet();
 
-        leaf.setId(R.id.leafButtonID + ((attachedView.getId())/100000)
-        );
 
-//        set.constrainHeight(leaf.getId(),
-//                ConstraintSet.WRAP_CONTENT);
-//        set.constrainWidth(leaf.getId(),
-//                ConstraintSet.WRAP_CONTENT);
-//
-//        set.connect(leaf.getId(), ConstraintSet.START,
-//                ConstraintSet.PARENT_ID, ConstraintSet.START, 0);
-//        set.connect(leaf.getId(), ConstraintSet.END,
-//                binding.timerExecuteBtn.getId(), ConstraintSet.END, 0);
-//        set.connect(leaf.getId(), ConstraintSet.TOP,
-//                binding.upperButtonPanel.getId(), ConstraintSet.TOP, 0);
-//        set.connect(leaf.getId(), ConstraintSet.BOTTOM,
-//                binding.upperButtonPanel.getId(), ConstraintSet.TOP, 0);
-//
-////        set.applyTo(binding.buttonPanel);
-//        set.applyTo(binding.upperButtonPanel);
+        if (attachedView.getId() == binding.editMoveBtn.getId()){
+            leaf.setId(R.id.leafOneButtonID);
+
+            set.constrainHeight(leaf.getId(),
+                    ConstraintSet.WRAP_CONTENT);
+            set.constrainWidth(leaf.getId(),
+                    160);
+
+            set.connect(leaf.getId(), ConstraintSet.START,
+                    ConstraintSet.PARENT_ID, ConstraintSet.START, 0);
+            set.connect(leaf.getId(), ConstraintSet.END,
+                    binding.guidelineVerticalCenter.getId(), ConstraintSet.END, 40);
+            set.connect(leaf.getId(), ConstraintSet.TOP,
+                    ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
+            set.connect(leaf.getId(), ConstraintSet.BOTTOM,
+                    binding.editMoveBtn.getId(), ConstraintSet.BOTTOM, 0);
+
+//            binding.buttonPanel.addView(leaf);
+
+        }
+
+        if(attachedView.getId() == binding.addDeleteBtn.getId()){
+            leaf.setId(R.id.leafTwoButtonID);
+
+            set.constrainHeight(leaf.getId(),
+                    ConstraintSet.WRAP_CONTENT);
+            set.constrainWidth(leaf.getId(),
+                    160);
+
+            set.connect(leaf.getId(), ConstraintSet.END,
+                    ConstraintSet.PARENT_ID, ConstraintSet.END, 0);
+            set.connect(leaf.getId(), ConstraintSet.START,
+                    binding.guidelineVerticalCenter.getId(), ConstraintSet.START, 40);
+            set.connect(leaf.getId(), ConstraintSet.TOP,
+                    ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
+            set.connect(leaf.getId(), ConstraintSet.BOTTOM,
+                    ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0);
+
+//            binding.buttonPanel.addView(leaf);
+        }
+
+
+
+
+//       set.applyTo(binding.main);
+        set.applyTo(binding.main);
 
     }
 

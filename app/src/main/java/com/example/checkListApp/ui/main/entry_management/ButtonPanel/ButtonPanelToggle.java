@@ -123,7 +123,7 @@ public class ButtonPanelToggle{
 
                 button.setBackground(ContextCompat.getDrawable(
                         binding.addDeleteBtn.getContext(),
-                        R.drawable.outline_remove_circle_outline_black_48));
+                        R.drawable.outline_arrow_circle_down_black_48));
 
 
 
@@ -165,7 +165,7 @@ public class ButtonPanelToggle{
 
                 button.setBackground(ContextCompat.getDrawable(
                         binding.addDeleteBtn.getContext(),
-                        R.drawable.outline_add_circle_black_48));
+                        R.drawable.outline_arrow_circle_up_black_48));
 
 
                 ConstraintSet set = new ConstraintSet();
