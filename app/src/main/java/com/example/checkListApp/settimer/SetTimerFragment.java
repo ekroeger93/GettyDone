@@ -32,6 +32,7 @@ import com.example.checkListApp.R;
 import com.example.checkListApp.timemanagement.parcel.TimeParcel;
 import com.example.checkListApp.timemanagement.parcel.TimeParcelBuilder;
 import com.example.checkListApp.databinding.SettimerFragmentBinding;
+import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.data_management.JsonService;
 
 import java.util.ArrayList;
@@ -79,6 +80,7 @@ public class SetTimerFragment extends Fragment {
 
 
 
+
         //parcelable = getActivity().getIntent().getExtras().getParcelable(KeyHelperClass.TIME_PARCEL_DATA);;
         timeIndexPosition = parcelable.getTimeIndex();
 //        jsonData = parcelable.getRetainedJsonData();
@@ -88,7 +90,7 @@ public class SetTimerFragment extends Fragment {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -98,6 +100,9 @@ public class SetTimerFragment extends Fragment {
         onToggleOnlySubmit = binding.toggleOnlyBtn;
         soundSelection = binding.soundSelectBtn;
 
+
+        Log.d("TestJson",""+parcelable.getTimeStringVal());
+        mViewModel.getTimerText().setValue(parcelable.getTimeStringVal());
 
         MainActivity.tabLayout.setVisibility(View.GONE);
 
@@ -257,7 +262,6 @@ public class SetTimerFragment extends Fragment {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public void observerInit(){
 
         Observer<String> changedTimeText = new Observer() {

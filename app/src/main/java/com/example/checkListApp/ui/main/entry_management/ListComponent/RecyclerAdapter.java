@@ -522,6 +522,7 @@ implements ItemTouchHelperAdapter {
 
                     action.setTimeParcel( new TimeParcelBuilder()
                             .setTimeIndexValue(getBindingAdapterPosition())
+                            .setTimeStringValue(getEntry().timeTemp)
                         //    .setRetainJsonData(JsonService.getJsonCheckArrayList())
                             .build() );
                     Navigation.findNavController(activity, R.id.entryListFragment).navigate(action);

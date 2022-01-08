@@ -170,15 +170,24 @@ public class Operator {
         Entry movingItem = mainFragment.getCheckList().get(movingItemIndex);
         Entry entrySwap = mainFragment.getCheckList().get(placeIndex);
 
-        mainFragment.getCheckList().remove(movingItem);
-        adapter.notifyItemRemoved(movingItemIndex);
-        mainFragment.getCheckList().add(placeIndex, movingItem);
-        adapter.notifyItemInserted(placeIndex);
+//        movingItem.swapIds(entrySwap);
+//        entrySwap.swapIds(movingItem);
 
-        adapter.notifyItemRangeChanged(movingItemIndex, placeIndex);
+//        mainFragment.getCheckList().remove(movingItem);
+//        adapter.notifyItemRemoved(movingItemIndex);
+//        mainFragment.getCheckList().add(placeIndex, movingItem);
+//        adapter.notifyItemInserted(placeIndex);
+
+        mainFragment.getCheckList().get(movingItemIndex).setEntry(entrySwap);
+        mainFragment.getCheckList().get(placeIndex).setEntry(movingItem);
+
+//        adapter.notifyItemRangeChanged(movingItemIndex, placeIndex);
+        adapter.notifyItemChanged(movingItemIndex,movingItem);
+        adapter.notifyItemChanged(placeIndex,entrySwap);
+
         adapter.notifyItemMoved(movingItemIndex,placeIndex);
 
-        movingItem.swapIds(entrySwap);
+
 
         MainFragment.scrollPosition(placeIndex);
 

@@ -171,7 +171,9 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+
+//        super.onBackPressed();
+
     }
 
 }

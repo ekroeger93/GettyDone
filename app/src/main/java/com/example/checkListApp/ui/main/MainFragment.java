@@ -99,11 +99,8 @@ TaDone Prototype
 
 //TODO: BUGS
 
- -pass in the timerLabel time to setTimer
- -hitting back button from setTimer causes issues
-
  -fix move
- resorting to deliberate buttons
+ needs to be tested
 
  -fix service
   service notification sometimes doesn't terminate itself and shows negative value
