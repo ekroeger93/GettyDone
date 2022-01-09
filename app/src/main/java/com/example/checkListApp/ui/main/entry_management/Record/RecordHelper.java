@@ -28,7 +28,7 @@ public class RecordHelper {
 
     public static ArrayList<Record>recordArrayList = new ArrayList<>();
 
-    static String recordListJson= "";
+    public static String recordListJson= "";
 
     public void createButton(Context context, MainFragmentBinding binding){
         recordFinishButtonToggle = new RecordFinishButtonToggle();

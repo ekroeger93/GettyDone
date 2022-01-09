@@ -109,7 +109,6 @@ TaDone Prototype
   service notification sometimes doesn't terminate itself and shows negative value
  of set time
 
-
  -fix leaf buttons, it would offset on other screens
   only works bindng.main and sucks doing it,
   -may have to resort to actual buttons,instead of generated
@@ -122,6 +121,7 @@ TaDone Prototype
 
  Context.startForegroundService() did not then call Service.startForeground()
  https://medium.com/geekculture/context-startforegroundservice-did-not-then-call-service-startforeground-solved-7640d5ba394a
+
  check the database table for further testing
 
 
@@ -154,11 +154,6 @@ TaDone Prototype
 add legend keys,
 change Y axis value to number of times submitted completion,
 within a month period
-
-
-use graph to represent the month (4 week) of being active (default)
-use calendar to show completed tasks
- - on click date changes graph
 
 -add in pull down/up to extender, change the recycler view Y size
     -use anchor points when dragging

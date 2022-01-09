@@ -36,10 +36,14 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -123,32 +127,53 @@ public class ProgressFragment extends Fragment {
         BarChart barChart = (BarChart) view.findViewById(R.id.chart);
         calendarView = view.findViewById(R.id.calendar);
 
+        String testDataProgress ="[" +
+                "{\"goalCount\":3,\"dateFinished\":2022.01.06,\"currentWeekOfYear\":2}," +
+                "{\"goalCount\":2,\"dateFinished\":2022.01.07,\"currentWeekOfYear\":3}," +
+                "{\"goalCount\":1,\"dateFinished\":2022.01.09,\"currentWeekOfYear\":3}," +
+                "{\"goalCount\":5,\"dateFinished\":2022.01.10,\"currentWeekOfYear\":3}," +
+                "{\"goalCount\":7,\"dateFinished\":2022.01.13,\"currentWeekOfYear\":3}" +
+                "]";
+
+
         ArrayList<Record> listRecord = RecordHelper
                 .getJsonRecordGeneratedArray(
-                        ProgressProvider.loadProgress(getContext()));
+//                        ProgressProvider.loadProgress(getContext())
+                testDataProgress
+                );
 
         RecordHelper.recordArrayList = listRecord;
+
         RecordHelper.buildRecordListJson();
+
+        Log.d("progressTest", ""+RecordHelper.recordListJson);
 
         mPaint.setColor(Color.BLACK);
         mPaint.setTextSize(100);
 
         barChart.setFitBars(true);
 
-        BarDataSet dataSet = new BarDataSet(generateEntries(listRecord), "Label"); // add entries to dataset
-            dataSet.setColor(Color.RED);
-            dataSet.setValueTextColor(Color.BLACK);
 
-            BarData barData = new BarData(dataSet);
-            barChart.setData(barData);
 
 
 
         calendarView.setOnDateChangeListener((calendarView1, year, month, day) -> {
 
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(year, month, day);
+            WeekFields weekFields = WeekFields.of(Locale.getDefault());
+            int week = LocalDate.of(year,month+1,day).get(weekFields.weekOfWeekBasedYear());
 
+            Log.d("progressTest"," "+year+" "+month+" "+day+" "+week);
+
+            BarDataSet dataSet = new BarDataSet(generateEntriesByWeek(listRecord,LocalDate.of(year,month+1,day)), "Label"); // add entries to dataset
+            dataSet.setColor(Color.RED);
+            dataSet.setValueTextColor(Color.BLACK);
+            dataSet.setLabel("entries submitted");
+
+            BarData barData = new BarData(dataSet);
+            barChart.setData(barData);
+//            barChart.setXAxisRenderer();
+
+            barChart.invalidate();
         });
 
 
@@ -157,6 +182,7 @@ public class ProgressFragment extends Fragment {
                 public void onValueSelected(Entry e, Highlight h) {
 
 //                    textView.setText((CharSequence) e.getData().toString());
+//                    barChart.setDescription();
                 }
 
                 @Override
@@ -166,11 +192,46 @@ public class ProgressFragment extends Fragment {
             });
 
 
-            barChart.invalidate();
 
 
     }
 
+
+
+    public List<BarEntry> generateEntriesByWeek(ArrayList<Record> listRecord, LocalDate localDate){
+
+        List<BarEntry> chartEntries = new ArrayList<>();
+
+        WeekFields weekFields = WeekFields.of(Locale.getDefault());
+
+        int week = localDate.get(weekFields.weekOfWeekBasedYear());
+
+
+        int index = 0;
+//        String prevCheckDate="";
+
+        for(int i = 1; i <= 7; i ++) {
+            chartEntries.add( new BarEntry(i,0,""));
+        }
+
+        for (Record record : listRecord) {
+
+            Log.d("progressTest","recWeek "+record.getCurrentWeekOfYear() + " # "+week);
+
+            if (record.getCurrentWeekOfYear() != week) continue;;
+
+//                BarEntry barEntry = new BarEntry(index, record.getNumberOfGoals(), record.getCurrentDate());
+                BarEntry barEntry = new BarEntry(record.getLocalDate().getDayOfWeek().getValue(), record.getNumberOfGoals(), record.getCurrentDate());
+                chartEntries.set(record.getLocalDate().getDayOfWeek().getValue()-1,barEntry);
+
+//            index++;
+        }
+
+
+        return chartEntries;
+
+
+    }
 
 
     public List<BarEntry> generateEntries(ArrayList<Record> listRecord){
