@@ -127,19 +127,19 @@ public class ProgressFragment extends Fragment {
         BarChart barChart = (BarChart) view.findViewById(R.id.chart);
         calendarView = view.findViewById(R.id.calendar);
 
-        String testDataProgress ="[" +
-                "{\"goalCount\":3,\"dateFinished\":2022.01.06,\"currentWeekOfYear\":2}," +
-                "{\"goalCount\":2,\"dateFinished\":2022.01.07,\"currentWeekOfYear\":3}," +
-                "{\"goalCount\":1,\"dateFinished\":2022.01.09,\"currentWeekOfYear\":3}," +
-                "{\"goalCount\":5,\"dateFinished\":2022.01.10,\"currentWeekOfYear\":3}," +
-                "{\"goalCount\":7,\"dateFinished\":2022.01.13,\"currentWeekOfYear\":3}" +
-                "]";
+//        String testDataProgress ="[" +
+//                "{\"goalCount\":3,\"dateFinished\":2022.01.06,\"currentWeekOfYear\":2}," +
+//                "{\"goalCount\":2,\"dateFinished\":2022.01.07,\"currentWeekOfYear\":2}," +
+//                "{\"goalCount\":1,\"dateFinished\":2022.01.09,\"currentWeekOfYear\":3}," +
+//                "{\"goalCount\":5,\"dateFinished\":2022.01.10,\"currentWeekOfYear\":3}," +
+//                "{\"goalCount\":7,\"dateFinished\":2022.01.13,\"currentWeekOfYear\":3}" +
+//                "]";
 
 
         ArrayList<Record> listRecord = RecordHelper
                 .getJsonRecordGeneratedArray(
-//                        ProgressProvider.loadProgress(getContext())
-                testDataProgress
+                     ProgressProvider.loadProgress(getContext())
+//               testDataProgress
                 );
 
         RecordHelper.recordArrayList = listRecord;
@@ -218,11 +218,19 @@ public class ProgressFragment extends Fragment {
 
             Log.d("progressTest","recWeek "+record.getCurrentWeekOfYear() + " # "+week);
 
+            int dayOfTheWeek = record.getLocalDate().getDayOfWeek().getValue();
+            dayOfTheWeek++;
+            if(dayOfTheWeek > 7) dayOfTheWeek =1; //who the hell made sunday 7!!!
+
+
             if (record.getCurrentWeekOfYear() != week) continue;;
 
+
+            Log.d("progressTest","dd = "+dayOfTheWeek);
+
 //                BarEntry barEntry = new BarEntry(index, record.getNumberOfGoals(), record.getCurrentDate());
-                BarEntry barEntry = new BarEntry(record.getLocalDate().getDayOfWeek().getValue(), record.getNumberOfGoals(), record.getCurrentDate());
-                chartEntries.set(record.getLocalDate().getDayOfWeek().getValue()-1,barEntry);
+                BarEntry barEntry = new BarEntry(dayOfTheWeek, record.getNumberOfGoals(), record.getCurrentDate());
+                chartEntries.set(dayOfTheWeek-1,barEntry);
 
 //            index++;
         }

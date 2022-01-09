@@ -29,7 +29,10 @@ public class Record {
     public LocalDate getLocalDate(){
 
         String[] holdDate;
-        holdDate = currentDate.replace("\"","").split("\\.");
+        holdDate = currentDate
+                .replace("\"","")
+                .replace("\\","")//quit fucking my shit up you curly curtain cunt!
+                .split("\\.");
 
         int year = Integer.parseInt(holdDate[0]);
         int month = Integer.parseInt(holdDate[1]);
