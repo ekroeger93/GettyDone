@@ -25,11 +25,13 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -48,6 +50,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.selection.SelectionTracker;
 import androidx.recyclerview.selection.StorageStrategy;
 import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.checkListApp.MainActivity;
@@ -124,28 +127,15 @@ TaDone Prototype
 
 //TODO: DESIGN
 
-well shit if I known
-https://medium.com/@ipaulpro/drag-and-swipe-with-recyclerview-b9456d2b1aaf
-i can get rid of touch expander completely
-
--double tap could be used as edit
--swipe is delete
--drag is move
--add button at the end of list to add
-
-
 - ICONS/IMAGES FOR BUTTONS
 
 - entry time label redesign
 
 - entry Animation for move/delete/add
-    move - shake up and down
-    delete - swipe right, show trash icon on left
-    add - popup, scroll to bottom
+    delete - show trash icon on left
 
 - show swiping hand icon for hint
 
-- transition between fragments
 - file manager
     -each viewholder have trash icon to delete
     -prompt confirm
@@ -159,9 +149,6 @@ i can get rid of touch expander completely
 -send a post notification for service at end
 -tips
 
-
--progress (see below)
-use calendar view instead
 
 -color code Entry Lists for graphing,
 add legend keys,
@@ -177,11 +164,19 @@ use calendar to show completed tasks
     -use anchor points when dragging
     or fullscreen mode
 
-Post production ideas:
+//TODO: Post production ideas:
 -? save to google drive, share data
 -? save as pdf/rich text file -> print appMobilityPrint
 -? schedule on calender, notification
 -? make timelabel editText instead, /w custom keyboard
+
+https://medium.com/@ipaulpro/drag-and-swipe-with-recyclerview-b9456d2b1aaf
+i can get rid of touch expander completely
+-double tap could be used as edit
+-swipe is delete
+-drag is move
+-add button at the end of list to add
+
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 
@@ -235,6 +230,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     public ListUtility      getListUtility() { return listUtility;}
 
     private boolean isSorting = false;
+    public static boolean isPrepMoving = false;
 
     private static final MutableLiveData<Boolean> timerRunning = new MutableLiveData<>(false);
     public Boolean isTimerRunning()   { return timerRunning.getValue();}
@@ -452,6 +448,10 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     public static void scrollPosition(int position){
         customLayoutManager.scrollToPositionWithOffset(position,100);
+    }
+
+    public static void scrollPosition(int position, int offset){
+        customLayoutManager.scrollToPositionWithOffset(position,offset);
     }
 
     public void startService(){
@@ -849,6 +849,15 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                try {
                    selectedEntry.postValue(operator.getSelection());
 
+
+//                   TODO: TEMP FIX FOR BUG, ANIMATION STUCK SCALE 0 WHEN VIEW IS CREATED
+                   if (checkList.get(selectedEntry.getValue()).getViewHolder().itemView.getScaleX() < 1){
+
+                       checkList.get(selectedEntry.getValue())
+                               .getViewHolder()
+                               .animatePopIn();
+                   }
+
                } catch (NullPointerException e) {
                    e.printStackTrace();
                }
@@ -871,6 +880,10 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                return true;
            });
 
+
+
+
+
     binding.touchExpander.setOnTouchListener((view, motionEvent) -> {
 
         float touch_X = motionEvent.getRawX();
@@ -887,37 +900,27 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         float xMove = operator.currentViewHolder.itemView.getX() + (velocityTracker.getXVelocity()*40);
 
-        ValueAnimator valueAnimator = ValueAnimator.ofInt(0,20,0,-20,0);
-        valueAnimator.setDuration(2000);
-        valueAnimator.setInterpolator(new OvershootInterpolator());
-        valueAnimator.addUpdateListener(valueAnimator1 -> {
 
-            operator.currentViewHolder.itemView.setTranslationY(
-                    (Integer) valueAnimator1.getAnimatedValue()
-            );
-
-        });
 
 
       if(touch_X > binding.touchExpander.getX()+ (binding.touchExpander.getWidth()/1.5) ) {
-
-
           operator.currentViewHolder.itemView.setTranslationX(xMove);
-
       }else{
           operator.currentViewHolder.itemView.setTranslationX(0);
       }
 
-      if(
-              touch_X < binding.touchExpander.getX()
-                      - (binding.touchExpander.getWidth()/3) &&
-                      onButton &&
-                      !valueAnimator.isRunning()
-      ) {
-          valueAnimator.start();
-      }else{
-         valueAnimator.pause();
-      }
+
+        checkList.get(operator.getSelection())
+                .getViewHolder()
+                .isGonnaShakeCauseImMovingIt
+                .postValue(
+                        (touch_X < binding.touchExpander.getX() -
+                (binding.touchExpander.getWidth()/3f)
+              && onButton)
+                );
+
+
+
 
         velocityTracker.recycle();
 
@@ -925,6 +928,9 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         if (motionEvent.getAction() == MotionEvent.ACTION_UP ||
                 motionEvent.getAction() == MotionEvent.ACTION_CANCEL
         ){
+
+            checkList.get(operator.getSelection()).getViewHolder().hasAnimateMove = false;
+
             if(!onButton){
 
            // operator.currentViewHolder.itemView.setTranslationX(0);
@@ -1021,6 +1027,37 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                 }else{ listUtility.updateAllSelection(checkList);
                 }
 
+
+//                RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(getContext());
+//                smoothScroller.setTargetPosition(checkList.size()-1);
+//                customLayoutManager.startSmoothScroll(smoothScroller);
+
+                if(EntryItemManager.isAddingEntry){
+//                scrollPosition(checkList.size()-2);
+
+
+                    RecyclerView.SmoothScroller smoothScroller =
+                            new LinearSmoothScroller(getContext()){
+
+                                @Override
+                                protected int getVerticalSnapPreference() {
+                                    return SNAP_TO_END;
+                                }
+
+                                @Override
+                                protected void onStop() {
+                                    super.onStop();
+                                    checkList.get(checkList.size()-2).getViewHolder().animatePopIn();
+                                }
+                            };
+
+                    smoothScroller.setTargetPosition(checkList.size()-1);
+                    customLayoutManager.startSmoothScroll(smoothScroller);
+
+
+
+                EntryItemManager.isAddingEntry = false;
+                }
 
                 _checkList.setValue(checkList);
 

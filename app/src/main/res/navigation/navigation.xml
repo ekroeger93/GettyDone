@@ -13,17 +13,23 @@
 
         <action
             android:id="@+id/action_mainFragment_to_fileListFragment"
-            app:destination="@id/fileListFragment" >
+            app:destination="@id/fileListFragment"
+            app:enterAnim="@anim/slide_left_enter"
+            app:exitAnim="@anim/slide_right_exit">
 
         </action>
 
         <action
             android:id="@+id/action_mainFragment_to_progressFragment"
-            app:destination="@id/progressFragment" />
+            app:destination="@id/progressFragment"
+            app:enterAnim="@anim/slide_left_enter"
+            app:exitAnim="@anim/slide_right_exit" />
 
         <action
             android:id="@+id/action_mainFragment_to_setTimerFragment"
             app:destination="@id/setTimerFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
             app:launchSingleTop="false">
 
         </action>
@@ -49,11 +55,15 @@
 
         <action
             android:id="@+id/action_fileListFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
+            app:destination="@id/mainFragment"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_left_exit" />
 
         <action
             android:id="@+id/action_fileListFragment_to_progressFragment"
-            app:destination="@id/progressFragment" />
+            app:destination="@id/progressFragment"
+            app:enterAnim="@anim/slide_left_enter"
+            app:exitAnim="@anim/slide_right_exit" />
         <argument
             android:name="jsonData"
             app:argType="string" />
@@ -70,10 +80,14 @@
         tools:layout="@layout/fragment_progress">
         <action
             android:id="@+id/action_progressFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
+            app:destination="@id/mainFragment"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_left_exit" />
         <action
             android:id="@+id/action_progressFragment_to_fileListFragment"
-            app:destination="@id/fileListFragment" />
+            app:destination="@id/fileListFragment"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_left_exit" />
     </fragment>
 
 
@@ -84,8 +98,9 @@
         android:label="SetTimerFragment" >
         <action
             android:id="@+id/action_setTimerFragment_to_mainFragment"
-            app:destination="@id/mainFragment" >
-           </action>
+            app:destination="@id/mainFragment"
+            app:enterAnim="@anim/item_animation_fall_down"
+            app:exitAnim="@android:anim/fade_out"></action>
         <argument
             android:name="timeParcel"
             app:argType="com.example.checkListApp.timemanagement.parcel.TimeParcel"

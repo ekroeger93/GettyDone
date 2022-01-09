@@ -3,6 +3,7 @@ package com.example.checkListApp.ui.main.entry_management.ListComponent;
 import android.content.Context;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public final class  CustomLayoutManager extends LinearLayoutManager {
     private boolean isScrollEnabled = true;
@@ -13,6 +14,11 @@ public final class  CustomLayoutManager extends LinearLayoutManager {
 
     public void setScrollEnabled(boolean flag) {
         this.isScrollEnabled = flag;
+    }
+
+    @Override
+    public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, int position) {
+        super.smoothScrollToPosition(recyclerView, state, position);
     }
 
     @Override

@@ -79,7 +79,8 @@ public class FileListFragment extends Fragment {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
 
-        fileListAdapter = new FileListAdapter();
+        fileListAdapter = new FileListAdapter(fileManager,this);
+
         fileListAdapter.setListFiles(fileManager.getListOfFiles());
 
         RecyclerView recyclerView = binding.fileListView;
@@ -113,11 +114,11 @@ public class FileListFragment extends Fragment {
 
         });
 
-        binding.deleteFileBtn.setOnClickListener(view1 -> {
-            fileManager.deleteFile(fileListAdapter.getFileSelection());
-            updateOnDelete();
-
-        });
+//        binding.deleteFileBtn.setOnClickListener(view1 -> {
+//            fileManager.deleteFile(fileListAdapter.getFileSelection());
+//            updateOnDelete();
+//
+//        });
 
 
         binding.loadFileBtn.setOnClickListener(view1 -> {

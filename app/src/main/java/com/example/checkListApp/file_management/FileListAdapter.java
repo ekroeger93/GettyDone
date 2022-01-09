@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,14 @@ public class FileListAdapter extends RecyclerView.Adapter {
 
     private  int fileSelection = 0;
 
+    private final FileManager fileManager;
+    private final FileListFragment fileListFragment;
+
+    public FileListAdapter(FileManager fileManager, FileListFragment fileListFragment) {
+        this.fileManager = fileManager;
+        this.fileListFragment = fileListFragment;
+    }
+
 
     public int getFileSelection() {
         return fileSelection;
@@ -30,6 +39,7 @@ public class FileListAdapter extends RecyclerView.Adapter {
     public void setListFiles(File[] listFiles) {
         this.listFiles = listFiles;
     }
+
 
     @NonNull
     @Override
@@ -91,6 +101,7 @@ public class FileListAdapter extends RecyclerView.Adapter {
     class MyViewHolder extends ViewHolder{
 
         public String fileName;
+        public Button deleteButton;
 
         public void setFileName(String fileName) {
             this.fileName = fileName;
@@ -100,6 +111,8 @@ public class FileListAdapter extends RecyclerView.Adapter {
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
+
+            deleteButton = (Button) itemView.findViewById(R.id.deleteFileSubBtn);
 
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -111,6 +124,13 @@ public class FileListAdapter extends RecyclerView.Adapter {
 
                 }
             });
+
+            deleteButton.setOnClickListener(view -> {
+                fileManager.deleteFile(getBindingAdapterPosition());
+                fileListFragment.updateOnDelete();
+            });
+
+
 
 
         }

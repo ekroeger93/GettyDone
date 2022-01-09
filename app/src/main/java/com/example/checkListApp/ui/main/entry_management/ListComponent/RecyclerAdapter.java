@@ -1,5 +1,6 @@
 package com.example.checkListApp.ui.main.entry_management.ListComponent;
 
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -10,6 +11,10 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.OvershootInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -173,12 +178,11 @@ implements ItemTouchHelperAdapter {
 
         view.setLongClickable(false);
 
-        ViewHolder viewHolder = new ViewHolder(entryBinding,listItemClickListener);
-//        viewHolder.onClick(view);
+        //        viewHolder.onClick(view);
 
 
 
-        return viewHolder;
+        return new ViewHolder(entryBinding,listItemClickListener);
 
 
             }
@@ -232,6 +236,8 @@ implements ItemTouchHelperAdapter {
            // holder.selectionUpdate();
             holder.checkSelected(position);
 
+
+
         }
 
 
@@ -239,7 +245,10 @@ implements ItemTouchHelperAdapter {
 
 
 
+
     }
+
+
 
 
     @Override
@@ -268,6 +277,7 @@ implements ItemTouchHelperAdapter {
 
 
     }
+
 
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
@@ -315,6 +325,9 @@ implements ItemTouchHelperAdapter {
       public  MutableLiveData<Integer> orderInt = new MutableLiveData<>(-1);
       public  MutableLiveData<Boolean> isSelected = new MutableLiveData<>(false);
 
+      public MutableLiveData<Boolean> isGonnaShakeCauseImMovingIt = new MutableLiveData<>(false);
+      public boolean hasAnimateMove = false;
+
         TrackerHelper.Details details;
 
         ListItemClickListener listItemClickListener;
@@ -343,12 +356,43 @@ implements ItemTouchHelperAdapter {
                     textView.setOnLongClickListener(this);
 
 
+
+
                     this.listItemClickListener = listItemClickListener;
 
+//                    animatePopIn();
 
 
                     setObservers(getEntry());
 
+                }
+
+                public void animatePopIn(){
+
+                    binding.getRoot().setScaleX(0.3f);
+                    binding.getRoot().setScaleY(0.3f);
+                    binding.getRoot().setAlpha(0f);
+
+                    binding.getRoot().animate()
+                            .scaleX(1)
+                            .scaleY(1)
+                            .alpha(1)
+                            .setDuration(500)
+                            .setInterpolator(new OvershootInterpolator())
+                            .start();
+
+                }
+
+                public void animateShakeVertically(){
+
+                   ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, -10 , 0 , 10, 0);
+                   valueAnimator.setDuration(200)
+                           .setRepeatCount(2);
+                   valueAnimator.addUpdateListener(valueAnimator1 -> {
+                       itemView.setTranslationY((Float)valueAnimator1.getAnimatedValue());
+                   });
+
+                   valueAnimator.start();
                 }
 
                 public void selectionUpdate(){
@@ -405,6 +449,19 @@ implements ItemTouchHelperAdapter {
                 }
 
                 public void setObservers(Entry entry){
+
+                    Observer<Boolean> onShaking = o ->{
+
+
+                        if(o && !hasAnimateMove) {
+                            animateShakeVertically();
+                        hasAnimateMove = true;
+                        }
+
+                    };
+
+                    isGonnaShakeCauseImMovingIt.observe(owner,onShaking);
+
 
                     Observer<String> onChangeEntryText = o -> {
 
@@ -482,14 +539,20 @@ implements ItemTouchHelperAdapter {
                     };
 
 
+
+
                     Observer<Integer> selectOrderObs = o -> {
                         selectOrder = o;//orderInt.getValue();
                         selectionUpdate();
+
                         //   notifyItemChanged(getBindingAdapterPosition());
                     };
 
                     Observer<Boolean> selectCheckObs = o ->{
                         selected = o;//isSelected.getValue();
+
+
+
                     };
 
 

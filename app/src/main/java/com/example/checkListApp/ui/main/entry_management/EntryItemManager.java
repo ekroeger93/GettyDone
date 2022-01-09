@@ -39,6 +39,8 @@ public class EntryItemManager {
     private final MainFragment mainFragment;
     private final TaskSortEntries taskSortEntries;
 
+    public static boolean isAddingEntry = false;
+
     ButtonPanelToggle buttonPanelToggle;
 
 
@@ -76,8 +78,9 @@ public class EntryItemManager {
 
        // operator.adapter.notifyItemChanged(mainFragment.getCheckList().size());
 
-        operator.refreshSelection(false);
+        isAddingEntry = true;
 
+        operator.refreshSelection(false);
 
         //TODO BUG AFTER MOVING ITEM IT UNDOS THE NEW ARRANGEMENT
         //NOTE: SOMETHING PROCEEDING THIS MAY BE EFFECTING IT

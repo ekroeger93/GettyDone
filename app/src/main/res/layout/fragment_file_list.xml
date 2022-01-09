@@ -32,6 +32,7 @@
         android:layout_width="379dp"
         android:layout_height="304dp"
         app:layoutManager="LinearLayoutManager"
+        android:background="@color/teal_700"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.343"
@@ -71,18 +72,18 @@
         android:id="@+id/loadFileBtn"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:background="@drawable/outline_file_open_black_48"
+        android:background="@mipmap/open_file_one_foreground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.488"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fileListView"
-        app:layout_constraintVertical_bias="0.756" />
+       />
 
     <Button
         android:id="@+id/deleteFileBtn"
         android:layout_width="70dp"
         android:layout_height="70dp"
+        android:visibility="gone"
         android:background="@drawable/outline_delete_black_48"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/saveAsBtn"
