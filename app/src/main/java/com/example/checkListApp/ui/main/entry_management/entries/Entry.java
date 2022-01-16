@@ -48,6 +48,8 @@ public class Entry {
     public boolean checkTemp;
     @Ignore
     public String timeTemp;
+    @Ignore
+    public boolean onTogglePrimerTemp = false;
 
     @Ignore
     public int numberValueTime = 0;

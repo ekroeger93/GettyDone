@@ -458,6 +458,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
             activity.startService(serviceIntent);
         }catch ( Exception i){
 
+            Log.d("_BUG",""+i.getLocalizedMessage());
         }
         //service.startService(intent);
     }
@@ -478,9 +479,16 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 //                int elapsedTime = setTime - time;
                 int elapsedTime = listUtility.getSummationTime(checkList) - time;
 
+                if(listUtility.currentActiveTime == null){
+                    listUtility.currentActiveTime = checkList.get(1);
+                }
+
                 Log.d("listUtilityTest",""+elapsedTime);
 
-                if(!listUtility.currentActiveTime.onTogglePrimer.getValue()){
+                //TODO NULL EXCEPTION HERE WHEN ASSIGNING NEW TIME VALUE
+             // STOPSHIP: 1/16/22
+//                if(!listUtility.currentActiveTime.onTogglePrimer.getValue()){
+             if(!listUtility.currentActiveTime.onTogglePrimerTemp){
                     if (listUtility.currentActiveTime.timeElapsed(elapsedTime)) {
 
 
@@ -563,8 +571,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         timerRunning.postValue(false);
 
 //        if(isMyServiceRunning(TimerService.class))
-       // getActivity().stopService(getForegroundTimerServiceIntent());
-        activity.stopService(serviceIntent);
+           activity.stopService(serviceIntent);
 
         return  true;
     });
@@ -700,10 +707,10 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     
     public int setTimer(MainTimerView mainTimerView){
 
-        if(mainTimerView.mainTimerViewModel.getNumberValueTime() == 0) {
+        if(MainTimerView.mainTimerViewModel.getNumberValueTime() == 0) {
             int summationTime = listUtility.getSummationTime(checkList);
             String setTime = new TimeState(summationTime).getTimeFormat();
-            mainTimerView.mainTimerViewModel.setCountDownTimer(setTime);
+            MainTimerView.mainTimerViewModel.setCountDownTimer(setTime);
 
             listUtility.accumulation(checkList);
 

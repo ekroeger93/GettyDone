@@ -231,6 +231,7 @@ public class CountDownTimerAsync {
             futureTime =  LocalDateTime.now();
             setTimeVolatile = 0;
             elapsedTimeVolatile = 0;
+            elapsedTime = 0;
             countDownTime = 0;
             countTime = 0;
             runTime = "00:00:00";

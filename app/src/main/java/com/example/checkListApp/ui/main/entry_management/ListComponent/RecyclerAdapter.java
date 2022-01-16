@@ -520,6 +520,8 @@ implements ItemTouchHelperAdapter {
 
                     Observer<Boolean> onChangeTogglePrimer = o->{
 
+                        entry.onTogglePrimerTemp = o;
+
                         if(o) {
 //                            setTimeButton.setBackgroundColor(Color.LTGRAY);
                             setTimeButton.setBackground(

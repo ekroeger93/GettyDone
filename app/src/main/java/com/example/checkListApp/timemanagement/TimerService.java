@@ -17,6 +17,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
 import com.example.checkListApp.MainActivity;
+import com.example.checkListApp.R;
 import com.example.checkListApp.timemanagement.parcel.ListTimersParcel;
 import com.example.checkListApp.timemanagement.utilities.KeyHelperClass;
 import com.example.checkListApp.timemanagement.utilities.ListTimerUtility;
@@ -116,7 +117,7 @@ public final class TimerService extends LifecycleService {
 //        Log.d("serviceTest",
 //        "r: "+ new TimeState().getValueAsTimeTruncated(decimalEntrySetTime - elapsedTimeNV) +
 //            "ra: "+ (decimalEntrySetTime- new TimeState().getValueAsTimeTruncated(elapsedTimeNV))+
-//                " eT: "+elapsedTime+
+////                " eT: "+elapsedTime+
 //                        " cT: " +countTime+
 ////                        " elapsedTimeVolatile: " +elapsedTimeVolatile+
 //                        " ex: " +expireTime.getTimeNumberValue()+
@@ -139,15 +140,16 @@ public final class TimerService extends LifecycleService {
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(this, channel)
                             .setContentIntent(pendingIntent)
-                            .setSmallIcon(android.R.drawable.star_on)
+                            .setSmallIcon(R.drawable.outline_timer_black_48)
                             .setOnlyAlertOnce(true)
                             .setContentTitle("Countdown Timer")
-                            .addAction(android.R.drawable.btn_minus, "Reset",
+                            .addAction(R.drawable.outline_add_circle_black_48, "R",
                                     resetTimePendingIntent)
                             .addAction(android.R.drawable.btn_star, "Toggle",
                                     toggleTimePendingIntent)
                             .setProgress(entry.numberValueTime, Math.abs( decimalEntrySetTime - elapsedTimeNV) , false)
                             .setAutoCancel(true)
+                            .setOngoing(true)
                             .setColor(Color.BLUE)
                             .setSubText(timeViewModel.getRepeaterTime() + "  " + new TimeState(countTime).getTimeFormat())
                             .setContentText(entry.textEntry.getValue() + "  " + new TimeState(timeRemainder).getTimeFormat());
@@ -245,7 +247,8 @@ public final class TimerService extends LifecycleService {
 
         private final TimerService timerService;
         private final PendingIntent pendingIntent;
-        private final MainTimerViewModel timeViewModel = MainActivity.timerViewModel;
+//        private final MainTimerViewModel timeViewModel = MainActivity.timerViewModel;
+        private final MainTimerViewModel timeViewModel = MainTimerView.mainTimerViewModel;
         private final ArrayList<Entry> timerViewModelList;
 
         private final int FOREGROUND_SERVICE_ID = 111;
@@ -260,9 +263,12 @@ public final class TimerService extends LifecycleService {
 
             timerViewModelList = (ArrayList<Entry>) generateEntryList(parcel);
 
-            timeViewModel.setTimeState(new TimeState(getSummationTime(timerViewModelList)));
+//            timeViewModel.setTimeState(new TimeState(getSummationTime(timerViewModelList)));
 
 
+            for(Entry n : timerViewModelList){
+                Log.d("serviceTest",""+n.numberValueTime);
+            }
 
 
         }
@@ -315,7 +321,8 @@ public final class TimerService extends LifecycleService {
 
                     int setTimeDecimalTruncated = new TimeState(timeViewModel.getNumberValueTime()).getTimeNumberValueDecimalTruncated();
 
-                elapsedTime = timeViewModel.getNumberValueTime() - countTime;
+//                elapsedTime = timeViewModel.getNumberValueTime() - countTime;
+                    elapsedTime = setTime.get() - countTime;
 
 //                Log.d("serviceTest")
 
@@ -329,11 +336,11 @@ public final class TimerService extends LifecycleService {
 
 //                    currentActiveTime = getCurrentActiveTime();
 
-//                    Log.d("serviceTest",time+ "   "+ elapsedTime);
+//                    Log.d("serviceTest", timeViewModel.getNumberValueTime()+"  " +countTime+"   "+ elapsedTime + " ST: "+setTime.get());
+
                     //rebuild notification here
                     notification.set(timerService.makeNotification(
-                            countTime
-                            ,
+                            countTime,
                             elapsedTimeN
                             , timeViewModel
                             , currentActiveTime
