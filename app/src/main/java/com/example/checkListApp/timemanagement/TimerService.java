@@ -7,14 +7,10 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.lifecycle.LifecycleService;
 import androidx.lifecycle.MutableLiveData;
@@ -90,7 +86,7 @@ public final class TimerService extends LifecycleService {
 //                            , elapsedTimeVolatile
 //                            , elapsedTimeN
 
-    public Notification makeNotification(int elapsedTime, int countTime, int elapsedTimeVolatile, int elapsedTimeNV, MainTimerViewModel timeViewModel, Entry entry, PendingIntent pendingIntent) {
+    public Notification makeNotification(int countTime, int elapsedTimeNV, MainTimerViewModel timeViewModel, Entry entry, PendingIntent pendingIntent) {
         String channel;
 
         channel = createChannel();
@@ -113,36 +109,25 @@ public final class TimerService extends LifecycleService {
 
         TimeState expireTime = new TimeState( Math.abs(entry.timeAccumulated));
 
-//        int timeRemainder =  expireTime.getTimeNumberValue()- elapsedTimeNV;
-
-//        int timeRemainderY = new TimeState( Math.abs(expireTime.getTimeNumberValue() - elapsedTimeNV)).timeTruncated();
-
-//        int timeRemainderX = Math.abs(expireTime.getTimeNumberValue() - new TimeState(elapsedTimeNV).timeTruncated());
-
-
-
         int decimalEntrySetTime = new TimeState(expireTime.getTimeNumberValue()).getTimeNumberValueDecimalTruncated();
-        int perElapsedValue = Math.abs(decimalEntrySetTime- elapsedTimeVolatile);
-        int perElapsedTime = new TimeState(expireTime.getTimeNumberValue() - elapsedTimeVolatile).getTimeNumberValueDecimalTruncated();
-
 
         int timeRemainder = new TimeState().getValueAsTimeTruncated(decimalEntrySetTime - elapsedTimeNV);
 
-        Log.d("serviceTest",
-        "r: "+ new TimeState().getValueAsTimeTruncated(decimalEntrySetTime - elapsedTimeNV) +
-            "ra: "+ (decimalEntrySetTime- new TimeState().getValueAsTimeTruncated(elapsedTimeNV))+
-                " eT: "+elapsedTime+
-                        " cT: " +countTime+
-//                        " elapsedTimeVolatile: " +elapsedTimeVolatile+
-                        " ex: " +expireTime.getTimeNumberValue()+
-                        " eTNV: "+elapsedTimeNV+
-//                        " TR: " +timeRemainder+
-//
-//                        " TRX: "+timeRemainderX+
-//                        " TTRX: "+(expireTime.getTimeNumberValue() -elapsedTimeNV)
-                        " elasped: "+ ( decimalEntrySetTime - elapsedTimeNV)+
-                ""
-        );
+//        Log.d("serviceTest",
+//        "r: "+ new TimeState().getValueAsTimeTruncated(decimalEntrySetTime - elapsedTimeNV) +
+//            "ra: "+ (decimalEntrySetTime- new TimeState().getValueAsTimeTruncated(elapsedTimeNV))+
+//                " eT: "+elapsedTime+
+//                        " cT: " +countTime+
+////                        " elapsedTimeVolatile: " +elapsedTimeVolatile+
+//                        " ex: " +expireTime.getTimeNumberValue()+
+//                        " eTNV: "+elapsedTimeNV+
+////                        " TR: " +timeRemainder+
+////
+////                        " TRX: "+timeRemainderX+
+////                        " TTRX: "+(expireTime.getTimeNumberValue() -elapsedTimeNV)
+//                        " elasped: "+ ( decimalEntrySetTime - elapsedTimeNV)+
+//                ""
+//        );
 
    //     new TimeState(entry.getTimeAccumulated()).timeTruncated();
 
@@ -161,12 +146,13 @@ public final class TimerService extends LifecycleService {
                                     resetTimePendingIntent)
                             .addAction(android.R.drawable.btn_star, "Toggle",
                                     toggleTimePendingIntent)
-//                            .setProgress(decimalEntrySetTime, Math.abs( decimalEntrySetTime - elapsedTimeNV) , false)
+                            .setProgress(entry.numberValueTime, Math.abs( decimalEntrySetTime - elapsedTimeNV) , false)
                             .setAutoCancel(true)
                             .setColor(Color.BLUE)
                             .setSubText(timeViewModel.getRepeaterTime() + "  " + new TimeState(countTime).getTimeFormat())
                             .setContentText(entry.textEntry.getValue() + "  " + new TimeState(timeRemainder).getTimeFormat());
 
+//            Log.d("serviceTest",decimalEntrySetTime+"  "+Math.abs( decimalEntrySetTime - elapsedTimeNV) + " "+entry.numberValueTime);
 
             return mBuilder
                     .setPriority(2)
@@ -283,7 +269,7 @@ public final class TimerService extends LifecycleService {
 
 
         public Notification preSetNotification() {
-            return timerService.makeNotification(0, 1, 0,0, timeViewModel, new Entry(), pendingIntent);
+            return timerService.makeNotification(1, 0, timeViewModel, new Entry(), pendingIntent);
         }
 
 
@@ -346,10 +332,9 @@ public final class TimerService extends LifecycleService {
 //                    Log.d("serviceTest",time+ "   "+ elapsedTime);
                     //rebuild notification here
                     notification.set(timerService.makeNotification(
-                           elapsedTime
-                            , countTime
-                            , elapsedTimeVolatile
-                            , elapsedTimeN
+                            countTime
+                            ,
+                            elapsedTimeN
                             , timeViewModel
                             , currentActiveTime
                             , pendingIntent));
