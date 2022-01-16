@@ -1,22 +1,24 @@
 package com.example.checkListApp.timemanagement;
 
-import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
+import androidx.lifecycle.LifecycleService;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import com.example.checkListApp.MainActivity;
 import com.example.checkListApp.timemanagement.parcel.ListTimersParcel;
@@ -27,26 +29,41 @@ import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-public final class TimerService extends Service {
+public final class TimerService extends LifecycleService {
 
    public static int activeTimeIndex=0;
    private Intent serviceIntent;
-   public static boolean reset= false;
+   public static MutableLiveData<Boolean> reset = new MutableLiveData<>(false);
 
     @Override
     public void onCreate() {
         super.onCreate();
+
+        Observer<Boolean> onReset = aBoolean -> {
+
+            if(aBoolean) {
+                stopSelf();
+                stopService(serviceIntent);
+                onDestroy();
+            }
+        };
+
+        reset.observe(this,onReset);
+
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
-        serviceIntent =intent;
+        super.onStartCommand(intent, flags, startId);
+        serviceIntent = intent;
 
         PendingIntent pendingIntent =
-                PendingIntent.getActivity(this, 0, intent,  PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
 
         ListTimersParcel parcelableList = intent.getParcelableExtra(KeyHelperClass.TIME_PARCEL_DATA);
 
@@ -54,7 +71,7 @@ public final class TimerService extends Service {
 
 
         ForegroundTimerService foregroundTimerService =
-                new ForegroundTimerService(this, parcelableList , pendingIntent);
+                new ForegroundTimerService(this, parcelableList, pendingIntent);
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -68,24 +85,16 @@ public final class TimerService extends Service {
         return (START_NOT_STICKY);
     }
 
+//    elapsedTime
+//                            , countTime
+//                            , elapsedTimeVolatile
+//                            , elapsedTimeN
 
-    public Notification makeNotification(String data, int timer, MainTimerViewModel timeViewModel, Entry entry, PendingIntent pendingIntent) {
+    public Notification makeNotification(int elapsedTime, int countTime, int elapsedTimeVolatile, int elapsedTimeNV, MainTimerViewModel timeViewModel, Entry entry, PendingIntent pendingIntent) {
         String channel;
 
         channel = createChannel();
 
-        TimeState countTime = new TimeState(0);
-
-        try {
-             countTime = new TimeState(data);
-        }catch (NumberFormatException e){
-            stopSelf();
-        }
-
-
-        TimeState expireTime = new TimeState( Math.abs(entry.timeAccumulated));
-
-        int timeRemainder =  expireTime.getTimeNumberValue() - countTime.getTimeNumberValue();
 
         Intent toggleTimeIntent = new Intent(this, TimerBroadcastReceiver.class);
             toggleTimeIntent.setAction(KeyHelperClass.BROADCAST_ACTION_TOGGLE_TIMER);
@@ -102,6 +111,83 @@ public final class TimerService extends Service {
         //https://developer.android.com/guide/components/broadcasts
         //https://developer.android.com/training/notify-user/build-notification.html#java
 
+        TimeState expireTime = new TimeState( Math.abs(entry.timeAccumulated));
+
+//        int timeRemainder =  expireTime.getTimeNumberValue()- elapsedTimeNV;
+
+//        int timeRemainderY = new TimeState( Math.abs(expireTime.getTimeNumberValue() - elapsedTimeNV)).timeTruncated();
+
+//        int timeRemainderX = Math.abs(expireTime.getTimeNumberValue() - new TimeState(elapsedTimeNV).timeTruncated());
+
+
+
+        int decimalEntrySetTime = new TimeState(expireTime.getTimeNumberValue()).getTimeNumberValueDecimalTruncated();
+        int perElapsedValue = Math.abs(decimalEntrySetTime- elapsedTimeVolatile);
+        int perElapsedTime = new TimeState(expireTime.getTimeNumberValue() - elapsedTimeVolatile).getTimeNumberValueDecimalTruncated();
+
+
+        int timeRemainder = new TimeState().getValueAsTimeTruncated(decimalEntrySetTime - elapsedTimeNV);
+
+        Log.d("serviceTest",
+        "r: "+ new TimeState().getValueAsTimeTruncated(decimalEntrySetTime - elapsedTimeNV) +
+            "ra: "+ (decimalEntrySetTime- new TimeState().getValueAsTimeTruncated(elapsedTimeNV))+
+                " eT: "+elapsedTime+
+                        " cT: " +countTime+
+//                        " elapsedTimeVolatile: " +elapsedTimeVolatile+
+                        " ex: " +expireTime.getTimeNumberValue()+
+                        " eTNV: "+elapsedTimeNV+
+//                        " TR: " +timeRemainder+
+//
+//                        " TRX: "+timeRemainderX+
+//                        " TTRX: "+(expireTime.getTimeNumberValue() -elapsedTimeNV)
+                        " elasped: "+ ( decimalEntrySetTime - elapsedTimeNV)+
+                ""
+        );
+
+   //     new TimeState(entry.getTimeAccumulated()).timeTruncated();
+
+        if(countTime <= 0 && timeViewModel.getRepeaterTime() <= 0 ) {
+            Log.d("serviceTest", "END!");
+            return makeNotificationDismiss(pendingIntent);
+
+        }else {
+            NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(this, channel)
+                            .setContentIntent(pendingIntent)
+                            .setSmallIcon(android.R.drawable.star_on)
+                            .setOnlyAlertOnce(true)
+                            .setContentTitle("Countdown Timer")
+                            .addAction(android.R.drawable.btn_minus, "Reset",
+                                    resetTimePendingIntent)
+                            .addAction(android.R.drawable.btn_star, "Toggle",
+                                    toggleTimePendingIntent)
+//                            .setProgress(decimalEntrySetTime, Math.abs( decimalEntrySetTime - elapsedTimeNV) , false)
+                            .setAutoCancel(true)
+                            .setColor(Color.BLUE)
+                            .setSubText(timeViewModel.getRepeaterTime() + "  " + new TimeState(countTime).getTimeFormat())
+                            .setContentText(entry.textEntry.getValue() + "  " + new TimeState(timeRemainder).getTimeFormat());
+
+
+            return mBuilder
+                    .setPriority(2)
+                    .setCategory(Notification.CATEGORY_SERVICE)
+                    .build(); // foregroundTimerService.createTimer(notification);
+        }
+    }
+
+
+    public Notification makeNotificationDismiss(PendingIntent pendingIntent){
+
+        String channel;
+        channel = createChannel();
+
+        Intent resetTimeIntent = new Intent(this, TimerBroadcastReceiver.class);
+        resetTimeIntent.setAction(KeyHelperClass.BROADCAST_ACTION_RESET_TIMER);
+
+        PendingIntent resetTimePendingIntent =
+                PendingIntent.getBroadcast(this,0, resetTimeIntent,0);
+
+
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this, channel)
@@ -109,27 +195,24 @@ public final class TimerService extends Service {
                         .setSmallIcon(android.R.drawable.star_on)
                         .setOnlyAlertOnce(true)
                         .setContentTitle("Countdown Timer")
-                        .addAction(android.R.drawable.btn_minus, "Reset",
-                                resetTimePendingIntent)
-                        .addAction(android.R.drawable.btn_star, "Toggle",
-                                toggleTimePendingIntent)
-                        .setProgress(entry.numberValueTime,timeRemainder,false)
                         .setAutoCancel(true)
                         .setColor(Color.BLUE)
-                        .setSubText(timeViewModel.getRepeaterTime()+"  "+ new TimeState(timer).getTimeFormat())
-                        .setContentText( entry.textEntry.getValue() + "  "+ new TimeState(timeRemainder).getTimeFormat());
+                        .setSubText("completed")
+                        .setContentText("");
 
 
-        if(timer <= 0 && timeViewModel.getRepeaterTime() <= 0 ) {
-           stopService(serviceIntent);
-        }
+//        if(timer <= 0 && timeViewModel.getRepeaterTime() <= 0 ) {
+//            stopService(serviceIntent);
+//        }
 
         return mBuilder
                 .setPriority(2)
                 .setCategory(Notification.CATEGORY_SERVICE)
                 .build(); // foregroundTimerService.createTimer(notification);
 
+
     }
+
 
     @Override
     public void onDestroy() {
@@ -164,8 +247,11 @@ public final class TimerService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
+        super.onBind(intent);
         return null;
+
     }
+
 
 
 
@@ -197,7 +283,7 @@ public final class TimerService extends Service {
 
 
         public Notification preSetNotification() {
-            return timerService.makeNotification("00:00:00", 1, timeViewModel, new Entry(), pendingIntent);
+            return timerService.makeNotification(0, 1, 0,0, timeViewModel, new Entry(), pendingIntent);
         }
 
 
@@ -205,49 +291,75 @@ public final class TimerService extends Service {
 
             AtomicReference<Notification> notification = new AtomicReference<>(preSetNotification());
 
-            int setTime = setTimer(timeViewModel);// getSummationTime(timerViewModelList);
+            AtomicInteger setTime = new AtomicInteger(setTimer(timeViewModel));// getSummationTime(timerViewModelList);
 
             currentActiveTime = timerViewModelList.get(activeProcessTimeIndex);
 
             timeViewModel.setServicePostExecute(() -> {
 //                setTimer(timeViewModel);
 
-                accumulation(timerViewModelList);
-                revertTimeIndex();
-                currentActiveTime = timerViewModelList.get(1);
+//                Log.d("serviceTest","repeater: "+MainTimerView.mainTimerViewModel.getRepeaterTime());
+
+                if (MainTimerView.mainTimerViewModel.getRepeaterTime() <= -1) {
+
+                    notification.set(timerService.makeNotificationDismiss(pendingIntent));
+                    mgr.notify(FOREGROUND_SERVICE_ID, notification.get());
+
+                    timerService.makeNotificationDismiss(pendingIntent);
+
+                }else {
+                    setTime.set(setTimer(timeViewModel));
+                    currentActiveTime = timerViewModelList.get(activeProcessTimeIndex);
+                    
+//                    Log.d("serviceTest",""+activeProcessTimeIndex);
+//                  currentActiveTime = timerViewModelList.get(activeProcessTimeIndex);
+
+
+
+
+                }
+
 
 
 
             });
 
             //TODO: BUG HERE RAPIDLY RESETING TIME
-                timeViewModel.setServiceTask((time -> {
-                elapsedTime = setTime - time;
+                timeViewModel.setServiceTask(((elapsedTimeVolatile, countTime, elapsedTimeN) -> {
 
-                Log.d("repeaterTest","s: "+activeProcessTimeIndex);
+                    int setTimeDecimalTruncated = new TimeState(timeViewModel.getNumberValueTime()).getTimeNumberValueDecimalTruncated();
+
+                elapsedTime = timeViewModel.getNumberValueTime() - countTime;
+
+//                Log.d("serviceTest")
+
+//              Log.d("serviceTest","time: "+ currentActiveTime.getTimeAccumulated() + " :: "+time);
                      if (currentActiveTime.timeElapsed(elapsedTime)// || elapsedTime == setTime
                      ) {
                          currentActiveTime = getNextActiveProcessTime(timerViewModelList);
+//                         Log.d("serviceTest","time: "+ currentActiveTime.getTimeAccumulated() + " :: ");
+
                      }
 
+//                    currentActiveTime = getCurrentActiveTime();
 
-                //rebuild notification here
-                notification.set(timerService.makeNotification(
-                        new TimeState(elapsedTime).getTimeFormat()
-                        , time
-                        , timeViewModel
-                        , currentActiveTime
-                        , pendingIntent));
-                mgr.notify(FOREGROUND_SERVICE_ID, notification.get());
-
+//                    Log.d("serviceTest",time+ "   "+ elapsedTime);
+                    //rebuild notification here
+                    notification.set(timerService.makeNotification(
+                           elapsedTime
+                            , countTime
+                            , elapsedTimeVolatile
+                            , elapsedTimeN
+                            , timeViewModel
+                            , currentActiveTime
+                            , pendingIntent));
+                    mgr.notify(FOREGROUND_SERVICE_ID, notification.get());
             }));
-
 
             return notification.get();
         }
 
 
-        @RequiresApi(api = Build.VERSION_CODES.O)
         public int setTimer(MainTimerViewModel mainTimerViewModel){
 
             if(mainTimerViewModel.getNumberValueTime() == 0) {

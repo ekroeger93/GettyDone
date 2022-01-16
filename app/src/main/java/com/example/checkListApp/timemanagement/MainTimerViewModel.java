@@ -83,7 +83,7 @@ public class MainTimerViewModel extends ViewModel {
 
         countTimer.setCountDownTask((n) -> {
             _countDownTimer.postValue(countTimer.getRunTime());
-            countDownTask.execute(countTimer.getNumberTime());
+            countDownTask.execute(countTimer.getCountTime());
         });
 
     }
@@ -104,8 +104,8 @@ public class MainTimerViewModel extends ViewModel {
     }
 
     public void setServiceTask(CountDownTimerAsync.ServiceTask serviceTask){
-        countTimer.setServiceTask((n) ->{
-            serviceTask.execute(countTimer.getNumberTime());
+        countTimer.setServiceTask((n , nt, ntVn) ->{
+            serviceTask.execute(countTimer.getElapsedTimeVolatile(), countTimer.getCountTime(), countTimer.getElapsedTime());
         });
 
     }
@@ -117,14 +117,15 @@ public class MainTimerViewModel extends ViewModel {
             toggled = toggle;
                     if(toggle){
 
-                        if(countTimer.getNumberTime() == 0){
+                        if(countTimer.getCountTime() == 0){
+                        countTimer.setTimerVolatile(timeState);
                         countTimer.setTimer(timeState);
                         }else{
-                            countTimer.setTimer( new TimeState(countTimer.getNumberTime()));
+                            countTimer.setTimerVolatile( new TimeState(countTimer.getCountTime()));
                         }
 
                     }else {
-                        timeState = new TimeState(countTimer.getNumberTime());
+                        timeState = new TimeState(countTimer.getCountTime());
                        _countDownTimer.postValue(timeState.getTimeFormat());
                     }
                 }
@@ -169,6 +170,7 @@ public class MainTimerViewModel extends ViewModel {
         timeState = new TimeState(0);
         _countDownTimer.postValue(timeState.getTimeFormat());//
         setRepeaterTime(0);
+        countTimer.setTimerVolatile(timeState);
         countTimer.setTimer(timeState);
         countTimer.resetAll();
         countTimer.postTimeExpire();

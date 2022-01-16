@@ -226,7 +226,9 @@ public class Entry {
         return  (timeAccumulated == time);
     }
 
-
+    public int getTimeAccumulated() {
+        return timeAccumulated;
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void setTimeAcclimated(int timeAcclimated) {

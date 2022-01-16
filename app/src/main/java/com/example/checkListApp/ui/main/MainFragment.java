@@ -475,9 +475,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         CountDownTimerAsync.CountDownTask countDownTask = time -> {
          {
 
-
-
-
 //                int elapsedTime = setTime - time;
                 int elapsedTime = listUtility.getSummationTime(checkList) - time;
 

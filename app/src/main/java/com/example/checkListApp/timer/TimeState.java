@@ -2,10 +2,14 @@ package com.example.checkListApp.timer;
 
 import android.annotation.SuppressLint;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
+import java.sql.Timestamp;
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.Locale;
 
 public class TimeState {
 
@@ -14,7 +18,11 @@ public class TimeState {
      protected int seconds;
      private final int rawValue;
 
-        public TimeState(int value) {//assuming 6 length
+     public TimeState(){
+         this.rawValue = 0;
+     }
+
+     public TimeState(int value) {//assuming 6 length
 
             rawValue = value;
 
@@ -35,15 +43,30 @@ public class TimeState {
 
         }
 
-    public TimeState(String time) throws NumberFormatException{
 
 
+        public TimeState(String time) throws NumberFormatException{
                 this((Integer.parseInt(time.replace(":", "").trim())));
-
-
-
         }
 
+
+        public int timeTruncated(){
+
+            double nanos = rawValue * Duration.ofSeconds(1).toNanos();
+            Duration dur = Duration.ofNanos(Math.round(nanos));
+
+            long hh = dur.toHours();
+            int mm = (int) dur.toMinutes()%60;
+            int ss = (int) (dur.toMillis()/1000)%60;
+
+            try {
+                return Integer.parseInt(String.format(Locale.getDefault(), "%02d%02d%02d", hh, mm, ss));
+            }
+            catch (NumberFormatException e){
+                return 0;
+            }
+
+        }
 
     public TimeState addTimeState(TimeState timeState){
 
@@ -67,15 +90,36 @@ public class TimeState {
 
         }
 
+
+
         @SuppressLint("DefaultLocale")
         public String getTimeFormat() { return String.format("%02d:%02d:%02d", hours, minutes, seconds); }
 
         public String getTimeUnformatted(){ return ""+hours+minutes+seconds; }
 
+        public int getValueAsTimeTruncated(int value){
+
+            double nanos = value * Duration.ofSeconds(1).toNanos();
+            Duration dur = Duration.ofNanos(Math.round(nanos));
+
+            long hh = dur.toHours();
+            int mm = (int) dur.toMinutes()%60;
+            int ss = (int) (dur.toMillis()/1000)%60;
+
+            try {
+                return Integer.parseInt(String.format(Locale.getDefault(), "%02d%02d%02d", hh, mm, ss));
+            }
+            catch (NumberFormatException e){
+                return 0;
+            }
+
+
+        }
+
         public int getTimeNumberValue(){ return Integer.parseInt(getTimeFormat().replace(":","").trim());}
 
 
-        @RequiresApi(api = Build.VERSION_CODES.O)
+
         public int getTimeNumberValueDecimalTruncated(){
 
             //so example:

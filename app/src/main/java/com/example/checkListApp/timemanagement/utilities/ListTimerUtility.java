@@ -82,12 +82,17 @@ public abstract class ListTimerUtility {
        return sum;
     }
 
-   public  Entry getNextActiveProcessTime(ArrayList<Entry> list){
+    public Entry getCurrentActiveTime() {
+        return currentActiveTime;
+    }
+
+    public  Entry getNextActiveProcessTime(ArrayList<Entry> list){
 
         int size = list.size()-1;
 
         if(activeProcessTimeIndex < size) {
             activeProcessTimeIndex++;
+
             return list.get(activeProcessTimeIndex);
         } else{
             activeProcessTimeIndex = 1;

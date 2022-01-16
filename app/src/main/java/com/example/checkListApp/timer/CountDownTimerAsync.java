@@ -5,12 +5,12 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
+import java.sql.Time;
 import java.time.DateTimeException;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
@@ -48,7 +48,7 @@ public class CountDownTimerAsync {
 
         };
 
-        private ServiceTask serviceTask = timeValue -> {
+        private ServiceTask serviceTask = (elapsedTimeVolatile, countTime, elapsedTime) -> {
 
         };
 
@@ -62,11 +62,21 @@ public class CountDownTimerAsync {
 
         private String runTime;
 
-        private int numberTime;
+        private int countTime;
+
+
+        //the set time updates itself to new set time on pause
+        private int setTimeVolatile;
+        //this resets when timer is toggled
+        //which is necessary to retain time when resumed from pause
+        private int elapsedTimeVolatile;
+
         private int setTime;
         private int elapsedTime;
+
         private int countDownTime;
 
+        //Volatile
         private int repeater = -1 ;
         private TimeState holdingState;
 
@@ -74,18 +84,14 @@ public class CountDownTimerAsync {
             if(this.repeater == -1)
             this.repeater = repeater;
         }
-
         public int getRepeater() {
             return repeater;
         }
 
-    public CountDownTimerAsync() {
-        }
-
+        public CountDownTimerAsync() { }
 
         static public CountDownTimerAsync getInstance() {
          return instance; }
-
          static public CountDownTimerAsync getInstanceToToggle(TimeToggler timeToggler){
             instance.timeToggler = timeToggler;
             return instance;
@@ -103,17 +109,22 @@ public class CountDownTimerAsync {
         public void setServicePostExecute(PostExecute postExecute) { this.servicePostExecute = postExecute;}
 
         public void setTimer(TimeState timeState){
+            setTime = timeState.getTimeNumberValueDecimalTruncated();
+        }
+
+        public void setTimerVolatile(TimeState timeState){
             futureTime = LocalDateTime.now()
                     .plusHours(timeState.hours)
                     .plusMinutes(timeState.minutes)
                     .plusSeconds(timeState.seconds)
                     .atZone(ZoneId.systemDefault()).toInstant();
 
-            setTime = timeState.getTimeNumberValueDecimalTruncated();
+            setTimeVolatile = timeState.getTimeNumberValueDecimalTruncated();
 
             if (holdingState == null) holdingState = timeState;
 
         }
+
 
         public void execute() {
             executor.execute(new Runnable() {
@@ -121,43 +132,46 @@ public class CountDownTimerAsync {
                 @Override
                 public void run() {
 
-                    Duration countingDown;
+                    Duration countDownTime;
                     Locale locale = Locale.getDefault();
+//                    countDownTime = Duration.between(Instant.now(), Instant.from(futureTime));
 
                     while (timeToggler.isToggleTimeON()) {
 
                         try {
 
                             //TODO: BUG HERE futureTime TemporalAccessor
-                            countingDown = Duration.between(Instant.now(), Instant.from(futureTime));
+                            countDownTime = Duration.between(Instant.now(), Instant.from(futureTime));
                         }catch (DateTimeException e){
                             Log.d("BUG_",".."+e.getCause().getMessage());
                             break;
                         }
 
-                        long HH = countingDown.toHours();
-                        long MM = countingDown.toMinutes()%60;
-                        long SS = (countingDown.toMillis()/1000)%60;
+                        long HH = countDownTime.toHours();
+                        long MM = countDownTime.toMinutes()%60;
+                        long SS = (countDownTime.toMillis()/1000)%60;
 
-                        numberTime = Integer.parseInt( String.format(locale,"%02d%02d%02d", HH, MM, SS));
+                        countTime = Integer.parseInt( String.format(locale,"%02d%02d%02d", HH, MM, SS));
                         runTime = String.format(locale,"%02d:%02d:%02d", HH, MM, SS);
-                        countDownTime = (int) countingDown.getSeconds();
+//                        CountDownTimerAsync.this.countDownTime = (int) countDownTime.getSeconds();
 
-                        elapsedTime = (int) (setTime - (countingDown.getSeconds()));
 
-                        if(countingDown.getSeconds() <= 0) {
+                        elapsedTimeVolatile = (int) (setTimeVolatile - (countDownTime.getSeconds()));
+                        elapsedTime = (int) (setTime -countDownTime.getSeconds());
+
+                        if(countDownTime.getSeconds() <= 0) {
 
                             if(repeater <= 0) {
 
                                 countDownTask.execute(0);
-                                serviceTask.execute(0);
+                                serviceTask.execute(0,0,0);
                                 repeater = -1;
                                 holdingState = null;
                                 postTimeExpire();
                                 break;
                             }else {
                                 repeater--;
-                                setTimer(holdingState);
+                                setTimerVolatile(holdingState);
 //                                countDownTask.execute(elapsedTime);
 //                                serviceTask.execute(elapsedTime);
                                 postExecute.execute();
@@ -168,8 +182,19 @@ public class CountDownTimerAsync {
 
                         }
 
-                        countDownTask.execute(elapsedTime);
-                        serviceTask.execute(elapsedTime);
+
+                        //TODO will have to pass int the countDownTime.getSeconds
+                        //every time this pauses elaspedTime will start from 0, which is meant to
+                        //but need a consistant elapsed
+
+//                        Log.d("serviceTest", "el "+elapsedTime +
+//                                " elV "+elapsedTimeVolatile+
+//                                " setV "+ setTimeVolatile + " set "+setTime);
+
+
+
+                        countDownTask.execute(elapsedTimeVolatile);
+                        serviceTask.execute(elapsedTimeVolatile, countTime, elapsedTime);
 
                     }
                 }
@@ -193,19 +218,21 @@ public class CountDownTimerAsync {
         }
 
 
-        public int getElapsedTime(){return  elapsedTime;}
+        public int getElapsedTimeVolatile(){return elapsedTimeVolatile;}
 
-        public int getNumberTime(){ return numberTime; }
+        public int getElapsedTime(){return elapsedTime;}
+
+        public int getCountTime(){ return countTime; }
 
         public String getRunTime(){ return runTime; }
 
         @RequiresApi(api = Build.VERSION_CODES.O)
         public void resetAll(){
             futureTime =  LocalDateTime.now();
-            setTime = 0;
-            elapsedTime = 0;
+            setTimeVolatile = 0;
+            elapsedTimeVolatile = 0;
             countDownTime = 0;
-            numberTime = 0;
+            countTime = 0;
             runTime = "00:00:00";
 
         }
@@ -225,9 +252,9 @@ public class CountDownTimerAsync {
 
         @FunctionalInterface
         public interface ServiceTask{
-            void execute(int timeValue);
+            void execute(int timeElapsedValue, int countTimeValue, int timeElapsedNonVolatile);
         }
-
+//int timeElapsedValue, int countTimeValue, int timeElapsedNonVolatile
 
 
 
