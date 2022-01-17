@@ -19,7 +19,6 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 
 public final class JsonService {
@@ -123,7 +122,7 @@ public final class JsonService {
     jsonObject.addProperty("orderIndex", src.orderIndex.getValue());
     jsonObject.addProperty("onTogglePrimer",src.onTogglePrimer.getValue());
     jsonObject.addProperty("selectedAudio", src.selectedAudio.getValue());
-    jsonObject.addProperty("repeater", Entry.repeater);
+    jsonObject.addProperty("repeater", Entry.globalCycler);
 
 //}
                 return jsonObject;
@@ -156,7 +155,7 @@ public final class JsonService {
             textEntry = textEntry.replaceAll("\"","").trim();
             timeText = timeText.replaceAll("\"","").trim();
 
-            Entry.repeater = repeaterVal;
+            Entry.globalCycler = repeaterVal;
 
             return new Entry(textEntry,isChecked,timeText,orderIndex,onToggle,selectAudio);
 

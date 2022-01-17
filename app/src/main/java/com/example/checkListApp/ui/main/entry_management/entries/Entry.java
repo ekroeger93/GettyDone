@@ -56,8 +56,15 @@ public class Entry {
     @Ignore
     public int timeAccumulated = 0;
 
+    //this is getting out of hand may dedicate a conjoined class
     @Ignore
-    static public int repeater = 0;
+    static public int globalCycler = 0;
+    @Ignore
+    public int subCycler = 0;
+    @Ignore
+    public boolean isStartCycle = false;
+    @Ignore
+    public boolean isEndCycle = false;
 
     public Entry(){
 

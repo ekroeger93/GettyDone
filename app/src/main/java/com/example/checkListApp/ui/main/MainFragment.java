@@ -93,6 +93,7 @@ TaDone Prototype
    -service
   -repeater time needs to be added to database
   -entry timer not setting?
+  -progress overwritten last entries, after a week
 
 
 //TODO: DESIGN
@@ -112,6 +113,12 @@ TaDone Prototype
 //TODO: Features
 
 -tips
+
+-chain cycle entry repeater
+ two entries iterate a set cycle [Start , End]
+ END loops back to Start until iteration is done
+ end cycle cannot set another cycle
+ last entry cannot cycle
 
 -color code Entry Lists for graphing,
 add legend keys
@@ -269,7 +276,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         recordHelper.createButton(getContext(),binding);
 
-        MainTimerView.mainTimerViewModel.setRepeaterTime(Entry.repeater);
+        MainTimerView.mainTimerViewModel.setRepeaterTime(Entry.globalCycler);
 
 
     }
@@ -750,7 +757,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                 if(!binding.repeatTimer.getText().toString().isEmpty())
                     value = Integer.parseInt(binding.repeatTimer.getText().toString());
 
-                Entry.repeater = value;
+                Entry.globalCycler = value;
                 JsonService.buildJson(checkList);
 
             }
@@ -1059,7 +1066,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
                 JsonService.buildJson(checkList);
 
-                binding.repeatTimer.setText(""+Entry.repeater);
+                binding.repeatTimer.setText(""+Entry.globalCycler);
 
             }
 
