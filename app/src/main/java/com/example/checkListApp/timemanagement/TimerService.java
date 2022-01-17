@@ -154,7 +154,10 @@ public final class TimerService extends LifecycleService {
         int timeRemainder = new TimeState().getValueAsTimeTruncated(decimalEntrySetTime - elapsedTimeNV);
 
 
-        String text = (entry.onTogglePrimerTemp) ? "toggle to continue" :  new TimeState(timeRemainder).getTimeFormat() ;
+        String text = (entry.onTogglePrimerTemp) ? "paused" :  new TimeState(timeRemainder).getTimeFormat() ;
+
+        String toggleButtonText = (dataHelper.mainTimerViewModel.isToggled()) ? "Pause" : "Resume";
+
 
 
         return dataHelper.builder  .setContentIntent(dataHelper.pendingIntent)
@@ -163,7 +166,7 @@ public final class TimerService extends LifecycleService {
                 .setContentTitle("Countdown Timer")
                 .addAction(R.drawable.outline_add_circle_black_48, "Reset",
                         resetTimePendingIntent)
-                .addAction(android.R.drawable.btn_star, "Toggle",
+                .addAction(android.R.drawable.btn_star, toggleButtonText,
                         toggleTimePendingIntent)
                 .setProgress(entry.numberValueTime, Math.abs( decimalEntrySetTime - elapsedTimeNV) , false)
                 .setAutoCancel(true)
@@ -174,38 +177,6 @@ public final class TimerService extends LifecycleService {
 
     }
 
-    private NotificationCompat.Builder builderToggleEntry(BuilderDataHelper dataHelper, Entry entry, int countTime){
-
-        Intent toggleTimeIntent = new Intent(this, TimerBroadcastReceiver.class);
-        toggleTimeIntent.setAction(KeyHelperClass.BROADCAST_ACTION_TOGGLE_TIMER);
-
-        PendingIntent toggleTimePendingIntent =
-                PendingIntent.getBroadcast(this, 0, toggleTimeIntent, 0);
-
-        Intent resetTimeIntent = new Intent(this, TimerBroadcastReceiver.class);
-        resetTimeIntent.setAction(KeyHelperClass.BROADCAST_ACTION_RESET_TIMER);
-
-        PendingIntent resetTimePendingIntent =
-                PendingIntent.getBroadcast(this,0, resetTimeIntent,0);
-
-
-
-        return dataHelper.builder  .setContentIntent(dataHelper.pendingIntent)
-                .setSmallIcon(R.drawable.outline_timer_black_48)
-                .setOnlyAlertOnce(true)
-                .setContentTitle("Countdown Timer")
-                .addAction(R.drawable.outline_add_circle_black_48, "Reset",
-                        resetTimePendingIntent)
-                .addAction(android.R.drawable.btn_star, "Toggle",
-                        toggleTimePendingIntent)
-                .setAutoCancel(true)
-                .setOngoing(true)
-                .setColor(Color.BLUE)
-                .setSubText(dataHelper.mainTimerViewModel.getRepeaterTime() + "  " + new TimeState(countTime).getTimeFormat())
-                .setContentText(entry.textEntry.getValue() + "  click toggle to continue" );
-
-
-    }
 
     private NotificationCompat.Builder builderDismissive(BuilderDataHelper dataHelper,int countTime){
 

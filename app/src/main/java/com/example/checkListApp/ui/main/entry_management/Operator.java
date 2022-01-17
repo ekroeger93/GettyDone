@@ -54,12 +54,15 @@ public class Operator {
 
             try{
            //     if(!e.checked.getValue()){
-
-                if (e.getViewHolder().getBindingAdapterPosition() == selection - 1) {
-                    e.getViewHolder().itemView.setBackgroundColor(Color.RED);
+                if(!adapter.toggleTracker) {
+                    if (e.getViewHolder().getBindingAdapterPosition() == selection - 1) {
+                        e.getViewHolder().itemView.setBackgroundColor(Color.RED);
+                        listUtility.updateAllSelection(mainFragment.getCheckList());
+                    } else {
+                        e.getViewHolder().itemView.setBackgroundColor(Color.parseColor("#95FF8D"));
+                    }
+                }else{
                     listUtility.updateAllSelection(mainFragment.getCheckList());
-                } else {
-                    e.getViewHolder().itemView.setBackgroundColor(Color.parseColor("#95FF8D"));
                 }
             //    }
 

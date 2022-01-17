@@ -90,14 +90,8 @@ TaDone Prototype
 
 //TODO: BUGS
 
-    -service
-
- -fix leaf buttons, it would offset on other screens
-  only works bindng.main and sucks doing it,
-  -may have to resort to actual buttons,instead of generated
-
+   -service
   -repeater time needs to be added to database
-
   -entry timer not setting?
 
 
@@ -768,10 +762,8 @@ public class MainFragment extends Fragment implements ListItemClickListener {
             , view -> entryItemManager.add()
             , view -> entryItemManager.delete(),
 
-            new LeafButton(getContext(),binding)
-                    .setViewGroup(binding.main)
-                    .setAttachedView(binding.addDeleteBtn)
-                    //assign a onClickListener for leaf button
+            new LeafButton(binding, binding.addDeleteBtn)
+                     //assign a onClickListener for leaf button
                     .assignListener(view -> {
 
                         //listener for the button panel
@@ -794,10 +786,8 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                         binding.editMoveBtn,
                         view -> entryItemManager.edit(),
                         view -> entryItemManager.move(),
-                        new LeafButton(getContext(),binding)
-                                .setViewGroup(binding.main)
-                                .setAttachedView(binding.editMoveBtn)
-                        .assignListener(view ->{
+                        new LeafButton(binding,binding.editMoveBtn)
+                         .assignListener(view ->{
 
                             //I'm having a tough time with the recyclerView
                             //for some reason the object references (viewHolders) are disorganized

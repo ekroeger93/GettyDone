@@ -29,27 +29,25 @@ public class LeafButton implements iButtonComponent {
     Button button;
 
     View.OnClickListener listener;
-
-    ViewGroup viewGroup;
-    View attachedView;
-
     MainFragmentBinding binding;
 
-    public LeafButton(@NonNull Context context, MainFragmentBinding binding) {
-        this.button = new Button(context);
+    public LeafButton(MainFragmentBinding binding, View attachedView) {
+
+//        this.button = new Button(context);
+
+        if(attachedView == binding.editMoveBtn){
+            button = binding.leafButtonLeft;
+        }
+        if(attachedView == binding.addDeleteBtn){
+            button = binding.leafButtonRight;
+        }
+
         toggleLeaf(false);
         this.binding = binding;
     }
 
-    public LeafButton setViewGroup(ViewGroup viewGroup){
-        this.viewGroup = viewGroup;
-        return  this;
-    }
 
-    public LeafButton setAttachedView(View attachedView) {
-        this.attachedView = attachedView;
-        return this;
-    }
+
 
 
 
@@ -73,18 +71,11 @@ public class LeafButton implements iButtonComponent {
 
     public LeafButton create(){
 
-        //TODO: Modify
-//        button.setText("multiple");;
 
         button.setBackground(ContextCompat.getDrawable(
                 binding.addDeleteBtn.getContext(),
                 R.drawable.outline_format_list_numbered_black_48));
 
-
-//        setConstraint(button);
-        viewGroup.addView(button);
-
-//        setConstraint(button);
 
         return  this;
     }
@@ -92,12 +83,12 @@ public class LeafButton implements iButtonComponent {
     public void setInitialization(){
 
         int[] location = new int[2];
-        button.getLocationInWindow(location);
-//        button.getLocationOnScreen(location);
-//        button.getLocationInSurface(location);
+        button.getLocationOnScreen(location);
+        button.getLocationOnScreen(location);
 
-        this.Button_X = location[0];
+        this.Button_X = button.getX();
         this.Button_Y = location[1];
+
 
         this.Button_Width = button.getWidth();
         this.Button_Height = button.getHeight();
@@ -106,60 +97,60 @@ public class LeafButton implements iButtonComponent {
 
     }
 
-    public void setConstraint(Button leaf){
-
-
-        ConstraintSet set = new ConstraintSet();
-
-
-        if (attachedView.getId() == binding.editMoveBtn.getId()){
-            leaf.setId(R.id.leafOneButtonID);
-
-            set.constrainHeight(leaf.getId(),
-                    ConstraintSet.WRAP_CONTENT);
-            set.constrainWidth(leaf.getId(),
-                    160);
-
-            set.connect(leaf.getId(), ConstraintSet.START,
-                    ConstraintSet.PARENT_ID, ConstraintSet.START, 0);
-            set.connect(leaf.getId(), ConstraintSet.END,
-                    binding.guidelineVerticalCenter.getId(), ConstraintSet.END, 40);
-            set.connect(leaf.getId(), ConstraintSet.TOP,
-                    ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
-            set.connect(leaf.getId(), ConstraintSet.BOTTOM,
-                    binding.editMoveBtn.getId(), ConstraintSet.BOTTOM, 0);
-
-//            binding.buttonPanel.addView(leaf);
-
-        }
-
-        if(attachedView.getId() == binding.addDeleteBtn.getId()){
-            leaf.setId(R.id.leafTwoButtonID);
-
-            set.constrainHeight(leaf.getId(),
-                    ConstraintSet.WRAP_CONTENT);
-            set.constrainWidth(leaf.getId(),
-                    160);
-
-            set.connect(leaf.getId(), ConstraintSet.END,
-                    ConstraintSet.PARENT_ID, ConstraintSet.END, 0);
-            set.connect(leaf.getId(), ConstraintSet.START,
-                    binding.guidelineVerticalCenter.getId(), ConstraintSet.START, 40);
-            set.connect(leaf.getId(), ConstraintSet.TOP,
-                    ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
-            set.connect(leaf.getId(), ConstraintSet.BOTTOM,
-                    ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0);
-
-//            binding.buttonPanel.addView(leaf);
-        }
-
-
-
-
-//       set.applyTo(binding.main);
-        set.applyTo(binding.main);
-
-    }
+//    public void setConstraint(Button leaf){
+//
+//
+//        ConstraintSet set = new ConstraintSet();
+//
+//
+//        if (attachedView.getId() == binding.editMoveBtn.getId()){
+//            leaf.setId(R.id.leafOneButtonID);
+//
+//            set.constrainHeight(leaf.getId(),
+//                    ConstraintSet.WRAP_CONTENT);
+//            set.constrainWidth(leaf.getId(),
+//                    160);
+//
+//            set.connect(leaf.getId(), ConstraintSet.START,
+//                    ConstraintSet.PARENT_ID, ConstraintSet.START, 0);
+//            set.connect(leaf.getId(), ConstraintSet.END,
+//                    binding.guidelineVerticalCenter.getId(), ConstraintSet.END, 40);
+//            set.connect(leaf.getId(), ConstraintSet.TOP,
+//                    ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
+//            set.connect(leaf.getId(), ConstraintSet.BOTTOM,
+//                    binding.editMoveBtn.getId(), ConstraintSet.BOTTOM, 0);
+//
+////            binding.buttonPanel.addView(leaf);
+//
+//        }
+//
+//        if(attachedView.getId() == binding.addDeleteBtn.getId()){
+//            leaf.setId(R.id.leafTwoButtonID);
+//
+//            set.constrainHeight(leaf.getId(),
+//                    ConstraintSet.WRAP_CONTENT);
+//            set.constrainWidth(leaf.getId(),
+//                    160);
+//
+//            set.connect(leaf.getId(), ConstraintSet.END,
+//                    ConstraintSet.PARENT_ID, ConstraintSet.END, 0);
+//            set.connect(leaf.getId(), ConstraintSet.START,
+//                    binding.guidelineVerticalCenter.getId(), ConstraintSet.START, 40);
+//            set.connect(leaf.getId(), ConstraintSet.TOP,
+//                    ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
+//            set.connect(leaf.getId(), ConstraintSet.BOTTOM,
+//                    ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0);
+//
+////            binding.buttonPanel.addView(leaf);
+//        }
+//
+//
+//
+//
+////       set.applyTo(binding.main);
+//        set.applyTo(binding.main);
+//
+//    }
 
 
 
@@ -175,6 +166,7 @@ public class LeafButton implements iButtonComponent {
 
 
     public boolean withinBoundary(float x, float y){
+
         return (x > Button_X &&
                 y < Button_Y+Button_Height &&
                 x < Button_X+Button_Width &&

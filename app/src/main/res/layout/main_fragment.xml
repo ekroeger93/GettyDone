@@ -117,6 +117,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp">
 
+                <Button
+                    android:id="@+id/leafButtonLeft"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    app:layout_constraintHorizontal_bias="0.4"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/timerExecuteBtn"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+
+                    />
 
                 <Button
                     android:id="@+id/timerExecuteBtn"
@@ -128,6 +139,18 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/leafButtonRight"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    app:layout_constraintHorizontal_bias="0.6"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/timerExecuteBtn"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+
+                    />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

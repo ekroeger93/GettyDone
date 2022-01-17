@@ -66,17 +66,15 @@ implements ItemTouchHelperAdapter {
     Activity activity;
 
     private SelectionTracker<Long> selectionTracker;
-    private SelectionTracker<Long> savedSelectionTracker;
-
 
     public void setTracker(SelectionTracker<Long> tracker){
         this.selectionTracker = tracker;
-        this.savedSelectionTracker = tracker;
     }
 
     public void trackerOn(boolean turnOnTracker){
         toggleTracker = turnOnTracker;
         trackerHelper.setIsMotionActive(turnOnTracker);
+
 
         notifyDataSetChanged();
     }
@@ -406,9 +404,9 @@ implements ItemTouchHelperAdapter {
                        details.position = position;
 
                         if (selectionTracker.isSelected(details.getSelectionKey())) {
-                            checkButton.setBackgroundColor(Color.RED);
+                            binding.getRoot().setBackgroundColor(Color.RED);
                         }else{
-                            checkButton.setBackgroundColor(Color.BLUE);
+                            checkButton.setBackgroundColor(Color.parseColor("#95FF8D"));
                         }
 
                  }

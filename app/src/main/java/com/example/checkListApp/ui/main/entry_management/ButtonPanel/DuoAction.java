@@ -47,11 +47,11 @@ public class DuoAction implements iButtonComponent {
 
         if(hasLeaf){
 
-            leaf.button.setX(Button_X);
-            leaf.button.setY(Button_Y - (Button_Height*2.6f));
-
-            leaf.button.setScaleX(.75f);
-            leaf.button.setTranslationX(Button_X - 30);
+//            leaf.button.setX(Button_X);
+//            leaf.button.setY(Button_Y - (Button_Height*2.6f));
+//
+//            leaf.button.setScaleX(.75f);
+//            leaf.button.setTranslationX(Button_X - 30);
 
             leaf.setInitialization();
 //            leaf.setConstraint(leaf.button);
