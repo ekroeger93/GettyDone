@@ -113,13 +113,13 @@ public class MainTimerViewModel extends ViewModel {
     public void toggleTime(){
 
         timeToggler.toggleTime(countTimer,
-                (toggle) -> {
-            toggled = toggle;
+                (toggle) -> { toggled = toggle;
                     if(toggle){
 
                         if(countTimer.getCountTime() == 0){
                         countTimer.setTimerVolatile(timeState);
                         countTimer.setTimer(timeState);
+
                         }else{
                             countTimer.setTimerVolatile( new TimeState(countTimer.getCountTime()));
                         }

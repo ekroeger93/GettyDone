@@ -80,6 +80,26 @@ public class Entry {
 
     }
 
+    public Entry(String text, boolean isChecked, String timeText, boolean onToggle) {
+
+
+        textEntry.setValue(text);
+        checked.setValue(isChecked);
+        countDownTimer.setValue(timeText);
+        onTogglePrimer.setValue(onToggle);
+
+        textTemp = text;
+        onTogglePrimerTemp = onToggle;
+
+        setNumberValueTime(timeText);
+        int numberTime = new TimeState(timeText).getTimeNumberValue();
+        numberValueTime = numberTime;
+        timeAccumulated = new TimeState(numberTime).getTimeNumberValue();//numberTime;//extractNumberValueTime(time);
+
+
+
+    }
+
     public void refreshDataValues(){
         this.textEntry.setValue(textEntry.getValue());
         this.checked.setValue(checked.getValue());

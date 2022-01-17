@@ -51,7 +51,8 @@ public abstract class ListTimerUtility {
                     new Entry(
                             parcel.listOfText[i],
                             parcel.listOfChecked[i],
-                            parcel.listOfCountDownTimers[i]
+                            parcel.listOfCountDownTimers[i],
+                            parcel.listOfOnToggle[i]
                     );
 
             entry.setTimeAccumulatedNonAdditive(parcel.listOfAccumulatedTime[i]);

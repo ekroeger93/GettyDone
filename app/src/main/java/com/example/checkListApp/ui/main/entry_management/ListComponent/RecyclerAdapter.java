@@ -5,40 +5,27 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.BounceInterpolator;
 import android.view.animation.OvershootInterpolator;
-import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.TableRow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleEventObserver;
-import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.selection.SelectionTracker;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.ItemTouchUIUtil;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.example.checkListApp.R;
 import com.example.checkListApp.database.EntryRepository;
 import com.example.checkListApp.databinding.EntryBinding;
-import com.example.checkListApp.input.CustomEditText;
-import com.example.checkListApp.input.DetectKeyboardBack;
 import com.example.checkListApp.timemanagement.parcel.TimeParcelBuilder;
 import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.entry_management.ListComponent.item_touch_helper.ItemTouchHelperAdapter;
@@ -52,12 +39,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 
 public class RecyclerAdapter
         extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder>
 implements ItemTouchHelperAdapter {
+
 
 
     private ArrayList<Entry> mList;
@@ -281,6 +268,7 @@ implements ItemTouchHelperAdapter {
 
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
+
         if (fromPosition < toPosition) {
             for (int i = fromPosition; i < toPosition; i++) {
                 Collections.swap(mList, i, i + 1);
@@ -291,6 +279,7 @@ implements ItemTouchHelperAdapter {
             }
         }
         notifyItemMoved(fromPosition, toPosition);
+
         return true;
     }
 
@@ -298,6 +287,7 @@ implements ItemTouchHelperAdapter {
     public void onItemDismiss(int position) {
 
 //        mList.remove(position);
+
         mainFragment.getmViewModel().deleteEntry(mainFragment.getCheckList().get(position));
         mainFragment.updateIndexes();
 
@@ -527,9 +517,9 @@ implements ItemTouchHelperAdapter {
                             setTimeButton.setBackground(
                                     ContextCompat.getDrawable(
                                     binding.entry.getContext(),
-                                    R.drawable.ic_ontogglecustom)
+                                    R.drawable.ic_ontogglecustom2)
                             );
-                            setTimeButton.setText(R.string.toggle_only);
+                            setTimeButton.setText("");
 
                         }else{
                             setTimeButton.setBackground( ContextCompat.getDrawable(

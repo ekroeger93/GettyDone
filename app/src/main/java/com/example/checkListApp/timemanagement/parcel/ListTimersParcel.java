@@ -92,7 +92,7 @@ public class ListTimersParcel implements Parcelable {
 
         for(Entry n : entryTimerViewModels){
             int index = entryTimerViewModels.indexOf(n);
-            listOfOnToggle[index]= n.onTogglePrimer.getValue();
+            listOfOnToggle[index]= n.onTogglePrimerTemp;
         }
         in.createBooleanArray();
 

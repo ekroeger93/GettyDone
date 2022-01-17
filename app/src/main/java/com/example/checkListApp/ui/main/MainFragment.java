@@ -1,48 +1,32 @@
 package com.example.checkListApp.ui.main;
 
-import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Color;
-import android.media.Image;
 import android.media.MediaPlayer;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.BounceInterpolator;
-import android.view.animation.CycleInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
-import android.view.animation.TranslateAnimation;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -60,7 +44,6 @@ import com.example.checkListApp.databinding.MainFragmentBinding;
 import com.example.checkListApp.input.CustomEditText;
 import com.example.checkListApp.input.DetectKeyboardBack;
 import com.example.checkListApp.timemanagement.MainTimerView;
-import com.example.checkListApp.timemanagement.MainTimerViewModel;
 import com.example.checkListApp.timemanagement.TimerService;
 import com.example.checkListApp.timemanagement.parcel.ListTimersParcel;
 import com.example.checkListApp.timemanagement.parcel.ListTimersParcelBuilder;
@@ -73,7 +56,6 @@ import com.example.checkListApp.ui.main.entry_management.EntryItemManager;
 import com.example.checkListApp.ui.main.entry_management.ButtonPanel.LeafButton;
 import com.example.checkListApp.ui.main.entry_management.ListComponent.CustomLayoutManager;
 import com.example.checkListApp.ui.main.entry_management.ListComponent.ListItemClickListener;
-import com.example.checkListApp.ui.main.entry_management.ListComponent.ListItemObserver;
 import com.example.checkListApp.ui.main.entry_management.ListComponent.RecyclerAdapter;
 import com.example.checkListApp.ui.main.entry_management.ListComponent.item_touch_helper.ItemTouchCallback;
 import com.example.checkListApp.ui.main.entry_management.Operator;
@@ -85,14 +67,7 @@ import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 import com.example.checkListApp.ui.main.entry_management.entries.Spacer;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Timer;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
-
-import com.example.checkListApp.databinding.MainActivityBinding;
-import com.google.gson.JsonObject;
 
 /*
 
@@ -100,39 +75,35 @@ TaDone Prototype
 --------------------------------------------------------------
 -------------------------------------------------------------
 
+ Context.startForegroundService() did not then call Service.startForeground()
+ https://medium.com/geekculture/context-startforegroundservice-did-not-then-call-service-startforeground-solved-7640d5ba394a
+
+
+
+//TODO: TESTING
+
+    -sorting and moving entries
+    -progress
+    -database
+    -service
+
+
 //TODO: BUGS
 
- -fix move
- needs to be tested
-
- -fix service
-  service notification sometimes doesn't terminate itself and shows negative value
- of set time
+    -service
 
  -fix leaf buttons, it would offset on other screens
   only works bindng.main and sucks doing it,
   -may have to resort to actual buttons,instead of generated
 
-  -on toggle mode at end of list is sketchy
+  -repeater time needs to be added to database
 
-  -obscure bug after sorting
-  toggle switch ordering may have leaks and complications
-
-
- Context.startForegroundService() did not then call Service.startForeground()
- https://medium.com/geekculture/context-startforegroundservice-did-not-then-call-service-startforeground-solved-7640d5ba394a
-
- check the database table for further testing
+  -entry timer not setting?
 
 
 //TODO: DESIGN
 
-- ICONS/IMAGES FOR BUTTONS
-
 - entry time label redesign
-
-- entry Animation for move/delete/add
-    delete - show trash icon on left
 
 - show swiping hand icon for hint
 
@@ -146,24 +117,21 @@ TaDone Prototype
 
 //TODO: Features
 
--send a post notification for service at end
 -tips
 
-
 -color code Entry Lists for graphing,
-add legend keys,
-change Y axis value to number of times submitted completion,
-within a month period
+add legend keys
 
--add in pull down/up to extender, change the recycler view Y size
-    -use anchor points when dragging
-    or fullscreen mode
 
 //TODO: Post production ideas:
 -? save to google drive, share data
 -? save as pdf/rich text file -> print appMobilityPrint
 -? schedule on calender, notification
 -? make timelabel editText instead, /w custom keyboard
+
+-add in pull down/up to extender, change the recycler view Y size
+    -use anchor points when dragging
+    or fullscreen mode
 
 https://medium.com/@ipaulpro/drag-and-swipe-with-recyclerview-b9456d2b1aaf
 i can get rid of touch expander completely
@@ -247,6 +215,9 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     private Activity activity;
     private Intent serviceIntent;
 
+//    private ItemTouchHelper.Callback callback;
+    private  ItemTouchCallback callback;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -304,7 +275,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         recordHelper.createButton(getContext(),binding);
 
-
+        MainTimerView.mainTimerViewModel.setRepeaterTime(Entry.repeater);
 
 
     }
@@ -404,8 +375,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         buttonPanel = new ButtonPanel(getContext(), binding);
         buttonPanelToggle  = buttonPanel.buttonPanelToggle;
 
-        ItemTouchHelper.Callback callback =
-                new ItemTouchCallback(adapter);
+        callback = new ItemTouchCallback(adapter);
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(recyclerView);
 
@@ -510,7 +480,11 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                         }
 
                         if (listUtility.currentActiveTime.numberValueTime != 0) {
-                            listUtility.currentActiveTime.getViewHolder().checkOff();
+
+                            if (MainTimerView.mainTimerViewModel.getRepeaterTime() <= 0) {
+                                listUtility.currentActiveTime.getViewHolder().checkOff();
+                            }
+
                             listUtility.currentActiveTime = listUtility.getNextActiveProcessTime(checkList);
                         }
                         activeIndex = listUtility.activeProcessTimeIndex;
@@ -521,7 +495,10 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                 }else{
                     MainTimerView.mainTimerViewModel.toggleTime();
 
-                    listUtility.currentActiveTime.getViewHolder().checkOff();
+                 if (MainTimerView.mainTimerViewModel.getRepeaterTime() <= 0) {
+                     listUtility.currentActiveTime.getViewHolder().checkOff();
+                 }
+
                     listUtility.currentActiveTime = listUtility.getNextActiveProcessTime(checkList);
                     activeIndex = listUtility.activeProcessTimeIndex;
 
@@ -536,7 +513,22 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     binding.timerExecuteBtn.setOnClickListener(view -> {
 
 
-        setTimer(mainTimerView);
+        setTimer();
+
+        if(MainTimerView.mainTimerViewModel.isToggled()) {
+            binding.timerExecuteBtn.setBackground(
+                    ContextCompat.getDrawable(
+                            getContext(),
+                            R.drawable.outline_play_circle_filled_black_48
+                    ));
+        }else{
+            binding.timerExecuteBtn.setBackground(
+                    ContextCompat.getDrawable(
+                            getContext(),
+                            R.drawable.outline_pause_circle_filled_black_48
+                    ));
+
+        }
 
         if( listUtility.getSummationTime(checkList)  > 0 ) {
 
@@ -681,7 +673,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         listTimersParcel = new ListTimersParcelBuilder(checkList)
                 .setEntryViewModelList(checkList)
-                .setGlobalTimer(mainTimerView.mainTimerViewModel.getValueTime())
+                .setGlobalTimer(MainTimerView.mainTimerViewModel.getValueTime())
                 .setIndexActive(listUtility.activeProcessTimeIndex).build();
 
 
@@ -705,7 +697,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     }
 
     
-    public int setTimer(MainTimerView mainTimerView){
+    public int setTimer(){
 
         if(MainTimerView.mainTimerViewModel.getNumberValueTime() == 0) {
             int summationTime = listUtility.getSummationTime(checkList);
@@ -716,6 +708,8 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
             listUtility.revertTimeIndex();
             listUtility.currentActiveTime = checkList.get(1);
+
+            for(Entry entry: checkList){ entry.checked.postValue(false); }
 
             return summationTime;
 
@@ -899,6 +893,9 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         float xMove = operator.currentViewHolder.itemView.getX() + (velocityTracker.getXVelocity()*40);
 
+        float width = (float) operator.currentViewHolder.itemView.getWidth();
+        float alpha = 1.0f - Math.abs(xMove) / width;
+        operator.currentViewHolder.itemView.setAlpha(alpha);
 
 
 
@@ -979,10 +976,14 @@ public class MainFragment extends Fragment implements ListItemClickListener {
             @Override
             public void onChanged(Boolean aBoolean) {
 
-                if(!aBoolean){
+                callback.setEnableSwipe(!aBoolean);
+
+                if(!aBoolean){//timer not running
+
                     MainActivity.tabLayout.setVisibility(View.VISIBLE);
                     hideButtons(false);
                 }else{
+
                     MainActivity.tabLayout.setVisibility(View.GONE);
                     hideButtons(true);
                 }
@@ -1192,41 +1193,42 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     public void clickPosition(RecyclerAdapter.ViewHolder viewHolder,View view, int position) {
 
 
-        if(view.getId() == R.id.checkBtn){
+            if (view.getId() == R.id.checkBtn) {
 
-            viewHolder.getEntry().checked.postValue( !viewHolder.getEntry().checked.getValue());
+                viewHolder.getEntry().checked.postValue(!viewHolder.getEntry().checked.getValue());
 
-        }
-
-        if(view.getId() == R.id.setEntryTimeBtn){
-
-            if(!isTimerRunning()) {
-                viewHolder.transitionToSetTimer();
             }
+
+        if(!isTimerRunning()) {
+            if (view.getId() == R.id.setEntryTimeBtn) {
+
+                viewHolder.transitionToSetTimer();
+
+            }
+
+
+            if (view.getId() == R.id.entryText) {
+
+                View itemView = viewHolder.itemView;
+                Entry entry = checkList.get(position);
+
+                scrollPosition(position);
+
+                CustomEditText editHolderText = itemView.findViewById(R.id.entryEditTxt);
+
+                new DetectKeyboardBack(
+                        itemView.getContext(),
+                        editHolderText,
+                        viewHolder.textView,
+                        entry
+                );
+
+                selectionTracker.clearSelection();
+
+
+            }
+
         }
-
-
-        if(view.getId() == R.id.entryText){
-
-            View itemView = viewHolder.itemView;
-            Entry entry = checkList.get(position);
-
-            scrollPosition(position);
-
-            CustomEditText editHolderText = itemView.findViewById(R.id.entryEditTxt);
-
-            new DetectKeyboardBack(
-                    itemView.getContext(),
-                    editHolderText,
-                    viewHolder.textView,
-                    entry
-            );
-
-            selectionTracker.clearSelection();
-
-
-        }
-
 
     }
 
