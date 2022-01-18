@@ -2,16 +2,14 @@ package com.example.checkListApp.ui.main.entry_management;
 
 import android.content.Context;
 import android.view.Gravity;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 
-import com.example.checkListApp.MainActivity;
 import com.example.checkListApp.R;
 import com.example.checkListApp.databinding.MainFragmentBinding;
-import com.example.checkListApp.timemanagement.MainTimerView;
+import com.example.checkListApp.timemanagement.MainTimerViewModel;
 import com.example.checkListApp.timer.CountDownTimerAsync;
 import com.example.checkListApp.timer.TimeState;
 import com.example.checkListApp.ui.main.MainFragment;
@@ -20,23 +18,23 @@ import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 
 import java.util.ArrayList;
 
-public class EntryTimerProcesses {
+public class EntryTimerProcessHandler {
 
     MainFragment mainFragment;
 
     ListUtility listUtility;
     ArrayList<Entry> checkList;
-    MainTimerView mainTimerView;
+    MainTimerViewModel mainTimerViewModel;
     MainFragmentBinding binding;
 
     Context context;
 
     public Context getContext() { return context; }
 
-    public EntryTimerProcesses(MainFragment mainFragment){
+    public EntryTimerProcessHandler(MainFragment mainFragment){
         this.mainFragment = mainFragment;
 
-        mainTimerView = mainFragment.getMainTimerView();
+        mainTimerViewModel = MainFragment.getMainTimerViewModel();
         listUtility = mainFragment.getListUtility();
         checkList = mainFragment.getCheckList();
         binding = mainFragment.binding;
@@ -70,7 +68,7 @@ public class EntryTimerProcesses {
 
             setTimer();
 
-            if(MainTimerView.mainTimerViewModel.isToggled()) {
+            if(mainTimerViewModel.isToggled()) {
                 binding.timerExecuteBtn.setBackground(
                         ContextCompat.getDrawable(
                                 getContext(),
@@ -94,14 +92,14 @@ public class EntryTimerProcesses {
                 }
 
                 int repeater = Integer.parseInt(binding.repeatTimer.getText().toString());
-                MainTimerView.mainTimerViewModel.setRepeaterTime(repeater);
+                mainTimerViewModel.setRepeaterTime(repeater);
 
 
                 mainFragment.getTimerRunning().postValue(true);
 
-                MainTimerView.mainTimerViewModel.setTaskCustom(countDownTask);
+                mainTimerViewModel.setTaskCustom(countDownTask);
 
-                MainTimerView.mainTimerViewModel.toggleTime();
+                mainTimerViewModel.toggleTime();
 
             }
 
@@ -109,7 +107,7 @@ public class EntryTimerProcesses {
 
         binding.timerExecuteBtn.setOnLongClickListener(view -> {
 
-            MainTimerView.mainTimerViewModel.resetAbsolutely();
+            mainTimerViewModel.resetAbsolutely();
             mainFragment.getTimerRunning().postValue(false);
 
 //        if(isMyServiceRunning(TimerService.class))
@@ -119,17 +117,28 @@ public class EntryTimerProcesses {
         });
 
         //update time of both View and ViewModel
-        mainTimerView.setObserverForMainTextTime(binding.timeTextMain,mainFragment.getViewLifecycleOwner());
+//        setObserverForMainTextTime(binding.timeTextMain,mainFragment.getViewLifecycleOwner());
+
+        Observer<String> observer = new Observer() {
+            @Override
+            public void onChanged(Object o) {
+                binding.timeTextMain.setText(mainTimerViewModel.getValueTime());
+            }
+        };
+
+        mainTimerViewModel.setObserver(observer, mainFragment.getViewLifecycleOwner());
+
+
 
         //set a post execution after timer expires, proceeds to next Entry
-        mainTimerView.setPostExecute(() -> {
+        mainTimerViewModel.setPostExecute(() -> {
 
             displayEntryToast();
 
-            if (MainTimerView.mainTimerViewModel.getRepeaterTime() <= -1) {
+            if (mainTimerViewModel.getRepeaterTime() <= -1) {
 
                 //go back to top of list
-                MainTimerView.mainTimerViewModel.resetTimeState();
+                mainTimerViewModel.resetTimeState();
                 mainFragment.getTimerRunning().postValue(false);
 
             }
@@ -150,10 +159,10 @@ public class EntryTimerProcesses {
 
         checkList = mainFragment.getCheckList();
 
-        if(MainTimerView.mainTimerViewModel.getNumberValueTime() == 0) {
+        if(mainTimerViewModel.getNumberValueTime() == 0) {
             int summationTime = listUtility.getSummationTime(checkList);
             String setTime = new TimeState(summationTime).getTimeFormat();
-            MainTimerView.mainTimerViewModel.setCountDownTimer(setTime);
+            mainTimerViewModel.setCountDownTimer(setTime);
 
             listUtility.accumulation(checkList);
 
@@ -203,7 +212,7 @@ public class EntryTimerProcesses {
                 if (listUtility.currentActiveTime.numberValueTime != 0) {
 
                     //if repeater time is 0 check off
-                    if (MainTimerView.mainTimerViewModel.getRepeaterTime() <= 0)
+                    if (mainTimerViewModel.getRepeaterTime() <= 0)
                         listUtility.currentActiveTime.getViewHolder().checkOff();
 
                     listUtility.currentActiveTime = listUtility.getNextActiveProcessTime(checkList);
@@ -213,9 +222,9 @@ public class EntryTimerProcesses {
             }
         }
         else{
-            MainTimerView.mainTimerViewModel.toggleTime();
+            mainTimerViewModel.toggleTime();
 
-            if (MainTimerView.mainTimerViewModel.getRepeaterTime() <= 0) {
+            if (mainTimerViewModel.getRepeaterTime() <= 0) {
                 listUtility.currentActiveTime.getViewHolder().checkOff();
             }
 
@@ -235,7 +244,7 @@ public class EntryTimerProcesses {
 
         listUtility.revertTimeIndex();
         listUtility.currentActiveTime = checkList.get(1);
-        MainTimerView.mainTimerViewModel.setTaskCustom(countDownTask);
+        mainTimerViewModel.setTaskCustom(countDownTask);
 
 
     }

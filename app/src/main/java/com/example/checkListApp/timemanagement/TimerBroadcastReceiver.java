@@ -18,7 +18,7 @@ public class TimerBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
        if (intent.getAction().equals(KeyHelperClass.BROADCAST_ACTION_TOGGLE_TIMER)){
-           MainTimerView.mainTimerViewModel.toggleTime();
+           MainFragment.getMainTimerViewModel().toggleTime();
        }
 
        if (intent.getAction().equals(KeyHelperClass.BROADCAST_ACTION_RESET_TIMER)){

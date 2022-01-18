@@ -29,8 +29,6 @@ public class MainTimerViewModel extends ViewModel {
         return toggled;
     }
 
-    CountDownTimerAsync.CountDownTask task;
-
     public void setRepeaterTime(int repeaterTime){
         countTimer.setRepeater(repeaterTime);
     }

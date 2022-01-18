@@ -21,6 +21,7 @@ import com.example.checkListApp.timemanagement.parcel.ListTimersParcel;
 import com.example.checkListApp.timemanagement.utilities.KeyHelperClass;
 import com.example.checkListApp.timemanagement.utilities.ListTimerUtility;
 import com.example.checkListApp.timer.TimeState;
+import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 
 
@@ -240,7 +241,7 @@ public final class TimerService extends LifecycleService {
 
         private final TimerService timerService;
         private final PendingIntent pendingIntent;
-        private final MainTimerViewModel timeViewModel = MainTimerView.mainTimerViewModel;
+        private final MainTimerViewModel timeViewModel = MainFragment.getMainTimerViewModel();
         private static  ArrayList<Entry> timerViewModelList;
 
         private final int FOREGROUND_SERVICE_ID = 111;
@@ -281,7 +282,7 @@ public final class TimerService extends LifecycleService {
 
                 Log.d("serviceTest","here");
 
-                if (MainTimerView.mainTimerViewModel.getRepeaterTime() <= -1) {
+                if (timeViewModel.getRepeaterTime() <= -1) {
 //                    notification.set(timerService.makeNotificationDismiss(pendingIntent));
 //                    mgr.notify(FOREGROUND_SERVICE_ID, notification.get());
 

@@ -39,7 +39,7 @@ import com.example.checkListApp.R;
 import com.example.checkListApp.databinding.MainFragmentBinding;
 import com.example.checkListApp.input.CustomEditText;
 import com.example.checkListApp.input.DetectKeyboardBack;
-import com.example.checkListApp.timemanagement.MainTimerView;
+import com.example.checkListApp.timemanagement.MainTimerViewModel;
 import com.example.checkListApp.timemanagement.TimerService;
 import com.example.checkListApp.timemanagement.parcel.ListTimersParcel;
 import com.example.checkListApp.timemanagement.parcel.ListTimersParcelBuilder;
@@ -48,7 +48,7 @@ import com.example.checkListApp.ui.main.entry_management.ButtonPanel.ButtonPanel
 import com.example.checkListApp.ui.main.entry_management.ButtonPanel.ButtonPanelToggle;
 import com.example.checkListApp.ui.main.entry_management.EntryItemManager;
 import com.example.checkListApp.ui.main.entry_management.ButtonPanel.LeafButton;
-import com.example.checkListApp.ui.main.entry_management.EntryTimerProcesses;
+import com.example.checkListApp.ui.main.entry_management.EntryTimerProcessHandler;
 import com.example.checkListApp.ui.main.entry_management.ListComponent.CustomLayoutManager;
 import com.example.checkListApp.ui.main.entry_management.ListComponent.ListItemClickListener;
 import com.example.checkListApp.ui.main.entry_management.ListComponent.RecyclerAdapter;
@@ -188,13 +188,13 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     public ListUtility      getListUtility() { return listUtility;}
 
     public Intent           getServiceIntent() { return serviceIntent; }
-    public MainTimerView    getMainTimerView() { return mainTimerView; }
+    public static MainTimerViewModel getMainTimerViewModel() { return mainTimerViewModel; }
 
 
 
     private Intent serviceIntent;
 
-    public EntryTimerProcesses entryTimerProcesses;
+    public EntryTimerProcessHandler entryTimerProcessHandler;
 
     private boolean isSorting = false;
 
@@ -206,7 +206,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     private MediaPlayer[] selectedAudio;
 
-    private final MainTimerView mainTimerView = new MainTimerView();
+    private static final MainTimerViewModel mainTimerViewModel = new MainTimerViewModel();
 
     ListTimersParcel listTimersParcel;
 
@@ -273,14 +273,14 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
 //        configureMainTimer();
 
-        entryTimerProcesses = new EntryTimerProcesses(this);
+        entryTimerProcessHandler = new EntryTimerProcessHandler(this);
 
-        entryTimerProcesses.configureMainTimer();
+        entryTimerProcessHandler.configureMainTimer();
 
 
         recordHelper.createButton(getContext(),binding);
 
-        MainTimerView.mainTimerViewModel.setRepeaterTime(Entry.globalCycle);
+        mainTimerViewModel.setRepeaterTime(Entry.globalCycle);
 
 
     }
@@ -435,7 +435,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         listTimersParcel = new ListTimersParcelBuilder(checkList)
                 .setEntryViewModelList(checkList)
-                .setGlobalTimer(MainTimerView.mainTimerViewModel.getValueTime())
+                .setGlobalTimer(mainTimerViewModel.getValueTime())
                 .setIndexActive(listUtility.activeProcessTimeIndex).build();
 
 
@@ -461,7 +461,8 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
 
     public static void resetTime(){
-        MainTimerView.mainTimerViewModel.resetAbsolutely();timerRunning.postValue(false);
+        mainTimerViewModel.resetAbsolutely();
+        timerRunning.postValue(false);
     }
 
     public void playAudio(int audio){
