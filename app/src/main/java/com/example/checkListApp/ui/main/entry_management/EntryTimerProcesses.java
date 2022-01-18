@@ -109,9 +109,6 @@ public class EntryTimerProcesses {
 
         binding.timerExecuteBtn.setOnLongClickListener(view -> {
 
-            //hideButtons(false);
-
-
             MainTimerView.mainTimerViewModel.resetAbsolutely();
             mainFragment.getTimerRunning().postValue(false);
 
@@ -197,8 +194,6 @@ public class EntryTimerProcesses {
 
         if(!listUtility.currentActiveTime.onTogglePrimerTemp){
             if (listUtility.currentActiveTime.timeElapsed(elapsedTime)) {
-
-                //selectedAudio[checkList.get(listUtility.activeProcessTimeIndex).getSelectAudio()].start();
 
                 mainFragment.playAudio(listUtility.currentActiveTime.getSelectAudio());
 
