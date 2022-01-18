@@ -12,6 +12,8 @@ import androidx.room.PrimaryKey;
 import com.example.checkListApp.timer.TimeState;
 import com.example.checkListApp.ui.main.entry_management.list_component.RecyclerAdapter;
 
+import java.util.ArrayList;
+
 @Entity(tableName = "Entries")
 public class Entry {
 
@@ -56,6 +58,9 @@ public class Entry {
     public int numberValueTime = 0;
     @Ignore
     public int timeAccumulated = 0;
+
+    @Ignore
+    public ArrayList<Entry> subCheckList =new ArrayList<>();
 
 
 
@@ -220,6 +225,10 @@ public class Entry {
 
         setNumberValueTime(time);
 
+    }
+
+    public void setSubCheckList(ArrayList<Entry> subCheckList) {
+        this.subCheckList = subCheckList;
     }
 
     public int getSelectAudio(){

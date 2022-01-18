@@ -303,6 +303,7 @@ implements ItemTouchHelperAdapter {
         public TableRow tEntryViewRow;
         public Button checkButton;
         private final Button setTimeButton;
+        private Button subListButton;
 
         private RecordHelper recordHelper;
 
@@ -335,6 +336,7 @@ implements ItemTouchHelperAdapter {
                     checkButton = binding.checkBtn;
                     setTimeButton = binding.setEntryTimeBtn;
                     textView = binding.entryText;
+                    subListButton = binding.subListBtn;
 
                     itemView.getRoot().setOnClickListener(this);
                     itemView.getRoot().setOnLongClickListener(this);
@@ -342,6 +344,7 @@ implements ItemTouchHelperAdapter {
                     checkButton.setOnClickListener(this);
                     setTimeButton.setOnClickListener(this);
                     textView.setOnLongClickListener(this);
+                    subListButton.setOnClickListener(this);
 
 
 

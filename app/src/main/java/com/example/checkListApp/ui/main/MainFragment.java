@@ -944,6 +944,17 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
             }
 
+
+            if(view.getId() == R.id.subListBtn){
+
+                Entry entry = checkList.get(position);
+
+
+
+
+
+            }
+
         }
 
     }
