@@ -32,8 +32,6 @@ public abstract class ListTimerUtility {
     }
 
 
-
-
    public ArrayList<Entry> generateEntryList(ListTimersParcel parcel){
 
       //  int size = MainFragment.getCheckList().size();// parcel.listOfCountDownTimers.length;
@@ -100,6 +98,21 @@ public abstract class ListTimerUtility {
         }
 
         return list.get(size-2);
+    }
+
+    public Entry getPreviousActiveProcessTime(ArrayList<Entry> list){
+
+
+        if(activeProcessTimeIndex > 1) {
+            activeProcessTimeIndex--;
+
+            return list.get(activeProcessTimeIndex);
+        } else{
+            activeProcessTimeIndex = 1;
+        }
+
+        return list.get(1);
+
     }
 
    public  void revertTimeIndex(){ activeProcessTimeIndex = 1; }

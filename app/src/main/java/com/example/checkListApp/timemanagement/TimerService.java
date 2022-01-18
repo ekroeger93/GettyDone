@@ -78,7 +78,10 @@ public final class TimerService extends LifecycleService {
         int FOREGROUND_SERVICE_ID = 111;
 
 //      if(!parcelableList.globalSetTimer.equals("00:00:00"))
-        startForeground(FOREGROUND_SERVICE_ID, foregroundTimerService.createTimer(notificationManager));
+
+
+        startForeground(FOREGROUND_SERVICE_ID,
+                foregroundTimerService.createTimer(notificationManager));
 
 
         return (START_NOT_STICKY);
@@ -95,8 +98,13 @@ public final class TimerService extends LifecycleService {
         BuilderDataHelper dataHelper = new BuilderDataHelper(mBuilder.get(), pendingIntent, timeViewModel);
 
 
+        Log.d("serviceTest",""+countTime + " "+ entry);
 
-        if(countTime <= 1 && timeViewModel.getRepeaterTime() <= 0 ) {
+        if(
+                countTime <= 1 &&
+                        timeViewModel.getRepeaterTime() <= 0
+
+        ) {
             mBuilder.set(builderDismissive(dataHelper, countTime));
         }
         else {
@@ -253,19 +261,19 @@ public final class TimerService extends LifecycleService {
             return timerViewModelList;
         }
 
-        public Notification preSetNotification() {
-            return timerService.makeNotification(1, 0, timeViewModel, new Entry(), pendingIntent);
+        public Notification preSetNotification(int setTime, Entry entry) {
+            return timerService.makeNotification(setTime, 0, timeViewModel, entry, pendingIntent);
         }
 
 
         public Notification createTimer(NotificationManager mgr) {
 
-            AtomicReference<Notification> notification = new AtomicReference<>(preSetNotification());
             AtomicInteger setTime = new AtomicInteger(setTimer(timeViewModel));
             currentActiveTime = timerViewModelList.get(activeProcessTimeIndex);
 
-
-
+            AtomicReference<Notification> notification =
+                    new AtomicReference<>(
+                            preSetNotification(setTimer(timeViewModel), currentActiveTime));
 
 
             timeViewModel.setServicePostExecute(() -> {
@@ -296,6 +304,8 @@ public final class TimerService extends LifecycleService {
 
                     elapsedTime = setTime.get() - countTime;
 
+                    //TODO BUG WHERE ENTRY IS TOGGLE AND THIS IS NOT GETTING NEXT INDEX
+                   //on second go round
                      if (currentActiveTime.timeElapsed(elapsedTime))
                          currentActiveTime = getNextActiveProcessTime(timerViewModelList);
 

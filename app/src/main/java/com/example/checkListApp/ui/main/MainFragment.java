@@ -54,6 +54,7 @@ import com.example.checkListApp.ui.main.entry_management.ButtonPanel.ButtonPanel
 import com.example.checkListApp.ui.main.entry_management.ButtonPanel.ButtonPanelToggle;
 import com.example.checkListApp.ui.main.entry_management.EntryItemManager;
 import com.example.checkListApp.ui.main.entry_management.ButtonPanel.LeafButton;
+import com.example.checkListApp.ui.main.entry_management.EntryTimerProcesses;
 import com.example.checkListApp.ui.main.entry_management.ListComponent.CustomLayoutManager;
 import com.example.checkListApp.ui.main.entry_management.ListComponent.ListItemClickListener;
 import com.example.checkListApp.ui.main.entry_management.ListComponent.RecyclerAdapter;
@@ -114,11 +115,11 @@ TaDone Prototype
 
 -tips
 
--chain cycle entry repeater
- two entries iterate a set cycle [Start , End]
- END loops back to Start until iteration is done
- end cycle cannot set another cycle
- last entry cannot cycle
+-back hopper, when timer expires "hops" back
+to previous entry and restoring time duration
+for a number of iterations
+-the entry being hopped back to cannot implement
+a back hopper
 
 -color code Entry Lists for graphing,
 add legend keys
@@ -154,9 +155,8 @@ https://github.com/PhilJay/MPAndroidChart
 public class MainFragment extends Fragment implements ListItemClickListener {
 
 
-    protected MainFragmentBinding binding;
+    public MainFragmentBinding binding;
 
-    MainActivityBinding activityBinding;
 
     public static float recyclerScrollCompute,itemHeightPx, ratioOffset;
 
@@ -193,30 +193,32 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     public RecordHelper     getRecordHelper() {return recordHelper;}
     public ListUtility      getListUtility() { return listUtility;}
 
+    public EntryTimerProcesses entryTimerProcesses;
+
     private boolean isSorting = false;
-    public static boolean isPrepMoving = false;
+
 
     private static final MutableLiveData<Boolean> timerRunning = new MutableLiveData<>(false);
-    public Boolean isTimerRunning()   { return timerRunning.getValue();}
-    public MutableLiveData<Boolean> getTimerRunning() { return timerRunning;}
+    public MutableLiveData<Boolean> getTimerRunning() { return timerRunning; }
 
-
+    public static Boolean isTimerRunning()   { return timerRunning.getValue();}
 
 
     private MediaPlayer[] selectedAudio;
 
     private final MainTimerView mainTimerView = new MainTimerView();
+    public MainTimerView getMainTimerView() { return mainTimerView; }
 
     ListTimersParcel listTimersParcel;
 
     private final ListUtility listUtility = new ListUtility();
 
-    public static int activeIndex = 0;
-
     private Activity activity;
-    private Intent serviceIntent;
 
-//    private ItemTouchHelper.Callback callback;
+    private Intent serviceIntent;
+    public Intent getServiceIntent() { return serviceIntent; }
+
+    //    private ItemTouchHelper.Callback callback;
     private  ItemTouchCallback callback;
 
     @Override
@@ -272,7 +274,12 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         //TODO: investigate here too
         assignObservers();
 
-        configureMainTimer();
+//        configureMainTimer();
+
+        entryTimerProcesses = new EntryTimerProcesses(this);
+
+        entryTimerProcesses.configureMainTimer();
+
 
         recordHelper.createButton(getContext(),binding);
 
@@ -280,7 +287,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
 
     }
-
 
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
@@ -319,18 +325,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     }
 
-    @Override
-    public void onPrimaryNavigationFragmentChanged(boolean isPrimaryNavigationFragment) {
-        super.onPrimaryNavigationFragmentChanged(isPrimaryNavigationFragment);
 
-
-
-    }
-
-
-
-
-    
     public void setUpAdapter(){
 
 
@@ -412,6 +407,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     }
 
+
     public static void scrollPosition(int position){
         customLayoutManager.scrollToPositionWithOffset(position,100);
     }
@@ -419,6 +415,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     public static void scrollPosition(int position, int offset){
         customLayoutManager.scrollToPositionWithOffset(position,offset);
     }
+
 
     public void startService(){
 
@@ -434,232 +431,15 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         //service.startService(intent);
     }
 
-    
-    public void configureMainTimer(){
-
-
-    //update text timer based on current scroll selected position
-    //selectedEntry.observe(getViewLifecycleOwner(),mainTimerView.getObserver(checkList));
-
-    //bind listener to button to toggle Time
-    //mainTimerView.setListener(binding.timerExecuteBtn);
-
-        CountDownTimerAsync.CountDownTask countDownTask = time -> {
-         {
-
-//                int elapsedTime = setTime - time;
-                int elapsedTime = listUtility.getSummationTime(checkList) - time;
-
-                if(listUtility.currentActiveTime == null){
-                    listUtility.currentActiveTime = checkList.get(1);
-                }
-
-                Log.d("listUtilityTest",""+elapsedTime);
-
-                //TODO NULL EXCEPTION HERE WHEN ASSIGNING NEW TIME VALUE
-             // STOPSHIP: 1/16/22
-//                if(!listUtility.currentActiveTime.onTogglePrimer.getValue()){
-             if(!listUtility.currentActiveTime.onTogglePrimerTemp){
-                    if (listUtility.currentActiveTime.timeElapsed(elapsedTime)) {
-
-
-                        selectedAudio[checkList.get(listUtility.activeProcessTimeIndex).getSelectAudio()].start();
-
-                        if (getActivity() != null && getContext() !=null) {
-                            getActivity().runOnUiThread(() -> {
-
-                                String messageB = checkList.get(listUtility.activeProcessTimeIndex-1).textEntry.getValue();
-
-                                scrollPosition(listUtility.activeProcessTimeIndex);
-
-                                Toast toast = Toast.makeText(getContext(), messageB + " done!", Toast.LENGTH_SHORT);
-                                toast.setGravity(Gravity.TOP, 0, 0);
-                                toast.show();
-
-
-                            });
-                        }
-
-                        if (listUtility.currentActiveTime.numberValueTime != 0) {
-
-                            if (MainTimerView.mainTimerViewModel.getRepeaterTime() <= 0) {
-                                listUtility.currentActiveTime.getViewHolder().checkOff();
-                            }
-
-                            listUtility.currentActiveTime = listUtility.getNextActiveProcessTime(checkList);
-                        }
-                        activeIndex = listUtility.activeProcessTimeIndex;
-
-
-
-                    }
-                }else{
-                    MainTimerView.mainTimerViewModel.toggleTime();
-
-                 if (MainTimerView.mainTimerViewModel.getRepeaterTime() <= 0) {
-                     listUtility.currentActiveTime.getViewHolder().checkOff();
-                 }
-
-                    listUtility.currentActiveTime = listUtility.getNextActiveProcessTime(checkList);
-                    activeIndex = listUtility.activeProcessTimeIndex;
-
-
-                }
-
-            };
-
-        };
-
-
-    binding.timerExecuteBtn.setOnClickListener(view -> {
-
-
-        setTimer();
-
-        if(MainTimerView.mainTimerViewModel.isToggled()) {
-            binding.timerExecuteBtn.setBackground(
-                    ContextCompat.getDrawable(
-                            getContext(),
-                            R.drawable.outline_play_circle_filled_black_48
-                    ));
-        }else{
-            binding.timerExecuteBtn.setBackground(
-                    ContextCompat.getDrawable(
-                            getContext(),
-                            R.drawable.outline_pause_circle_filled_black_48
-                    ));
-
-        }
-
-        if( listUtility.getSummationTime(checkList)  > 0 ) {
-
-//            if (!isMyServiceRunning(TimerService.class))
-            startService();
-
-            if(binding.repeatTimer.getText().toString().isEmpty()){
-                binding.repeatTimer.setText("0");
-            }
-
-                int repeater = Integer.parseInt(binding.repeatTimer.getText().toString());
-                MainTimerView.mainTimerViewModel.setRepeaterTime(repeater);
-
-
-            timerRunning.postValue(true);
-
-            MainTimerView.mainTimerViewModel.setTaskCustom(countDownTask);
-
-            MainTimerView.mainTimerViewModel.toggleTime();
-
-        }
-
-    });
-
-
-    binding.timerExecuteBtn.setOnLongClickListener(view -> {
-
-        //hideButtons(false);
-
-
-        MainTimerView.mainTimerViewModel.resetAbsolutely();
-        timerRunning.postValue(false);
-
-//        if(isMyServiceRunning(TimerService.class))
-           activity.stopService(serviceIntent);
-
-        return  true;
-    });
-
-    //update time of both View and ViewModel
-    mainTimerView.setObserverForMainTextTime(binding.timeTextMain,getViewLifecycleOwner());
-
-    //set a post execution after timer expires, proceeds to next Entry
-    mainTimerView.setPostExecute(() -> {
-
-//        shortBell.start();
-//        selectedAudio[listUtility.currentActiveTime.getSelectAudio()].start();
-
-        if(getActivity() != null) {//fine bitch don't work
-            getActivity().runOnUiThread(() -> {
-
-                String message = checkList.get(
-                        listUtility.activeProcessTimeIndex-1
-                ).textEntry.getValue();
-
-
-                Toast toast = Toast.makeText(getContext(), message + " done!", Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.TOP, 0, 0);
-                toast.show();
-
-
-            });
-        }
-//        new Handler(Looper.getMainLooper()).post(new Runnable () {
-//            @Override public void run() {
-//
-//                String message = checkList.get(
-//                        listUtility.activeProcessTimeIndex
-//                ).textEntry.getValue();
-//
-//                Toast toast = Toast.makeText(
-//                        getContext(),
-//                        message +
-//                                " done!",
-//                        Toast.LENGTH_SHORT);
-//                toast.setGravity(Gravity.TOP,0,0);
-//                toast.show();
-//            }
-//
-//
-//
-//        });
-
-//        getActivity().stopService(getForegroundTimerServiceIntent());
-        //    activity.stopService(serviceIntent);
-
-        if (MainTimerView.mainTimerViewModel.getRepeaterTime() <= -1) {
-
-            Log.d("repeaterTest",":here "+MainTimerView.mainTimerViewModel.getRepeaterTime());
-
-            mainTimerView.mainTimerViewModel.resetTimeState();
-            timerRunning.postValue(false);
-
-//            if (isMyServiceRunning(TimerService.class))
-//                activity.stopService(serviceIntent);
-
-        }else {
-
-            selectedAudio[checkList.get(listUtility.activeProcessTimeIndex).getSelectAudio()].start();
-            listUtility.currentActiveTime.getViewHolder().checkOff();
-
-            Log.d("repeaterTest","here "+MainTimerView.mainTimerViewModel.getRepeaterTime());
-            listUtility.revertTimeIndex();
-            listUtility.currentActiveTime = checkList.get(1);
-            MainTimerView.mainTimerViewModel.setTaskCustom(countDownTask);
-
-        }
-
-    });
-
-
-}
-
-    public static void resetTime(){
-
-        MainTimerView.mainTimerViewModel.resetAbsolutely();
-        timerRunning.postValue(false);
-
-    }
-
-
     private boolean isMyServiceRunning(Class<?> serviceClass) {
 
         try{
-        ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }}catch (NullPointerException e){
+            ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
+            for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+                if (serviceClass.getName().equals(service.service.getClassName())) {
+                    return true;
+                }
+            }}catch (NullPointerException e){
             return false;
         }
 
@@ -697,7 +477,111 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     }
 
-    
+
+    public void configureMainTimer(){
+
+
+    //update text timer based on current scroll selected position
+
+        CountDownTimerAsync.CountDownTask countDownTask = time -> {
+         {
+
+                int elapsedTime = listUtility.getSummationTime(checkList) - time;
+
+                if(listUtility.currentActiveTime == null) listUtility.currentActiveTime = checkList.get(1);
+
+                processTimerTask(elapsedTime);
+
+
+         };
+
+        };
+
+
+    binding.timerExecuteBtn.setOnClickListener(view -> {
+
+
+        setTimer();
+
+        if(MainTimerView.mainTimerViewModel.isToggled()) {
+            binding.timerExecuteBtn.setBackground(
+                    ContextCompat.getDrawable(
+                            getContext(),
+                            R.drawable.outline_play_circle_filled_black_48
+                    ));
+        }else{
+            binding.timerExecuteBtn.setBackground(
+                    ContextCompat.getDrawable(
+                            getContext(),
+                            R.drawable.outline_pause_circle_filled_black_48
+                    ));
+
+        }
+
+        if( listUtility.getSummationTime(checkList)  > 0 ) {
+
+            startService();
+
+            if(binding.repeatTimer.getText().toString().isEmpty()){
+                binding.repeatTimer.setText("0");
+            }
+
+                int repeater = Integer.parseInt(binding.repeatTimer.getText().toString());
+                MainTimerView.mainTimerViewModel.setRepeaterTime(repeater);
+
+
+            timerRunning.postValue(true);
+
+            MainTimerView.mainTimerViewModel.setTaskCustom(countDownTask);
+
+            MainTimerView.mainTimerViewModel.toggleTime();
+
+        }
+
+    });
+
+    binding.timerExecuteBtn.setOnLongClickListener(view -> {
+
+        //hideButtons(false);
+
+
+        MainTimerView.mainTimerViewModel.resetAbsolutely();
+        timerRunning.postValue(false);
+
+//        if(isMyServiceRunning(TimerService.class))
+           activity.stopService(serviceIntent);
+
+        return  true;
+    });
+
+    //update time of both View and ViewModel
+    mainTimerView.setObserverForMainTextTime(binding.timeTextMain,getViewLifecycleOwner());
+
+    //set a post execution after timer expires, proceeds to next Entry
+    mainTimerView.setPostExecute(() -> {
+
+        displayEntryToast();
+
+        if (MainTimerView.mainTimerViewModel.getRepeaterTime() <= -1) {
+
+            //go back to top of list
+            MainTimerView.mainTimerViewModel.resetTimeState();
+            timerRunning.postValue(false);
+
+        }
+        else {
+
+            endOfTimerTask(countDownTask);
+
+        }
+
+
+
+    });
+
+
+}
+
     public int setTimer(){
 
         if(MainTimerView.mainTimerViewModel.getNumberValueTime() == 0) {
@@ -721,7 +605,90 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         }
 }
 
-    
+    public static void resetTime(){
+
+        MainTimerView.mainTimerViewModel.resetAbsolutely();
+        timerRunning.postValue(false);
+
+    }
+
+    public void displayEntryToast(){
+
+        if (getActivity() != null && getContext() !=null) {
+            getActivity().runOnUiThread(() -> {
+
+                String message = checkList.get(listUtility.activeProcessTimeIndex-1).textEntry.getValue();
+
+                scrollPosition(listUtility.activeProcessTimeIndex);
+
+                Toast toast = Toast.makeText(getContext(), message + " done!", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.TOP, 0, 0);
+                toast.show();
+
+
+            });
+        }
+
+    }
+
+    public void processTimerTask(int elapsedTime){
+
+        if(!listUtility.currentActiveTime.onTogglePrimerTemp){
+            if (listUtility.currentActiveTime.timeElapsed(elapsedTime)) {
+
+                //selectedAudio[checkList.get(listUtility.activeProcessTimeIndex).getSelectAudio()].start();
+
+                playAudio(listUtility.currentActiveTime.getSelectAudio());
+
+
+                displayEntryToast();
+
+                if (listUtility.currentActiveTime.numberValueTime != 0) {
+
+                    //if repeater time is 0 check off
+                    if (MainTimerView.mainTimerViewModel.getRepeaterTime() <= 0)
+                        listUtility.currentActiveTime.getViewHolder().checkOff();
+
+                    listUtility.currentActiveTime = listUtility.getNextActiveProcessTime(checkList);
+                }
+
+
+            }
+        }
+        else{
+            MainTimerView.mainTimerViewModel.toggleTime();
+
+            if (MainTimerView.mainTimerViewModel.getRepeaterTime() <= 0) {
+                listUtility.currentActiveTime.getViewHolder().checkOff();
+            }
+
+            listUtility.currentActiveTime = listUtility.getNextActiveProcessTime(checkList);
+
+        }
+
+    }
+
+    public void endOfTimerTask( CountDownTimerAsync.CountDownTask countDownTask){
+
+//        selectedAudio[checkList.get(listUtility.activeProcessTimeIndex).getSelectAudio()].start();
+
+        playAudio(listUtility.currentActiveTime.getSelectAudio());
+
+        listUtility.currentActiveTime.getViewHolder().checkOff();
+
+        listUtility.revertTimeIndex();
+        listUtility.currentActiveTime = checkList.get(1);
+        MainTimerView.mainTimerViewModel.setTaskCustom(countDownTask);
+
+
+    }
+
+
+    public void playAudio(int audio){
+        selectedAudio[audio].start();
+    }
+
+
     @SuppressLint("ClickableViewAccessibility")
     public void assignButtonListeners(){
 
@@ -950,23 +917,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
 }
 
-    public void updateIndexes(){
-
-        for(Entry n :checkList) {
-
-            if(Thread.currentThread() == Looper.getMainLooper().getThread()) {
-                n.orderIndex.setValue(checkList.indexOf(n));
-            }else{
-                n.orderIndex.postValue(checkList.indexOf(n));
-            }
-                mViewModel.updateIndex(n, checkList.indexOf(n));
-//            Log.d("orderingTest", ""+n.orderIndex.getValue());
-        }
-
-
-        mViewModel.sortIndexes();
-    }
-
     public void assignObservers(){
 
         Observer<Boolean> onTimerRunning = new Observer<Boolean>() {
@@ -1169,6 +1119,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
 }
 
+
     public static void transitionToFileFromMain(Activity activity){
 
         MainFragmentDirections.ActionMainFragmentToFileListFragment action =
@@ -1184,6 +1135,11 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     }
 
+    @Override
+    public void onPrimaryNavigationFragmentChanged(boolean isPrimaryNavigationFragment) {
+        super.onPrimaryNavigationFragmentChanged(isPrimaryNavigationFragment);
+
+    }
 
     
     @Override
@@ -1249,6 +1205,23 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     }
 
 
+
+    public void updateIndexes(){
+
+        for(Entry n :checkList) {
+
+            if(Thread.currentThread() == Looper.getMainLooper().getThread()) {
+                n.orderIndex.setValue(checkList.indexOf(n));
+            }else{
+                n.orderIndex.postValue(checkList.indexOf(n));
+            }
+            mViewModel.updateIndex(n, checkList.indexOf(n));
+//            Log.d("orderingTest", ""+n.orderIndex.getValue());
+        }
+
+
+        mViewModel.sortIndexes();
+    }
 
 
 }
