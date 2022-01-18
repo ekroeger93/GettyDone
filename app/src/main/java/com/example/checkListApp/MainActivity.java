@@ -19,7 +19,6 @@ import com.google.android.material.tabs.TabLayout;
 public class MainActivity extends AppCompatActivity implements FileListFragment.OnFragmentInteractionListener {
 
     public MainActivityBinding activityBinding;
-    static public final MainTimerViewModel timerViewModel = new MainTimerViewModel();
 
     static public TabLayout tabLayout;
     int navPosition = 0;
@@ -55,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
 
                 //THIS WAS TOTALLY NOT CONFUSING AND MADE COMPLETE SENSE!
 
-                if (!mainFragment.isTimerRunning()) {
+                if (!MainFragment.isTimerRunning()) {
 
                     if (!visualSelect) {
                         if (tab.getPosition() == 0 //CLICKS LIST
@@ -122,33 +121,11 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
 
         });
 
-        setObserver();
 
 
     }
 
 
-    public void setObserver() {
-
-//        Observer<Boolean> onTimerRunning = new Observer<Boolean>() {
-//            @Override
-//            public void onChanged(Boolean aBoolean) {
-//
-//                if(!aBoolean){
-//                    tabLayout.setVisibility(View.VISIBLE);
-//                    mainFragment.hideButtons(false);
-//                }else{
-//                    tabLayout.setVisibility(View.GONE);
-//                    mainFragment.hideButtons(true);
-//                }
-//
-//            }
-//        };
-//
-//        mainFragment.getTimerRunning().observe(navHostFragment, onTimerRunning);
-
-
-    }
 
 
     @Override

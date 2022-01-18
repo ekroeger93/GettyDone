@@ -148,9 +148,7 @@ https://github.com/PhilJay/MPAndroidChart
 
 public class MainFragment extends Fragment implements ListItemClickListener {
 
-
     public MainFragmentBinding binding;
-
 
     public static float recyclerScrollCompute,itemHeightPx, ratioOffset;
 
@@ -162,13 +160,17 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     private ButtonPanelToggle buttonPanelToggle;
 
     private final RecordHelper recordHelper = new RecordHelper();
-//    private final AuxiliaryData auxiliaryData  = new AuxiliaryData(this);
+    private static final MainTimerViewModel mainTimerViewModel = new MainTimerViewModel();
+    private final ListUtility listUtility = new ListUtility();
 
     private RecyclerAdapter adapter;
     private MainViewModel mViewModel;
     private RecyclerView recyclerView;
 
     private static CustomLayoutManager customLayoutManager;
+    ListTimersParcel listTimersParcel;
+
+    public EntryTimerProcessHandler entryTimerProcessHandler;
 
     private ArrayList<Entry> checkList = new ArrayList<>();
     private final MutableLiveData< ArrayList<Entry>> _checkList = new MutableLiveData<>();
@@ -190,11 +192,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     public Intent           getServiceIntent() { return serviceIntent; }
     public static MainTimerViewModel getMainTimerViewModel() { return mainTimerViewModel; }
 
-
-
     private Intent serviceIntent;
-
-    public EntryTimerProcessHandler entryTimerProcessHandler;
 
     private boolean isSorting = false;
 
@@ -203,18 +201,9 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     public static Boolean isTimerRunning()   { return timerRunning.getValue();}
 
-
     private MediaPlayer[] selectedAudio;
 
-    private static final MainTimerViewModel mainTimerViewModel = new MainTimerViewModel();
-
-    ListTimersParcel listTimersParcel;
-
-    private final ListUtility listUtility = new ListUtility();
-
     private Activity activity;
-
-
 
     private  ItemTouchCallback callback;
 
@@ -271,7 +260,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         //TODO: investigate here too
         assignObservers();
 
-//        configureMainTimer();
 
         entryTimerProcessHandler = new EntryTimerProcessHandler(this);
 
@@ -617,12 +605,9 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                    e.printStackTrace();
                }
 
-               if (operator.isMovingItem) {
-
-//                   operator.moveItem(operator.movingItem);
-
-
-               }
+//               if (operator.isMovingItem) {
+////                   operator.moveItem(operator.movingItem);
+//               }
 
 
            });
