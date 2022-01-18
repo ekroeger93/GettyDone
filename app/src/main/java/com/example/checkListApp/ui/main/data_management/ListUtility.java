@@ -1,9 +1,9 @@
 package com.example.checkListApp.ui.main.data_management;
 
-import com.example.checkListApp.timemanagement.utilities.ListTimerUtility;
+import com.example.checkListApp.time_management.utilities.ListTimerUtility;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 import com.example.checkListApp.ui.main.entry_management.entries.Spacer;
-import com.example.checkListApp.ui.main.entry_management.ListComponent.ToggleSwitchOrdering;
+import com.example.checkListApp.ui.main.entry_management.list_component.ToggleSwitchOrdering;
 
 import java.util.ArrayList;
 

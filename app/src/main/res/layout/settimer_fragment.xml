@@ -9,7 +9,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.checkListApp.settimer.SetTimerViewModel" />
+            type="com.example.checkListApp.set_timer.SetTimerViewModel" />
     </data>
 
 

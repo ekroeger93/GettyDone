@@ -4,12 +4,10 @@ import android.app.Activity;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -18,12 +16,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
-import android.widget.TextView;
 
 import com.example.checkListApp.R;
-import com.example.checkListApp.ui.main.entry_management.Record.ProgressProvider;
-import com.example.checkListApp.ui.main.entry_management.Record.Record;
-import com.example.checkListApp.ui.main.entry_management.Record.RecordHelper;
+import com.example.checkListApp.ui.main.entry_management.record.ProgressProvider;
+import com.example.checkListApp.ui.main.entry_management.record.Record;
+import com.example.checkListApp.ui.main.entry_management.record.RecordHelper;
 import com.example.checkListApp.ui.main.data_management.JsonService;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
@@ -36,12 +33,9 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
 

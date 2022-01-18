@@ -1,20 +1,14 @@
 package com.example.checkListApp.ui.main.data_management;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
-import androidx.annotation.RequiresApi;
-
-import com.example.checkListApp.settimer.SetTimerFragmentArgs;
-import com.example.checkListApp.timemanagement.parcel.TimeParcel;
+import com.example.checkListApp.set_timer.SetTimerFragmentArgs;
+import com.example.checkListApp.time_management.parcel.TimeParcel;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
-import com.example.checkListApp.ui.main.entry_management.entries.Spacer;
 import com.example.checkListApp.ui.main.MainFragmentArgs;
-import com.example.checkListApp.ui.main.MainViewModel;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 
 public final class AuxiliaryData {
 

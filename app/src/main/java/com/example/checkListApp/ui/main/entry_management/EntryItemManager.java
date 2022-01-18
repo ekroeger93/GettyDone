@@ -4,24 +4,21 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.TextView;
 
-import androidx.annotation.RequiresApi;
 import androidx.recyclerview.selection.SelectionTracker;
 
 import com.example.checkListApp.R;
 import com.example.checkListApp.input.CustomEditText;
 import com.example.checkListApp.input.DetectKeyboardBack;
-import com.example.checkListApp.ui.main.data_management.JsonService;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
-import com.example.checkListApp.ui.main.entry_management.ButtonPanel.ButtonPanelToggle;
+import com.example.checkListApp.ui.main.entry_management.button_panel.ButtonPanelToggle;
 import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.MainViewModel;
-import com.example.checkListApp.ui.main.entry_management.ListComponent.ToggleSwitchOrdering;
+import com.example.checkListApp.ui.main.entry_management.list_component.ToggleSwitchOrdering;
 import com.example.checkListApp.ui.main.data_management.ListUtility;
 
 import java.util.ArrayList;

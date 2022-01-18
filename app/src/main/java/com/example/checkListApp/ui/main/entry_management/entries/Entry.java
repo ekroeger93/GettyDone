@@ -4,18 +4,13 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-import androidx.room.Query;
 
 import com.example.checkListApp.timer.TimeState;
-import com.example.checkListApp.ui.main.data_management.JsonService;
-import com.example.checkListApp.ui.main.entry_management.ListComponent.RecyclerAdapter;
-
-import java.util.ArrayList;
+import com.example.checkListApp.ui.main.entry_management.list_component.RecyclerAdapter;
 
 @Entity(tableName = "Entries")
 public class Entry {

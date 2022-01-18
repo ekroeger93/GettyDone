@@ -2,22 +2,17 @@ package com.example.checkListApp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.FragmentContainerView;
-import androidx.lifecycle.Observer;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.view.WindowManager;
 
 import com.example.checkListApp.file_management.FileListFragment;
 import com.example.checkListApp.databinding.MainActivityBinding;
 import com.example.checkListApp.ui.main.MainFragment;
-import com.example.checkListApp.timemanagement.MainTimerViewModel;
+import com.example.checkListApp.time_management.MainTimerViewModel;
 import com.example.checkListApp.ui.main.progress.ProgressFragment;
 import com.google.android.material.tabs.TabLayout;
 

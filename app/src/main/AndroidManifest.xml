@@ -20,9 +20,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-          <service android:name=".timemanagement.TimerService"/>
+          <service android:name=".time_management.TimerService"/>
 
-        <receiver android:name=".timemanagement.TimerBroadcastReceiver"  android:exported="true"
+        <receiver android:name=".time_management.TimerBroadcastReceiver"  android:exported="true"
             android:permission="BROADCAST_STICKY">
             <intent-filter>
                 <action android:name="TOGGLE_TIME"/>

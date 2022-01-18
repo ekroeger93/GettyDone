@@ -9,7 +9,7 @@ import androidx.lifecycle.Observer;
 
 import com.example.checkListApp.R;
 import com.example.checkListApp.databinding.MainFragmentBinding;
-import com.example.checkListApp.timemanagement.MainTimerViewModel;
+import com.example.checkListApp.time_management.MainTimerViewModel;
 import com.example.checkListApp.timer.CountDownTimerAsync;
 import com.example.checkListApp.timer.TimeState;
 import com.example.checkListApp.ui.main.MainFragment;
