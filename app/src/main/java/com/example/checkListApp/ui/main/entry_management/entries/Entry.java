@@ -29,13 +29,19 @@ public class Entry {
     public MutableLiveData<Boolean> checked = new MutableLiveData<>(false);
     @ColumnInfo(name = "timerLabel")
     public MutableLiveData<String> countDownTimer = new MutableLiveData<>("00:00:00");
+
+    //this is getting out of hand may dedicate a conjoined class
     @ColumnInfo(name="orderIndex")
     public MutableLiveData<Integer> orderIndex = new MutableLiveData<>(-1);
-
     @ColumnInfo(name="onTogglePrimer")
     public MutableLiveData<Boolean> onTogglePrimer = new MutableLiveData<>(false);
     @ColumnInfo(name="selectedAudio")
     public MutableLiveData<Integer> selectedAudio = new MutableLiveData<>(0);
+
+    @Ignore
+    static public int globalCycle = 0;
+    @Ignore
+    public int backHopCycle = 0;
 
     @Ignore
     private RecyclerAdapter.ViewHolder viewHolder;
@@ -56,15 +62,7 @@ public class Entry {
     @Ignore
     public int timeAccumulated = 0;
 
-    //this is getting out of hand may dedicate a conjoined class
-    @Ignore
-    static public int globalCycler = 0;
-    @Ignore
-    public int subCycler = 0;
-    @Ignore
-    public boolean isStartCycle = false;
-    @Ignore
-    public boolean isEndCycle = false;
+
 
     public Entry(){
 

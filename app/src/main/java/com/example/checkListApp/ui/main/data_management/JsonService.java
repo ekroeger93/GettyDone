@@ -122,7 +122,7 @@ public final class JsonService {
     jsonObject.addProperty("orderIndex", src.orderIndex.getValue());
     jsonObject.addProperty("onTogglePrimer",src.onTogglePrimer.getValue());
     jsonObject.addProperty("selectedAudio", src.selectedAudio.getValue());
-    jsonObject.addProperty("repeater", Entry.globalCycler);
+    jsonObject.addProperty("repeater", Entry.globalCycle);
 
 //}
                 return jsonObject;
@@ -155,7 +155,7 @@ public final class JsonService {
             textEntry = textEntry.replaceAll("\"","").trim();
             timeText = timeText.replaceAll("\"","").trim();
 
-            Entry.globalCycler = repeaterVal;
+            Entry.globalCycle = repeaterVal;
 
             return new Entry(textEntry,isChecked,timeText,orderIndex,onToggle,selectAudio);
 

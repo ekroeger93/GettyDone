@@ -268,7 +268,8 @@ public final class TimerService extends LifecycleService {
 
         public Notification createTimer(NotificationManager mgr) {
 
-            AtomicInteger setTime = new AtomicInteger(setTimer(timeViewModel));
+            AtomicInteger _setTime = new AtomicInteger(setTimer(timeViewModel));
+            int setTime = _setTime.get();
             currentActiveTime = timerViewModelList.get(activeProcessTimeIndex);
 
             AtomicReference<Notification> notification =
@@ -285,7 +286,7 @@ public final class TimerService extends LifecycleService {
 //                    mgr.notify(FOREGROUND_SERVICE_ID, notification.get());
 
                 }else {
-                    setTime.set(setTimer(timeViewModel));
+                    _setTime.set(setTimer(timeViewModel));
                     currentActiveTime = timerViewModelList.get(activeProcessTimeIndex);
                 }
 
@@ -296,16 +297,16 @@ public final class TimerService extends LifecycleService {
 
             //TODO: BUG HERE RAPIDLY RESETING TIME
             //TODO: Repeater doesn't work well with single entry
-
+            //TODO  FIRST ENTRY IS TOGGLE AND THIS IS NOT GETTING NEXT INDEX
+            //ON SECOND GO AROUND
 
 
 
                 timeViewModel.setServiceTask(((elapsedTimeVolatile, countTime, elapsedTimeN) -> {
 
-                    elapsedTime = setTime.get() - countTime;
+                    elapsedTime = _setTime.get() - countTime;
 
-                    //TODO BUG WHERE ENTRY IS TOGGLE AND THIS IS NOT GETTING NEXT INDEX
-                   //on second go round
+
                      if (currentActiveTime.timeElapsed(elapsedTime))
                          currentActiveTime = getNextActiveProcessTime(timerViewModelList);
 
