@@ -59,22 +59,28 @@ public abstract class ListTimerUtility {
     }
 
 
-   public  int getSummationTime(ArrayList<Entry> list){
+    public  int getSummationTime(ArrayList<Entry> list){
 
-       int sum = 0;
+        int sum = 0;
 
-       for(Entry viewModel:list){
+        for(Entry entry:list){
 
-           viewModel.setNumberValueTime(viewModel.countDownTimer.getValue());
+            entry.setNumberValueTime(entry.countDownTimer.getValue());
 
-           int value = viewModel.getNumberValueTime();
+            int value;
 
-               sum+= value;
+            if (entry.subNumberTimeValue == 0) {
+                value = entry.getNumberValueTime();
+            }else{
+                value = entry.subNumberTimeValue;
+            }
+            sum+= value;
 
-       }
+        }
 
-       return sum;
+        return sum;
     }
+
 
     public Entry getCurrentActiveTime() {
         return currentActiveTime;
@@ -84,12 +90,34 @@ public abstract class ListTimerUtility {
 
         int size = list.size()-1;
 
-        if(activeProcessTimeIndex < size) {
-            activeProcessTimeIndex++;
+        currentActiveTime = list.get(activeProcessTimeIndex);
 
-            return list.get(activeProcessTimeIndex);
-        } else{
-            activeProcessTimeIndex = 1;
+        if(currentActiveTime.entrySubList.isEmpty()){
+
+            if(activeProcessTimeIndex < size) {
+                activeProcessTimeIndex++;
+
+                return list.get(activeProcessTimeIndex);
+            } else{
+                activeProcessTimeIndex = 1;
+            }
+
+        }else{
+
+            if(subActiveProcessTimeIndex < currentActiveTime.entrySubList.size()){
+
+                Entry subEntry = currentActiveTime.entrySubList.get(subActiveProcessTimeIndex);
+                list.get(activeProcessTimeIndex).setEntry( subEntry);
+
+                subActiveProcessTimeIndex++;
+
+                return subEntry;
+
+            }else{
+                subActiveProcessTimeIndex = 0;
+                return list.get(activeProcessTimeIndex);
+            }
+
         }
 
         return list.get(size-2);

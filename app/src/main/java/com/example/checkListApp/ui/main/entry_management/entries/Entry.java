@@ -111,7 +111,6 @@ public class Entry {
         this.countDownTimer.setValue(countDownTimer.getValue());
     }
 
-
     public Entry(String text, boolean isChecked, String timeText) {
 
         textEntry.setValue(text);
@@ -173,7 +172,6 @@ public class Entry {
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public void setNumberValueTime(String timeText){
 
 
@@ -186,7 +184,6 @@ public class Entry {
         }
 
     }
-
 
     public void swapIds(Entry entry){
 
@@ -261,15 +258,23 @@ public class Entry {
         return timeAccumulated;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
+
     public void setTimeAcclimated(int timeAcclimated) {
 
-    int original = new TimeState(numberValueTime).getTimeNumberValue();
-    int addedTime  = new TimeState(timeAcclimated).getTimeNumberValue();
 
-    this.timeAccumulated = original + addedTime;
+        int original = new TimeState(numberValueTime).getTimeNumberValue();
+        int addedTime = new TimeState(timeAcclimated).getTimeNumberValue();
 
-}
+        this.timeAccumulated = original + addedTime;
+
+        if(!subCheckList.isEmpty()) {
+            int subPlusOriginal = new TimeState(numberValueTime + subNumberTimeValue).getTimeNumberValue();
+            this.timeSubAccumulated = subPlusOriginal + addedTime;
+        }
+
+    }
+
 
 
     public MutableLiveData<String> getCountDownTimer() {
