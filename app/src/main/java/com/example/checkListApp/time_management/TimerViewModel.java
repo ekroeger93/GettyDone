@@ -6,7 +6,6 @@ import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
 
 import com.example.checkListApp.timer.CountDownTimerAsync;
 import com.example.checkListApp.timer.TimeState;
@@ -16,10 +15,11 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 
-public class MainTimerViewModel extends ViewModel {
+public class TimerViewModel {
 
     private final TimeToggler timeToggler = new TimeToggler();//TimeToggler.getTimeToggler();
-    private final CountDownTimerAsync countTimer = CountDownTimerAsync.getInstanceToToggle(timeToggler);
+//    private final CountDownTimerAsync countTimer = CountDownTimerAsync.getInstanceToToggle(timeToggler);
+    private final CountDownTimerAsync countTimer = new CountDownTimerAsync(timeToggler);
     private TimeState timeState = new TimeState(0);
 
 
@@ -96,7 +96,7 @@ public class MainTimerViewModel extends ViewModel {
 
         @RequiresApi(api = Build.VERSION_CODES.O)
         public void execute() {
-            executorService.execute(MainTimerViewModel.this::toggleTime);
+            executorService.execute(TimerViewModel.this::toggleTime);
         }
 
     }

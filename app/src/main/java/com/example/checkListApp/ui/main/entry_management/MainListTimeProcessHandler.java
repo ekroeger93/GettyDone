@@ -9,7 +9,8 @@ import androidx.lifecycle.Observer;
 
 import com.example.checkListApp.R;
 import com.example.checkListApp.databinding.MainFragmentBinding;
-import com.example.checkListApp.time_management.MainTimerViewModel;
+import com.example.checkListApp.time_management.TimerViewModel;
+import com.example.checkListApp.time_management.utilities.ListTimerUtility;
 import com.example.checkListApp.timer.CountDownTimerAsync;
 import com.example.checkListApp.timer.TimeState;
 import com.example.checkListApp.ui.main.MainFragment;
@@ -18,28 +19,48 @@ import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 
 import java.util.ArrayList;
 
-public class EntryTimerProcessHandler {
+public class MainListTimeProcessHandler {
 
     MainFragment mainFragment;
 
-    ListUtility listUtility;
-    ArrayList<Entry> checkList;
-    MainTimerViewModel mainTimerViewModel;
-    MainFragmentBinding binding;
+    private final static TimerViewModel timerViewModel = new TimerViewModel();
+    final MainListTimerUtility listUtility = new MainListTimerUtility();
 
+    public static TimerViewModel getTimerViewModel() { return timerViewModel; }
+
+
+    //have one process handler swap out timerViewModel, listUtility, checklist
+    //have two process handler switch between them
+
+
+    /*
+    the entry on Main list should have a summation of its sublist, which is
+    added to the timerViewModel of the main list.
+
+    the SubListProcessHandler will initiate when the MainList arrives at that
+    entry, it will be simply called and expire accordingly (may need to terminate thread)
+
+    could use the mainTimer instead (timerViewModel) and check the accumulation of
+    the sub Entries
+
+     */
+
+    public int getActiveProcessTimeIndex(){
+        return listUtility.activeProcessTimeIndex;
+    }
+
+    MainFragmentBinding binding;
+    ArrayList<Entry> checkList;
     Context context;
 
     public Context getContext() { return context; }
 
-    public EntryTimerProcessHandler(MainFragment mainFragment){
+    public MainListTimeProcessHandler(MainFragment mainFragment){
         this.mainFragment = mainFragment;
 
-        mainTimerViewModel = MainFragment.getMainTimerViewModel();
-        listUtility = mainFragment.getListUtility();
         checkList = mainFragment.getCheckList();
         binding = mainFragment.binding;
         context = mainFragment.getContext();
-
 
     }
 
@@ -68,7 +89,7 @@ public class EntryTimerProcessHandler {
 
             setTimer();
 
-            if(mainTimerViewModel.isToggled()) {
+            if(timerViewModel.isToggled()) {
                 binding.timerExecuteBtn.setBackground(
                         ContextCompat.getDrawable(
                                 getContext(),
@@ -92,14 +113,14 @@ public class EntryTimerProcessHandler {
                 }
 
                 int repeater = Integer.parseInt(binding.repeatTimer.getText().toString());
-                mainTimerViewModel.setRepeaterTime(repeater);
+                timerViewModel.setRepeaterTime(repeater);
 
 
                 mainFragment.getTimerRunning().postValue(true);
 
-                mainTimerViewModel.setTaskCustom(countDownTask);
+                timerViewModel.setTaskCustom(countDownTask);
 
-                mainTimerViewModel.toggleTime();
+                timerViewModel.toggleTime();
 
             }
 
@@ -107,7 +128,7 @@ public class EntryTimerProcessHandler {
 
         binding.timerExecuteBtn.setOnLongClickListener(view -> {
 
-            mainTimerViewModel.resetAbsolutely();
+            timerViewModel.resetAbsolutely();
             mainFragment.getTimerRunning().postValue(false);
 
 //        if(isMyServiceRunning(TimerService.class))
@@ -122,23 +143,23 @@ public class EntryTimerProcessHandler {
         Observer<String> observer = new Observer() {
             @Override
             public void onChanged(Object o) {
-                binding.timeTextMain.setText(mainTimerViewModel.getValueTime());
+                binding.timeTextMain.setText(timerViewModel.getValueTime());
             }
         };
 
-        mainTimerViewModel.setObserver(observer, mainFragment.getViewLifecycleOwner());
+        timerViewModel.setObserver(observer, mainFragment.getViewLifecycleOwner());
 
 
 
         //set a post execution after timer expires, proceeds to next Entry
-        mainTimerViewModel.setPostExecute(() -> {
+        timerViewModel.setPostExecute(() -> {
 
             displayEntryToast();
 
-            if (mainTimerViewModel.getRepeaterTime() <= -1) {
+            if (timerViewModel.getRepeaterTime() <= -1) {
 
                 //go back to top of list
-                mainTimerViewModel.resetTimeState();
+                timerViewModel.resetTimeState();
                 mainFragment.getTimerRunning().postValue(false);
 
             }
@@ -159,10 +180,10 @@ public class EntryTimerProcessHandler {
 
         checkList = mainFragment.getCheckList();
 
-        if(mainTimerViewModel.getNumberValueTime() == 0) {
+        if(timerViewModel.getNumberValueTime() == 0) {
             int summationTime = listUtility.getSummationTime(checkList);
             String setTime = new TimeState(summationTime).getTimeFormat();
-            mainTimerViewModel.setCountDownTimer(setTime);
+            timerViewModel.setCountDownTimer(setTime);
 
             listUtility.accumulation(checkList);
 
@@ -212,7 +233,7 @@ public class EntryTimerProcessHandler {
                 if (listUtility.currentActiveTime.numberValueTime != 0) {
 
                     //if repeater time is 0 check off
-                    if (mainTimerViewModel.getRepeaterTime() <= 0)
+                    if (timerViewModel.getRepeaterTime() <= 0)
                         listUtility.currentActiveTime.getViewHolder().checkOff();
 
                     listUtility.currentActiveTime = listUtility.getNextActiveProcessTime(checkList);
@@ -222,9 +243,9 @@ public class EntryTimerProcessHandler {
             }
         }
         else{
-            mainTimerViewModel.toggleTime();
+            timerViewModel.toggleTime();
 
-            if (mainTimerViewModel.getRepeaterTime() <= 0) {
+            if (timerViewModel.getRepeaterTime() <= 0) {
                 listUtility.currentActiveTime.getViewHolder().checkOff();
             }
 
@@ -244,12 +265,16 @@ public class EntryTimerProcessHandler {
 
         listUtility.revertTimeIndex();
         listUtility.currentActiveTime = checkList.get(1);
-        mainTimerViewModel.setTaskCustom(countDownTask);
+        timerViewModel.setTaskCustom(countDownTask);
 
 
     }
 
 
+    static class MainListTimerUtility extends ListTimerUtility{
+
+
+    }
 
 
 }

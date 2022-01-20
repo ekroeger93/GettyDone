@@ -12,7 +12,6 @@ import android.view.WindowManager;
 import com.example.checkListApp.file_management.FileListFragment;
 import com.example.checkListApp.databinding.MainActivityBinding;
 import com.example.checkListApp.ui.main.MainFragment;
-import com.example.checkListApp.time_management.MainTimerViewModel;
 import com.example.checkListApp.ui.main.progress.ProgressFragment;
 import com.google.android.material.tabs.TabLayout;
 

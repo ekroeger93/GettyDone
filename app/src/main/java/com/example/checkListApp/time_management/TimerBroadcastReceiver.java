@@ -6,6 +6,7 @@ import android.content.Intent;
 
 import com.example.checkListApp.time_management.utilities.KeyHelperClass;
 import com.example.checkListApp.ui.main.MainFragment;
+import com.example.checkListApp.ui.main.entry_management.MainListTimeProcessHandler;
 
 public class TimerBroadcastReceiver extends BroadcastReceiver {
 
@@ -15,7 +16,7 @@ public class TimerBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
        if (intent.getAction().equals(KeyHelperClass.BROADCAST_ACTION_TOGGLE_TIMER)){
-           MainFragment.getMainTimerViewModel().toggleTime();
+           MainListTimeProcessHandler.getTimerViewModel().toggleTime();
        }
 
        if (intent.getAction().equals(KeyHelperClass.BROADCAST_ACTION_RESET_TIMER)){

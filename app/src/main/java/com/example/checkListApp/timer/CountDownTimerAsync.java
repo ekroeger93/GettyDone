@@ -34,6 +34,18 @@ public class CountDownTimerAsync {
 
      */
 
+    static public CountDownTimerAsync getInstance() {
+        return instance; }
+
+
+    static public CountDownTimerAsync getInstanceToToggle(TimeToggler timeToggler){
+        instance.timeToggler = timeToggler;
+        return instance;
+    }
+
+    public CountDownTimerAsync(TimeToggler timeToggler){
+        this.timeToggler = timeToggler;
+    }
 
 
         private static final CountDownTimerAsync instance = new CountDownTimerAsync();
@@ -90,12 +102,6 @@ public class CountDownTimerAsync {
 
         public CountDownTimerAsync() { }
 
-        static public CountDownTimerAsync getInstance() {
-         return instance; }
-         static public CountDownTimerAsync getInstanceToToggle(TimeToggler timeToggler){
-            instance.timeToggler = timeToggler;
-            return instance;
-         }
 
 
         public void setCountDownTask(CountDownTask countDownTask) { this.countDownTask = countDownTask; }

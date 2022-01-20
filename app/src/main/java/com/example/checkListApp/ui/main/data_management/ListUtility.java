@@ -7,7 +7,7 @@ import com.example.checkListApp.ui.main.entry_management.list_component.ToggleSw
 
 import java.util.ArrayList;
 
-public class ListUtility  extends ListTimerUtility {
+public class ListUtility  {
 
 
      public ToggleSwitchOrdering toggleSwitchOrdering = new ToggleSwitchOrdering();

@@ -39,7 +39,7 @@ import com.example.checkListApp.R;
 import com.example.checkListApp.databinding.MainFragmentBinding;
 import com.example.checkListApp.input.CustomEditText;
 import com.example.checkListApp.input.DetectKeyboardBack;
-import com.example.checkListApp.time_management.MainTimerViewModel;
+import com.example.checkListApp.time_management.TimerViewModel;
 import com.example.checkListApp.time_management.TimerService;
 import com.example.checkListApp.time_management.parcel.ListTimersParcel;
 import com.example.checkListApp.time_management.parcel.ListTimersParcelBuilder;
@@ -48,7 +48,7 @@ import com.example.checkListApp.ui.main.entry_management.button_panel.ButtonPane
 import com.example.checkListApp.ui.main.entry_management.button_panel.ButtonPanelToggle;
 import com.example.checkListApp.ui.main.entry_management.EntryItemManager;
 import com.example.checkListApp.ui.main.entry_management.button_panel.LeafButton;
-import com.example.checkListApp.ui.main.entry_management.EntryTimerProcessHandler;
+import com.example.checkListApp.ui.main.entry_management.MainListTimeProcessHandler;
 import com.example.checkListApp.ui.main.entry_management.list_component.CustomLayoutManager;
 import com.example.checkListApp.ui.main.entry_management.list_component.ListItemClickListener;
 import com.example.checkListApp.ui.main.entry_management.list_component.RecyclerAdapter;
@@ -160,7 +160,11 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     private ButtonPanelToggle buttonPanelToggle;
 
     private final RecordHelper recordHelper = new RecordHelper();
-    private static final MainTimerViewModel mainTimerViewModel = new MainTimerViewModel();
+
+//    private static final TimerViewModel mainTimerViewModel = new TimerViewModel();
+//    private static final TimerViewModel subTimerViewModel = new TimerViewModel();
+
+
     private final ListUtility listUtility = new ListUtility();
 
     private RecyclerAdapter adapter;
@@ -170,7 +174,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     private static CustomLayoutManager customLayoutManager;
     ListTimersParcel listTimersParcel;
 
-    public EntryTimerProcessHandler entryTimerProcessHandler;
+    public MainListTimeProcessHandler mainListTimeProcessHandler;
 
     private ArrayList<Entry> checkList = new ArrayList<>();
     private final MutableLiveData< ArrayList<Entry>> _checkList = new MutableLiveData<>();
@@ -190,7 +194,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     public ListUtility      getListUtility() { return listUtility;}
 
     public Intent           getServiceIntent() { return serviceIntent; }
-    public static MainTimerViewModel getMainTimerViewModel() { return mainTimerViewModel; }
+//    public static TimerViewModel getMainTimerViewModel() { return mainTimerViewModel; }
 
     private Intent serviceIntent;
 
@@ -261,14 +265,14 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         assignObservers();
 
 
-        entryTimerProcessHandler = new EntryTimerProcessHandler(this);
+        mainListTimeProcessHandler = new MainListTimeProcessHandler(this);
 
-        entryTimerProcessHandler.configureMainTimer();
+        mainListTimeProcessHandler.configureMainTimer();
 
 
         recordHelper.createButton(getContext(),binding);
 
-        mainTimerViewModel.setRepeaterTime(Entry.globalCycle);
+        MainListTimeProcessHandler.getTimerViewModel().setRepeaterTime(Entry.globalCycle);
 
 
     }
@@ -423,8 +427,13 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         listTimersParcel = new ListTimersParcelBuilder(checkList)
                 .setEntryViewModelList(checkList)
-                .setGlobalTimer(mainTimerViewModel.getValueTime())
-                .setIndexActive(listUtility.activeProcessTimeIndex).build();
+                .setGlobalTimer(MainListTimeProcessHandler.getTimerViewModel().getValueTime())
+                .setIndexActive(
+
+                        mainListTimeProcessHandler.getActiveProcessTimeIndex()
+//                        listUtility.activeProcessTimeIndex
+
+                ).build();
 
 
         int size = checkList.size();
@@ -449,7 +458,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
 
     public static void resetTime(){
-        mainTimerViewModel.resetAbsolutely();
+        MainListTimeProcessHandler.getTimerViewModel().resetAbsolutely();
         timerRunning.postValue(false);
     }
 
@@ -949,6 +958,24 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
                 Entry entry = checkList.get(position);
 
+                ArrayList<Entry> testList = new ArrayList<>();
+
+                Entry a = new Entry("a", false,"00:00:05");
+                Entry b = new Entry("b", false,"00:00:01");
+                Entry c = new Entry("c", false,"00:00:05");
+
+                a.setViewHolder(entry.getViewHolder());
+                b.setViewHolder(entry.getViewHolder());
+                c.setViewHolder(entry.getViewHolder());
+
+                b.onTogglePrimer.setValue(true);
+                b.onTogglePrimerTemp = true;
+
+                testList.add( a);
+                testList.add( b);
+                testList.add( c);
+
+                entry.setSubCheckList(testList);
 
 
 

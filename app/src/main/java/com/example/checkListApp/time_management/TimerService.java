@@ -22,6 +22,7 @@ import com.example.checkListApp.time_management.utilities.KeyHelperClass;
 import com.example.checkListApp.time_management.utilities.ListTimerUtility;
 import com.example.checkListApp.timer.TimeState;
 import com.example.checkListApp.ui.main.MainFragment;
+import com.example.checkListApp.ui.main.entry_management.MainListTimeProcessHandler;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 
 
@@ -92,7 +93,7 @@ public final class TimerService extends LifecycleService {
     //https://developer.android.com/guide/components/broadcasts
     //https://developer.android.com/training/notify-user/build-notification.html#java
 
-    public Notification makeNotification(int countTime, int elapsedTimeNV, MainTimerViewModel timeViewModel, Entry entry, PendingIntent pendingIntent) {
+    public Notification makeNotification(int countTime, int elapsedTimeNV, TimerViewModel timeViewModel, Entry entry, PendingIntent pendingIntent) {
 
         String channel = createChannel();
         AtomicReference<NotificationCompat.Builder> mBuilder = new AtomicReference<>(new NotificationCompat.Builder(this, channel));
@@ -131,12 +132,12 @@ public final class TimerService extends LifecycleService {
 
         NotificationCompat.Builder builder;
         PendingIntent pendingIntent;
-        MainTimerViewModel mainTimerViewModel;
+        TimerViewModel timerViewModel;
 
-        public BuilderDataHelper(NotificationCompat.Builder builder, PendingIntent pendingIntent, MainTimerViewModel mainTimerViewModel) {
+        public BuilderDataHelper(NotificationCompat.Builder builder, PendingIntent pendingIntent, TimerViewModel timerViewModel) {
             this.builder = builder;
             this.pendingIntent = pendingIntent;
-            this.mainTimerViewModel = mainTimerViewModel;
+            this.timerViewModel = timerViewModel;
         }
 
     }
@@ -165,7 +166,7 @@ public final class TimerService extends LifecycleService {
 
         String text = (entry.onTogglePrimerTemp) ? "paused" :  new TimeState(timeRemainder).getTimeFormat() ;
 
-        String toggleButtonText = (dataHelper.mainTimerViewModel.isToggled()) ? "Pause" : "Resume";
+        String toggleButtonText = (dataHelper.timerViewModel.isToggled()) ? "Pause" : "Resume";
 
 
 
@@ -181,7 +182,7 @@ public final class TimerService extends LifecycleService {
                 .setAutoCancel(true)
                 .setOngoing(true)
                 .setColor(Color.BLUE)
-                .setSubText(dataHelper.mainTimerViewModel.getRepeaterTime() + " " + new TimeState(countTime).getTimeFormat())
+                .setSubText(dataHelper.timerViewModel.getRepeaterTime() + " " + new TimeState(countTime).getTimeFormat())
                 .setContentText(entry.textEntry.getValue() + " " + text);
 
     }
@@ -196,7 +197,7 @@ public final class TimerService extends LifecycleService {
                 .setAutoCancel(true)
                 .setOngoing(true)
                 .setColor(Color.BLUE)
-                .setSubText(dataHelper.mainTimerViewModel.getRepeaterTime() + "  " + new TimeState(countTime).getTimeFormat())
+                .setSubText(dataHelper.timerViewModel.getRepeaterTime() + "  " + new TimeState(countTime).getTimeFormat())
                 .setContentText("completed");
 
     }
@@ -241,7 +242,7 @@ public final class TimerService extends LifecycleService {
 
         private final TimerService timerService;
         private final PendingIntent pendingIntent;
-        private final MainTimerViewModel timeViewModel = MainFragment.getMainTimerViewModel();
+        private final TimerViewModel timeViewModel = MainListTimeProcessHandler.getTimerViewModel();
         private static  ArrayList<Entry> timerViewModelList;
 
         private final int FOREGROUND_SERVICE_ID = 111;
@@ -326,12 +327,12 @@ public final class TimerService extends LifecycleService {
         }
 
 
-        public int setTimer(MainTimerViewModel mainTimerViewModel){
+        public int setTimer(TimerViewModel timerViewModel){
 
-            if(mainTimerViewModel.getNumberValueTime() == 0) {
+            if(timerViewModel.getNumberValueTime() == 0) {
                 int summationTime = getSummationTime(timerViewModelList);
                 String setTime = new TimeState(summationTime).getTimeFormat();
-                mainTimerViewModel.setCountDownTimer(setTime);
+                timerViewModel.setCountDownTimer(setTime);
 
                 accumulation(timerViewModelList);
 
