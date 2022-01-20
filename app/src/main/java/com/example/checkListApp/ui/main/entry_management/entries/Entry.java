@@ -62,6 +62,12 @@ public class Entry {
     @Ignore
     public ArrayList<Entry> subCheckList =new ArrayList<>();
 
+    @Ignore
+    public int subNumberTimeValue = 0;
+    @Ignore
+    public int timeSubAccumulated = 0;
+
+
 
 
     public Entry(){

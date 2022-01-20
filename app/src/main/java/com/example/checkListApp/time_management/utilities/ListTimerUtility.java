@@ -10,7 +10,10 @@ import java.util.ArrayList;
 public abstract class ListTimerUtility {
 
     public int activeProcessTimeIndex = 1;
+    public int subActiveProcessTimeIndex = 0 ;
+
     public Entry currentActiveTime;
+
 
 
    public void accumulation(ArrayList<Entry> list){
@@ -92,7 +95,7 @@ public abstract class ListTimerUtility {
 
         currentActiveTime = list.get(activeProcessTimeIndex);
 
-        if(currentActiveTime.entrySubList.isEmpty()){
+        if(currentActiveTime.subCheckList.isEmpty()){
 
             if(activeProcessTimeIndex < size) {
                 activeProcessTimeIndex++;
@@ -104,9 +107,9 @@ public abstract class ListTimerUtility {
 
         }else{
 
-            if(subActiveProcessTimeIndex < currentActiveTime.entrySubList.size()){
+            if(subActiveProcessTimeIndex < currentActiveTime.subCheckList.size()){
 
-                Entry subEntry = currentActiveTime.entrySubList.get(subActiveProcessTimeIndex);
+                Entry subEntry = currentActiveTime.subCheckList.get(subActiveProcessTimeIndex);
                 list.get(activeProcessTimeIndex).setEntry( subEntry);
 
                 subActiveProcessTimeIndex++;
