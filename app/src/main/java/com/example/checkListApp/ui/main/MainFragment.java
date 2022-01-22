@@ -961,16 +961,21 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                 ArrayList<Entry> testList = new ArrayList<>();
 
                 Entry a = new Entry("a", false,"00:00:05");
-                Entry b = new Entry("b", false,"00:00:01");
+                Entry b = new Entry("b", false,"00:00:05");
                 Entry c = new Entry("c", false,"00:00:05");
 
                 a.setViewHolder(entry.getViewHolder());
                 b.setViewHolder(entry.getViewHolder());
                 c.setViewHolder(entry.getViewHolder());
 
-                b.onTogglePrimer.setValue(true);
-                b.onTogglePrimerTemp = true;
+//                b.onTogglePrimer.setValue(true);
+//                b.onTogglePrimerTemp = true;
 
+                a.isSubEntry = true;
+                b.isSubEntry = true;
+                c.isSubEntry = true;
+
+//                testList.add( entry);
                 testList.add( a);
                 testList.add( b);
                 testList.add( c);

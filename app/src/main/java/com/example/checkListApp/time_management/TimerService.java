@@ -299,7 +299,7 @@ public final class TimerService extends LifecycleService {
 
             //TODO: BUG HERE RAPIDLY RESETING TIME
             //TODO: Repeater doesn't work well with single entry
-            //TODO  FIRST ENTRY IS TOGGLE AND THIS IS NOT GETTING NEXT INDEX
+            //TODO  FIRST ENTRY IS TOGGLE AND IS NOT GETTING NEXT INDEX
             //ON SECOND GO AROUND
 
 
@@ -310,7 +310,8 @@ public final class TimerService extends LifecycleService {
 
 
                      if (currentActiveTime.timeElapsed(elapsedTime))
-                         currentActiveTime = getNextActiveProcessTime(timerViewModelList);
+                         currentActiveTime = getCurrentActiveTime();
+//                         currentActiveTime = getNextActiveProcessTime(timerViewModelList);
 
 
                     //rebuild notification here

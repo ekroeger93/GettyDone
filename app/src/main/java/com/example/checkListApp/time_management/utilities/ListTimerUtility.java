@@ -7,12 +7,14 @@ import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 
 import java.util.ArrayList;
 
-public abstract class ListTimerUtility {
+public  class ListTimerUtility {
 
     public int activeProcessTimeIndex = 1;
     public int subActiveProcessTimeIndex = 0 ;
 
     public Entry currentActiveTime;
+
+    public Entry memoryEntry = new Entry();
 
 
 
@@ -93,15 +95,26 @@ public abstract class ListTimerUtility {
 
         int size = list.size()-1;
 
-        currentActiveTime = list.get(activeProcessTimeIndex);
+//        if (subActiveProcessTimeIndex == 0) {
 
-        if(currentActiveTime.subCheckList.isEmpty()){
+            currentActiveTime = list.get(activeProcessTimeIndex);
+//        } else{
+//            currentActiveTime = list.get(subActiveProcessTimeIndex);
+//        }
+
+        Log.d("subListingTest",
+                " actP= "+activeProcessTimeIndex +
+                        " subP= "+subActiveProcessTimeIndex+
+                " currentActiveTime= "+currentActiveTime.textEntry.getValue());
+
+        if(currentActiveTime.subCheckList.isEmpty() && !currentActiveTime.isSubEntry){
 
             if(activeProcessTimeIndex < size) {
                 activeProcessTimeIndex++;
 
                 return list.get(activeProcessTimeIndex);
             } else{
+                Log.d("subListTest","reverted");
                 activeProcessTimeIndex = 1;
             }
 
@@ -109,7 +122,9 @@ public abstract class ListTimerUtility {
 
             if(subActiveProcessTimeIndex < currentActiveTime.subCheckList.size()){
 
+                memoryEntry = list.get(activeProcessTimeIndex);
                 Entry subEntry = currentActiveTime.subCheckList.get(subActiveProcessTimeIndex);
+
                 list.get(activeProcessTimeIndex).setEntry( subEntry);
 
                 subActiveProcessTimeIndex++;
@@ -117,7 +132,15 @@ public abstract class ListTimerUtility {
                 return subEntry;
 
             }else{
+                Log.d("subListingTest","finish Sub list");
                 subActiveProcessTimeIndex = 0;
+
+                list.get(activeProcessTimeIndex).setEntry( memoryEntry);
+
+
+                activeProcessTimeIndex++;
+
+                Log.d("subListingTest",""+activeProcessTimeIndex);
                 return list.get(activeProcessTimeIndex);
             }
 
@@ -141,7 +164,11 @@ public abstract class ListTimerUtility {
 
     }
 
-   public  void revertTimeIndex(){ activeProcessTimeIndex = 1; }
+   public  void revertTimeIndex(){
+       Log.d("subListingTest","called");
+       activeProcessTimeIndex = 1; }
+
+   public void revertSubTimeIndex(){ subActiveProcessTimeIndex = 0;}
 
    public int getActiveProcessTimeIndex(){return  activeProcessTimeIndex;}
 

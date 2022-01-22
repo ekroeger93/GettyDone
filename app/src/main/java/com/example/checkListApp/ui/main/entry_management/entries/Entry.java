@@ -61,6 +61,8 @@ public class Entry {
 
     @Ignore
     public ArrayList<Entry> subCheckList =new ArrayList<>();
+    @Ignore
+    public boolean isSubEntry = false;
 
     @Ignore
     public int subNumberTimeValue = 0;
@@ -75,7 +77,6 @@ public class Entry {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public Entry(Entry entry) {
         textEntry.postValue(entry.textEntry.getValue());
         checked.postValue(entry.checked.getValue());
@@ -201,7 +202,6 @@ public class Entry {
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public void setEntry(Entry entry){
 
 //        entryID = entry.getEntryID();
@@ -231,7 +231,24 @@ public class Entry {
     }
 
     public void setSubCheckList(ArrayList<Entry> subCheckList) {
+
         this.subCheckList = subCheckList;
+
+        numberValueTime = new TimeState(countDownTimer.getValue()).getTimeNumberValue();
+
+        int subAcc = 0;
+
+        for(Entry n : subCheckList) {
+            subAcc += n.numberValueTime;
+            n.timeAccumulated = numberValueTime + subAcc;
+        }
+        subNumberTimeValue = numberValueTime + subAcc;
+
+        countDownTimer.postValue( new TimeState(numberValueTime).getTimeFormat());
+
+
+
+
     }
 
     public int getSelectAudio(){

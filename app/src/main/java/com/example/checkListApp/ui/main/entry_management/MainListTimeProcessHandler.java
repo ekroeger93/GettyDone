@@ -24,7 +24,7 @@ public class MainListTimeProcessHandler {
     MainFragment mainFragment;
 
     private final static TimerViewModel timerViewModel = new TimerViewModel();
-    final MainListTimerUtility listUtility = new MainListTimerUtility();
+     ListTimerUtility listUtility = new ListTimerUtility();
 
     public static TimerViewModel getTimerViewModel() { return timerViewModel; }
 
@@ -158,13 +158,13 @@ public class MainListTimeProcessHandler {
 
             if (timerViewModel.getRepeaterTime() <= -1) {
 
-                //go back to top of list
                 timerViewModel.resetTimeState();
                 mainFragment.getTimerRunning().postValue(false);
 
             }
             else {
 
+                //go back to top of list
                 endOfTimerTask(countDownTask);
 
             }
@@ -188,6 +188,8 @@ public class MainListTimeProcessHandler {
             listUtility.accumulation(checkList);
 
             listUtility.revertTimeIndex();
+            listUtility.revertSubTimeIndex();
+
             listUtility.currentActiveTime = checkList.get(1);
 
             for(Entry entry: checkList){ entry.checked.postValue(false); }
@@ -206,7 +208,7 @@ public class MainListTimeProcessHandler {
         if (mainFragment.getActivity() != null && getContext() !=null) {
             mainFragment.getActivity().runOnUiThread(() -> {
 
-                String message = checkList.get(listUtility.activeProcessTimeIndex-1).textEntry.getValue();
+                String message = listUtility.currentActiveTime.textEntry.getValue();
 
                 mainFragment.scrollPosition(listUtility.activeProcessTimeIndex);
 
@@ -264,6 +266,8 @@ public class MainListTimeProcessHandler {
         listUtility.currentActiveTime.getViewHolder().checkOff();
 
         listUtility.revertTimeIndex();
+        listUtility.revertSubTimeIndex();
+
         listUtility.currentActiveTime = checkList.get(1);
         timerViewModel.setTaskCustom(countDownTask);
 
@@ -271,10 +275,10 @@ public class MainListTimeProcessHandler {
     }
 
 
-    static class MainListTimerUtility extends ListTimerUtility{
+    static class MainListTimerUtility extends ListTimerUtility{}
 
 
-    }
+
 
 
 }
