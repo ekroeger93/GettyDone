@@ -278,8 +278,8 @@ public final class TimerService extends LifecycleService {
 //                    setTimer(timeViewModel)
 
             );
-            int setTime = _setTime.get();
-            timerUtility.currentActiveTime = timerViewModelList.get(timerUtility.activeProcessTimeIndex);
+//            int setTime = _setTime.get();
+//            timerUtility.currentActiveTime = timerViewModelList.get(timerUtility.activeProcessTimeIndex);
 
             AtomicReference<Notification> notification =
                     new AtomicReference<>(

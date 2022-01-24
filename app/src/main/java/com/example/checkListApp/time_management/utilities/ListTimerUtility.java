@@ -109,9 +109,8 @@ public class ListTimerUtility {
 
         currentActiveTime = list.get(activeProcessTimeIndex);
 
-
-
-        if(currentActiveTime.subCheckList.isEmpty() && !currentActiveTime.isSubEntry){
+        if(currentActiveTime.subCheckList.isEmpty() && !currentActiveTime.isSubEntry
+        ){
 
             Log.d("subListingTest","standard!");
 
@@ -120,7 +119,8 @@ public class ListTimerUtility {
 
                 return list.get(activeProcessTimeIndex);
             } else{
-//                Log.d("subListTest","reverted");
+
+                Log.d("subListTest","reverted");
                 activeProcessTimeIndex = 1;
             }
 
@@ -155,6 +155,7 @@ public class ListTimerUtility {
 
         }
 
+        Log.d("subListingTest","failed!");
         return list.get(size-2);
     }
 

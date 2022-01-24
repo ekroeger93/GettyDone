@@ -87,7 +87,7 @@ public class MainListTimeProcessHandler {
         binding.timerExecuteBtn.setOnClickListener(view -> {
 
             setTimer();
-            Log.d("subListingTest","begin: "+timerUtility.currentActiveTime.getViewHolder());
+            Log.d("subListingTest","begin: "+timerUtility.currentActiveTime.textTemp);
 
             if(timerViewModel.isToggled()) {
                 binding.timerExecuteBtn.setBackground(
