@@ -322,8 +322,9 @@ public class Entry {
         ) {
 
             int subAddedTime = new TimeState( entry.subNumberTimeValue).getTimeNumberValue();
-           this.timeAccumulated = subAddedTime + original;
-//            this.timeSubAccumulated = subAddedTime + addedTime;
+           this.timeAccumulated = subAddedTime + addedTime;
+            this.timeSubAccumulated = subAddedTime + addedTime;
+
             Log.d("subListingTest",subAddedTime+" ::: "+this.timeAccumulated);
 
         }
