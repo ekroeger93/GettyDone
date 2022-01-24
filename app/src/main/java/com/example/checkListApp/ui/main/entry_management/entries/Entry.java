@@ -237,18 +237,38 @@ public class Entry {
         this.isSubEntry = true;
 
         numberValueTime = new TimeState(countDownTimer.getValue()).getTimeNumberValue();
-
+//
         int subAcc = 0;
+//
+//        for(int i = 1; i < checkList.size()-2; i++){
+//
+//            Entry entry = checkList.get(i);
+//
+//            if(!entry.subCheckList.isEmpty()){
+//
+//                ArrayList<Entry> subList = entry.subCheckList;
+//
+//                for(Entry n : subList) {
+//                    subAcc += n.numberValueTime;
+//                    n.timeAccumulated = numberValueTime + subAcc;
+//                    Log.d("subListingTest","subAcc: "+n.timeAccumulated);
+//                }
+//                subNumberTimeValue = numberValueTime + subAcc;
+//
+//            }
+//
+//        }
+//
 
-        for(Entry n : subCheckList) {
-            subAcc += n.numberValueTime;
-            n.timeAccumulated = numberValueTime + subAcc;
-            Log.d("subListingTest","subAcc: "+n.timeAccumulated);
-        }
-        subNumberTimeValue = numberValueTime + subAcc;
+//        for(Entry n : subCheckList) {
+//            subAcc += n.numberValueTime;
+//            n.timeAccumulated = numberValueTime + subAcc;
+////            Log.d("subListingTest","subAcc: "+n.timeAccumulated);
+//        }
+//        subNumberTimeValue = numberValueTime + subAcc;
 
 
-        Log.d("subListingTest","subNumberValue: "+subNumberTimeValue);
+//        Log.d("subListingTest","subNumberValue: "+subNumberTimeValue);
         countDownTimer.postValue( new TimeState(numberValueTime).getTimeFormat());
 
 
@@ -310,6 +330,11 @@ public class Entry {
 
     }
 
+
+    public void setSubTimeAcclimated(Entry entry){
+
+
+    }
 
 
     public MutableLiveData<String> getCountDownTimer() {

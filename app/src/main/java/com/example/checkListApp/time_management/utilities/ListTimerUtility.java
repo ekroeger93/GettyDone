@@ -3,6 +3,7 @@ package com.example.checkListApp.time_management.utilities;
 import android.util.Log;
 
 import com.example.checkListApp.time_management.parcel.ListTimersParcel;
+import com.example.checkListApp.timer.TimeState;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 
 import java.util.ArrayList;
@@ -26,11 +27,47 @@ public class ListTimerUtility {
 
 
 
-    public void subAccumulation(ArrayList<Entry> list){
+    public void subAccumulation(ArrayList<Entry> checkList){
 
-        for(Entry entry : list){
+
+        int subAcc = 0;
+
+        checkList.get(1).timeAccumulated = checkList.get(1).numberValueTime;
+
+        for(int i = 1; i < checkList.size()-2; i++){
+
+            Entry entry = checkList.get(i);
+
+            if(!entry.subCheckList.isEmpty()){
+
+                ArrayList<Entry> subList = entry.subCheckList;
+
+                if( i != 1) {
+                    entry.setTimeAcclimated(checkList.get(i - 1));
+                }
+
+                subAcc = 0;
+
+                for(Entry n : subList) {
+                    subAcc += n.numberValueTime;
+                    n.timeAccumulated = entry.timeAccumulated + subAcc;
+                    Log.d("subListingTest",entry.timeAccumulated+"  subAcc: "+n.timeAccumulated+" fm: "+subAcc);
+                }
+                entry.subNumberTimeValue = entry.numberValueTime + subAcc;
+
+
+//                int original = new TimeState(entry.numberValueTime).getTimeNumberValue();
+//                int subAddedTime = new TimeState( entry.subNumberTimeValue).getTimeNumberValue();
+//                entry.timeAccumulated = subAddedTime + original;
+
+            }
+
+
+            Log.d("subListingTest",entry.textTemp+" * Acc: "+entry.timeAccumulated);
 
         }
+
+//        accumulation(checkList);
 
     }
 
@@ -147,9 +184,9 @@ public class ListTimerUtility {
 //                list.set(activeProcessTimeIndex,parentEntry);
 
                 activeProcessTimeIndex++;
+                parentEntry = null;
 
                 Log.d("subListingTest",""+activeProcessTimeIndex);
-//                return  parentEntry;
                 return list.get(activeProcessTimeIndex);
             }
 

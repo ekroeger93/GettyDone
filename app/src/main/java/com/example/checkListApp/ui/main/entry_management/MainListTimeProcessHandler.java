@@ -46,6 +46,8 @@ public class MainListTimeProcessHandler {
         return timerUtility.activeProcessTimeIndex;
     }
 
+    public void subAccumulation(ArrayList<Entry> list){ timerUtility.subAccumulation(list);}
+
     MainFragmentBinding binding;
     ArrayList<Entry> checkList;
     Context context;
@@ -187,6 +189,7 @@ public class MainListTimeProcessHandler {
             timerViewModel.setCountDownTimer(setTime);
 
             timerUtility.accumulation(checkList);
+//            timerUtility.subAccumulation(checkList);
 
             timerUtility.revertTimeIndex();
             timerUtility.revertSubTimeIndex();
@@ -198,6 +201,8 @@ public class MainListTimeProcessHandler {
         }else{
 
             timerUtility.accumulation(checkList);
+//            timerUtility.subAccumulation(checkList);
+
             timerUtility.getSummationTime(checkList);
 
         }

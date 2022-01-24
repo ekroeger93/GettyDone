@@ -39,7 +39,6 @@ import com.example.checkListApp.R;
 import com.example.checkListApp.databinding.MainFragmentBinding;
 import com.example.checkListApp.input.CustomEditText;
 import com.example.checkListApp.input.DetectKeyboardBack;
-import com.example.checkListApp.time_management.TimerViewModel;
 import com.example.checkListApp.time_management.TimerService;
 import com.example.checkListApp.time_management.parcel.ListTimersParcel;
 import com.example.checkListApp.time_management.parcel.ListTimersParcelBuilder;
@@ -989,6 +988,8 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                 testList.add( c);
 
                 entry.setSubCheckList(testList);
+
+                mainListTimeProcessHandler.subAccumulation(checkList);
 
 
 
