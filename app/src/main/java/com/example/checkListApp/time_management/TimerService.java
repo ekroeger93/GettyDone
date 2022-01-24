@@ -36,6 +36,9 @@ public final class TimerService extends LifecycleService {
    private Intent serviceIntent;
    public static MutableLiveData<Boolean> reset = new MutableLiveData<>(false);
 
+   private final static ListTimerUtility timerUtility = MainListTimeProcessHandler.timerUtility;
+
+
    public static MutableLiveData<Boolean> timerToggled = new MutableLiveData<>(false);
 
 
@@ -238,11 +241,11 @@ public final class TimerService extends LifecycleService {
     }
 
 
-    static class ForegroundTimerService extends ListTimerUtility {
+    static class ForegroundTimerService {
 
         private final TimerService timerService;
         private final PendingIntent pendingIntent;
-        private final TimerViewModel timeViewModel = MainListTimeProcessHandler.getTimerViewModel();
+        private final TimerViewModel timeViewModel = MainListTimeProcessHandler.timerViewModel;
         private static  ArrayList<Entry> timerViewModelList;
 
         private final int FOREGROUND_SERVICE_ID = 111;
@@ -255,7 +258,7 @@ public final class TimerService extends LifecycleService {
 
             this.pendingIntent = pendingIntent;
 
-            timerViewModelList = (ArrayList<Entry>) generateEntryList(parcel);
+            timerViewModelList = (ArrayList<Entry>) timerUtility.generateEntryList(parcel);
 
         }
 
@@ -270,27 +273,31 @@ public final class TimerService extends LifecycleService {
 
         public Notification createTimer(NotificationManager mgr) {
 
-            AtomicInteger _setTime = new AtomicInteger(setTimer(timeViewModel));
+            AtomicInteger _setTime = new AtomicInteger(
+                    timerUtility.getSummationTime(timerViewModelList)
+//                    setTimer(timeViewModel)
+
+            );
             int setTime = _setTime.get();
-            currentActiveTime = timerViewModelList.get(activeProcessTimeIndex);
+            timerUtility.currentActiveTime = timerViewModelList.get(timerUtility.activeProcessTimeIndex);
 
             AtomicReference<Notification> notification =
                     new AtomicReference<>(
-                            preSetNotification(setTimer(timeViewModel), currentActiveTime));
+                            preSetNotification(_setTime.get() ,timerUtility.currentActiveTime));
 
 
             timeViewModel.setServicePostExecute(() -> {
 
                 Log.d("serviceTest","here");
 
-                if (timeViewModel.getRepeaterTime() <= -1) {
-//                    notification.set(timerService.makeNotificationDismiss(pendingIntent));
-//                    mgr.notify(FOREGROUND_SERVICE_ID, notification.get());
-
-                }else {
-                    _setTime.set(setTimer(timeViewModel));
-                    currentActiveTime = timerViewModelList.get(activeProcessTimeIndex);
-                }
+//                if (timeViewModel.getRepeaterTime() <= -1) {
+////                    notification.set(timerService.makeNotificationDismiss(pendingIntent));
+////                    mgr.notify(FOREGROUND_SERVICE_ID, notification.get());
+//
+//                }else {
+//                    _setTime.set(setTimer(timeViewModel));
+//                    currentActiveTime = timerViewModelList.get(activeProcessTimeIndex);
+//                }
 
 
 
@@ -309,8 +316,8 @@ public final class TimerService extends LifecycleService {
                     elapsedTime = _setTime.get() - countTime;
 
 
-                     if (currentActiveTime.timeElapsed(elapsedTime))
-                         currentActiveTime = getCurrentActiveTime();
+//                     if (currentActiveTime.timeElapsed(elapsedTime))
+//                         currentActiveTime = getCurrentActiveTime();
 //                         currentActiveTime = getNextActiveProcessTime(timerViewModelList);
 
 
@@ -319,7 +326,7 @@ public final class TimerService extends LifecycleService {
                             countTime,
                             elapsedTimeN
                             , timeViewModel
-                            , currentActiveTime
+                            , timerUtility.currentActiveTime
                             , pendingIntent));
                     mgr.notify(FOREGROUND_SERVICE_ID, notification.get());
             }));
@@ -328,27 +335,27 @@ public final class TimerService extends LifecycleService {
         }
 
 
-        public int setTimer(TimerViewModel timerViewModel){
-
-            if(timerViewModel.getNumberValueTime() == 0) {
-                int summationTime = getSummationTime(timerViewModelList);
-                String setTime = new TimeState(summationTime).getTimeFormat();
-                timerViewModel.setCountDownTimer(setTime);
-
-                accumulation(timerViewModelList);
-
-                revertTimeIndex();
-                currentActiveTime = timerViewModelList.get(1);
-
-                return summationTime;
-
-            }else{
-                accumulation(timerViewModelList);
-                activeProcessTimeIndex = activeTimeIndex;
-
-                return getSummationTime(timerViewModelList);
-            }
-        }
+//        public int setTimer(TimerViewModel timerViewModel){
+//
+//            if(timerViewModel.getNumberValueTime() == 0) {
+//                int summationTime = getSummationTime(timerViewModelList);
+//                String setTime = new TimeState(summationTime).getTimeFormat();
+//                timerViewModel.setCountDownTimer(setTime);
+//
+//                accumulation(timerViewModelList);
+//
+//                revertTimeIndex();
+//                currentActiveTime = timerViewModelList.get(1);
+//
+//                return summationTime;
+//
+//            }else{
+//                accumulation(timerViewModelList);
+//                activeProcessTimeIndex = activeTimeIndex;
+//
+//                return getSummationTime(timerViewModelList);
+//            }
+//        }
 
 
 

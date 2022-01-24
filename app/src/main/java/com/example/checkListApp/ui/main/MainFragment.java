@@ -272,7 +272,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         recordHelper.createButton(getContext(),binding);
 
-        MainListTimeProcessHandler.getTimerViewModel().setRepeaterTime(Entry.globalCycle);
+        MainListTimeProcessHandler.timerViewModel.setRepeaterTime(Entry.globalCycle);
 
 
     }
@@ -427,7 +427,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         listTimersParcel = new ListTimersParcelBuilder(checkList)
                 .setEntryViewModelList(checkList)
-                .setGlobalTimer(MainListTimeProcessHandler.getTimerViewModel().getValueTime())
+                .setGlobalTimer(MainListTimeProcessHandler.timerViewModel.getValueTime())
                 .setIndexActive(
 
                         mainListTimeProcessHandler.getActiveProcessTimeIndex()
@@ -458,7 +458,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
 
     public static void resetTime(){
-        MainListTimeProcessHandler.getTimerViewModel().resetAbsolutely();
+        MainListTimeProcessHandler.timerViewModel.resetAbsolutely();
         timerRunning.postValue(false);
     }
 
@@ -961,21 +961,29 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                 ArrayList<Entry> testList = new ArrayList<>();
 
                 Entry a = new Entry("a", false,"00:00:05");
-                Entry b = new Entry("b", false,"00:00:05");
+                Entry b = new Entry("b", false,"00:00:01");
                 Entry c = new Entry("c", false,"00:00:05");
+
 
                 a.setViewHolder(entry.getViewHolder());
                 b.setViewHolder(entry.getViewHolder());
                 c.setViewHolder(entry.getViewHolder());
 
-//                b.onTogglePrimer.setValue(true);
-//                b.onTogglePrimerTemp = true;
+                b.onTogglePrimer.setValue(true);
+                b.onTogglePrimerTemp = true;
 
+                checkList.get(position).isSubEntry = true;
                 a.isSubEntry = true;
                 b.isSubEntry = true;
                 c.isSubEntry = true;
 
+//                a.setTimeAccumulatedNonAdditive(10);
+//                b.setTimeAccumulatedNonAdditive(15);
+//                c.setTimeAccumulatedNonAdditive(20);
+
 //                testList.add( entry);
+
+
                 testList.add( a);
                 testList.add( b);
                 testList.add( c);

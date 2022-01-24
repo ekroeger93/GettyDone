@@ -1,6 +1,7 @@
 package com.example.checkListApp.ui.main.entry_management.entries;
 
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.MutableLiveData;
@@ -233,6 +234,7 @@ public class Entry {
     public void setSubCheckList(ArrayList<Entry> subCheckList) {
 
         this.subCheckList = subCheckList;
+        this.isSubEntry = true;
 
         numberValueTime = new TimeState(countDownTimer.getValue()).getTimeNumberValue();
 
@@ -241,9 +243,12 @@ public class Entry {
         for(Entry n : subCheckList) {
             subAcc += n.numberValueTime;
             n.timeAccumulated = numberValueTime + subAcc;
+            Log.d("subListingTest","subAcc: "+n.timeAccumulated);
         }
         subNumberTimeValue = numberValueTime + subAcc;
 
+
+        Log.d("subListingTest","subNumberValue: "+subNumberTimeValue);
         countDownTimer.postValue( new TimeState(numberValueTime).getTimeFormat());
 
 
@@ -283,17 +288,24 @@ public class Entry {
 
 
 
-    public void setTimeAcclimated(int timeAcclimated) {
+    public void setTimeAcclimated(Entry entry ) {
 
 
         int original = new TimeState(numberValueTime).getTimeNumberValue();
-        int addedTime = new TimeState(timeAcclimated).getTimeNumberValue();
+        int addedTime = new TimeState(entry.timeAccumulated).getTimeNumberValue();
 
         this.timeAccumulated = original + addedTime;
 
-        if(!subCheckList.isEmpty()) {
-            int subPlusOriginal = new TimeState(numberValueTime + subNumberTimeValue).getTimeNumberValue();
-            this.timeSubAccumulated = subPlusOriginal + addedTime;
+        if(
+                !entry.subCheckList.isEmpty()
+//                !subCheckList.isEmpty()
+        ) {
+
+            int subAddedTime = new TimeState( entry.subNumberTimeValue).getTimeNumberValue();
+           this.timeAccumulated = subAddedTime + original;
+//            this.timeSubAccumulated = subAddedTime + addedTime;
+            Log.d("subListingTest",subAddedTime+" ::: "+this.timeAccumulated);
+
         }
 
     }
