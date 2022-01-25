@@ -34,7 +34,7 @@ public class ListTimerUtility {
 
         checkList.get(1).timeAccumulated = checkList.get(1).numberValueTime;
 
-        for(int i = 1; i < checkList.size()-2; i++){
+        for(int i = 1; i <= checkList.size()-2; i++){
 
             Entry entry = checkList.get(i);
 
@@ -51,15 +51,15 @@ public class ListTimerUtility {
                 for(Entry n : subList) {
                     subAcc += n.numberValueTime;
                     n.timeAccumulated = entry.timeAccumulated + subAcc;
+
+                    entry.subLateAccumulated = n.timeAccumulated;
                     Log.d("subListingTest",entry.timeAccumulated+"  subAcc: "+n.timeAccumulated+" fm: "+subAcc);
                 }
                 entry.subNumberTimeValue = entry.numberValueTime + subAcc;
 
 
-//                int original = new TimeState(entry.numberValueTime).getTimeNumberValue();
-//                int subAddedTime = new TimeState( entry.subNumberTimeValue).getTimeNumberValue();
-//                entry.timeAccumulated = subAddedTime + original;
-
+            }else{
+                checkList.get(i).setTimeAcclimated(checkList.get(i - 1));
             }
 
 

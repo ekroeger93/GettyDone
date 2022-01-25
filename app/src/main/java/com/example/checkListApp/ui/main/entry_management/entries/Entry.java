@@ -14,6 +14,7 @@ import com.example.checkListApp.timer.TimeState;
 import com.example.checkListApp.ui.main.entry_management.list_component.RecyclerAdapter;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 @Entity(tableName = "Entries")
 public class Entry {
@@ -61,7 +62,8 @@ public class Entry {
     public int timeAccumulated = 0;
 
     @Ignore
-    public ArrayList<Entry> subCheckList =new ArrayList<>();
+    public ArrayList<Entry> subCheckList = new ArrayList<>();
+
     @Ignore
     public boolean isSubEntry = false;
 
@@ -69,6 +71,9 @@ public class Entry {
     public int subNumberTimeValue = 0;
     @Ignore
     public int timeSubAccumulated = 0;
+
+    @Ignore
+    public int subLateAccumulated = 0;
 
 
 
@@ -89,6 +94,7 @@ public class Entry {
         int numberTime = new TimeState(countDownTimer.getValue()).getTimeNumberValue();
         numberValueTime = numberTime;
         timeAccumulated = new TimeState(numberTime).getTimeNumberValue();//numberTime;//extractNumberValueTime(time);
+
 
 
     }
@@ -322,10 +328,23 @@ public class Entry {
         ) {
 
             int subAddedTime = new TimeState( entry.subNumberTimeValue).getTimeNumberValue();
-           this.timeAccumulated = subAddedTime + addedTime;
+
+
+            if(entry.subLateAccumulated == 0) {
+                this.timeAccumulated = subAddedTime + addedTime;
+            }else{
+                this.timeAccumulated = entry.subLateAccumulated +original;
+            }
             this.timeSubAccumulated = subAddedTime + addedTime;
 
-            Log.d("subListingTest",subAddedTime+" ::: "+this.timeAccumulated);
+//            Log.d("subListingTest",subAddedTime+" ::: "+this.timeAccumulated);
+            Log.d("subListingTest",
+                    "subAddTime: "+subAddedTime+
+                    " entAcc: "+this.timeAccumulated +
+                            " prevEntSubVal: "+entry.subNumberTimeValue +
+                            " subLateAcc: "+entry.subLateAccumulated
+
+            );
 
         }
 

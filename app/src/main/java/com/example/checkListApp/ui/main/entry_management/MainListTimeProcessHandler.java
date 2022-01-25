@@ -188,8 +188,8 @@ public class MainListTimeProcessHandler {
             String setTime = new TimeState(summationTime).getTimeFormat();
             timerViewModel.setCountDownTimer(setTime);
 
-            timerUtility.accumulation(checkList);
-//            timerUtility.subAccumulation(checkList);
+//            timerUtility.accumulation(checkList);
+            timerUtility.subAccumulation(checkList);
 
             timerUtility.revertTimeIndex();
             timerUtility.revertSubTimeIndex();
@@ -200,8 +200,8 @@ public class MainListTimeProcessHandler {
 
         }else{
 
-            timerUtility.accumulation(checkList);
-//            timerUtility.subAccumulation(checkList);
+//            timerUtility.accumulation(checkList);
+            timerUtility.subAccumulation(checkList);
 
             timerUtility.getSummationTime(checkList);
 
