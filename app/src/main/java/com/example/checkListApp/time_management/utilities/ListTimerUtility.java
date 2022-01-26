@@ -22,14 +22,8 @@ public class ListTimerUtility {
 
     }
 
-    public ListTimerUtility(Entry entry){
-        currentActiveTime = entry;
-    }
 
-
-
-    public void subAccumulation(ArrayList<Entry> checkList){
-
+    public void accumulation(ArrayList<Entry> checkList){
 
         int subAcc = 0;
 
@@ -59,8 +53,12 @@ public class ListTimerUtility {
                 entry.subNumberTimeValue = entry.numberValueTime + subAcc;
 
 
-            }else{
+            }
+
+            else{
+
                 checkList.get(i).setTimeAcclimated(checkList.get(i - 1));
+
             }
 
 
@@ -68,21 +66,9 @@ public class ListTimerUtility {
 
         }
 
-//        accumulation(checkList);
 
     }
 
-   public void accumulation(ArrayList<Entry> list){
-
-       for(int i = 0; i <= list.size()-2; i++){
-
-           if(i != 0 ) {
-               list.get(i).setTimeAcclimated(list.get(i - 1));
-              }
-
-       }
-
-    }
 
    public  ArrayList<Entry> generateEntryList(ListTimersParcel parcel){
 
@@ -186,8 +172,6 @@ public class ListTimerUtility {
 
                 list.get(activeProcessTimeIndex)
                         .getViewHolder().textView.setText(parentEntry.textTemp);
-
-//                list.set(activeProcessTimeIndex,parentEntry);
 
                 activeProcessTimeIndex++;
                 parentEntry = null;
