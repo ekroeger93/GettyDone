@@ -143,6 +143,7 @@ OR
 
 use the file manager to load existing checkList data
 -could flag files as subLists/ save as sublist
+-would need to find a way to help simplify the file list
 
 on select subList button popups a list of available subList
 to be loaded
