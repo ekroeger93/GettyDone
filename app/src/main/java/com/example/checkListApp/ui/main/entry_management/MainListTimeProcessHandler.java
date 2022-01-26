@@ -91,6 +91,11 @@ public class MainListTimeProcessHandler {
             setTimer();
             Log.d("subListingTest","begin: "+timerUtility.currentActiveTime.textTemp);
 
+            if(timerUtility.currentActiveTime.isSubEntry){
+                setSubTextToParent();
+            }
+
+
             if(timerViewModel.isToggled()) {
                 binding.timerExecuteBtn.setBackground(
                         ContextCompat.getDrawable(
@@ -227,6 +232,26 @@ public class MainListTimeProcessHandler {
 
     }
 
+    public void setSubTextToParent(){
+
+        if(timerUtility.currentActiveTime.isSubEntry){
+
+            String subText = timerUtility.currentActiveTime.textTemp;
+
+            checkList.get(timerUtility.activeProcessTimeIndex)
+                    .getViewHolder().textView.setText(
+                    subText);
+        }
+
+    }
+
+    public void resetParentText(String text){
+
+        checkList.get(timerUtility.activeProcessTimeIndex-1)
+                .getViewHolder().textView.setText(text);
+
+    }
+
     public void processTimerTask(int elapsedTime){
 
         Log.d("subListingTest",
@@ -241,7 +266,10 @@ public class MainListTimeProcessHandler {
             if (timerUtility.currentActiveTime.timeElapsed(elapsedTime)) {
 
                 mainFragment.playAudio(timerUtility.currentActiveTime.getSelectAudio());
-                displayEntryToast();
+
+
+
+
 
 //                Log.d("subListingTest",""+timerUtility.currentActiveTime.getViewHolder());
 //                Log.d("subListingTest",""+checkList.get(timerUtility.activeProcessTimeIndex).getViewHolder());
@@ -260,7 +288,8 @@ public class MainListTimeProcessHandler {
                     }
 
                     timerUtility.currentActiveTime = timerUtility.getNextActiveProcessTime(checkList);
-
+                    displayEntryToast();
+                    setSubTextToParent();
                     Log.d("subListingTest",""+timerUtility.currentActiveTime.textTemp);
 
                 }
@@ -269,7 +298,10 @@ public class MainListTimeProcessHandler {
             }
         }
         else{
+
             timerViewModel.toggleTime();
+
+
 
             if (timerViewModel.getRepeaterTime() <= 0) {
                 timerUtility.currentActiveTime.getViewHolder().checkOff();

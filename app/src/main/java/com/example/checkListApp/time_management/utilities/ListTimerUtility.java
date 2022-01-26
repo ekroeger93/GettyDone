@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.checkListApp.time_management.parcel.ListTimersParcel;
 import com.example.checkListApp.timer.TimeState;
+import com.example.checkListApp.ui.main.entry_management.MainListTimeProcessHandler;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class ListTimerUtility {
                     subAcc += n.numberValueTime;
                     n.timeAccumulated = entry.timeAccumulated + subAcc;
 
-                    entry.subLateAccumulated = n.timeAccumulated;
+                    entry.subLatestAccumulated = n.timeAccumulated;
                     Log.d("subListingTest",entry.timeAccumulated+"  subAcc: "+n.timeAccumulated+" fm: "+subAcc);
                 }
                 entry.subNumberTimeValue = entry.numberValueTime + subAcc;
@@ -179,8 +180,13 @@ public class ListTimerUtility {
                 return subEntry;
 
             }else{
+
                 Log.d("subListingTest","finish Sub list");
                 subActiveProcessTimeIndex = 0;
+
+                list.get(activeProcessTimeIndex)
+                        .getViewHolder().textView.setText(parentEntry.textTemp);
+
 //                list.set(activeProcessTimeIndex,parentEntry);
 
                 activeProcessTimeIndex++;

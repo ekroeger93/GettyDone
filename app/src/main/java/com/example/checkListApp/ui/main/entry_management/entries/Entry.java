@@ -66,14 +66,10 @@ public class Entry {
 
     @Ignore
     public boolean isSubEntry = false;
-
     @Ignore
     public int subNumberTimeValue = 0;
     @Ignore
-    public int timeSubAccumulated = 0;
-
-    @Ignore
-    public int subLateAccumulated = 0;
+    public int subLatestAccumulated = 0;
 
 
 
@@ -243,41 +239,7 @@ public class Entry {
         this.isSubEntry = true;
 
         numberValueTime = new TimeState(countDownTimer.getValue()).getTimeNumberValue();
-//
-        int subAcc = 0;
-//
-//        for(int i = 1; i < checkList.size()-2; i++){
-//
-//            Entry entry = checkList.get(i);
-//
-//            if(!entry.subCheckList.isEmpty()){
-//
-//                ArrayList<Entry> subList = entry.subCheckList;
-//
-//                for(Entry n : subList) {
-//                    subAcc += n.numberValueTime;
-//                    n.timeAccumulated = numberValueTime + subAcc;
-//                    Log.d("subListingTest","subAcc: "+n.timeAccumulated);
-//                }
-//                subNumberTimeValue = numberValueTime + subAcc;
-//
-//            }
-//
-//        }
-//
-
-//        for(Entry n : subCheckList) {
-//            subAcc += n.numberValueTime;
-//            n.timeAccumulated = numberValueTime + subAcc;
-////            Log.d("subListingTest","subAcc: "+n.timeAccumulated);
-//        }
-//        subNumberTimeValue = numberValueTime + subAcc;
-
-
-//        Log.d("subListingTest","subNumberValue: "+subNumberTimeValue);
         countDownTimer.postValue( new TimeState(numberValueTime).getTimeFormat());
-
-
 
 
     }
@@ -317,32 +279,29 @@ public class Entry {
     public void setTimeAcclimated(Entry entry ) {
 
 
-        int original = new TimeState(numberValueTime).getTimeNumberValue();
+        int initialTime = new TimeState(numberValueTime).getTimeNumberValue();
         int addedTime = new TimeState(entry.timeAccumulated).getTimeNumberValue();
 
-        this.timeAccumulated = original + addedTime;
+        this.timeAccumulated = initialTime + addedTime;
 
-        if(
-                !entry.subCheckList.isEmpty()
-//                !subCheckList.isEmpty()
-        ) {
+        if(!entry.subCheckList.isEmpty()) {//if the last entry has a sublist
 
             int subAddedTime = new TimeState( entry.subNumberTimeValue).getTimeNumberValue();
+//
+//            if(entry.subLatestAccumulated == 0) {
+//                this.timeAccumulated = subAddedTime + addedTime;
+//                Log.d("subListingTest","true!");
+//            }else{
+                int subLateAcc = new TimeState( entry.subLatestAccumulated).getTimeNumberValue();
 
+                this.timeAccumulated = subLateAcc + initialTime;
+//            }
 
-            if(entry.subLateAccumulated == 0) {
-                this.timeAccumulated = subAddedTime + addedTime;
-            }else{
-                this.timeAccumulated = entry.subLateAccumulated +original;
-            }
-            this.timeSubAccumulated = subAddedTime + addedTime;
-
-//            Log.d("subListingTest",subAddedTime+" ::: "+this.timeAccumulated);
             Log.d("subListingTest",
                     "subAddTime: "+subAddedTime+
                     " entAcc: "+this.timeAccumulated +
                             " prevEntSubVal: "+entry.subNumberTimeValue +
-                            " subLateAcc: "+entry.subLateAccumulated
+                            " subLateAcc: "+entry.subLatestAccumulated
 
             );
 
