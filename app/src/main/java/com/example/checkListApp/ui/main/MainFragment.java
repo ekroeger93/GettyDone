@@ -103,6 +103,52 @@ TaDone Prototype
 - color theme
 
 
+//TODO: sublisting
+
+two ways i can handle this
+
+create a new Fragment (SubListFragment) much like MainFragment but doesn't
+use the DOA dataBase; may use interface, MainFragment needs to be designed
+to be extendable
+
+create a subList Array for SubListFragment, like checkList
+if all goes well it would function like the MainFragment.
+
+create a submit button pass back an Intent to the Entry selected
+and while the Entry sends a index position to SubListFragment
+
+to persist data, use Json and convert the subList value to String and
+save it to the Database and Serialize when needed, or could try a making
+child Tables to be loaded per Entry
+
+excludes functionality:
+
+execute timer
+subList
+repeater
+checkBox (cannot be checked)
+countDownTimer
+tabs
+DOA
+
+includes functionality:
+
+submit button
+buttonPanel add,delete,move,edit
+recyclerView
+setTimer
+setText
+
+OR
+
+use the file manager to load existing checkList data
+-could flag files as subLists/ save as sublist
+
+on select subList button popups a list of available subList
+to be loaded
+
+save the file path to the Entry to be loaded when needed
+in Entry + DOA
 
 //TODO: Features
 

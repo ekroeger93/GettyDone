@@ -26,9 +26,6 @@ public class MainListTimeProcessHandler {
     public final static TimerViewModel timerViewModel = new TimerViewModel();
     public final static ListTimerUtility timerUtility = new ListTimerUtility();
 
-    //have one process handler swap out timerViewModel, listUtility, checklist
-    //have two process handler switch between them
-
 
     /*
     the entry on Main list should have a summation of its sublist, which is
