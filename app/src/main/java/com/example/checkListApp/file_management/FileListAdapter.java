@@ -63,7 +63,7 @@ public class FileListAdapter extends RecyclerView.Adapter {
         textView.setText((CharSequence) listFiles[position].getName());
 
         if ( fileSelection == position){
-            FileListFragment.updateEditText( listFiles[position].getName().replaceAll(".json",""));
+            fileListFragment.updateEditText( listFiles[position].getName().replaceAll(".json",""));
         }
         //there no point in recycling why can't i just have a simple list?
         holder.setIsRecyclable(false);

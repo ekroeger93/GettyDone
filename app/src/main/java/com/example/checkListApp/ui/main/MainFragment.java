@@ -3,6 +3,7 @@ package com.example.checkListApp.ui.main;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -19,6 +20,7 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,18 +33,22 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.selection.SelectionTracker;
 import androidx.recyclerview.selection.StorageStrategy;
 import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.checkListApp.MainActivity;
 import com.example.checkListApp.R;
 import com.example.checkListApp.databinding.MainFragmentBinding;
+import com.example.checkListApp.file_management.FileListAdapter;
+import com.example.checkListApp.file_management.FileManager;
 import com.example.checkListApp.input.CustomEditText;
 import com.example.checkListApp.input.DetectKeyboardBack;
 import com.example.checkListApp.time_management.TimerService;
 import com.example.checkListApp.time_management.parcel.ListTimersParcel;
 import com.example.checkListApp.time_management.parcel.ListTimersParcelBuilder;
 import com.example.checkListApp.time_management.utilities.KeyHelperClass;
+import com.example.checkListApp.ui.main.entry_management.SubListFileRecyclerAdapter;
 import com.example.checkListApp.ui.main.entry_management.button_panel.ButtonPanel;
 import com.example.checkListApp.ui.main.entry_management.button_panel.ButtonPanelToggle;
 import com.example.checkListApp.ui.main.entry_management.EntryItemManager;
@@ -255,7 +261,87 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     private Activity activity;
 
-    private  ItemTouchCallback callback;
+    private ItemTouchCallback callback;
+
+
+    private FileManager fileManager;
+    private FileListAdapter fileListAdapter;
+
+    private View fragmentView;
+
+
+    public void showSubListSelection(View view, int index){
+
+        buildSubListAdapter(buildSubListDialog(view) , index);
+
+    }
+
+    public AlertDialog buildSubListDialog(View view){
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+        AlertDialog subListDialog = dialogBuilder.create();
+
+
+        subListDialog.setMessage("load a sub list");
+        subListDialog.setView(LayoutInflater.from(getContext())
+                .inflate(
+                        R.layout.dialog_sublist_selection,
+                        (ViewGroup) view,
+                        false));
+
+        subListDialog.show();
+
+        return subListDialog;
+
+    }
+
+    public void buildSubListAdapter(AlertDialog alertDialog, int index){
+
+
+        RecyclerView subListRecyclerView = alertDialog.findViewById(R.id.subListSelection);
+        SubListFileRecyclerAdapter subListAdapter = new SubListFileRecyclerAdapter(fileManager.getListOfFiles());
+
+        subListRecyclerView.setAdapter(subListAdapter);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(alertDialog.getContext());
+
+        subListRecyclerView.setLayoutManager(linearLayoutManager);
+        subListRecyclerView.setHasFixedSize(true);
+
+        Button loadSub = alertDialog.findViewById(R.id.loadSubListFileBtn);
+
+        loadSub.setOnClickListener(view -> {
+
+            setSubList(index, subListAdapter.getFileSelection());
+            alertDialog.dismiss();
+
+        });
+
+    }
+
+    public void setSubList(int checkListIndex , int fileListIndex){
+
+        Entry entry = checkList.get(checkListIndex);
+
+        ArrayList<Entry> subList = AuxiliaryData.loadFile(
+                fileManager.loadFile(fileListIndex));
+
+        Log.d("subListingTest",""+fileManager.loadFile(fileListIndex));
+
+        checkList.get(checkListIndex).isSubEntry = true;
+
+        for(Entry n: subList) {
+            n.isSubEntry = true;
+            n.setViewHolder(entry.getViewHolder());
+
+        }
+
+        entry.setSubCheckList(subList);
+
+        mainListTimeProcessHandler.subAccumulation(checkList);
+
+    }
+
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -284,6 +370,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                              @Nullable Bundle savedInstanceState) {
 
 
+
         binding = DataBindingUtil.inflate(inflater,R.layout.main_fragment,container,false);
         binding.setLifecycleOwner(this);
 
@@ -298,6 +385,9 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
+        fileManager = new FileManager(view.getContext());
+
+        fragmentView = view;
 
         setUpAdapter();
 
@@ -434,8 +524,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     }
 
-
-
     public void startService(){
 
         serviceIntent = getForegroundTimerServiceIntent();
@@ -502,7 +590,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     }
 
 
-
     public static void resetTime(){
         MainListTimeProcessHandler.timerViewModel.resetAbsolutely();
         timerRunning.postValue(false);
@@ -528,7 +615,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         mViewModel.sortIndexes();
     }
-
 
     @SuppressLint("ClickableViewAccessibility")
     public void assignButtonListeners(){
@@ -957,8 +1043,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
 }
 
-
-
     
     @Override
     public void clickPosition(RecyclerAdapter.ViewHolder viewHolder,View view, int position) {
@@ -1002,43 +1086,58 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
             if(view.getId() == R.id.subListBtn){
 
-                Entry entry = checkList.get(position);
 
-                ArrayList<Entry> testList = new ArrayList<>();
-
-                Entry a = new Entry("a", false,"00:00:05");
-                Entry b = new Entry("b", false,"00:00:01");
-                Entry c = new Entry("c", false,"00:00:05");
+                showSubListSelection(fragmentView, position);
 
 
-                a.setViewHolder(entry.getViewHolder());
-                b.setViewHolder(entry.getViewHolder());
-                c.setViewHolder(entry.getViewHolder());
-
-                b.onTogglePrimer.setValue(true);
-                b.onTogglePrimerTemp = true;
-
-                checkList.get(position).isSubEntry = true;
-                a.isSubEntry = true;
-                b.isSubEntry = true;
-                c.isSubEntry = true;
-
-//                a.setTimeAccumulatedNonAdditive(10);
-//                b.setTimeAccumulatedNonAdditive(15);
-//                c.setTimeAccumulatedNonAdditive(20);
-
-//                testList.add( entry);
-
-
-                testList.add( a);
-                testList.add( b);
-                testList.add( c);
-
-                entry.setSubCheckList(testList);
-
-                mainListTimeProcessHandler.subAccumulation(checkList);
-
-
+//                Entry entry = checkList.get(position);
+//
+//                ArrayList<Entry> testList = AuxiliaryData.loadFile(
+//                        fileManager.loadFile("test.json"));
+//
+//                Log.d("subListingTest",""+fileManager.loadFile("test.json"));
+//
+//                checkList.get(position).isSubEntry = true;
+//
+//                for(Entry n: testList){
+//                    n.isSubEntry = true;
+//                    n.setViewHolder(entry.getViewHolder());
+//
+//                }
+//
+////                Entry a = new Entry("a", false,"00:00:05");
+////                Entry b = new Entry("b", false,"00:00:01");
+////                Entry c = new Entry("c", false,"00:00:05");
+////
+////
+////                a.setViewHolder(entry.getViewHolder());
+////                b.setViewHolder(entry.getViewHolder());
+////                c.setViewHolder(entry.getViewHolder());
+////
+////                b.onTogglePrimer.setValue(true);
+////                b.onTogglePrimerTemp = true;
+////
+////                checkList.get(position).isSubEntry = true;
+////                a.isSubEntry = true;
+////                b.isSubEntry = true;
+////                c.isSubEntry = true;
+//
+////                a.setTimeAccumulatedNonAdditive(10);
+////                b.setTimeAccumulatedNonAdditive(15);
+////                c.setTimeAccumulatedNonAdditive(20);
+//
+////                testList.add( entry);
+//
+////
+////                testList.add( a);
+////                testList.add( b);
+////                testList.add( c);
+//
+//                entry.setSubCheckList(testList);
+//
+//                mainListTimeProcessHandler.subAccumulation(checkList);
+//
+//
 
 
             }

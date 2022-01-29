@@ -36,8 +36,8 @@ public class FileListFragment extends Fragment {
 
     FragmentFileListBinding binding;
 
-    static EditText editText;
-    static Button buttonSave;
+     EditText editText;
+     Button buttonSave;
 
     public FileListFragment() {
         // Required empty public constructor
@@ -155,7 +155,7 @@ public class FileListFragment extends Fragment {
     }
 
 
-    static void updateEditText(String fileNameTxt){
+     void updateEditText(String fileNameTxt){
 
         editText.setText(fileNameTxt);
 

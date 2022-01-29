@@ -101,6 +101,48 @@ public class FileManager {
 
     }
 
+    public String loadFile(String fileName){
+       //to retain integrity use the file actual name
+
+        String output = "";
+        String receiveString;
+        StringBuilder stringBuilder;
+
+        InputStream inputStream;
+        InputStreamReader inputStreamReader;
+        BufferedReader bufferedReader;
+
+
+        try {
+            inputStream = context.openFileInput(fileName);
+
+
+            if ( inputStream != null ) {
+
+                inputStreamReader = new InputStreamReader(inputStream);
+                bufferedReader = new BufferedReader(inputStreamReader);
+                stringBuilder = new StringBuilder();
+
+
+                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                    stringBuilder.append("\n").append(receiveString);
+                }
+
+                inputStream.close();
+                output = stringBuilder.toString();
+            }
+        }
+        catch (FileNotFoundException e) {
+            Log.e("login activity", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("login activity", "Can not read file: " + e.toString());
+        }
+
+        return output;
+
+    }
+
+
     public File[] getListOfFiles() {
         return listOfFiles;
     }

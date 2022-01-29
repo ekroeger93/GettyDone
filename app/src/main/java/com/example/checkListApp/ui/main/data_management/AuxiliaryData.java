@@ -63,6 +63,25 @@ public final class AuxiliaryData {
     }
 
 
+    public static ArrayList<Entry> loadFile(String file){
+
+        ArrayList<Entry> loadedCheckList;
+
+        try {
+            loadedCheckList = JsonService.getJsonGeneratedArray(file);
+        }catch (NullPointerException e){
+            return  null;
+        }
+
+        for(Entry entry : loadedCheckList){
+            entry.textEntry.setValue(entry.textEntry.getValue().replaceAll("\"" , ""));
+            entry.countDownTimer.setValue(entry.countDownTimer.getValue().replaceAll("\"",""));
+        }
+
+        return loadedCheckList;
+
+
+    }
 
 
 }
