@@ -71,7 +71,10 @@ public class MainListTimeProcessHandler {
         CountDownTimerAsync.CountDownTask countDownTask = time -> {
             {
 
-                int elapsedTime = timerUtility.getSummationTime(checkList) - time;
+//                int elapsedTime = timerUtility.getSummationTime(checkList) - time;
+
+                int elapsedTime = time;
+//                Log.d("subListingTest",timerUtility.getSummationTime2(checkList)+"  "+time);
 
                 if(timerUtility.currentActiveTime == null) timerUtility.currentActiveTime = checkList.get(1);
 
@@ -252,12 +255,15 @@ public class MainListTimeProcessHandler {
 
         Log.d("subListingTest",
                 timerUtility.currentActiveTime.textTemp+
+                        " elapse: " + elapsedTime +
                         " acc:" + timerUtility.currentActiveTime.timeAccumulated +
                         " index: "+ timerUtility.activeProcessTimeIndex+
                         " subIndex: "+timerUtility.subActiveProcessTimeIndex +
                         " isSub: " + timerUtility.currentActiveTime.isSubEntry);
 
-        if(!timerUtility.currentActiveTime.onTogglePrimerTemp){
+        if(!timerUtility.currentActiveTime.onTogglePrimer.getValue()){
+
+
 
             if (timerUtility.currentActiveTime.timeElapsed(elapsedTime)) {
 

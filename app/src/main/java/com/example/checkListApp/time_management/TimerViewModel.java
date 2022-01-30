@@ -81,7 +81,7 @@ public class TimerViewModel {
 
         countTimer.setCountDownTask((n) -> {
             _countDownTimer.postValue(countTimer.getRunTime());
-            countDownTask.execute(countTimer.getCountTime());
+            countDownTask.execute(countTimer.getElapsedTime());
         });
 
     }

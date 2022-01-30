@@ -69,6 +69,9 @@ public class Entry {
     @Ignore
     public int subNumberTimeValue = 0;
     @Ignore
+    public int subNumberTimeTruncated =0;
+
+    @Ignore
     public int subLatestAccumulated = 0;
 
 
@@ -279,10 +282,14 @@ public class Entry {
     public void setTimeAcclimated(Entry entry ) {
 
 
-        int initialTime = new TimeState(numberValueTime).getTimeNumberValue();
-        int addedTime = new TimeState(entry.timeAccumulated).getTimeNumberValue();
+//        int initialTime = new TimeState(numberValueTime).getTimeNumberValue();
+        int initialTime = numberValueTime;
+        int addedTime = entry.timeAccumulated;
 
-        this.timeAccumulated = initialTime + addedTime;
+         this.timeAccumulated = initialTime + addedTime;
+
+        Log.d("subListingTest",initialTime+" + "+addedTime+"  "+this.timeAccumulated);
+
 
         if(!entry.subCheckList.isEmpty()) {//if the last entry has a sublist
 
@@ -292,7 +299,10 @@ public class Entry {
 //                this.timeAccumulated = subAddedTime + addedTime;
 //                Log.d("subListingTest","true!");
 //            }else{
-                int subLateAcc = new TimeState( entry.subLatestAccumulated).getTimeNumberValue();
+
+//                int subLateAcc = new TimeState( entry.subLatestAccumulated).getTimeNumberValue();
+
+                int subLateAcc = entry.subLatestAccumulated;
 
                 this.timeAccumulated = subLateAcc + initialTime;
 //            }

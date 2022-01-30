@@ -26,6 +26,7 @@ public class ListTimerUtility {
     public void accumulation(ArrayList<Entry> checkList){
 
         int subAcc = 0;
+        int subAccT = 0;
 
         checkList.get(1).timeAccumulated = checkList.get(1).numberValueTime;
 
@@ -42,15 +43,21 @@ public class ListTimerUtility {
                 }
 
                 subAcc = 0;
+                subAccT = 0;
 
                 for(Entry n : subList) {
                     subAcc += n.numberValueTime;
                     n.timeAccumulated = entry.timeAccumulated + subAcc;
 
+                    subAccT += new TimeState(subAcc).timeTruncated();
+
                     entry.subLatestAccumulated = n.timeAccumulated;
                     Log.d("subListingTest",entry.timeAccumulated+"  subAcc: "+n.timeAccumulated+" fm: "+subAcc);
                 }
+
                 entry.subNumberTimeValue = entry.numberValueTime + subAcc;
+
+                entry.subNumberTimeTruncated = entry.numberValueTime+ subAccT;
 
 
             }
@@ -116,12 +123,38 @@ public class ListTimerUtility {
             }else{
                 value = entry.subNumberTimeValue;
             }
+
+            Log.d("subListingTest"," s "+value);
             sum+= value;
 
         }
 
         return sum;
     }
+
+    public int getSummationTime2(ArrayList<Entry> list){
+
+        int sum = 0;
+
+        for(Entry entry:list){
+
+            entry.setNumberValueTime(entry.countDownTimer.getValue());
+
+            int value;
+
+            if (entry.subNumberTimeValue == 0) {
+                value = entry.getNumberValueTime();
+            }else{
+                value = entry.subNumberTimeValue;
+            }
+
+            sum+= value;
+
+        }
+
+        return sum;
+    }
+
 
     public Entry getCurrentActiveTime() {
         return currentActiveTime;
