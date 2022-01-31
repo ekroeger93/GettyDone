@@ -25,8 +25,7 @@ public class ListTimerUtility {
 
     public void accumulation(ArrayList<Entry> checkList){
 
-        int subAcc = 0;
-        int subAccT = 0;
+        int subAcc;
 
         checkList.get(1).timeAccumulated = checkList.get(1).numberValueTime;
 
@@ -43,21 +42,17 @@ public class ListTimerUtility {
                 }
 
                 subAcc = 0;
-                subAccT = 0;
 
                 for(Entry n : subList) {
+
                     subAcc += n.numberValueTime;
                     n.timeAccumulated = entry.timeAccumulated + subAcc;
-
-                    subAccT += new TimeState(subAcc).timeTruncated();
-
                     entry.subLatestAccumulated = n.timeAccumulated;
-                    Log.d("subListingTest",entry.timeAccumulated+"  subAcc: "+n.timeAccumulated+" fm: "+subAcc);
-                }
+
+                 }
 
                 entry.subNumberTimeValue = entry.numberValueTime + subAcc;
 
-                entry.subNumberTimeTruncated = entry.numberValueTime+ subAccT;
 
 
             }
@@ -69,7 +64,6 @@ public class ListTimerUtility {
             }
 
 
-            Log.d("subListingTest",entry.textTemp+" * Acc: "+entry.timeAccumulated);
 
         }
 
@@ -79,14 +73,10 @@ public class ListTimerUtility {
 
    public  ArrayList<Entry> generateEntryList(ListTimersParcel parcel){
 
-      //  int size = MainFragment.getCheckList().size();// parcel.listOfCountDownTimers.length;
-
-        //TODO: THIS May need to be fix
        int size = parcel.listOfChecked.length;
 
        ArrayList<Entry> list = new ArrayList<>(size);
 
-       Log.d("serviceTest"," size: "+size);
 
         for(int i = 0 ; i < size; i++){
 
@@ -124,30 +114,6 @@ public class ListTimerUtility {
                 value = entry.subNumberTimeValue;
             }
 
-            Log.d("subListingTest"," s "+value);
-            sum+= value;
-
-        }
-
-        return sum;
-    }
-
-    public int getSummationTime2(ArrayList<Entry> list){
-
-        int sum = 0;
-
-        for(Entry entry:list){
-
-            entry.setNumberValueTime(entry.countDownTimer.getValue());
-
-            int value;
-
-            if (entry.subNumberTimeValue == 0) {
-                value = entry.getNumberValueTime();
-            }else{
-                value = entry.subNumberTimeValue;
-            }
-
             sum+= value;
 
         }
@@ -156,9 +122,6 @@ public class ListTimerUtility {
     }
 
 
-    public Entry getCurrentActiveTime() {
-        return currentActiveTime;
-    }
 
     public  Entry getNextActiveProcessTime(ArrayList<Entry> list){
 
@@ -168,31 +131,23 @@ public class ListTimerUtility {
 
         if(currentActiveTime.subCheckList.isEmpty() && !currentActiveTime.isSubEntry
         ){
-
-            Log.d("subListingTest","standard!");
-
             if(activeProcessTimeIndex < size) {
                 activeProcessTimeIndex++;
-
                 return list.get(activeProcessTimeIndex);
+
             } else{
 
-                Log.d("subListTest","reverted");
                 activeProcessTimeIndex = 1;
             }
 
         }else{
 
-            Log.d("subListingTest","sublist!");
             if(parentEntry == null)
             parentEntry = list.get(activeProcessTimeIndex);
 
             if(subActiveProcessTimeIndex < parentEntry.subCheckList.size()){
 
-
                 Entry subEntry = parentEntry.subCheckList.get(subActiveProcessTimeIndex);
-
-//                list.get(activeProcessTimeIndex).setEntry( subEntry);
 
                 subActiveProcessTimeIndex++;
 
@@ -200,7 +155,6 @@ public class ListTimerUtility {
 
             }else{
 
-                Log.d("subListingTest","finish Sub list");
                 subActiveProcessTimeIndex = 0;
 
                 list.get(activeProcessTimeIndex)
@@ -209,13 +163,12 @@ public class ListTimerUtility {
                 activeProcessTimeIndex++;
                 parentEntry = null;
 
-                Log.d("subListingTest",""+activeProcessTimeIndex);
-                return list.get(activeProcessTimeIndex);
+                 return list.get(activeProcessTimeIndex);
             }
 
         }
 
-        Log.d("subListingTest","failed!");
+
         return list.get(size-2);
     }
 
@@ -235,7 +188,6 @@ public class ListTimerUtility {
     }
 
    public  void revertTimeIndex(){
-       Log.d("subListingTest","called");
        activeProcessTimeIndex = 1; }
 
    public  void revertSubTimeIndex(){

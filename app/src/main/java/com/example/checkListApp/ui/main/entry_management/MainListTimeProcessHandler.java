@@ -27,18 +27,6 @@ public class MainListTimeProcessHandler {
     public final static ListTimerUtility timerUtility = new ListTimerUtility();
 
 
-    /*
-    the entry on Main list should have a summation of its sublist, which is
-    added to the timerViewModel of the main list.
-
-    the SubListProcessHandler will initiate when the MainList arrives at that
-    entry, it will be simply called and expire accordingly (may need to terminate thread)
-
-    could use the mainTimer instead (timerViewModel) and check the accumulation of
-    the sub Entries
-
-     */
-
     public int getActiveProcessTimeIndex(){
         return timerUtility.activeProcessTimeIndex;
     }
@@ -63,23 +51,14 @@ public class MainListTimeProcessHandler {
 
     public void configureMainTimer(){
 
-
-
-
         //update text timer based on current scroll selected position
 
         CountDownTimerAsync.CountDownTask countDownTask = time -> {
             {
 
-//                int elapsedTime = timerUtility.getSummationTime(checkList) - time;
-
-                int elapsedTime = time;
-//                Log.d("subListingTest",timerUtility.getSummationTime2(checkList)+"  "+time);
-
                 if(timerUtility.currentActiveTime == null) timerUtility.currentActiveTime = checkList.get(1);
 
-                processTimerTask(elapsedTime);
-
+                processTimerTask(time);
 
             };
 
@@ -89,7 +68,6 @@ public class MainListTimeProcessHandler {
         binding.timerExecuteBtn.setOnClickListener(view -> {
 
             setTimer();
-            Log.d("subListingTest","begin: "+timerUtility.currentActiveTime.textTemp);
 
             if(timerUtility.currentActiveTime.isSubEntry){
                 setSubTextToParent();
@@ -138,14 +116,11 @@ public class MainListTimeProcessHandler {
             timerViewModel.resetAbsolutely();
             mainFragment.getTimerRunning().postValue(false);
 
-//        if(isMyServiceRunning(TimerService.class))
             mainFragment.getActivity().stopService(mainFragment.getServiceIntent());
 
             return  true;
         });
 
-        //update time of both View and ViewModel
-//        setObserverForMainTextTime(binding.timeTextMain,mainFragment.getViewLifecycleOwner());
 
         Observer<String> observer = new Observer() {
             @Override
@@ -155,8 +130,6 @@ public class MainListTimeProcessHandler {
         };
 
         timerViewModel.setObserver(observer, mainFragment.getViewLifecycleOwner());
-
-
 
         //set a post execution after timer expires, proceeds to next Entry
         timerViewModel.setPostExecute(() -> {
@@ -204,7 +177,6 @@ public class MainListTimeProcessHandler {
 
         }else{
 
-
             timerUtility.accumulation(checkList);
 
             timerUtility.getSummationTime(checkList);
@@ -219,7 +191,7 @@ public class MainListTimeProcessHandler {
 
                 String message = timerUtility.currentActiveTime.textEntry.getValue();
 
-                mainFragment.scrollPosition(timerUtility.activeProcessTimeIndex);
+                MainFragment.scrollPosition(timerUtility.activeProcessTimeIndex);
 
                 Toast toast = Toast.makeText(getContext(), message + " done!", Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.TOP, 0, 0);
@@ -244,55 +216,27 @@ public class MainListTimeProcessHandler {
 
     }
 
-    public void resetParentText(String text){
 
-        checkList.get(timerUtility.activeProcessTimeIndex-1)
-                .getViewHolder().textView.setText(text);
-
-    }
 
     public void processTimerTask(int elapsedTime){
 
-        Log.d("subListingTest",
-                timerUtility.currentActiveTime.textTemp+
-                        " elapse: " + elapsedTime +
-                        " acc:" + timerUtility.currentActiveTime.timeAccumulated +
-                        " index: "+ timerUtility.activeProcessTimeIndex+
-                        " subIndex: "+timerUtility.subActiveProcessTimeIndex +
-                        " isSub: " + timerUtility.currentActiveTime.isSubEntry);
 
         if(!timerUtility.currentActiveTime.onTogglePrimer.getValue()){
-
-
 
             if (timerUtility.currentActiveTime.timeElapsed(elapsedTime)) {
 
                 mainFragment.playAudio(timerUtility.currentActiveTime.getSelectAudio());
 
-
-
-
-
-//                Log.d("subListingTest",""+timerUtility.currentActiveTime.getViewHolder());
-//                Log.d("subListingTest",""+checkList.get(timerUtility.activeProcessTimeIndex).getViewHolder());
-//                Log.d("subListingTest",""+timerUtility.activeProcessTimeIndex);
-
                 if (timerUtility.currentActiveTime.numberValueTime != 0) {
 
-                    //if repeater time is 0 check off
-
-                    try {//POS
+                    try {
                         if (timerViewModel.getRepeaterTime() <= 0)
                             timerUtility.currentActiveTime.getViewHolder().checkOff();
-                    }catch (NullPointerException e){
-//                        timerUtility.currentActiveTime = checkList.get(getActiveProcessTimeIndex());
-//                        timerUtility.currentActiveTime.getViewHolder().checkOff();
-                    }
-
-                    timerUtility.currentActiveTime = timerUtility.getNextActiveProcessTime(checkList);
-                    displayEntryToast();
-                    setSubTextToParent();
-                    Log.d("subListingTest",""+timerUtility.currentActiveTime.textTemp);
+                    }finally {
+                        timerUtility.currentActiveTime = timerUtility.getNextActiveProcessTime(checkList);
+                        displayEntryToast();
+                        setSubTextToParent();
+                     }
 
                 }
 
@@ -303,15 +247,11 @@ public class MainListTimeProcessHandler {
 
             timerViewModel.toggleTime();
 
-
-
-            if (timerViewModel.getRepeaterTime() <= 0) {
+            if (timerViewModel.getRepeaterTime() <= 0)
                 timerUtility.currentActiveTime.getViewHolder().checkOff();
-            }
+
 
             timerUtility.currentActiveTime = timerUtility.getNextActiveProcessTime(checkList);
-
-            Log.d("subListingTest","T: "+timerUtility.currentActiveTime.textTemp);
 
         }
 
@@ -319,23 +259,18 @@ public class MainListTimeProcessHandler {
 
     public void endOfTimerTask( CountDownTimerAsync.CountDownTask countDownTask){
 
-//        selectedAudio[checkList.get(listUtility.activeProcessTimeIndex).getSelectAudio()].start();
-
         mainFragment.playAudio(timerUtility.currentActiveTime.getSelectAudio());
 
-        Log.d("subListingTest", " finished: "+timerUtility.currentActiveTime.textTemp);
         try {
             timerUtility.currentActiveTime.getViewHolder().checkOff();
-        }catch (NullPointerException e){
+        }finally {
 
+            timerUtility.revertTimeIndex();
+            timerUtility.revertSubTimeIndex();
+
+            timerUtility.currentActiveTime = checkList.get(1);
+            timerViewModel.setTaskCustom(countDownTask);
         }
-
-        timerUtility.revertTimeIndex();
-        timerUtility.revertSubTimeIndex();
-
-        timerUtility.currentActiveTime = checkList.get(1);
-        timerViewModel.setTaskCustom(countDownTask);
-
 
     }
 
