@@ -220,6 +220,13 @@ public class MainListTimeProcessHandler {
 
     public void processTimerTask(int elapsedTime){
 
+        Log.d("subListingTest",
+                timerUtility.currentActiveTime.textTemp+
+                        " elapse: " + elapsedTime +
+                        " acc:" + timerUtility.currentActiveTime.timeAccumulated +
+                        " index: "+ timerUtility.activeProcessTimeIndex+
+                        " subIndex: "+timerUtility.subActiveProcessTimeIndex +
+                        " isSub: " + timerUtility.currentActiveTime.isSubEntry);
 
         if(!timerUtility.currentActiveTime.onTogglePrimer.getValue()){
 

@@ -162,15 +162,16 @@ public final class TimerService extends LifecycleService {
 
         TimeState expireTime = new TimeState( Math.abs(entry.timeAccumulated));
 
-        int decimalEntrySetTime = new TimeState(expireTime.getTimeNumberValue()).getTimeNumberValueDecimalTruncated();
+//        int decimalEntrySetTime = new TimeState(expireTime.getTimeNumberValue()).getTimeNumberValueDecimalTruncated();
+
+        int decimalEntrySetTime = entry.timeAccumulated;//expireTime.getTimeNumberValueDecimalTruncated();
 
         int timeRemainder = new TimeState().getValueAsTimeTruncated(decimalEntrySetTime - elapsedTimeNV);
 
 
-        String text = (entry.onTogglePrimerTemp) ? "paused" :  new TimeState(timeRemainder).getTimeFormat() ;
+        String textTimeRemainder = (entry.onTogglePrimer.getValue()) ? "paused" :  new TimeState(timeRemainder).getTimeFormat() ;
 
         String toggleButtonText = (dataHelper.timerViewModel.isToggled()) ? "Pause" : "Resume";
-
 
 
         return dataHelper.builder  .setContentIntent(dataHelper.pendingIntent)
@@ -186,7 +187,7 @@ public final class TimerService extends LifecycleService {
                 .setOngoing(true)
                 .setColor(Color.BLUE)
                 .setSubText(dataHelper.timerViewModel.getRepeaterTime() + " " + new TimeState(countTime).getTimeFormat())
-                .setContentText(entry.textEntry.getValue() + " " + text);
+                .setContentText(entry.textEntry.getValue() + " " + textTimeRemainder);
 
     }
 

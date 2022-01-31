@@ -288,7 +288,6 @@ public class Entry {
             this.timeAccumulated = subLateAcc + initialTime;
 
 
-
         }
 
     }
