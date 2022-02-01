@@ -274,7 +274,10 @@ public class MainListTimeProcessHandler {
 
         try {
             timerUtility.currentActiveTime.getViewHolder().checkOff();
-        }finally {
+        }catch (NullPointerException e){
+         e.printStackTrace();
+        }
+        finally {
 
             timerUtility.revertTimeIndex();
             timerUtility.revertSubTimeIndex();
