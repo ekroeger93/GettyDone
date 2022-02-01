@@ -111,6 +111,10 @@ TaDone Prototype
 
 //TODO: sublisting
 
+-persist data, try String value as json data
+-
+
+
 two ways i can handle this
 
 create a new Fragment (SubListFragment) much like MainFragment but doesn't
@@ -160,13 +164,6 @@ in Entry + DOA
 //TODO: Features
 
 -tips
-
--back hopper, when timer expires "hops" back
-to previous entry and restoring time duration
-for a number of iterations
--the entry being hopped back to cannot implement
-a back hopper
-
 -color code Entry Lists for graphing,
 add legend keys
 
@@ -325,6 +322,8 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         ArrayList<Entry> subList = AuxiliaryData.loadFile(
                 fileManager.loadFile(fileListIndex));
 
+        entry.subListJson.setValue(fileManager.loadFile(fileListIndex));
+
         Log.d("subListingTest",""+fileManager.loadFile(fileListIndex));
 
         checkList.get(checkListIndex).isSubEntry = true;
@@ -332,7 +331,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         for(Entry n: subList) {
             n.isSubEntry = true;
             n.setViewHolder(entry.getViewHolder());
-
         }
 
         entry.setSubCheckList(subList);
@@ -341,6 +339,34 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     }
 
+    public void loadSubLists(){
+
+        for(Entry entry: getCheckList()){
+
+
+            if(!entry.subListJson.getValue().isEmpty()){
+
+                ArrayList<Entry> subList = AuxiliaryData.loadFile(entry.subListJson.getValue());
+
+                entry.isSubEntry = true;
+
+                for(Entry n: subList) {
+                    n.isSubEntry = true;
+                    n.setViewHolder(entry.getViewHolder());
+                }
+
+                entry.setSubCheckList(subList);
+                mainListTimeProcessHandler.subAccumulation(checkList);
+
+            }
+
+
+        }
+
+
+
+
+    }
 
 
     @Override
@@ -431,6 +457,10 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                 for(Entry entry : getCheckList()) mViewModel.loadEntry(entry);
                 updateIndexes();
 
+                loadSubLists();
+
+
+
             }
 
             AuxiliaryData.receiveParcelTime(checkList, getArguments());
@@ -441,6 +471,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
 
     }
+
 
 
     public void setUpAdapter(){
@@ -889,6 +920,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
                 updateIndexes();
 
+                loadSubLists();
 
                 adapter.setList(checkList);
                 recordHelper.update(checkList);

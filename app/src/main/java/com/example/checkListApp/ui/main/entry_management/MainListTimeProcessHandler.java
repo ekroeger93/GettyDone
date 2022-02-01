@@ -237,8 +237,12 @@ public class MainListTimeProcessHandler {
                 if (timerUtility.currentActiveTime.numberValueTime != 0) {
 
                     try {
-                        if (timerViewModel.getRepeaterTime() <= 0)
+
+                        if (timerViewModel.getRepeaterTime() <= 0
+                                && !timerUtility.currentActiveTime.isSubEntry)
                             timerUtility.currentActiveTime.getViewHolder().checkOff();
+
+
                     }finally {
                         timerUtility.currentActiveTime = timerUtility.getNextActiveProcessTime(checkList);
                         displayEntryToast();

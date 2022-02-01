@@ -160,6 +160,8 @@ public class ListTimerUtility {
                 list.get(activeProcessTimeIndex)
                         .getViewHolder().textView.setText(parentEntry.textTemp);
 
+                parentEntry.getViewHolder().checkOff();
+
                 activeProcessTimeIndex++;
                 parentEntry = null;
 

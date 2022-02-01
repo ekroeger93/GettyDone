@@ -37,8 +37,12 @@ public class Entry {
     @ColumnInfo(name="selectedAudio")
     public MutableLiveData<Integer> selectedAudio = new MutableLiveData<>(0);
 
-    @Ignore
+    @ColumnInfo(name="globalCycle")
     static public int globalCycle = 0;
+    @ColumnInfo(name="subListJson")
+    public MutableLiveData<String> subListJson = new MutableLiveData<>("");
+
+
 
     @Ignore
     private RecyclerAdapter.ViewHolder viewHolder;
@@ -83,6 +87,7 @@ public class Entry {
         countDownTimer.postValue(entry.countDownTimer.getValue());
         onTogglePrimer.postValue(entry.onTogglePrimer.getValue());
         selectedAudio.postValue(entry.selectedAudio.getValue());
+        subListJson.postValue(entry.subListJson.getValue());
 
 
         int numberTime = new TimeState(countDownTimer.getValue()).getTimeNumberValue();
@@ -141,13 +146,18 @@ public class Entry {
                  boolean isChecked,
                  String timeText,
                  int orderIndex,
-                 boolean onToggle, int audioSelect) {
+                 boolean onToggle,
+                 int audioSelect,
+                 int globalCycle,
+                 String jsonData) {
 
         textEntry.setValue(text);
         checked.setValue(isChecked);
         countDownTimer.setValue(timeText);
         onTogglePrimer.setValue(onToggle);
         selectedAudio.setValue(audioSelect);
+        Entry.globalCycle = globalCycle;
+        subListJson.setValue(jsonData);
 
         this.orderIndex.setValue(orderIndex);
 
@@ -211,6 +221,7 @@ public class Entry {
         countDownTimer.postValue(entry.countDownTimer.getValue());
         onTogglePrimer.postValue(entry.onTogglePrimer.getValue());
         selectedAudio.postValue(entry.selectedAudio.getValue());
+        subListJson.postValue(entry.subListJson.getValue());
 
         textTemp = entry.textTemp;
 

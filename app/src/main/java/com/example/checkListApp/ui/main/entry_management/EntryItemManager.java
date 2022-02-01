@@ -66,7 +66,7 @@ public class EntryItemManager {
                 "00:00:05",
                 mainFragment.getCheckList().size()-1,
                 false,
-                0);
+                0,Entry.globalCycle,"");
 
 
         mViewModel.insertEntry(entry);

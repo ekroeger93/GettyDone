@@ -39,21 +39,12 @@ public final class JsonService {
     }
 
     public static void buildJson(ArrayList<Entry> checkList){
-//
-//        Gson gson = new GsonBuilder()
-//                .excludeFieldsWithoutExposeAnnotation()
-//                .registerTypeAdapter(Entry.class, new SerializeEntryToJson())
-//                .registerTypeAdapter(Entry.class, new DeserializeJsonToEntry())
-//                .create();
 
         StringBuilder jsonCheckList = new StringBuilder();
 
 
         jsonCheckList.append("[");
         for(Entry entry : checkList){
-
-//            Log.d("checkListTest",""+jsonCheckList);
-//            Log.d("checkListTest",""+entry);
 
             if (entry.getClass() == Entry.class)
                 jsonCheckList.append(gson.toJson(entry)).append(",");
@@ -68,11 +59,6 @@ public final class JsonService {
 
     public static ArrayList<Entry> getJsonGeneratedArray(String json){
 
-//        Gson gson = new GsonBuilder()
-//                .excludeFieldsWithoutExposeAnnotation()
-//                .registerTypeAdapter(Entry.class, new SerializeEntryToJson())
-//                .registerTypeAdapter(Entry.class, new DeserializeJsonToEntry())
-//                .create();
 
         ArrayList<Entry> entryArrayList;
         Type userListType = new TypeToken<ArrayList<Entry>>(){}.getType();
@@ -105,9 +91,6 @@ public final class JsonService {
 
     JsonObject jsonObject = new JsonObject();
 
-//            object.add("bar", context.serialize(foo.getBar());
-//            object.add("baz", context.serialize(foo.getBaz());
-//
 
             //TODO NULL FAULT
           //  if(src.textEntry != null) {
@@ -122,7 +105,8 @@ public final class JsonService {
     jsonObject.addProperty("orderIndex", src.orderIndex.getValue());
     jsonObject.addProperty("onTogglePrimer",src.onTogglePrimer.getValue());
     jsonObject.addProperty("selectedAudio", src.selectedAudio.getValue());
-    jsonObject.addProperty("repeater", Entry.globalCycle);
+    jsonObject.addProperty("globalCycle", Entry.globalCycle);
+    jsonObject.addProperty("subListJson",src.subListJson.getValue());
 
 //}
                 return jsonObject;
@@ -147,17 +131,18 @@ public final class JsonService {
             int orderIndex = jsonObject.get("orderIndex").getAsInt();
             boolean onToggle = jsonObject.get("onTogglePrimer").getAsBoolean();
             int selectAudio = jsonObject.get("selectedAudio").getAsInt();
-            int repeaterVal = jsonObject.get("repeater").getAsInt();
-
-            Log.d("checkListTime",">>> "+timeText);
+            int repeaterVal = jsonObject.get("globalCycle").getAsInt();
+            String jsonData = jsonObject.get("subListJson").toString();
 
             //TODO:fix this
             textEntry = textEntry.replaceAll("\"","").trim();
             timeText = timeText.replaceAll("\"","").trim();
 
+
             Entry.globalCycle = repeaterVal;
 
-            return new Entry(textEntry,isChecked,timeText,orderIndex,onToggle,selectAudio);
+            return new Entry(textEntry,isChecked,timeText
+                    ,orderIndex,onToggle,selectAudio,repeaterVal,jsonData);
 
 
         }
