@@ -63,7 +63,8 @@ public final class JsonService {
         ArrayList<Entry> entryArrayList;
         Type userListType = new TypeToken<ArrayList<Entry>>(){}.getType();
 
-        entryArrayList = gson.fromJson(String.valueOf(json), userListType);
+        Log.d("jsonTest",""+json);
+        entryArrayList = gson.fromJson(json, userListType);
 
         entryArrayList.sort(new CompareIds());
 
@@ -132,7 +133,7 @@ public final class JsonService {
             boolean onToggle = jsonObject.get("onTogglePrimer").getAsBoolean();
             int selectAudio = jsonObject.get("selectedAudio").getAsInt();
             int repeaterVal = jsonObject.get("globalCycle").getAsInt();
-            String jsonData = jsonObject.get("subListJson").toString();
+            String jsonData = jsonObject.get("subListJson").getAsString();
 
             //TODO:fix this
             textEntry = textEntry.replaceAll("\"","").trim();

@@ -339,12 +339,14 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     }
 
-    public void loadSubLists(){
+    public void loadSubLists(ArrayList<Entry> checkList){
 
         for(Entry entry: getCheckList()){
 
 
-            if(!entry.subListJson.getValue().isEmpty()){
+            if(!entry.subListJson.getValue().isEmpty() && !entry.subListJson.getValue().equals("\"\"")){
+
+                Log.d("jsonTest", ":"+entry.subListJson.getValue());
 
                 ArrayList<Entry> subList = AuxiliaryData.loadFile(entry.subListJson.getValue());
 
@@ -457,7 +459,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                 for(Entry entry : getCheckList()) mViewModel.loadEntry(entry);
                 updateIndexes();
 
-                loadSubLists();
+                loadSubLists(checkList);
 
 
 
@@ -920,7 +922,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
                 updateIndexes();
 
-                loadSubLists();
+                loadSubLists(checkList);
 
                 adapter.setList(checkList);
                 recordHelper.update(checkList);

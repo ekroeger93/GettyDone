@@ -27,7 +27,11 @@ public class ListTimerUtility {
 
         int subAcc;
 
-        checkList.get(1).timeAccumulated = checkList.get(1).numberValueTime;
+        try {
+            checkList.get(1).timeAccumulated = checkList.get(1).numberValueTime;
+        }catch (IndexOutOfBoundsException e){
+            checkList.get(0).timeAccumulated = checkList.get(0).numberValueTime;
+        }
 
         for(int i = 1; i <= checkList.size()-2; i++){
 
