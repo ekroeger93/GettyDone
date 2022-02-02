@@ -86,13 +86,11 @@ TaDone Prototype
     -progress
     -database
     -service
-
+    -subListing
 
 //TODO: BUGS
 
-   -service
-  -repeater time needs to be added to database
-  -entry timer not setting?
+  -repeater time needs persistence
   -progress overwritten last entries, after a week
 
 
@@ -103,70 +101,16 @@ TaDone Prototype
 - show swiping hand icon for hint
 
 - file manager
-    -each viewholder have trash icon to delete
     -prompt confirm
+    -or click hold to delete
 
 - color theme
 
-
-//TODO: sublisting
-
--persist data, try String value as json data
--
-
-
-two ways i can handle this
-
-create a new Fragment (SubListFragment) much like MainFragment but doesn't
-use the DOA dataBase; may use interface, MainFragment needs to be designed
-to be extendable
-
-create a subList Array for SubListFragment, like checkList
-if all goes well it would function like the MainFragment.
-
-create a submit button pass back an Intent to the Entry selected
-and while the Entry sends a index position to SubListFragment
-
-to persist data, use Json and convert the subList value to String and
-save it to the Database and Serialize when needed, or could try a making
-child Tables to be loaded per Entry
-
-excludes functionality:
-
-execute timer
-subList
-repeater
-checkBox (cannot be checked)
-countDownTimer
-tabs
-DOA
-
-includes functionality:
-
-submit button
-buttonPanel add,delete,move,edit
-recyclerView
-setTimer
-setText
-
-OR
-
-use the file manager to load existing checkList data
--could flag files as subLists/ save as sublist
--would need to find a way to help simplify the file list
-
-on select subList button popups a list of available subList
-to be loaded
-
-save the file path to the Entry to be loaded when needed
-in Entry + DOA
-
-//TODO: Features
-
--tips
--color code Entry Lists for graphing,
-add legend keys
-
+- subListing, some indication of what list is being used
+and that a subList IS being used
+    -title = file name
+    -collapsed icon
+    -mini residing entries
 
 //TODO: Post production ideas:
 -? save to google drive, share data
@@ -438,6 +382,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         MainListTimeProcessHandler.timerViewModel.setRepeaterTime(Entry.globalCycle);
 
+        binding.repeatTimer.setText(""+Entry.globalCycle);
 
     }
 
@@ -458,6 +403,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                 _checkList.setValue(checkList);
                 for(Entry entry : getCheckList()) mViewModel.loadEntry(entry);
                 updateIndexes();
+
 
                 loadSubLists(checkList);
 
@@ -974,7 +920,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
                 JsonService.buildJson(checkList);
 
-                binding.repeatTimer.setText(""+Entry.globalCycle);
 
             }
 
