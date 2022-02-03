@@ -13,6 +13,8 @@ import androidx.appcompat.widget.AppCompatButton;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+
 public class RecordFinishButtonToggle {
 
 //    static FinishButton finishButton;
@@ -25,6 +27,11 @@ public class RecordFinishButtonToggle {
         finishButton.setVisibility(View.GONE);
 
         finishButton.setOnClickListener( view -> {
+
+
+            RecordHelper.recordArrayList =
+                    RecordHelper.getJsonRecordGeneratedArray(
+                            ProgressProvider.loadProgress(context));
 
                 RecordHelper.recordArrayList.add(
                         new Record(RecordHelper.numOfEntries)

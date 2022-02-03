@@ -130,13 +130,11 @@ public class ProgressFragment extends Fragment {
 //                "]";
 
 
-        ArrayList<Record> listRecord = RecordHelper
+        RecordHelper.recordArrayList = RecordHelper
                 .getJsonRecordGeneratedArray(
                      ProgressProvider.loadProgress(getContext())
 //               testDataProgress
                 );
-
-        RecordHelper.recordArrayList = listRecord;
 
         RecordHelper.buildRecordListJson();
 
@@ -147,6 +145,7 @@ public class ProgressFragment extends Fragment {
 
         barChart.setFitBars(true);
 
+        Log.d("progressListTest",""+RecordHelper.recordListJson);
 
 
 
@@ -158,7 +157,7 @@ public class ProgressFragment extends Fragment {
 
             Log.d("progressTest"," "+year+" "+month+" "+day+" "+week);
 
-            BarDataSet dataSet = new BarDataSet(generateEntriesByWeek(listRecord,LocalDate.of(year,month+1,day)), "Label"); // add entries to dataset
+            BarDataSet dataSet = new BarDataSet(generateEntriesByWeek(RecordHelper.recordArrayList,LocalDate.of(year,month+1,day)), "Label"); // add entries to dataset
             dataSet.setColor(Color.RED);
             dataSet.setValueTextColor(Color.BLACK);
             dataSet.setLabel("entries submitted");

@@ -91,6 +91,7 @@ TaDone Prototype
 //TODO: BUGS
 
   -repeater time needs persistence
+    -still not in database, cant add statics?
   -progress overwritten last entries, after a week
 
 

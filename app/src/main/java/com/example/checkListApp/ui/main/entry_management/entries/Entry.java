@@ -29,7 +29,7 @@ public class Entry {
     @ColumnInfo(name = "timerLabel")
     public MutableLiveData<String> countDownTimer = new MutableLiveData<>("00:00:00");
 
-    //this is getting out of hand may dedicate a conjoined class
+    //this is getting out of hand may dedicate a conjoined class complex
     @ColumnInfo(name="orderIndex")
     public MutableLiveData<Integer> orderIndex = new MutableLiveData<>(-1);
     @ColumnInfo(name="onTogglePrimer")
