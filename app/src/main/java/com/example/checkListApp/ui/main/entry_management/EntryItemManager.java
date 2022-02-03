@@ -61,12 +61,12 @@ public class EntryItemManager {
 //(String text, boolean isChecked, String timeText, int orderIndex) {
 
         Entry entry = new Entry(
-                "o",
+                "",
                 false,
                 "00:00:05",
                 mainFragment.getCheckList().size()-1,
                 false,
-                0,Entry.globalCycle,"");
+                0,Entry.globalCycle,"","");
 
 
         mViewModel.insertEntry(entry);

@@ -23,7 +23,7 @@ public class Entry {
     @ColumnInfo(name = "entryID")
     private int entryID = 0;
     @ColumnInfo(name = "textEntry")
-    public MutableLiveData<String> textEntry = new MutableLiveData<>("o") ;
+    public MutableLiveData<String> textEntry = new MutableLiveData<>("") ;
     @ColumnInfo(name = "isChecked")
     public MutableLiveData<Boolean> checked = new MutableLiveData<>(false);
     @ColumnInfo(name = "timerLabel")
@@ -41,7 +41,8 @@ public class Entry {
     static public int globalCycle = 0;
     @ColumnInfo(name="subListJson")
     public MutableLiveData<String> subListJson = new MutableLiveData<>("");
-
+    @ColumnInfo(name="subListName")
+    public MutableLiveData<String> subListName = new MutableLiveData<>("");
 
 
     @Ignore
@@ -88,6 +89,7 @@ public class Entry {
         onTogglePrimer.postValue(entry.onTogglePrimer.getValue());
         selectedAudio.postValue(entry.selectedAudio.getValue());
         subListJson.postValue(entry.subListJson.getValue());
+        subListName.postValue(entry.subListName.getValue());
 
         isSubEntry = entry.isSubEntry;
         subCheckList = entry.subCheckList;
@@ -154,7 +156,9 @@ public class Entry {
                  boolean onToggle,
                  int audioSelect,
                  int globalCycle,
-                 String jsonData) {
+                 String jsonData,
+                 String jsonNameData
+    ) {
 
         textEntry.setValue(text);
         checked.setValue(isChecked);
@@ -163,6 +167,7 @@ public class Entry {
         selectedAudio.setValue(audioSelect);
         Entry.globalCycle = globalCycle;
         subListJson.setValue(jsonData);
+        subListName.setValue(jsonNameData);
 
         this.orderIndex.setValue(orderIndex);
 
@@ -228,6 +233,7 @@ public class Entry {
         countDownTimer.postValue(entry.countDownTimer.getValue());
         onTogglePrimer.postValue(entry.onTogglePrimer.getValue());
         selectedAudio.postValue(entry.selectedAudio.getValue());
+        subListName.postValue(entry.subListName.getValue());
 
 
 //        Log.d("subListingTest",entry.getEntryID()+".."+subListJson.getValue());

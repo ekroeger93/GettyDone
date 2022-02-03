@@ -61,6 +61,13 @@ public class FileManager {
 
     }
 
+
+    public String getFileName(int selection ){
+
+        return  listOfFiles[selection].getName();
+
+    }
+
    public String loadFile(int selection){
 
         String output = "";

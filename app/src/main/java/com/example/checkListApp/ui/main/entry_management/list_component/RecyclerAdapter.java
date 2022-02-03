@@ -300,6 +300,7 @@ implements ItemTouchHelperAdapter {
     {
 
         public TextView textView;
+        public TextView subTextView;
         public TableRow tEntryViewRow;
         public Button checkButton;
         private final Button setTimeButton;
@@ -337,6 +338,8 @@ implements ItemTouchHelperAdapter {
                     setTimeButton = binding.setEntryTimeBtn;
                     textView = binding.entryText;
                     subListButton = binding.subListBtn;
+
+                    subTextView = binding.entrySubText;
 
                     itemView.getRoot().setOnClickListener(this);
                     itemView.getRoot().setOnLongClickListener(this);
@@ -548,6 +551,15 @@ implements ItemTouchHelperAdapter {
 
                     };
 
+                    Observer<String> onChangeSubFileName = subName->{
+
+                        if(subName.isEmpty()){
+                            subTextView.setText(R.string.entrySubTextNoLoaded);
+                        }else{
+                            subTextView.setText(subName);
+                        }
+
+                    };
 
                     orderInt.observe(owner,selectOrderObs);
                     isSelected.observe(owner,selectCheckObs);
@@ -560,6 +572,7 @@ implements ItemTouchHelperAdapter {
                             getEntry().checked.observe(owner, onChangeEntryChecked);
                             getEntry().countDownTimer.observe(owner, onChangeTimeValue);
                             getEntry().onTogglePrimer.observe(owner, onChangeTogglePrimer);
+                            getEntry().subListName.observe(owner,onChangeSubFileName);
 
 
                     }catch (NullPointerException e){

@@ -257,11 +257,21 @@ public class MainFragment extends Fragment implements ListItemClickListener {
             setSubList(index, subListAdapter.getFileSelection());
             alertDialog.dismiss();
 
+            checkList.get(index).subListName.postValue(
+                            fileManager.getFileName(
+                                    subListAdapter.getFileSelection()));
+
         });
 
         unLoadSub.setOnClickListener(view -> {
             checkList.get(index).unSetSubList();
             alertDialog.dismiss();
+
+            checkList.get(index).subListName.postValue("");
+//            checkList.get(index).getViewHolder()
+//                    .subTextView.setText(
+//                    R.string.entrySubTextNoLoaded);
+
         });
 
     }

@@ -28,10 +28,10 @@ public class RecordFinishButtonToggle {
 
         finishButton.setOnClickListener( view -> {
 
-
-            RecordHelper.recordArrayList =
-                    RecordHelper.getJsonRecordGeneratedArray(
-                            ProgressProvider.loadProgress(context));
+//
+//            RecordHelper.recordArrayList =
+//                    RecordHelper.getJsonRecordGeneratedArray(
+//                            ProgressProvider.loadProgress(context));
 
                 RecordHelper.recordArrayList.add(
                         new Record(RecordHelper.numOfEntries)

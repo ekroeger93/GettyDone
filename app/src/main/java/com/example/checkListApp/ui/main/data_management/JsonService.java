@@ -103,11 +103,14 @@ public final class JsonService {
     jsonObject.addProperty("textEntry", src.textEntry.getValue());
     jsonObject.addProperty("isChecked", src.checked.getValue());
     jsonObject.addProperty("timerLabel", src.countDownTimer.getValue());
+
     jsonObject.addProperty("orderIndex", src.orderIndex.getValue());
     jsonObject.addProperty("onTogglePrimer",src.onTogglePrimer.getValue());
     jsonObject.addProperty("selectedAudio", src.selectedAudio.getValue());
+
     jsonObject.addProperty("globalCycle", Entry.globalCycle);
     jsonObject.addProperty("subListJson",src.subListJson.getValue());
+    jsonObject.addProperty("subListName",src.subListName.getValue());
 
 //}
                 return jsonObject;
@@ -134,6 +137,7 @@ public final class JsonService {
             int selectAudio = jsonObject.get("selectedAudio").getAsInt();
             int repeaterVal = jsonObject.get("globalCycle").getAsInt();
             String jsonData = jsonObject.get("subListJson").getAsString();
+            String jsonNameData = jsonObject.get("subListName").getAsString();
 
             //TODO:fix this
             textEntry = textEntry.replaceAll("\"","").trim();
@@ -143,7 +147,7 @@ public final class JsonService {
             Entry.globalCycle = repeaterVal;
 
             return new Entry(textEntry,isChecked,timeText
-                    ,orderIndex,onToggle,selectAudio,repeaterVal,jsonData);
+                    ,orderIndex,onToggle,selectAudio,repeaterVal,jsonData,jsonNameData);
 
 
         }

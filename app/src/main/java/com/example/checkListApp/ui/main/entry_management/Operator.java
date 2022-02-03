@@ -192,7 +192,6 @@ public class Operator {
         mainFragment.getCheckList().get(placeIndex).setEntry(movingItem);
 
         if(movingItem.isSubEntry && entrySwap.isSubEntry){
-            Log.d("subListingTest","RR");
 
             mainFragment.setSubList(movingItemIndex,jsonSwapSubList);
             mainFragment.setSubList(placeIndex,jsonMovingSubList);
