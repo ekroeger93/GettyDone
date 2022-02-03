@@ -144,6 +144,7 @@ public class EntryItemManager {
 
         
         public void executeAsync() {
+
             executor.execute(() -> {
 
                 listUtility.updateAllSelection(mainFragment.getCheckList());
@@ -158,6 +159,12 @@ public class EntryItemManager {
 //                });
 
             });
+
+//           mainFragment.mainListTimeProcessHandler
+//                   .subAccumulation(mainFragment.getCheckList());
+
+            mainFragment.loadSubLists(mainFragment.getCheckList());
+
         }
 
 
@@ -218,10 +225,6 @@ public class EntryItemManager {
     
      void assignSorted(ArrayList<Entry> entries){
 
-        for(Entry entry : entries){
-            System.out.println(entry.textEntry.getValue());
-        }
-
 
         for(Entry entry : entries){
 
@@ -238,9 +241,15 @@ public class EntryItemManager {
 //                mainFragment.getCheckList().get(index)
 //                        .postEntryOptimized(entry.textTemp,entry.checkTemp,entry.countDownTimer.getValue());
 
+
+
                 mainFragment.getCheckList().get(index).setEntry(entry);
 
-
+//                mainFragment.getCheckList().get(index).setSubList(
+//                        entry.subListJson.getValue()
+//                        ,entry.subCheckList
+//                        ,entry.subNumberTimeValue
+//                        ,entry.subLatestAccumulated);
 
 
             }catch (IndexOutOfBoundsException | NullPointerException e){
@@ -249,7 +258,8 @@ public class EntryItemManager {
 
         }
 
-mainFragment.updateIndexes();
+//        mainFragment.mainListTimeProcessHandler.subAccumulation();
+         mainFragment.updateIndexes();
 
     }
 

@@ -90,7 +90,6 @@ TaDone Prototype
 
 //TODO: BUGS
 
-   -subListing moving Entry
   -repeater time needs persistence
   -progress overwritten last entries, after a week
 
@@ -448,8 +447,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
 
     }
-
-
 
     public void setUpAdapter(){
 

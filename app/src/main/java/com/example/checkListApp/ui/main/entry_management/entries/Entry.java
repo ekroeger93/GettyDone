@@ -228,8 +228,6 @@ public class Entry {
         countDownTimer.postValue(entry.countDownTimer.getValue());
         onTogglePrimer.postValue(entry.onTogglePrimer.getValue());
         selectedAudio.postValue(entry.selectedAudio.getValue());
-//        subListJson.postValue(entry.subListJson.getValue());
-
 
 
 //        Log.d("subListingTest",entry.getEntryID()+".."+subListJson.getValue());
@@ -237,6 +235,12 @@ public class Entry {
         textTemp = entry.textTemp;
 
         setNumberValueTime(countDownTimer.getValue());
+
+        setSubList(entry.subListJson.getValue()
+                ,entry.subCheckList
+                ,entry.subNumberTimeValue
+                ,entry.subLatestAccumulated);
+
 
         swapIds(entry);
     }
@@ -246,14 +250,26 @@ public class Entry {
     public void setSubList(String json, ArrayList<Entry> list, int subNumT, int subLateAcc){
 
         this.subListJson.postValue(json);
-        this.subCheckList = list;
-        this.isSubEntry = true;
-        this.subNumberTimeValue = subNumT;
-        this.subLatestAccumulated = subLateAcc;
 
-        if(subCheckList.isEmpty()){
+        if(list.isEmpty()){
             unSetSubList();
+        }else{
+
+            this.isSubEntry = true;
+            this.subCheckList = list;
+            this.subNumberTimeValue = subNumT;
+            this.subLatestAccumulated = subLateAcc;
+
+            for(Entry n: list) {
+                n.isSubEntry = true;
+                n.setViewHolder(getViewHolder());
+            }
+
+//            setSubCheckList(list);
+
+
         }
+
 
     }
 

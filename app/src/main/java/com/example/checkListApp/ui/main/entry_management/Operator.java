@@ -245,6 +245,57 @@ public class Operator {
     }
 
 
+    public void swapSubLists(int swap1, int swap2){
+
+        Entry entrySwapOne = mainFragment.getCheckList().get(swap1);
+        Entry entrySwapTwo = mainFragment.getCheckList().get(swap2);
+
+        String jsonMovingSubList = entrySwapOne.subListJson.getValue();
+        String jsonSwapSubList = entrySwapTwo.subListJson.getValue();
+
+
+        if(entrySwapOne.isSubEntry && entrySwapTwo.isSubEntry){
+            Log.d("subListingTest","RR");
+
+            mainFragment.setSubList(swap1,jsonSwapSubList);
+            mainFragment.setSubList(swap2,jsonMovingSubList);
+
+            mainFragment.getCheckList().get(swap1)
+                    .subListJson.postValue(jsonSwapSubList);
+
+            mainFragment.getCheckList().get(swap2)
+                    .subListJson.postValue(jsonMovingSubList);
+
+
+        }
+
+        if(!entrySwapOne.isSubEntry && entrySwapTwo.isSubEntry){
+
+            mainFragment.setSubList(swap1,entrySwapTwo.subListJson.getValue());
+            mainFragment.getCheckList().get(swap2).unSetSubList();
+
+            mainFragment.getCheckList().get(swap1)
+                    .subListJson.postValue(entrySwapTwo.subListJson.getValue());
+
+            entrySwapTwo.isSubEntry=false;
+
+        }
+
+        if(entrySwapOne.isSubEntry && !entrySwapTwo.isSubEntry){
+
+            mainFragment.setSubList(swap2,entrySwapOne.subListJson.getValue());
+            mainFragment.getCheckList().get(swap1).unSetSubList();
+
+            mainFragment.getCheckList().get(swap2)
+                    .subListJson.postValue(entrySwapOne.subListJson.getValue());
+
+            entrySwapOne.isSubEntry=false;
+        }
+
+    }
+
+
+
     public void moveItemUp(){
 
         int movingItemIndex = selection-1;
