@@ -89,6 +89,11 @@ public class Entry {
         selectedAudio.postValue(entry.selectedAudio.getValue());
         subListJson.postValue(entry.subListJson.getValue());
 
+        isSubEntry = entry.isSubEntry;
+        subCheckList = entry.subCheckList;
+        subNumberTimeValue = entry.subNumberTimeValue;
+        subLatestAccumulated = entry.subLatestAccumulated;
+
 
         int numberTime = new TimeState(countDownTimer.getValue()).getTimeNumberValue();
         numberValueTime = numberTime;
@@ -216,12 +221,18 @@ public class Entry {
     public void setEntry(Entry entry){
 
 //        entryID = entry.getEntryID();
+        Log.d("subListingTest",entry.getEntryID()+".."+isSubEntry);
+
         textEntry.postValue(entry.textEntry.getValue());
         checked.postValue(entry.checked.getValue());
         countDownTimer.postValue(entry.countDownTimer.getValue());
         onTogglePrimer.postValue(entry.onTogglePrimer.getValue());
         selectedAudio.postValue(entry.selectedAudio.getValue());
-        subListJson.postValue(entry.subListJson.getValue());
+//        subListJson.postValue(entry.subListJson.getValue());
+
+
+
+//        Log.d("subListingTest",entry.getEntryID()+".."+subListJson.getValue());
 
         textTemp = entry.textTemp;
 
@@ -230,6 +241,31 @@ public class Entry {
         swapIds(entry);
     }
 
+
+
+    public void setSubList(String json, ArrayList<Entry> list, int subNumT, int subLateAcc){
+
+        this.subListJson.postValue(json);
+        this.subCheckList = list;
+        this.isSubEntry = true;
+        this.subNumberTimeValue = subNumT;
+        this.subLatestAccumulated = subLateAcc;
+
+        if(subCheckList.isEmpty()){
+            unSetSubList();
+        }
+
+    }
+
+    public void unSetSubList(){
+
+        this.subListJson.postValue("");
+        this.subCheckList.clear();
+        this.isSubEntry = false;
+        this.subNumberTimeValue = 0;
+        this.subLatestAccumulated = 0;
+
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void postEntryOptimized(String text, Boolean check, String time){

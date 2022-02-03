@@ -7,10 +7,8 @@
     android:orientation="vertical"
     >
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-/>
+
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/subListSelection"
@@ -21,13 +19,40 @@
         android:layout_height="330dp"
         />
 
-    <Button
-        android:id="@+id/loadSubListFileBtn"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="100dp"
-        android:layout_marginEnd="100dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        />
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        >
+
+        <Button
+            android:id="@+id/unsetSubListBtn"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="24dp"
+            android:background="@drawable/outline_delete_forever_black_48"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/loadSubListFileBtn"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <Button
+            android:id="@+id/loadSubListFileBtn"
+            android:layout_width="200dp"
+            android:layout_height="100dp"
+            android:layout_marginEnd="24dp"
+            android:foregroundTint="#FFFFFF"
+            app:icon="@drawable/outline_file_open_black_48"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -90,6 +90,7 @@ TaDone Prototype
 
 //TODO: BUGS
 
+   -subListing moving Entry
   -repeater time needs persistence
   -progress overwritten last entries, after a week
 
@@ -250,11 +251,17 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         Button loadSub = alertDialog.findViewById(R.id.loadSubListFileBtn);
 
-        loadSub.setOnClickListener(view -> {
+        Button unLoadSub = alertDialog.findViewById(R.id.unsetSubListBtn);
 
+        loadSub.setOnClickListener(view -> {
             setSubList(index, subListAdapter.getFileSelection());
             alertDialog.dismiss();
 
+        });
+
+        unLoadSub.setOnClickListener(view -> {
+            checkList.get(index).unSetSubList();
+            alertDialog.dismiss();
         });
 
     }
@@ -269,6 +276,28 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         entry.subListJson.setValue(fileManager.loadFile(fileListIndex));
 
         Log.d("subListingTest",""+fileManager.loadFile(fileListIndex));
+
+        checkList.get(checkListIndex).isSubEntry = true;
+
+        for(Entry n: subList) {
+            n.isSubEntry = true;
+            n.setViewHolder(entry.getViewHolder());
+        }
+
+        entry.setSubCheckList(subList);
+
+        mainListTimeProcessHandler.subAccumulation(checkList);
+
+    }
+
+    public void setSubList(int checkListIndex, String jsonData){
+
+
+        Entry entry = checkList.get(checkListIndex);
+
+        ArrayList<Entry> subList = AuxiliaryData.loadFile(jsonData);
+
+        entry.subListJson.setValue(jsonData);
 
         checkList.get(checkListIndex).isSubEntry = true;
 
@@ -1065,59 +1094,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
             if(view.getId() == R.id.subListBtn){
 
-
                 showSubListSelection(fragmentView, position);
-
-
-//                Entry entry = checkList.get(position);
-//
-//                ArrayList<Entry> testList = AuxiliaryData.loadFile(
-//                        fileManager.loadFile("test.json"));
-//
-//                Log.d("subListingTest",""+fileManager.loadFile("test.json"));
-//
-//                checkList.get(position).isSubEntry = true;
-//
-//                for(Entry n: testList){
-//                    n.isSubEntry = true;
-//                    n.setViewHolder(entry.getViewHolder());
-//
-//                }
-//
-////                Entry a = new Entry("a", false,"00:00:05");
-////                Entry b = new Entry("b", false,"00:00:01");
-////                Entry c = new Entry("c", false,"00:00:05");
-////
-////
-////                a.setViewHolder(entry.getViewHolder());
-////                b.setViewHolder(entry.getViewHolder());
-////                c.setViewHolder(entry.getViewHolder());
-////
-////                b.onTogglePrimer.setValue(true);
-////                b.onTogglePrimerTemp = true;
-////
-////                checkList.get(position).isSubEntry = true;
-////                a.isSubEntry = true;
-////                b.isSubEntry = true;
-////                c.isSubEntry = true;
-//
-////                a.setTimeAccumulatedNonAdditive(10);
-////                b.setTimeAccumulatedNonAdditive(15);
-////                c.setTimeAccumulatedNonAdditive(20);
-//
-////                testList.add( entry);
-//
-////
-////                testList.add( a);
-////                testList.add( b);
-////                testList.add( c);
-//
-//                entry.setSubCheckList(testList);
-//
-//                mainListTimeProcessHandler.subAccumulation(checkList);
-//
-//
-
 
             }
 

@@ -10,6 +10,8 @@ import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.entry_management.list_component.RecyclerAdapter;
 import com.example.checkListApp.ui.main.data_management.ListUtility;
 
+import java.util.ArrayList;
+
 public class Operator {
 
     //Passed In and out (needs assignment)
@@ -170,6 +172,13 @@ public class Operator {
         Entry movingItem = mainFragment.getCheckList().get(movingItemIndex);
         Entry entrySwap = mainFragment.getCheckList().get(placeIndex);
 
+
+        ArrayList<Entry> moveItemSubList = movingItem.subCheckList;
+        ArrayList<Entry> swapSubList = entrySwap.subCheckList;
+
+        String jsonMovingSubList = movingItem.subListJson.getValue();
+        String jsonSwapSubList = entrySwap.subListJson.getValue();
+
 //        movingItem.swapIds(entrySwap);
 //        entrySwap.swapIds(movingItem);
 
@@ -178,8 +187,48 @@ public class Operator {
 //        mainFragment.getCheckList().add(placeIndex, movingItem);
 //        adapter.notifyItemInserted(placeIndex);
 
+
         mainFragment.getCheckList().get(movingItemIndex).setEntry(entrySwap);
         mainFragment.getCheckList().get(placeIndex).setEntry(movingItem);
+
+        if(movingItem.isSubEntry && entrySwap.isSubEntry){
+            Log.d("subListingTest","RR");
+
+            mainFragment.setSubList(movingItemIndex,jsonSwapSubList);
+            mainFragment.setSubList(placeIndex,jsonMovingSubList);
+
+            mainFragment.getCheckList().get(movingItemIndex)
+                    .subListJson.postValue(jsonSwapSubList);
+
+            mainFragment.getCheckList().get(placeIndex)
+                    .subListJson.postValue(jsonMovingSubList);
+
+
+        }
+
+        if(!movingItem.isSubEntry && entrySwap.isSubEntry){
+
+            mainFragment.setSubList(movingItemIndex,entrySwap.subListJson.getValue());
+            mainFragment.getCheckList().get(placeIndex).unSetSubList();
+
+            mainFragment.getCheckList().get(movingItemIndex)
+                    .subListJson.postValue(entrySwap.subListJson.getValue());
+
+            entrySwap.isSubEntry=false;
+
+        }
+
+        if(movingItem.isSubEntry && !entrySwap.isSubEntry){
+
+            mainFragment.setSubList(placeIndex,movingItem.subListJson.getValue());
+            mainFragment.getCheckList().get(movingItemIndex).unSetSubList();
+
+            mainFragment.getCheckList().get(placeIndex)
+                    .subListJson.postValue(movingItem.subListJson.getValue());
+
+            movingItem.isSubEntry=false;
+        }
+
 
 //        adapter.notifyItemRangeChanged(movingItemIndex, placeIndex);
         adapter.notifyItemChanged(movingItemIndex,movingItem);

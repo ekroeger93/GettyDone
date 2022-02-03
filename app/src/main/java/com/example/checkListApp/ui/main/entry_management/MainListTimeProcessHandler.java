@@ -33,6 +33,10 @@ public class MainListTimeProcessHandler {
 
     public void subAccumulation(ArrayList<Entry> list){ timerUtility.accumulation(list);}
 
+    public void subAccumulation(){timerUtility.accumulation(mainFragment.getCheckList());
+    }
+
+
     MainFragmentBinding binding;
     ArrayList<Entry> checkList;
     Context context;
