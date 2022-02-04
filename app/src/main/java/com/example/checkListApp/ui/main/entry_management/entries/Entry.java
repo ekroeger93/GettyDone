@@ -235,6 +235,8 @@ public class Entry {
         selectedAudio.postValue(entry.selectedAudio.getValue());
         subListName.postValue(entry.subListName.getValue());
 
+        isSubEntry = entry.isSubEntry;
+        subCheckList = entry.subCheckList;
 
 //        Log.d("subListingTest",entry.getEntryID()+".."+subListJson.getValue());
 
@@ -242,11 +244,14 @@ public class Entry {
 
         setNumberValueTime(countDownTimer.getValue());
 
-        setSubList(entry.subListJson.getValue()
-                ,entry.subCheckList
-                ,entry.subNumberTimeValue
-                ,entry.subLatestAccumulated);
-
+        if(isSubEntry && !subCheckList.isEmpty()) {
+            setSubList(entry.subListJson.getValue()
+                    , entry.subCheckList
+                    , entry.subNumberTimeValue
+                    , entry.subLatestAccumulated);
+        }else{
+            unSetSubList();
+        }
 
         swapIds(entry);
     }

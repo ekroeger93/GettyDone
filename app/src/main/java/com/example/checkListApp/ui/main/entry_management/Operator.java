@@ -170,28 +170,21 @@ public class Operator {
     public void moveEntry( int movingItemIndex, int placeIndex){
 
         Entry movingItem = mainFragment.getCheckList().get(movingItemIndex);
-        Entry entrySwap = mainFragment.getCheckList().get(placeIndex);
+        Entry entrySwap =  mainFragment.getCheckList().get(placeIndex);
 
-
-        ArrayList<Entry> moveItemSubList = movingItem.subCheckList;
-        ArrayList<Entry> swapSubList = entrySwap.subCheckList;
 
         String jsonMovingSubList = movingItem.subListJson.getValue();
         String jsonSwapSubList = entrySwap.subListJson.getValue();
 
-//        movingItem.swapIds(entrySwap);
-//        entrySwap.swapIds(movingItem);
 
-//        mainFragment.getCheckList().remove(movingItem);
-//        adapter.notifyItemRemoved(movingItemIndex);
-//        mainFragment.getCheckList().add(placeIndex, movingItem);
-//        adapter.notifyItemInserted(placeIndex);
-
+        Entry oldCopyMovingItem = new Entry(movingItem);
+        Entry oldCopySwapEntry = new Entry(entrySwap);
 
         mainFragment.getCheckList().get(movingItemIndex).setEntry(entrySwap);
         mainFragment.getCheckList().get(placeIndex).setEntry(movingItem);
 
-        if(movingItem.isSubEntry && entrySwap.isSubEntry){
+
+        if(oldCopyMovingItem.isSubEntry && oldCopySwapEntry.isSubEntry){
 
             mainFragment.setSubList(movingItemIndex,jsonSwapSubList);
             mainFragment.setSubList(placeIndex,jsonMovingSubList);
@@ -205,28 +198,30 @@ public class Operator {
 
         }
 
-        if(!movingItem.isSubEntry && entrySwap.isSubEntry){
+        if(!oldCopyMovingItem.isSubEntry && oldCopySwapEntry.isSubEntry){
 
-            mainFragment.setSubList(movingItemIndex,entrySwap.subListJson.getValue());
+            mainFragment.setSubList(movingItemIndex,jsonSwapSubList);
             mainFragment.getCheckList().get(placeIndex).unSetSubList();
 
-            mainFragment.getCheckList().get(movingItemIndex)
-                    .subListJson.postValue(entrySwap.subListJson.getValue());
-
-            entrySwap.isSubEntry=false;
 
         }
 
-        if(movingItem.isSubEntry && !entrySwap.isSubEntry){
+        if(oldCopyMovingItem.isSubEntry && !oldCopySwapEntry.isSubEntry){
 
-            mainFragment.setSubList(placeIndex,movingItem.subListJson.getValue());
+            mainFragment.setSubList(placeIndex,jsonMovingSubList);
             mainFragment.getCheckList().get(movingItemIndex).unSetSubList();
 
-            mainFragment.getCheckList().get(placeIndex)
-                    .subListJson.postValue(movingItem.subListJson.getValue());
 
-            movingItem.isSubEntry=false;
+
+//            mainFragment.setSubList(placeIndex,movingItem.subListJson.getValue());
+//            mainFragment.getCheckList().get(movingItemIndex).unSetSubList();
+
+//            mainFragment.getCheckList().get(placeIndex)
+//                    .subListJson.postValue(movingItem.subListJson.getValue());
+
+//            movingItem.isSubEntry=false;
         }
+
 
 
 //        adapter.notifyItemRangeChanged(movingItemIndex, placeIndex);

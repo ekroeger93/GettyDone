@@ -40,7 +40,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.checkListApp.MainActivity;
 import com.example.checkListApp.R;
 import com.example.checkListApp.databinding.MainFragmentBinding;
-import com.example.checkListApp.file_management.FileListAdapter;
 import com.example.checkListApp.file_management.FileManager;
 import com.example.checkListApp.input.CustomEditText;
 import com.example.checkListApp.input.DetectKeyboardBack;
@@ -92,7 +91,7 @@ TaDone Prototype
 
   -repeater time needs persistence
     -still not in database, cant add statics?
-  -progress overwritten last entries, after a week
+  -progress overwritten last entries, lost data
 
 
 //TODO: DESIGN
@@ -107,17 +106,13 @@ TaDone Prototype
 
 - color theme
 
-- subListing, some indication of what list is being used
-and that a subList IS being used
-    -title = file name
-    -collapsed icon
-    -mini residing entries
 
 //TODO: Post production ideas:
 -? save to google drive, share data
 -? save as pdf/rich text file -> print appMobilityPrint
 -? schedule on calender, notification
 -? make timelabel editText instead, /w custom keyboard
+-? pictures and gifs, thumbnails
 
 -add in pull down/up to extender, change the recycler view Y size
     -use anchor points when dragging
@@ -154,11 +149,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     private ButtonPanelToggle buttonPanelToggle;
 
     private final RecordHelper recordHelper = new RecordHelper();
-
-//    private static final TimerViewModel mainTimerViewModel = new TimerViewModel();
-//    private static final TimerViewModel subTimerViewModel = new TimerViewModel();
-
-
     private final ListUtility listUtility = new ListUtility();
 
     private RecyclerAdapter adapter;
@@ -182,7 +172,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     public RecyclerView     getRecyclerView(){ return recyclerView;}
     public RecyclerAdapter  getAdapter() {return adapter;}
-    public CustomLayoutManager getCustomLayoutManager(){return customLayoutManager;}
 
     public RecordHelper     getRecordHelper() {return recordHelper;}
     public ListUtility      getListUtility() { return listUtility;}
@@ -205,9 +194,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     private ItemTouchCallback callback;
 
-
     private FileManager fileManager;
-    private FileListAdapter fileListAdapter;
 
     private View fragmentView;
 
@@ -309,16 +296,22 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         entry.subListJson.setValue(jsonData);
 
-        checkList.get(checkListIndex).isSubEntry = true;
+       if(subList!=null) {
 
-        for(Entry n: subList) {
-            n.isSubEntry = true;
-            n.setViewHolder(entry.getViewHolder());
+            for (Entry n : subList) {
+                n.isSubEntry = true;
+                n.setViewHolder(entry.getViewHolder());
+            }
+
+            entry.isSubEntry = true;
+
+            entry.setSubCheckList(subList);
+
+            mainListTimeProcessHandler.subAccumulation(checkList);
         }
 
-        entry.setSubCheckList(subList);
 
-        mainListTimeProcessHandler.subAccumulation(checkList);
+
 
     }
 
@@ -405,10 +398,8 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         initialize();
 
         //TODO: selectionTracker interference with onClick!!!
-
         assignButtonListeners();
 
-        //TODO: investigate here too
         assignObservers();
 
 
@@ -421,7 +412,8 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         MainListTimeProcessHandler.timerViewModel.setRepeaterTime(Entry.globalCycle);
 
-        binding.repeatTimer.setText(""+Entry.globalCycle);
+
+        binding.repeatTimer.setText(String.valueOf(Entry.globalCycle));
 
     }
 
@@ -859,23 +851,20 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     public void assignObservers(){
 
-        Observer<Boolean> onTimerRunning = new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
+        Observer<Boolean> onTimerRunning = aBoolean -> {
 
-                callback.setEnableSwipe(!aBoolean);
+            callback.setEnableSwipe(!aBoolean);
 
-                if(!aBoolean){//timer not running
+            if(!aBoolean){//timer not running
 
-                    MainActivity.tabLayout.setVisibility(View.VISIBLE);
-                    hideButtons(false);
-                }else{
+                MainActivity.tabLayout.setVisibility(View.VISIBLE);
+                hideButtons(false);
+            }else{
 
-                    MainActivity.tabLayout.setVisibility(View.GONE);
-                    hideButtons(true);
-                }
-
+                MainActivity.tabLayout.setVisibility(View.GONE);
+                hideButtons(true);
             }
+
         };
 
         timerRunning.observe(getViewLifecycleOwner(), onTimerRunning);
