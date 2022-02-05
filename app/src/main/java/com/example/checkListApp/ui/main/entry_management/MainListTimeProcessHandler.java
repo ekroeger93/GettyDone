@@ -71,7 +71,12 @@ public class MainListTimeProcessHandler {
 
         binding.timerExecuteBtn.setOnClickListener(view -> {
 
+            //TODO: dont forget the move sublisting json is screwed up
+            //this is a temp fix
+//            mainFragment.sanityCheckSubList();
+
             setTimer();
+
 
             if(timerUtility.currentActiveTime.isSubEntry){
                 setSubTextToParent();
@@ -166,11 +171,13 @@ public class MainListTimeProcessHandler {
         checkList = mainFragment.getCheckList();
 
         if(timerViewModel.getNumberValueTime() == 0) {
+            timerUtility.accumulation(checkList);
+
             int summationTime = timerUtility.getSummationTime(checkList);
+
             String setTime = new TimeState(summationTime).getTimeFormat();
             timerViewModel.setCountDownTimer(setTime);
 
-            timerUtility.accumulation(checkList);
 
             timerUtility.revertTimeIndex();
             timerUtility.revertSubTimeIndex();
@@ -262,8 +269,8 @@ public class MainListTimeProcessHandler {
 
             timerViewModel.toggleTime();
 
-            if (timerViewModel.getRepeaterTime() <= 0)
-                timerUtility.currentActiveTime.getViewHolder().checkOff();
+//            if (timerViewModel.getRepeaterTime() <= 0)
+//                timerUtility.currentActiveTime.getViewHolder().checkOff();
 
 
             timerUtility.currentActiveTime = timerUtility.getNextActiveProcessTime(checkList);

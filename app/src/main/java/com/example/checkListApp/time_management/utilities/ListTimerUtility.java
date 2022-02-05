@@ -6,6 +6,7 @@ import com.example.checkListApp.time_management.parcel.ListTimersParcel;
 import com.example.checkListApp.timer.TimeState;
 import com.example.checkListApp.ui.main.entry_management.MainListTimeProcessHandler;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
+import com.example.checkListApp.ui.main.entry_management.entries.Spacer;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
@@ -37,6 +38,8 @@ public class ListTimerUtility {
 
             Entry entry = checkList.get(i);
 
+            entry.setNumberValueTime(entry.countDownTimer.getValue());
+
             if(!entry.subCheckList.isEmpty()){
 
                 ArrayList<Entry> subList = entry.subCheckList;
@@ -49,14 +52,22 @@ public class ListTimerUtility {
 
                 for(Entry n : subList) {
 
+                    n.setNumberValueTime(n.countDownTimer.getValue());
+
                     subAcc += n.numberValueTime;
                     n.timeAccumulated = entry.timeAccumulated + subAcc;
                     entry.subLatestAccumulated = n.timeAccumulated;
 
+                    Log.d("subListingTest","Sub acc:"+n.timeAccumulated);
                  }
 
-                entry.subNumberTimeValue = entry.numberValueTime + subAcc;
+                entry.subNumberTimeValue = entry.numberValueTime + entry.subLatestAccumulated;
 
+                if(i == checkList.size()-2){
+                    entry.setTimeAcclimatedLastSub();
+                }
+
+                Log.d("subListingTest"," Parent subNTV "+entry.subNumberTimeValue);
 
 
             }
@@ -70,6 +81,8 @@ public class ListTimerUtility {
 
 
         }
+
+
 
 
     }
@@ -104,25 +117,39 @@ public class ListTimerUtility {
 
    public int getSummationTime(ArrayList<Entry> list){
 
-        int sum = 0;
+//        int sum = 0;
+//
+//        for(Entry entry:list){
+//
+//            if (!(entry instanceof Spacer)) {
+//
+//            entry.setNumberValueTime(entry.countDownTimer.getValue());
+//
+//            int value;
+//
+//
+//
+//            if (entry.subNumberTimeValue == 0) {
+//                value = entry.timeAccumulated;
+//                Log.d("summationTest"," parVal "+value);
+//            }else{
+//                value = new TimeState(entry.subNumberTimeValue).timeTruncated();
+//                Log.d("summationTest"," subVal "+value);
+//            }
+//
+//
+//
+//                sum =value;
+//
+//                Log.d("summationTest","sum: "+sum);
+//            }
+//
+//
+//        }
 
-        for(Entry entry:list){
+       Entry lastEntry = list.get(list.size()-2);
 
-            entry.setNumberValueTime(entry.countDownTimer.getValue());
-
-            int value;
-
-            if (entry.subNumberTimeValue == 0) {
-                value = entry.getNumberValueTime();
-            }else{
-                value = entry.subNumberTimeValue;
-            }
-
-            sum+= value;
-
-        }
-
-        return sum;
+        return new TimeState(lastEntry.timeAccumulated).timeTruncated();
     }
 
 

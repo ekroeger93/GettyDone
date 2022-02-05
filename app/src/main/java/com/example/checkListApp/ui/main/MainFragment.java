@@ -294,7 +294,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         ArrayList<Entry> subList = AuxiliaryData.loadFile(jsonData);
 
-        entry.subListJson.setValue(jsonData);
+        checkList.get(checkListIndex).subListJson.setValue(jsonData);
 
        if(subList!=null) {
 
@@ -303,9 +303,9 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                 n.setViewHolder(entry.getViewHolder());
             }
 
-            entry.isSubEntry = true;
+           checkList.get(checkListIndex).isSubEntry = true;
 
-            entry.setSubCheckList(subList);
+           checkList.get(checkListIndex).setSubCheckList(subList);
 
             mainListTimeProcessHandler.subAccumulation(checkList);
         }
@@ -315,10 +315,28 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     }
 
-    public void loadSubLists(ArrayList<Entry> checkList){
+
+    public void sanityCheckSubList(){
+
+
+        //if a name is there but no sublist what the hell?!
+        for(Entry entry : checkList){
+
+                entry.subListJson.setValue(fileManager.loadFile(entry.subListName.getValue()));
+
+                if( entry.subListJson.getValue() != null || !entry.subListJson.getValue().isEmpty())
+                setSubList(checkList.indexOf(entry),entry.subListJson.getValue());
+
+
+
+
+        }
+
+    }
+
+    public void loadSubLists(){
 
         for(Entry entry: getCheckList()){
-
 
             if(!entry.subListJson.getValue().isEmpty() && !entry.subListJson.getValue().equals("\"\"")){
 
@@ -334,8 +352,10 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                 }
 
                 entry.setSubCheckList(subList);
-                mainListTimeProcessHandler.subAccumulation(checkList);
+                mainListTimeProcessHandler.subAccumulation(getCheckList());
 
+            }else{
+                entry.unSetSubList();
             }
 
 
@@ -345,7 +365,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
 
     }
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -435,8 +454,9 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                 for(Entry entry : getCheckList()) mViewModel.loadEntry(entry);
                 updateIndexes();
 
+                sanityCheckSubList();
+                loadSubLists();
 
-                loadSubLists(checkList);
 
 
 
@@ -893,8 +913,9 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
 
                 updateIndexes();
+                sanityCheckSubList();
 
-                loadSubLists(checkList);
+                loadSubLists();
 
                 adapter.setList(checkList);
                 recordHelper.update(checkList);
@@ -1048,7 +1069,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
 }
 
-    
     @Override
     public void clickPosition(RecyclerAdapter.ViewHolder viewHolder,View view, int position) {
 

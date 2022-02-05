@@ -163,7 +163,7 @@ public class EntryItemManager {
 //           mainFragment.mainListTimeProcessHandler
 //                   .subAccumulation(mainFragment.getCheckList());
 
-            mainFragment.loadSubLists(mainFragment.getCheckList());
+            mainFragment.loadSubLists();
 
         }
 

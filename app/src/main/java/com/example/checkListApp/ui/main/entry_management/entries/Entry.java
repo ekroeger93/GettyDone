@@ -225,8 +225,6 @@ public class Entry {
 
     public void setEntry(Entry entry){
 
-//        entryID = entry.getEntryID();
-        Log.d("subListingTest",entry.getEntryID()+".."+isSubEntry);
 
         textEntry.postValue(entry.textEntry.getValue());
         checked.postValue(entry.checked.getValue());
@@ -234,24 +232,17 @@ public class Entry {
         onTogglePrimer.postValue(entry.onTogglePrimer.getValue());
         selectedAudio.postValue(entry.selectedAudio.getValue());
         subListName.postValue(entry.subListName.getValue());
-
         isSubEntry = entry.isSubEntry;
-        subCheckList = entry.subCheckList;
-
-//        Log.d("subListingTest",entry.getEntryID()+".."+subListJson.getValue());
 
         textTemp = entry.textTemp;
 
         setNumberValueTime(countDownTimer.getValue());
 
-        if(isSubEntry && !subCheckList.isEmpty()) {
-            setSubList(entry.subListJson.getValue()
+        setSubList(entry.subListJson.getValue()
                     , entry.subCheckList
                     , entry.subNumberTimeValue
                     , entry.subLatestAccumulated);
-        }else{
-            unSetSubList();
-        }
+
 
         swapIds(entry);
     }
@@ -260,13 +251,12 @@ public class Entry {
 
     public void setSubList(String json, ArrayList<Entry> list, int subNumT, int subLateAcc){
 
-        this.subListJson.postValue(json);
 
-        if(list.isEmpty()){
+
+        if(!isSubEntry && subListName.getValue().isEmpty()){
             unSetSubList();
         }else{
-
-            this.isSubEntry = true;
+            this.subListJson.postValue(json);
             this.subCheckList = list;
             this.subNumberTimeValue = subNumT;
             this.subLatestAccumulated = subLateAcc;
@@ -361,11 +351,34 @@ public class Entry {
 
             this.timeAccumulated = subLateAcc + initialTime;
 
-
         }
 
     }
 
+    public void setTimeAcclimatedLastSub(){
+
+        if(!subCheckList.isEmpty()){
+
+       int     subAcc = 0;
+
+            for(Entry n : subCheckList) {
+
+                n.setNumberValueTime(n.countDownTimer.getValue());
+
+                subAcc += n.numberValueTime;
+                n.timeAccumulated = timeAccumulated + subAcc;
+                subLatestAccumulated = n.timeAccumulated;
+
+                Log.d("subListingTest","Sub acc:"+n.timeAccumulated);
+            }
+
+            subNumberTimeValue = numberValueTime + subLatestAccumulated;
+
+            timeAccumulated = subNumberTimeValue;
+
+        }
+
+    }
 
 
 
