@@ -94,6 +94,14 @@ TaDone Prototype
   -progress overwritten last entries, lost data
 
 
+//TODO: FEATURES
+
+- undo button
+- duplicate
+- shake phone to toggle timer
+https://demonuts.com/android-shake-detection/
+
+
 //TODO: DESIGN
 
 - entry time label redesign
@@ -198,7 +206,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     private View fragmentView;
 
-
+///subListManagerClass
     public void showSubListSelection(View view, int index){
 
         buildSubListAdapter(buildSubListDialog(view) , index);
@@ -315,7 +323,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     }
 
-
     public void sanityCheckSubList(){
 
 
@@ -366,6 +373,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     }
 
+///////////////////
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
