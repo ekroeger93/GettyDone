@@ -104,7 +104,7 @@ https://demonuts.com/android-shake-detection/
 
 //TODO: DESIGN
 
-- entry time label redesign
+- update accordingly to the subListing
 
 - show swiping hand icon for hint
 

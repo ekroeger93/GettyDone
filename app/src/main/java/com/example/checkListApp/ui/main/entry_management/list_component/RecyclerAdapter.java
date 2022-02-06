@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.databinding.ObservableField;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
@@ -304,7 +305,9 @@ implements ItemTouchHelperAdapter {
         public TableRow tEntryViewRow;
         public Button checkButton;
         private final Button setTimeButton;
+
         private Button subListButton;
+        public TextView timerLabelText;
 
         private RecordHelper recordHelper;
 
@@ -338,6 +341,7 @@ implements ItemTouchHelperAdapter {
                     setTimeButton = binding.setEntryTimeBtn;
                     textView = binding.entryText;
                     subListButton = binding.subListBtn;
+                    timerLabelText = binding.timerLabelText;
 
                     subTextView = binding.entrySubText;
 
@@ -505,12 +509,14 @@ implements ItemTouchHelperAdapter {
 
                     Observer<String> onChangeTimeValue = o ->{
 
-                        setTimeButton.setText(o);
+                        timerLabelText.setText(o);
                         entry.timeTemp = o;
 
                         repository.updateEntry(entry);
                         JsonService.buildJson((ArrayList<Entry>) mList);
                     };
+
+//                    Observer<String> onActiveTimeLabelChange = o-> timerLabelText.setText(o);
 
                     Observer<Boolean> onChangeTogglePrimer = o->{
 
@@ -523,7 +529,7 @@ implements ItemTouchHelperAdapter {
                                     binding.entry.getContext(),
                                     R.drawable.ic_ontogglecustom2)
                             );
-                            setTimeButton.setText("");
+                            timerLabelText.setText("");
 
                         }else{
                             setTimeButton.setBackground( ContextCompat.getDrawable(
@@ -573,6 +579,8 @@ implements ItemTouchHelperAdapter {
                             getEntry().countDownTimer.observe(owner, onChangeTimeValue);
                             getEntry().onTogglePrimer.observe(owner, onChangeTogglePrimer);
                             getEntry().subListName.observe(owner,onChangeSubFileName);
+
+//                            getEntry().activeTimerLabel.observe(owner,onActiveTimeLabelChange);
 
 
                     }catch (NullPointerException e){

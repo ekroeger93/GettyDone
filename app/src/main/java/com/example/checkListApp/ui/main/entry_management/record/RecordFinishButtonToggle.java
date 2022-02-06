@@ -69,11 +69,12 @@ public class RecordFinishButtonToggle {
 
             finishButton.getAnimation().cancel();
 
-            finishButton.setVisibility(View.GONE);
+            finishButton.setVisibility(View.INVISIBLE);
+            finishButton.setClickable(false);
         }else{
 
             finishButton.setVisibility(View.VISIBLE);
-
+            finishButton.setClickable(true);
             finishButton.getAnimation().start();
 
 

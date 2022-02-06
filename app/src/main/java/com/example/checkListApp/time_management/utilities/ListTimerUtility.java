@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.checkListApp.time_management.parcel.ListTimersParcel;
 import com.example.checkListApp.timer.TimeState;
+import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.entry_management.MainListTimeProcessHandler;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 import com.example.checkListApp.ui.main.entry_management.entries.Spacer;
@@ -164,6 +165,7 @@ public class ListTimerUtility {
         ){
             if(activeProcessTimeIndex < size) {
                 activeProcessTimeIndex++;
+                MainFragment.scrollPosition(activeProcessTimeIndex);
                 return list.get(activeProcessTimeIndex);
 
             } else{
@@ -180,6 +182,10 @@ public class ListTimerUtility {
 
                 Entry subEntry = parentEntry.subCheckList.get(subActiveProcessTimeIndex);
 
+//                    parentEntry.getViewHolder().textView.setText(subEntry.textEntry.getValue());
+//                    parentEntry.getViewHolder().timerLabelText.setText(subEntry.getCountDownTimer().getValue());
+
+
                 subActiveProcessTimeIndex++;
 
                 return subEntry;
@@ -188,12 +194,14 @@ public class ListTimerUtility {
 
                 subActiveProcessTimeIndex = 0;
 
-                list.get(activeProcessTimeIndex)
-                        .getViewHolder().textView.setText(parentEntry.textTemp);
-
+//                parentEntry.getViewHolder().textView.setText(parentEntry.textTemp);
                 parentEntry.getViewHolder().checkOff();
 
+
+
                 activeProcessTimeIndex++;
+
+
                 parentEntry = null;
 
                  return list.get(activeProcessTimeIndex);

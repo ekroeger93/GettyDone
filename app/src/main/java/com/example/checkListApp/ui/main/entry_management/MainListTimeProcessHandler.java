@@ -62,6 +62,7 @@ public class MainListTimeProcessHandler {
 
                 if(timerUtility.currentActiveTime == null) timerUtility.currentActiveTime = checkList.get(1);
 
+                updateSecondaryTimer(time);
                 processTimerTask(time);
 
             };
@@ -75,12 +76,17 @@ public class MainListTimeProcessHandler {
             //this is a temp fix
 //            mainFragment.sanityCheckSubList();
 
+            updateEntryUI();
+
+
             setTimer();
 
 
-            if(timerUtility.currentActiveTime.isSubEntry){
-                setSubTextToParent();
-            }
+
+
+//            if(timerUtility.currentActiveTime.isSubEntry){
+////                setSubTextToParent();
+//            }
 
 
             if(timerViewModel.isToggled()) {
@@ -195,14 +201,22 @@ public class MainListTimeProcessHandler {
         }
     }
 
+    public void updateSecondaryTimer(int elapsedTime){
+
+        if (mainFragment.getActivity() != null && getContext() !=null) {
+            mainFragment.getActivity().runOnUiThread(() -> {
+                binding.timeTextSecondary.setText(
+                        timerUtility.currentActiveTime.getActiveTimeLabel(elapsedTime));
+            });
+        }
+    }
+
     public void displayEntryToast(){
 
         if (mainFragment.getActivity() != null && getContext() !=null) {
             mainFragment.getActivity().runOnUiThread(() -> {
 
                 String message = timerUtility.currentActiveTime.textEntry.getValue();
-
-                MainFragment.scrollPosition(timerUtility.activeProcessTimeIndex);
 
                 Toast toast = Toast.makeText(getContext(), message + " done!", Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.TOP, 0, 0);
@@ -213,6 +227,18 @@ public class MainListTimeProcessHandler {
         }
 
     }
+
+    public void scrollToPosition(int scroll){
+
+
+        mainFragment.getActivity().runOnUiThread(() -> {
+
+            MainFragment.scrollPosition(scroll);
+
+        });
+    }
+
+
 
     public void setSubTextToParent(){
 
@@ -228,54 +254,64 @@ public class MainListTimeProcessHandler {
     }
 
 
-
-    public void processTimerTask(int elapsedTime){
+    public void processTimerTask(int elapsedTime) {
 
         Log.d("subListingTest",
-                timerUtility.currentActiveTime.textTemp+
+                timerUtility.currentActiveTime.textTemp +
                         " elapse: " + elapsedTime +
                         " acc:" + timerUtility.currentActiveTime.timeAccumulated +
-                        " index: "+ timerUtility.activeProcessTimeIndex+
-                        " subIndex: "+timerUtility.subActiveProcessTimeIndex +
+                        " index: " + timerUtility.activeProcessTimeIndex +
+                        " subIndex: " + timerUtility.subActiveProcessTimeIndex +
                         " isSub: " + timerUtility.currentActiveTime.isSubEntry);
 
-        if(!timerUtility.currentActiveTime.onTogglePrimer.getValue()){
+
+
+        if (!timerUtility.currentActiveTime.onTogglePrimer.getValue()) {
+
 
             if (timerUtility.currentActiveTime.timeElapsed(elapsedTime)) {
 
+                updateEntryUI();
+
                 mainFragment.playAudio(timerUtility.currentActiveTime.getSelectAudio());
+
+
 
                 if (timerUtility.currentActiveTime.numberValueTime != 0) {
 
-                    try {
 
-                        if (timerViewModel.getRepeaterTime() <= 0
-                                && !timerUtility.currentActiveTime.isSubEntry)
-                            timerUtility.currentActiveTime.getViewHolder().checkOff();
+                    timerUtility.currentActiveTime = timerUtility.getNextActiveProcessTime(checkList);
 
-
-                    }finally {
-                        timerUtility.currentActiveTime = timerUtility.getNextActiveProcessTime(checkList);
-                        displayEntryToast();
-                        setSubTextToParent();
-                     }
+                    scrollToPosition(timerUtility.activeProcessTimeIndex);
 
                 }
 
 
             }
+
+
         }
-        else{
+
+
+        else {
+
+            updateEntryUI();
+            scrollToPosition(timerUtility.activeProcessTimeIndex);
 
             timerViewModel.toggleTime();
 
-//            if (timerViewModel.getRepeaterTime() <= 0)
-//                timerUtility.currentActiveTime.getViewHolder().checkOff();
-
+            mainFragment.playAudio(timerUtility.currentActiveTime.getSelectAudio());
 
             timerUtility.currentActiveTime = timerUtility.getNextActiveProcessTime(checkList);
 
+
+
+
+
         }
+
+
+
 
     }
 
@@ -299,6 +335,26 @@ public class MainListTimeProcessHandler {
 
     }
 
+
+    public void updateEntryUI(){
+
+        try {
+            if (timerUtility.parentEntry != null) {
+
+                timerUtility.parentEntry.getViewHolder().textView
+                        .setText(timerUtility.currentActiveTime.textEntry.getValue());
+
+            } else {
+
+                timerUtility.currentActiveTime.getViewHolder().textView.setText(timerUtility.currentActiveTime.textEntry.getValue());
+
+            }
+        }catch (NullPointerException e){
+
+
+        }
+
+    }
 
 
 

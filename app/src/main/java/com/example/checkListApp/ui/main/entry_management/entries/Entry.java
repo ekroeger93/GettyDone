@@ -75,6 +75,8 @@ public class Entry {
     public int subLatestAccumulated = 0;
 
 
+    @Ignore
+    public MutableLiveData<String> activeTimerLabel = new MutableLiveData<>("");
 
 
     public Entry(){
@@ -183,6 +185,25 @@ public class Entry {
         //    numberValueTime = new TimeState(timeText).getTimeNumberValueDecimalTruncated();
     }
 
+
+    public void updateActiveTimeLabel(int elapsedTimeNV){
+
+        int timeRemainder = new TimeState().getValueAsTimeTruncated(timeAccumulated - elapsedTimeNV);
+
+//        Log.d("timerLabelTest",""+timeRemainder);
+
+        activeTimerLabel.postValue(new TimeState(timeRemainder).getTimeFormat());
+
+    }
+
+    public String getActiveTimeLabel(int elapsedTimeNV){
+
+        int timeRemainder = new TimeState().getValueAsTimeTruncated(timeAccumulated - elapsedTimeNV);
+
+        Log.d("timerLabelTest",elapsedTimeNV+" :"+ new TimeState(timeRemainder).getTimeFormat());
+      return   new TimeState(timeRemainder).getTimeFormat();
+
+    }
 
     public int getNumberValueTime(){
         String timeText;
@@ -359,7 +380,7 @@ public class Entry {
 
         if(!subCheckList.isEmpty()){
 
-       int     subAcc = 0;
+       int subAcc = 0;
 
             for(Entry n : subCheckList) {
 
