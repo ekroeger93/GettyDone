@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+
+    android:layout_margin= "10dp"
+    android:layout_height="250dp"
+    android:background="@color/purple_700"
+    >
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="10dp"
+        android:background="@color/teal_700"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:text=" delete file?"
+            android:background="@color/purple_700"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            />
+        <TextView
+            android:id="@+id/fileBeingDeletedText"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="30dp"
+            android:textSize="18sp"
+            android:background="@color/teal_200"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp"
+           android:background="@color/purple_200"
+            >
+
+            <Button
+               android:id="@+id/cancel_file_delete_btn"
+
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+
+
+
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="40dp"
+                android:text="no"
+                />
+
+            <Button
+
+                android:id="@+id/confirm_file_delete_btn"
+
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+
+
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="40dp"
+                android:text="yes"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

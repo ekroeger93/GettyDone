@@ -1,5 +1,6 @@
 package com.example.checkListApp.file_management;
 
+import android.app.AlertDialog;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,8 @@ public class FileListAdapter extends RecyclerView.Adapter {
         this.fileManager = fileManager;
         this.fileListFragment = fileListFragment;
     }
+
+
 
 
     public int getFileSelection() {
@@ -121,14 +124,23 @@ public class FileListAdapter extends RecyclerView.Adapter {
                 public void onClick(View view) {
 
                     fileSelection = (getBindingAdapterPosition());
+
                     notifyDataSetChanged();
 
                 }
             });
 
             deleteButton.setOnClickListener(view -> {
-                fileManager.deleteFile(getBindingAdapterPosition());
-                fileListFragment.updateOnDelete();
+
+
+//                fileManager.deleteFile(getBindingAdapterPosition());
+//                fileListFragment.updateOnDelete();
+                fileName =
+                        fileManager.getFileName(getBindingAdapterPosition()).replace(".json","");
+
+                fileListFragment.showDeleteFileDialog(fileName,getBindingAdapterPosition());
+
+
             });
 
 

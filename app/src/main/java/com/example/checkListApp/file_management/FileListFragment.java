@@ -1,6 +1,7 @@
 package com.example.checkListApp.file_management;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.checkListApp.MainActivity;
 import com.example.checkListApp.databinding.FragmentFileListBinding;
@@ -39,10 +41,13 @@ public class FileListFragment extends Fragment {
      EditText editText;
      Button buttonSave;
 
+     ViewGroup fragmentViewGroup;
+
     public FileListFragment() {
         // Required empty public constructor
 
     }
+
 
 
     public interface OnFragmentInteractionListener {
@@ -64,6 +69,8 @@ public class FileListFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_file_list, (ViewGroup) container, false);
 
       //  return inflater.inflate(R.layout.fragment_file_list, container, false);
+
+        fragmentViewGroup = container;
 
         return binding.getRoot();
     }
@@ -139,6 +146,52 @@ public class FileListFragment extends Fragment {
                   //  (MainActivity.activityBinding.tabs.getTabAt(0));
 
         });
+
+
+    }
+
+    public void showDeleteFileDialog(String fileName, int index){
+
+        buildDeleteFileAdapter(buildDeleteFileDialog(),fileName,index);
+    }
+
+    public AlertDialog buildDeleteFileDialog(){
+
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+        AlertDialog confirmDeleteFileDialog = dialogBuilder.create();
+
+        confirmDeleteFileDialog.setView(LayoutInflater.from(getContext())
+                .inflate(
+                        R.layout.dialog_confirm_file_delete,
+                        fragmentViewGroup,
+                        false));
+
+        confirmDeleteFileDialog.show();
+
+        return confirmDeleteFileDialog;
+
+    }
+
+    public void buildDeleteFileAdapter(AlertDialog alertDialog, String filename, int index){
+
+        TextView textView = alertDialog.findViewById(R.id.fileBeingDeletedText);
+
+        textView.setText(filename);
+
+
+        alertDialog.findViewById(R.id.confirm_file_delete_btn)
+                .setOnClickListener(view -> {
+
+                    fileManager.deleteFile(index);
+                    updateOnDelete();
+                    alertDialog.dismiss();
+
+                });
+
+        alertDialog.findViewById(R.id.cancel_file_delete_btn).setOnClickListener(
+                view -> { alertDialog.dismiss();
+                });
 
 
     }
