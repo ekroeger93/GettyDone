@@ -28,6 +28,7 @@ import com.example.checkListApp.R;
 import com.example.checkListApp.database.EntryRepository;
 import com.example.checkListApp.databinding.EntryBinding;
 import com.example.checkListApp.time_management.parcel.TimeParcelBuilder;
+import com.example.checkListApp.ui.main.ColorHelper;
 import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.entry_management.list_component.item_touch_helper.ItemTouchHelperAdapter;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
@@ -88,7 +89,7 @@ implements ItemTouchHelperAdapter {
 
    public void highlightSelected(RecyclerView.ViewHolder viewHolder){
        if(viewHolder != null) {
-           viewHolder.itemView.setBackgroundColor(Color.RED);
+           viewHolder.itemView.setBackgroundColor(new ColorHelper(mainFragment.getContext()).Entry_ItemView_Selected);
        }
    }
 
@@ -413,10 +414,12 @@ implements ItemTouchHelperAdapter {
 
                        details.position = position;
 
+                       ColorHelper colorHelper = new ColorHelper(itemView.getContext());
+
                         if (selectionTracker.isSelected(details.getSelectionKey())) {
-                            binding.getRoot().setBackgroundColor(Color.RED);
+                            binding.getRoot().setBackgroundColor(colorHelper.Entry_ItemView_Selected);
                         }else{
-                            checkButton.setBackgroundColor(Color.parseColor("#95FF8D"));
+                            checkButton.setBackgroundColor(colorHelper.Entry_ItemView);
                         }
 
                  }

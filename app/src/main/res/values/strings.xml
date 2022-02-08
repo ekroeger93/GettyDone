@@ -13,5 +13,6 @@
     <string name="_submit">submit</string>
     <string name="textEntryHint">hold to edit text \n swipe right to remove</string>
     <string name="entrySubTextNoLoaded">no sublist loaded</string>
+    <string name="openfile">open</string>
 
 </resources>

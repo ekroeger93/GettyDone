@@ -1,5 +1,6 @@
 package com.example.checkListApp;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.navigation.fragment.NavHostFragment;
@@ -7,10 +8,12 @@ import androidx.navigation.fragment.NavHostFragment;
 import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.view.WindowManager;
 
 import com.example.checkListApp.file_management.FileListFragment;
 import com.example.checkListApp.databinding.MainActivityBinding;
+import com.example.checkListApp.ui.main.ColorHelper;
 import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.progress.ProgressFragment;
 import com.google.android.material.tabs.TabLayout;
@@ -29,11 +32,13 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
     MainFragment mainFragment;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //   setContentView(R.layout.main_activity);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
+
 
         activityBinding = DataBindingUtil.setContentView(this, R.layout.main_activity);
         ///DataBindingUtil.inflate(inflater,R.layout.fragment_file_list, (ViewGroup) container, false);
@@ -42,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
 
         navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.entryListFragment);
         mainFragment = (MainFragment) navHostFragment.getChildFragmentManager().getFragments().get(0);
+
 
 
         tabLayout = findViewById(R.id.tabs);
@@ -125,7 +131,12 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
     }
 
 
+    @Override
+    public void onPostCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        super.onPostCreate(savedInstanceState, persistentState);
 
+
+    }
 
     @Override
     public void onAttachFragment(Fragment fragment) {

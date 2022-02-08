@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.checkListApp.R;
+import com.example.checkListApp.ui.main.ColorHelper;
 
 import java.io.File;
 
@@ -52,9 +53,9 @@ public class SubListFileRecyclerAdapter extends RecyclerView.Adapter {
     private void highlightSelected(RecyclerView.ViewHolder holder){
 
         if ( fileSelection == holder.getBindingAdapterPosition()) {
-            holder.itemView.setBackgroundColor(Color.YELLOW);
+            holder.itemView.setBackgroundColor(new ColorHelper(holder.itemView.getContext()).Entry_ItemView_Selected);
         }else{
-            holder.itemView.setBackgroundColor(Color.WHITE);
+            holder.itemView.setBackgroundColor(new ColorHelper(holder.itemView.getContext()).Entry_ItemView);
         }
 
 

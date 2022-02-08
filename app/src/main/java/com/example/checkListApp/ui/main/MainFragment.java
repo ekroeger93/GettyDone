@@ -108,11 +108,20 @@ https://demonuts.com/android-shake-detection/
 
 - show swiping hand icon for hint
 
+- filter .json on various file strings
+
+- various ui glitches
+    leaf buttons not hiding
+    pause/resume button
+    -> pause/resume on service notification
+
+
+
 - file manager
     -prompt confirm
     -or click hold to delete
 
-- color theme
+- color and theme
 
 
 //TODO: Post production ideas:

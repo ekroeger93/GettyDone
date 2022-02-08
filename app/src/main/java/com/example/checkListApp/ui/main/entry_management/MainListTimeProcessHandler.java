@@ -344,9 +344,16 @@ public class MainListTimeProcessHandler {
                 timerUtility.parentEntry.getViewHolder().textView
                         .setText(timerUtility.currentActiveTime.textEntry.getValue());
 
+                timerUtility.parentEntry.getViewHolder().timerLabelText
+                        .setText(timerUtility.currentActiveTime.getCountDownTimer().getValue());
+
             } else {
 
-                timerUtility.currentActiveTime.getViewHolder().textView.setText(timerUtility.currentActiveTime.textEntry.getValue());
+                timerUtility.currentActiveTime.getViewHolder().textView
+                        .setText(timerUtility.currentActiveTime.textEntry.getValue());
+
+                timerUtility.currentActiveTime.getViewHolder().timerLabelText
+                        .setText(timerUtility.currentActiveTime.getCountDownTimer().getValue());
 
             }
         }catch (NullPointerException e){

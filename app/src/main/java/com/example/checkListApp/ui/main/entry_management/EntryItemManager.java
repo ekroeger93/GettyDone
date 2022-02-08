@@ -14,6 +14,7 @@ import androidx.recyclerview.selection.SelectionTracker;
 import com.example.checkListApp.R;
 import com.example.checkListApp.input.CustomEditText;
 import com.example.checkListApp.input.DetectKeyboardBack;
+import com.example.checkListApp.ui.main.ColorHelper;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 import com.example.checkListApp.ui.main.entry_management.button_panel.ButtonPanelToggle;
 import com.example.checkListApp.ui.main.MainFragment;
@@ -343,7 +344,7 @@ public class EntryItemManager {
             operator.movingItem = mainFragment.getCheckList().get(selection - 1);
             operator.oldMovePosition = selection - 1;
          //   operator.movingItem.setViewHolder(mainFragment.getCheckList().get(selection - 1).getViewHolder());
-            operator.movingItem.getViewHolder().itemView.setBackgroundColor(Color.BLUE);
+            operator.movingItem.getViewHolder().itemView.setBackgroundColor(new ColorHelper(context).Entry_ItemView_Selected);
 //            operator.moveItem(operator.movingItem);
 
 

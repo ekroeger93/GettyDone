@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:background="@color/purple_500"
     >
 
 
@@ -17,6 +18,7 @@
         android:layout_marginEnd="20dp"
         android:layout_width="match_parent"
         android:layout_height="330dp"
+        android:background="@color/teal_700"
         />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,6 +26,7 @@
         android:layout_height="100dp"
         android:orientation="horizontal"
         android:layout_marginTop="10dp"
+        android:background="@color/purple_200"
         >
 
         <Button
@@ -47,6 +50,7 @@
             android:foregroundTint="#FFFFFF"
             app:icon="@drawable/outline_file_open_black_48"
 
+            android:text="@string/openfile"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

@@ -3,14 +3,18 @@ package com.example.checkListApp.ui.main.entry_management;
 import android.graphics.Color;
 import android.util.Log;
 
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.checkListApp.R;
+import com.example.checkListApp.ui.main.ColorHelper;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.entry_management.list_component.RecyclerAdapter;
 import com.example.checkListApp.ui.main.data_management.ListUtility;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class Operator {
 
@@ -54,11 +58,14 @@ public class Operator {
             try{
            //     if(!e.checked.getValue()){
                 if(!adapter.toggleTracker) {
+
+                    ColorHelper colorHelper = new ColorHelper(mainFragment.getContext());
+
                     if (e.getViewHolder().getBindingAdapterPosition() == selection - 1) {
-                        e.getViewHolder().itemView.setBackgroundColor(Color.RED);
+                        e.getViewHolder().itemView.setBackgroundColor(colorHelper.Entry_ItemView_Selected);
                         listUtility.updateAllSelection(mainFragment.getCheckList());
                     } else {
-                        e.getViewHolder().itemView.setBackgroundColor(Color.parseColor("#95FF8D"));
+                        e.getViewHolder().itemView.setBackgroundColor(colorHelper.Entry_ItemView);
                     }
                 }else{
                     listUtility.updateAllSelection(mainFragment.getCheckList());

@@ -165,7 +165,6 @@ public class ListTimerUtility {
         ){
             if(activeProcessTimeIndex < size) {
                 activeProcessTimeIndex++;
-                MainFragment.scrollPosition(activeProcessTimeIndex);
                 return list.get(activeProcessTimeIndex);
 
             } else{

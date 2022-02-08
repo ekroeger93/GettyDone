@@ -85,7 +85,7 @@
                 android:id="@+id/entrySubText"
                 android:background="@color/teal_700"
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="18dp"
                 android:textColor="@color/teal_200"
                 android:text="@string/entrySubTextNoLoaded"
                 android:textAlignment="center"
@@ -117,7 +117,7 @@
             <TextView
                 android:id="@+id/timerLabelText"
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="18dp"
                 android:textColor="@color/white"
                 android:background="@color/teal_700"
                 android:text="00:00:00"
