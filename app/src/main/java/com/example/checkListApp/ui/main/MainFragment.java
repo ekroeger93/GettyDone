@@ -48,6 +48,7 @@ import com.example.checkListApp.time_management.parcel.ListTimersParcel;
 import com.example.checkListApp.time_management.parcel.ListTimersParcelBuilder;
 import com.example.checkListApp.time_management.utilities.KeyHelperClass;
 import com.example.checkListApp.ui.main.entry_management.SubListFileRecyclerAdapter;
+import com.example.checkListApp.ui.main.entry_management.SubListManager;
 import com.example.checkListApp.ui.main.entry_management.button_panel.ButtonPanel;
 import com.example.checkListApp.ui.main.entry_management.button_panel.ButtonPanelToggle;
 import com.example.checkListApp.ui.main.entry_management.EntryItemManager;
@@ -175,11 +176,12 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     private static CustomLayoutManager customLayoutManager;
     ListTimersParcel listTimersParcel;
 
-    public MainListTimeProcessHandler mainListTimeProcessHandler;
+    private MainListTimeProcessHandler mainListTimeProcessHandler;
+    private FileManager fileManager;
+    private SubListManager subListManager;
 
     private ArrayList<Entry> checkList = new ArrayList<>();
     private final MutableLiveData< ArrayList<Entry>> _checkList = new MutableLiveData<>();
-
 
     private final MutableLiveData<Integer> selectedEntry = new MutableLiveData<>();
 
@@ -194,7 +196,10 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     public ListUtility      getListUtility() { return listUtility;}
 
     public Intent           getServiceIntent() { return serviceIntent; }
-//    public static TimerViewModel getMainTimerViewModel() { return mainTimerViewModel; }
+
+    public MainListTimeProcessHandler getMainListTimeProcessHandler() { return mainListTimeProcessHandler; }
+    public FileManager getFileManager() { return fileManager; }
+    public SubListManager getSubListManager() { return subListManager; }
 
     private Intent serviceIntent;
 
@@ -211,180 +216,9 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     private ItemTouchCallback callback;
 
-    private FileManager fileManager;
-
     private View fragmentView;
 
-///subListManagerClass
-    public void showSubListSelection(View view, int index){
 
-        buildSubListAdapter(buildSubListDialog(view) , index);
-
-    }
-
-    public AlertDialog buildSubListDialog(View view){
-
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
-        AlertDialog subListDialog = dialogBuilder.create();
-
-
-        subListDialog.setMessage("load a sub list");
-        subListDialog.setView(LayoutInflater.from(getContext())
-                .inflate(
-                        R.layout.dialog_sublist_selection,
-                        (ViewGroup) view,
-                        false));
-
-        subListDialog.show();
-
-        return subListDialog;
-
-    }
-
-    public void buildSubListAdapter(AlertDialog alertDialog, int index){
-
-
-        RecyclerView subListRecyclerView = alertDialog.findViewById(R.id.subListSelection);
-        SubListFileRecyclerAdapter subListAdapter = new SubListFileRecyclerAdapter(fileManager.getListOfFiles());
-
-        subListRecyclerView.setAdapter(subListAdapter);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(alertDialog.getContext());
-
-        subListRecyclerView.setLayoutManager(linearLayoutManager);
-        subListRecyclerView.setHasFixedSize(true);
-
-        Button loadSub = alertDialog.findViewById(R.id.loadSubListFileBtn);
-
-        Button unLoadSub = alertDialog.findViewById(R.id.unsetSubListBtn);
-
-        loadSub.setOnClickListener(view -> {
-            setSubList(index, subListAdapter.getFileSelection());
-            alertDialog.dismiss();
-
-            checkList.get(index).subListName.postValue(
-                            fileManager.getFileName(
-                                    subListAdapter.getFileSelection()));
-
-        });
-
-        unLoadSub.setOnClickListener(view -> {
-            checkList.get(index).unSetSubList();
-            alertDialog.dismiss();
-
-//            checkList.get(index).subListName.postValue("");
-
-            checkList.get(index).getViewHolder()
-                    .subTextView.setText(
-                    R.string.entrySubTextNoLoaded);
-
-
-        });
-
-    }
-
-    public void setSubList(int checkListIndex , int fileListIndex){
-
-        Entry entry = checkList.get(checkListIndex);
-
-        ArrayList<Entry> subList = AuxiliaryData.loadFile(
-                fileManager.loadFile(fileListIndex));
-
-        entry.subListJson.setValue(fileManager.loadFile(fileListIndex));
-
-        Log.d("subListingTest",""+fileManager.loadFile(fileListIndex));
-
-        checkList.get(checkListIndex).isSubEntry = true;
-
-        for(Entry n: subList) {
-            n.isSubEntry = true;
-            n.setViewHolder(entry.getViewHolder());
-        }
-
-        entry.setSubCheckList(subList);
-
-        mainListTimeProcessHandler.subAccumulation(checkList);
-
-    }
-
-    public void setSubList(int checkListIndex, String jsonData){
-
-
-        Entry entry = checkList.get(checkListIndex);
-
-        ArrayList<Entry> subList = AuxiliaryData.loadFile(jsonData);
-
-        checkList.get(checkListIndex).subListJson.setValue(jsonData);
-
-       if(subList!=null) {
-
-            for (Entry n : subList) {
-                n.isSubEntry = true;
-                n.setViewHolder(entry.getViewHolder());
-            }
-
-           checkList.get(checkListIndex).isSubEntry = true;
-
-           checkList.get(checkListIndex).setSubCheckList(subList);
-
-            mainListTimeProcessHandler.subAccumulation(checkList);
-        }
-
-
-
-
-    }
-
-    public void sanityCheckSubList(){
-
-
-        //if a name is there but no sublist what the hell?!
-        for(Entry entry : checkList){
-
-                entry.subListJson.setValue(fileManager.loadFile(entry.subListName.getValue()));
-
-                if( entry.subListJson.getValue() != null || !entry.subListJson.getValue().isEmpty())
-                setSubList(checkList.indexOf(entry),entry.subListJson.getValue());
-
-
-
-
-        }
-
-    }
-
-    public void loadSubLists(){
-
-        for(Entry entry: getCheckList()){
-
-            if(!entry.subListJson.getValue().isEmpty() && !entry.subListJson.getValue().equals("\"\"")){
-
-                Log.d("jsonTest", ":"+entry.subListJson.getValue());
-
-                ArrayList<Entry> subList = AuxiliaryData.loadFile(entry.subListJson.getValue());
-
-                entry.isSubEntry = true;
-
-                for(Entry n: subList) {
-                    n.isSubEntry = true;
-                    n.setViewHolder(entry.getViewHolder());
-                }
-
-                entry.setSubCheckList(subList);
-                mainListTimeProcessHandler.subAccumulation(getCheckList());
-
-            }else{
-                entry.unSetSubList();
-            }
-
-
-        }
-
-
-
-
-    }
-
-///////////////////
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -428,6 +262,8 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         fileManager = new FileManager(view.getContext());
+
+        subListManager = new SubListManager(this);
 
         fragmentView = view;
 
@@ -473,8 +309,8 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                 for(Entry entry : getCheckList()) mViewModel.loadEntry(entry);
                 updateIndexes();
 
-                sanityCheckSubList();
-                loadSubLists();
+                subListManager.sanityCheckSubList();
+                subListManager.loadSubLists();
 
 
 
@@ -636,16 +472,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     }
 
-
-    public static void resetTime(){
-        MainListTimeProcessHandler.timerViewModel.resetAbsolutely();
-        timerRunning.postValue(false);
-    }
-
-    public void playAudio(int audio){
-        selectedAudio[audio].start();
-    }
-
+    //move to operator?
     public void updateIndexes(){
 
         for(Entry n :checkList) {
@@ -663,231 +490,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         mViewModel.sortIndexes();
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    public void assignButtonListeners(){
-
-
-        binding.repeatTimer.setOnClickListener(view -> {
-            binding.repeatTimer.setSelection(0);
-        });
-
-//        binding.repeatTimer.onKeyPreIme(KeyEvent.KEYCODE_ENTER,new KeyEvent(KeyEvent.KEYCODE_ENTER,KeyEvent.ACTION_DOWN));
-
-        binding.repeatTimer.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                binding.repeatTimer.setSelection(0);
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                binding.repeatTimer.setSelection(0);
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-                if(binding.repeatTimer.getText().length()>1){
-                    String text = binding.repeatTimer.getText().toString();
-                    binding.repeatTimer.setText(text.substring(0,text.length()-1));
-
-
-                }
-                int value = 0;
-
-                if(!binding.repeatTimer.getText().toString().isEmpty())
-                    value = Integer.parseInt(binding.repeatTimer.getText().toString());
-
-                Entry.globalCycle = value;
-                JsonService.buildJson(checkList);
-
-            }
-        });
-
-
-        buttonPanel.addButtonWithLeaf(
-            binding.addDeleteBtn
-            , view -> entryItemManager.add()
-            , view -> entryItemManager.delete(),
-
-            new LeafButton(binding, binding.addDeleteBtn)
-                     //assign a onClickListener for leaf button
-                    .assignListener(view -> {
-
-                        //listener for the button panel
-                        buttonPanelToggle.setSubmitBtnOnClickListener(
-                                view1 -> { //deletes selected Entries
-                            entryItemManager.deleteSelected(selectionTracker);
-                            buttonPanelToggle.toggleDisableToButton();
-                            adapter.trackerOn(false);
-                        });
-
-                        updateIndexes();
-                        adapter.trackerOn(true);
-                        buttonPanelToggle.toggleDisableToButton();
-
-                    }).create()
-
-    );
-
-                buttonPanel.addButtonWithLeaf(
-                        binding.editMoveBtn,
-                        view -> entryItemManager.edit(),
-                        view -> entryItemManager.move(),
-                        new LeafButton(binding,binding.editMoveBtn)
-                         .assignListener(view ->{
-
-                            //I'm having a tough time with the recyclerView
-                            //for some reason the object references (viewHolders) are disorganized
-                            //until you scroll the entirety of the list so
-                            //I'm starting it on 0 and setting setHasFixedSize here
-
-                            recyclerView.scrollToPosition(0);
-                            recyclerView.setHasFixedSize(true);
-
-                            buttonPanelToggle.setSubmitBtnOnClickListener(view1 -> {
-
-                                isSorting = true;
-                                entryItemManager.sortSelected(selectionTracker);
-                                buttonPanelToggle.toggleDisableToButton();
-                                adapter.notifyDataSetChanged();
-
-                                selectionTracker.clearSelection();
-                                listUtility.reInitializeAllSelection(checkList);
-                                adapter.trackerOn(false);
-
-                            });
-
-                            //thread may still be running!!!
-                            selectionTracker.clearSelection();
-                            listUtility.reInitializeAllSelection(checkList);
-                            updateIndexes();
-
-                            isSorting = false;
-
-                            adapter.trackerOn(true);
-                            buttonPanelToggle.toggleDisableToButton();
-
-
-                        }).create()
-                );
-
-
-
-
-           binding.ScrollView.setOnScrollChangeListener((v, i, i1, i2, i3) -> {
-
-               try {
-                   selectedEntry.postValue(operator.getSelection());
-
-
-//                   TODO: TEMP FIX FOR BUG, ANIMATION STUCK SCALE 0 WHEN VIEW IS CREATED
-                   if (checkList.get(selectedEntry.getValue()).getViewHolder().itemView.getScaleX() < 1){
-
-                       checkList.get(selectedEntry.getValue())
-                               .getViewHolder()
-                               .animatePopIn();
-                   }
-
-               } catch (NullPointerException e) {
-                   e.printStackTrace();
-               }
-
-//               if (operator.isMovingItem) {
-////                   operator.moveItem(operator.movingItem);
-//               }
-
-
-           });
-
-           binding.windowBox.setOnTouchListener((view, motionEvent) -> {
-               float touch_X = motionEvent.getRawX();
-               float touch_Y = motionEvent.getRawY();
-               buttonPanel.checkWithinButtonBoundary(touch_X,touch_Y);
-
-               return true;
-           });
-
-
-
-
-
-    binding.touchExpander.setOnTouchListener((view, motionEvent) -> {
-
-        float touch_X = motionEvent.getRawX();
-        float touch_Y = motionEvent.getRawY();
-
-        buttonPanel.setButtons();
-        boolean onButton= buttonPanel.checkWithinButtonBoundary(touch_X,touch_Y);
-
-
-        VelocityTracker velocityTracker = VelocityTracker.obtain();
-        velocityTracker.addMovement(motionEvent);
-        velocityTracker.computeCurrentVelocity(1);
-        operator.refreshSelection(false);
-
-        float xMove = operator.currentViewHolder.itemView.getX() + (velocityTracker.getXVelocity()*40);
-
-        float width = (float) operator.currentViewHolder.itemView.getWidth();
-        float alpha = 1.0f - Math.abs(xMove) / width;
-        operator.currentViewHolder.itemView.setAlpha(alpha);
-
-
-
-      if(touch_X > binding.touchExpander.getX()+ (binding.touchExpander.getWidth()/1.5) ) {
-          operator.currentViewHolder.itemView.setTranslationX(xMove);
-      }else{
-          operator.currentViewHolder.itemView.setTranslationX(0);
-      }
-
-
-        checkList.get(operator.getSelection())
-                .getViewHolder()
-                .isGonnaShakeCauseImMovingIt
-                .postValue(
-                        (touch_X < binding.touchExpander.getX() -
-                (binding.touchExpander.getWidth()/3f)
-              && onButton)
-                );
-
-
-
-
-        velocityTracker.recycle();
-
-
-        if (motionEvent.getAction() == MotionEvent.ACTION_UP ||
-                motionEvent.getAction() == MotionEvent.ACTION_CANCEL
-        ){
-
-            checkList.get(operator.getSelection()).getViewHolder().hasAnimateMove = false;
-
-            if(!onButton){
-
-           // operator.currentViewHolder.itemView.setTranslationX(0);
-            operator.currentViewHolder.itemView.animate()
-                    .translationX(0)
-                    .setDuration(500)
-                    .setInterpolator( new OvershootInterpolator())
-                    .start();
-
-        }}
-
-//------------------------------
-        //We only need to check this once so lets do it on UP
-
-        if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
-            buttonPanel.executeAlternative();
-        }
-
-        buttonPanel.animationHandler(motionEvent.getAction(),touch_X,binding);
-
-        return  true;
-
-    });
-
-}
-
+    //may move part to ui dynamics
     public void assignObservers(){
 
         Observer<Boolean> onTimerRunning = aBoolean -> {
@@ -932,9 +535,9 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
 
                 updateIndexes();
-                sanityCheckSubList();
+                subListManager.sanityCheckSubList();
 
-                loadSubLists();
+                subListManager.loadSubLists();
 
                 adapter.setList(checkList);
                 recordHelper.update(checkList);
@@ -1088,6 +691,243 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
 }
 
+
+    //UI dynamics class
+
+    @SuppressLint("ClickableViewAccessibility")
+    public void assignButtonListeners(){
+
+
+        binding.repeatTimer.setOnClickListener(view -> {
+            binding.repeatTimer.setSelection(0);
+        });
+
+//        binding.repeatTimer.onKeyPreIme(KeyEvent.KEYCODE_ENTER,new KeyEvent(KeyEvent.KEYCODE_ENTER,KeyEvent.ACTION_DOWN));
+
+        binding.repeatTimer.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                binding.repeatTimer.setSelection(0);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                binding.repeatTimer.setSelection(0);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+                if(binding.repeatTimer.getText().length()>1){
+                    String text = binding.repeatTimer.getText().toString();
+                    binding.repeatTimer.setText(text.substring(0,text.length()-1));
+
+
+                }
+                int value = 0;
+
+                if(!binding.repeatTimer.getText().toString().isEmpty())
+                    value = Integer.parseInt(binding.repeatTimer.getText().toString());
+
+                Entry.globalCycle = value;
+                JsonService.buildJson(checkList);
+
+            }
+        });
+
+
+        buttonPanel.addButtonWithLeaf(
+                binding.addDeleteBtn
+                , view -> entryItemManager.add()
+                , view -> entryItemManager.delete(),
+
+                new LeafButton(binding, binding.addDeleteBtn)
+                        //assign a onClickListener for leaf button
+                        .assignListener(view -> {
+
+                            //listener for the button panel
+                            buttonPanelToggle.setSubmitBtnOnClickListener(
+                                    view1 -> { //deletes selected Entries
+                                        entryItemManager.deleteSelected(selectionTracker);
+                                        buttonPanelToggle.toggleDisableToButton();
+                                        adapter.trackerOn(false);
+                                    });
+
+                            updateIndexes();
+                            adapter.trackerOn(true);
+                            buttonPanelToggle.toggleDisableToButton();
+
+                        }).create()
+
+        );
+
+        buttonPanel.addButtonWithLeaf(
+                binding.editMoveBtn,
+                view -> entryItemManager.edit(),
+                view -> entryItemManager.move(),
+                new LeafButton(binding,binding.editMoveBtn)
+                        .assignListener(view ->{
+
+                            //I'm having a tough time with the recyclerView
+                            //for some reason the object references (viewHolders) are disorganized
+                            //until you scroll the entirety of the list so
+                            //I'm starting it on 0 and setting setHasFixedSize here
+
+                            recyclerView.scrollToPosition(0);
+                            recyclerView.setHasFixedSize(true);
+
+                            buttonPanelToggle.setSubmitBtnOnClickListener(view1 -> {
+
+                                isSorting = true;
+                                entryItemManager.sortSelected(selectionTracker);
+                                buttonPanelToggle.toggleDisableToButton();
+                                adapter.notifyDataSetChanged();
+
+                                selectionTracker.clearSelection();
+                                listUtility.reInitializeAllSelection(checkList);
+                                adapter.trackerOn(false);
+
+                            });
+
+                            //thread may still be running!!!
+                            selectionTracker.clearSelection();
+                            listUtility.reInitializeAllSelection(checkList);
+                            updateIndexes();
+
+                            isSorting = false;
+
+                            adapter.trackerOn(true);
+                            buttonPanelToggle.toggleDisableToButton();
+
+
+                        }).create()
+        );
+
+
+
+
+        binding.ScrollView.setOnScrollChangeListener((v, i, i1, i2, i3) -> {
+
+            try {
+                selectedEntry.postValue(operator.getSelection());
+
+
+//                   TODO: TEMP FIX FOR BUG, ANIMATION STUCK SCALE 0 WHEN VIEW IS CREATED
+                if (checkList.get(selectedEntry.getValue()).getViewHolder().itemView.getScaleX() < 1){
+
+                    checkList.get(selectedEntry.getValue())
+                            .getViewHolder()
+                            .animatePopIn();
+                }
+
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+
+//               if (operator.isMovingItem) {
+////                   operator.moveItem(operator.movingItem);
+//               }
+
+
+        });
+
+        binding.windowBox.setOnTouchListener((view, motionEvent) -> {
+            float touch_X = motionEvent.getRawX();
+            float touch_Y = motionEvent.getRawY();
+            buttonPanel.checkWithinButtonBoundary(touch_X,touch_Y);
+
+            return true;
+        });
+
+
+
+
+
+        binding.touchExpander.setOnTouchListener((view, motionEvent) -> {
+
+            float touch_X = motionEvent.getRawX();
+            float touch_Y = motionEvent.getRawY();
+
+            buttonPanel.setButtons();
+            boolean onButton= buttonPanel.checkWithinButtonBoundary(touch_X,touch_Y);
+
+
+            VelocityTracker velocityTracker = VelocityTracker.obtain();
+            velocityTracker.addMovement(motionEvent);
+            velocityTracker.computeCurrentVelocity(1);
+            operator.refreshSelection(false);
+
+            float xMove = operator.currentViewHolder.itemView.getX() + (velocityTracker.getXVelocity()*40);
+
+            float width = (float) operator.currentViewHolder.itemView.getWidth();
+            float alpha = 1.0f - Math.abs(xMove) / width;
+            operator.currentViewHolder.itemView.setAlpha(alpha);
+
+
+
+            if(touch_X > binding.touchExpander.getX()+ (binding.touchExpander.getWidth()/1.5) ) {
+                operator.currentViewHolder.itemView.setTranslationX(xMove);
+            }else{
+                operator.currentViewHolder.itemView.setTranslationX(0);
+            }
+
+
+            checkList.get(operator.getSelection())
+                    .getViewHolder()
+                    .isGonnaShakeCauseImMovingIt
+                    .postValue(
+                            (touch_X < binding.touchExpander.getX() -
+                                    (binding.touchExpander.getWidth()/3f)
+                                    && onButton)
+                    );
+
+
+
+
+            velocityTracker.recycle();
+
+
+            if (motionEvent.getAction() == MotionEvent.ACTION_UP ||
+                    motionEvent.getAction() == MotionEvent.ACTION_CANCEL
+            ){
+
+                checkList.get(operator.getSelection()).getViewHolder().hasAnimateMove = false;
+
+                if(!onButton){
+
+                    // operator.currentViewHolder.itemView.setTranslationX(0);
+                    operator.currentViewHolder.itemView.animate()
+                            .translationX(0)
+                            .setDuration(500)
+                            .setInterpolator( new OvershootInterpolator())
+                            .start();
+
+                }}
+
+//------------------------------
+            //We only need to check this once so lets do it on UP
+
+            if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                buttonPanel.executeAlternative();
+            }
+
+            buttonPanel.animationHandler(motionEvent.getAction(),touch_X,binding);
+
+            return  true;
+
+        });
+
+    }
+
+    public static void resetTime(){
+        MainListTimeProcessHandler.timerViewModel.resetAbsolutely();
+        timerRunning.postValue(false);
+    }
+
+    public void playAudio(int audio){
+        selectedAudio[audio].start();
+    }
+
     @Override
     public void clickPosition(RecyclerAdapter.ViewHolder viewHolder,View view, int position) {
 
@@ -1130,15 +970,13 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
             if(view.getId() == R.id.subListBtn){
 
-                showSubListSelection(fragmentView, position);
+                subListManager.showSubListSelection(fragmentView, position);
 
             }
 
         }
 
     }
-
-    //UI dynamics
 
     public static void transitionToFileFromMain(Activity activity){
 

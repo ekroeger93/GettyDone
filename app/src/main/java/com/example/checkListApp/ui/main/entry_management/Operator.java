@@ -188,7 +188,7 @@ public class Operator {
         //too burned out atm to actually fix
 
 
-        mainFragment.loadSubLists();
+        mainFragment.getSubListManager().loadSubLists();
 
 //        adapter.notifyItemRangeChanged(movingItemIndex, placeIndex);
         adapter.notifyItemChanged(movingItemIndex,movingItem);
@@ -218,8 +218,8 @@ public class Operator {
         if(entrySwapOne.isSubEntry && entrySwapTwo.isSubEntry){
             Log.d("subListingTest","RR");
 
-            mainFragment.setSubList(swap1,jsonSwapSubList);
-            mainFragment.setSubList(swap2,jsonMovingSubList);
+            mainFragment.getSubListManager().setSubList(swap1,jsonSwapSubList);
+            mainFragment.getSubListManager().setSubList(swap2,jsonMovingSubList);
 
             mainFragment.getCheckList().get(swap1)
                     .subListJson.postValue(jsonSwapSubList);
@@ -232,7 +232,7 @@ public class Operator {
 
         if(!entrySwapOne.isSubEntry && entrySwapTwo.isSubEntry){
 
-            mainFragment.setSubList(swap1,entrySwapTwo.subListJson.getValue());
+            mainFragment.getSubListManager().setSubList(swap1,entrySwapTwo.subListJson.getValue());
             mainFragment.getCheckList().get(swap2).unSetSubList();
 
             mainFragment.getCheckList().get(swap1)
@@ -244,7 +244,7 @@ public class Operator {
 
         if(entrySwapOne.isSubEntry && !entrySwapTwo.isSubEntry){
 
-            mainFragment.setSubList(swap2,entrySwapOne.subListJson.getValue());
+            mainFragment.getSubListManager().setSubList(swap2,entrySwapOne.subListJson.getValue());
             mainFragment.getCheckList().get(swap1).unSetSubList();
 
             mainFragment.getCheckList().get(swap2)
