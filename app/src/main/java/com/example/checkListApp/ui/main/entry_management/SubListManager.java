@@ -22,19 +22,22 @@ import java.util.ArrayList;
 public class SubListManager {
 
 
-    private final ArrayList<Entry> checkList;
+
+    private final MainFragment mainFragment;
     private final FileManager fileManager;
     private final MainListTimeProcessHandler mainListTimeProcessHandler;
     private final Context context;
 
 
     public SubListManager(MainFragment mainFragment){
-        checkList = mainFragment.getCheckList();
+        this.mainFragment = mainFragment;
+
         fileManager = mainFragment.getFileManager();
         mainListTimeProcessHandler = mainFragment.getMainListTimeProcessHandler();
         context = mainFragment.getContext();
-
     }
+
+
 
     public void showSubListSelection(View view, int index){
 
@@ -63,6 +66,7 @@ public class SubListManager {
 
     public void buildSubListAdapter(AlertDialog alertDialog, int index){
 
+        ArrayList<Entry> checkList = mainFragment.getCheckList();
 
         RecyclerView subListRecyclerView = alertDialog.findViewById(R.id.subListSelection);
         SubListFileRecyclerAdapter subListAdapter = new SubListFileRecyclerAdapter(fileManager.getListOfFiles());
@@ -104,6 +108,8 @@ public class SubListManager {
 
     public void setSubList(int checkListIndex , int fileListIndex){
 
+        ArrayList<Entry> checkList = mainFragment.getCheckList();
+
         Entry entry = checkList.get(checkListIndex);
 
         ArrayList<Entry> subList = AuxiliaryData.loadFile(
@@ -128,6 +134,7 @@ public class SubListManager {
 
     public void setSubList(int checkListIndex, String jsonData){
 
+        ArrayList<Entry> checkList = mainFragment.getCheckList();
 
         Entry entry = checkList.get(checkListIndex);
 
@@ -156,6 +163,7 @@ public class SubListManager {
 
     public void sanityCheckSubList(){
 
+        ArrayList<Entry> checkList = mainFragment.getCheckList();
 
         //if a name is there but no sublist what the hell?!
         for(Entry entry : checkList){
@@ -173,6 +181,8 @@ public class SubListManager {
     }
 
     public void loadSubLists(){
+
+        ArrayList<Entry> checkList = mainFragment.getCheckList();
 
         for(Entry entry: checkList){
 

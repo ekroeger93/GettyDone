@@ -61,7 +61,7 @@ public class FileListAdapter extends RecyclerView.Adapter {
 
         TextView textView = holder.itemView.findViewById(R.id.fileName);
 
-        textView.setText((CharSequence) listFiles[position].getName());
+        textView.setText((CharSequence) listFiles[position].getName().replace(".json",""));
 
         if ( fileSelection == position){
             fileListFragment.updateEditText( listFiles[position].getName().replaceAll(".json",""));

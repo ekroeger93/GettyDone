@@ -43,7 +43,7 @@ public class SubListFileRecyclerAdapter extends RecyclerView.Adapter {
 
         TextView textView = holder.itemView.findViewById(R.id.fileNameSubList);
 
-        textView.setText(listOfFiles[position].getName());
+        textView.setText(listOfFiles[position].getName().replace(".json",""));
 
         highlightSelected(holder);
 

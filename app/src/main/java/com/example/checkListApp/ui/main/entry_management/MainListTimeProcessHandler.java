@@ -78,10 +78,7 @@ public class MainListTimeProcessHandler {
 
             updateEntryUI();
 
-
             setTimer();
-
-
 
 
 //            if(timerUtility.currentActiveTime.isSubEntry){
@@ -128,8 +125,10 @@ public class MainListTimeProcessHandler {
 
         binding.timerExecuteBtn.setOnLongClickListener(view -> {
 
-            timerViewModel.resetAbsolutely();
-            mainFragment.getTimerRunning().postValue(false);
+//            timerViewModel.resetAbsolutely();
+//            mainFragment.getTimerRunning().postValue(false);
+
+            MainFragment.resetTime();
 
             mainFragment.getActivity().stopService(mainFragment.getServiceIntent());
 
@@ -354,6 +353,9 @@ public class MainListTimeProcessHandler {
 
                 timerUtility.currentActiveTime.getViewHolder().timerLabelText
                         .setText(timerUtility.currentActiveTime.getCountDownTimer().getValue());
+
+                if(!timerUtility.currentActiveTime.isSubEntry)
+                timerUtility.currentActiveTime.getViewHolder().checkOff();
 
             }
         }catch (NullPointerException e){

@@ -565,7 +565,7 @@ implements ItemTouchHelperAdapter {
                         if(subName.isEmpty()){
                             subTextView.setText(R.string.entrySubTextNoLoaded);
                         }else{
-                            subTextView.setText(subName);
+                            subTextView.setText(subName.replace(".json",""));
                         }
 
                     };

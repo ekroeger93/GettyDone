@@ -105,17 +105,12 @@ https://demonuts.com/android-shake-detection/
 
 //TODO: DESIGN
 
-- update accordingly to the subListing
-
 - show swiping hand icon for hint
-
-- filter .json on various file strings
 
 - various ui glitches
     leaf buttons not hiding
     pause/resume button
     -> pause/resume on service notification
-
 
 
 - file manager
@@ -263,7 +258,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         fileManager = new FileManager(view.getContext());
 
-        subListManager = new SubListManager(this);
 
         fragmentView = view;
 
@@ -281,11 +275,11 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         mainListTimeProcessHandler.configureMainTimer();
 
+        subListManager = new SubListManager(this);
 
         recordHelper.createButton(getContext(),binding);
 
         MainListTimeProcessHandler.timerViewModel.setRepeaterTime(Entry.globalCycle);
-
 
         binding.repeatTimer.setText(String.valueOf(Entry.globalCycle));
 
@@ -691,6 +685,10 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
 }
 
+    public static void resetTime(){
+        MainListTimeProcessHandler.timerViewModel.resetAbsolutely();
+        timerRunning.postValue(false);
+    }
 
     //UI dynamics class
 
@@ -917,11 +915,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         });
 
-    }
-
-    public static void resetTime(){
-        MainListTimeProcessHandler.timerViewModel.resetAbsolutely();
-        timerRunning.postValue(false);
     }
 
     public void playAudio(int audio){
