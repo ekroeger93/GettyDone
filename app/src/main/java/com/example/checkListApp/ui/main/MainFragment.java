@@ -94,6 +94,9 @@ TaDone Prototype
     -still not in database, cant add statics?
   -progress overwritten last entries, lost data
 
+-crash when closing app and service is running
+-sublisting does not work when there is only
+one entry on list
 
 //TODO: FEATURES
 
@@ -105,17 +108,19 @@ https://demonuts.com/android-shake-detection/
 
 //TODO: DESIGN
 
+-set timer
+    -colors
+    -the hint icon
+    -sound list
+
+
+
 - show swiping hand icon for hint
 
 - various ui glitches
     leaf buttons not hiding
     pause/resume button
     -> pause/resume on service notification
-
-
-- file manager
-    -prompt confirm
-    -or click hold to delete
 
 - color and theme
 

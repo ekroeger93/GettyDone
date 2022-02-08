@@ -230,11 +230,22 @@ public class MainListTimeProcessHandler {
     public void scrollToPosition(int scroll){
 
 
-        mainFragment.getActivity().runOnUiThread(() -> {
+        try {
+            mainFragment.getActivity().runOnUiThread(() -> {
 
-            MainFragment.scrollPosition(scroll);
+                MainFragment.scrollPosition(scroll);
 
-        });
+            });
+        }catch (NullPointerException e){
+            //means main thread is not active, app has closed but
+            //service is still running!
+            e.printStackTrace();
+            System.out.println("means main thread is not active, app has closed but\n" +
+                    "service is still running!");
+
+        }
+
+
     }
 
 
