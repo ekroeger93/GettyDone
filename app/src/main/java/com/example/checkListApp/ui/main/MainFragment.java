@@ -271,10 +271,12 @@ public class MainFragment extends Fragment implements ListItemClickListener {
             checkList.get(index).unSetSubList();
             alertDialog.dismiss();
 
-            checkList.get(index).subListName.postValue("");
-//            checkList.get(index).getViewHolder()
-//                    .subTextView.setText(
-//                    R.string.entrySubTextNoLoaded);
+//            checkList.get(index).subListName.postValue("");
+
+            checkList.get(index).getViewHolder()
+                    .subTextView.setText(
+                    R.string.entrySubTextNoLoaded);
+
 
         });
 
