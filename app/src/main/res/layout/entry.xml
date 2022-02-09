@@ -19,7 +19,7 @@
         android:layout_height="@dimen/entryHeight"
         android:layout_marginTop="@dimen/entryMarginTop"
         android:layout_marginBottom="@dimen/entryMarginBottom"
-        android:background="@color/purple_200"
+        android:background="?colorAccent"
         android:orientation="horizontal"
 
         tools:context="ui.main.MainFragment">
@@ -45,7 +45,8 @@
                 android:id="@+id/entryText"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:background="@color/teal_200"
+                android:background="?colorSecondary"
+                android:textColor="?colorOnSecondary"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:hint="@string/textEntryHint"
@@ -58,7 +59,7 @@
                 android:id="@+id/entryEditTxt"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#FFF7B4"
+                android:background="?colorSecondary"
                 android:visibility="invisible"
 
                 />
@@ -83,10 +84,10 @@
 
             <TextView
                 android:id="@+id/entrySubText"
-                android:background="@color/teal_700"
                 android:layout_width="match_parent"
                 android:layout_height="18dp"
-                android:textColor="@color/teal_200"
+                android:textColor="?colorOnPrimary"
+                android:background="?colorSecondaryVariant"
                 android:text="@string/entrySubTextNoLoaded"
                 android:textAlignment="center"
                 android:singleLine="true"
@@ -109,7 +110,6 @@
                 android:layout_height="60dp"
                 android:background="@drawable/outline_timer_black_48"
                 android:textAlignment="center"
-                android:textColorHighlight="@color/purple_200"
                 android:textSize="12sp"
 
                 />
@@ -118,8 +118,8 @@
                 android:id="@+id/timerLabelText"
                 android:layout_width="match_parent"
                 android:layout_height="18dp"
-                android:textColor="@color/white"
-                android:background="@color/teal_700"
+                android:textColor="?colorOnPrimary"
+                android:background="?colorSecondaryVariant"
                 android:text="00:00:00"
                 android:textAlignment="center"
 />

@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="ThemeOverlay.StylesNThemes.Button.Red" parent="">
+    <style name="ThemeOverlay.Alternative.One" parent="Theme.MaterialComponents.DayNight.NoActionBar">
 
-            <item name="colorPrimary">@color/red</item>
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/pale_blue_200</item>
+        <item name="colorPrimaryVariant">@color/pale_blue_700</item>
+        <item name="colorAccent">@color/pale_blue_300</item>
+        <item name="colorOnPrimary">@color/white</item>
 
+        <item name="colorPrimaryDark">@color/pale_blue_900</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/blue_300</item>
+        <item name="colorSecondaryVariant">@color/blue_500</item>
+        <item name="colorOnSecondary">@color/black</item>
+
+        <item name="colorControlHighlight">@color/light_blue_200</item>
 
         </style>
 </resources>

@@ -4,7 +4,7 @@
 
     android:layout_margin= "10dp"
     android:layout_height="250dp"
-    android:background="@color/purple_700"
+    android:background="?colorPrimary"
     >
 
 
@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_margin="10dp"
-        android:background="@color/teal_700"
+        android:background="?colorSecondaryVariant"
         >
         <TextView
             android:layout_width="match_parent"
@@ -22,8 +22,8 @@
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
             android:text=" delete file?"
-            android:background="@color/purple_700"
-            android:textColor="@color/white"
+            android:background="?colorPrimaryDark"
+            android:textColor="?colorOnPrimary"
             android:textSize="20sp"
             />
         <TextView
@@ -35,7 +35,7 @@
             android:layout_marginEnd="30dp"
             android:layout_marginBottom="30dp"
             android:textSize="18sp"
-            android:background="@color/teal_200"
+            android:background="?colorSecondary"
             />
 
         <LinearLayout
@@ -44,7 +44,7 @@
             android:layout_gravity="center"
             android:orientation="horizontal"
             android:layout_marginBottom="10dp"
-           android:background="@color/purple_200"
+           android:background="?colorAccent"
             >
 
             <Button

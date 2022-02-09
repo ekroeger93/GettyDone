@@ -6,6 +6,8 @@ import android.util.Log;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -35,9 +37,21 @@ public final class ProgressProvider {
 //        outputStreamWriter.write(String.valueOf(input));
 //        outputStreamWriter.close();
 
+        int length = loadProgress(context).length();
+
+        StringBuilder builder = new StringBuilder(input);
+
+        if(length > 0) {
+             builder = new StringBuilder(loadProgress(context))
+                    .deleteCharAt(length - 1)
+                    .append(",")
+                    .append(new StringBuilder(input).deleteCharAt(0));
+
+            Log.d("progressAppend", builder.toString());
+        }
         try {
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(RECORD_FILE, Context.MODE_PRIVATE));
-            outputStreamWriter.write(String.valueOf(input));
+            outputStreamWriter.append(builder.toString());
             outputStreamWriter.close();
         }catch (IOException e){
             ;
@@ -69,8 +83,10 @@ public final class ProgressProvider {
                 stringBuilder = new StringBuilder();
 
 
+                //TODO:TRYING SOMETHING HERE
                 while ( (receiveString = bufferedReader.readLine()) != null ) {
                     stringBuilder.append("\n").append(receiveString);
+//                    stringBuilder.append(receiveString);
                 }
 
                 inputStream.close();
@@ -79,6 +95,17 @@ public final class ProgressProvider {
         }
         catch (FileNotFoundException e) {
             Log.e("login activity", "File not found: " + e.toString());
+
+            File file1 = new File(RECORD_FILE);
+
+            try (FileWriter fileWriter = new FileWriter(file1)) {
+
+                fileWriter.write("");
+
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+
         } catch (IOException e) {
             Log.e("login activity", "Can not read file: " + e.toString());
         }

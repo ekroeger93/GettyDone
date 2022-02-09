@@ -22,7 +22,7 @@
 
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:background="@color/purple_200"
+    android:background="?colorAccent"
     >
 
 
@@ -33,7 +33,7 @@
         android:layout_width="379dp"
         android:layout_height="304dp"
         app:layoutManager="LinearLayoutManager"
-        android:background="@color/teal_700"
+        android:background="?colorSecondaryVariant"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.343"
@@ -47,7 +47,7 @@
         android:id="@+id/editFileName"
         android:layout_width="266dp"
         android:layout_height="65dp"
-        android:background="@color/teal_200"
+        android:background="?colorSecondary"
         android:hint="Name of File"
         app:layout_constraintBottom_toTopOf="@+id/fileListView"
         app:layout_constraintEnd_toEndOf="parent"

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/purple_500"
+    android:background="?colorPrimary"
     >
 
 
@@ -18,7 +18,7 @@
         android:layout_marginEnd="20dp"
         android:layout_width="match_parent"
         android:layout_height="330dp"
-        android:background="@color/teal_700"
+        android:background="?colorSecondaryVariant"
         />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,7 +26,7 @@
         android:layout_height="100dp"
         android:orientation="horizontal"
         android:layout_marginTop="10dp"
-        android:background="@color/purple_200"
+        android:background="?colorAccent"
         >
 
         <Button
@@ -47,7 +47,6 @@
             android:layout_width="200dp"
             android:layout_height="100dp"
             android:layout_marginEnd="24dp"
-            android:foregroundTint="#FFFFFF"
             app:icon="@drawable/outline_file_open_black_48"
 
             android:text="@string/openfile"

@@ -59,6 +59,7 @@ import com.example.checkListApp.ui.main.entry_management.list_component.ListItem
 import com.example.checkListApp.ui.main.entry_management.list_component.RecyclerAdapter;
 import com.example.checkListApp.ui.main.entry_management.list_component.item_touch_helper.ItemTouchCallback;
 import com.example.checkListApp.ui.main.entry_management.Operator;
+import com.example.checkListApp.ui.main.entry_management.record.ProgressProvider;
 import com.example.checkListApp.ui.main.entry_management.record.RecordHelper;
 import com.example.checkListApp.ui.main.data_management.AuxiliaryData;
 import com.example.checkListApp.ui.main.data_management.JsonService;
@@ -92,11 +93,6 @@ TaDone Prototype
 
   -repeater time needs persistence
     -still not in database, cant add statics?
-  -progress overwritten last entries, lost data
-
--crash when closing app and service is running
--sublisting does not work when there is only
-one entry on list
 
 //TODO: FEATURES
 
@@ -112,8 +108,6 @@ https://demonuts.com/android-shake-detection/
     -colors
     -the hint icon
     -sound list
-
-
 
 - show swiping hand icon for hint
 
@@ -238,6 +232,31 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     activity = getActivity();
 
+
+//       String testDataProgress ="[" +
+//                "{\"goalCount\":3,\"dateFinished\":2022.01.06,\"currentWeekOfYear\":2}," +
+//                "{\"goalCount\":2,\"dateFinished\":2022.01.07,\"currentWeekOfYear\":2}," +
+//                "{\"goalCount\":1,\"dateFinished\":2022.01.09,\"currentWeekOfYear\":3}," +
+//                "{\"goalCount\":5,\"dateFinished\":2022.01.10,\"currentWeekOfYear\":3}," +
+//                "{\"goalCount\":7,\"dateFinished\":2022.01.12,\"currentWeekOfYear\":3}" +
+//                "]";
+
+//        String testDataProgress ="[" +
+//                "{\"goalCount\":3,\"dateFinished\":2022.02.06,\"currentWeekOfYear\":6}," +
+//                "{\"goalCount\":2,\"dateFinished\":2022.02.07,\"currentWeekOfYear\":6}," +
+//                "{\"goalCount\":1,\"dateFinished\":2022.02.09,\"currentWeekOfYear\":6}," +
+//                "{\"goalCount\":5,\"dateFinished\":2022.02.10,\"currentWeekOfYear\":6}," +
+//                "{\"goalCount\":7,\"dateFinished\":2022.02.12,\"currentWeekOfYear\":6}" +
+//                "]";
+//
+//        ProgressProvider.saveProgress(testDataProgress,getContext());
+//
+//        RecordHelper.recordArrayList = RecordHelper
+//                .getJsonRecordGeneratedArray(
+//                        ProgressProvider.loadProgress(getContext()));
+//
+
+
     }
 
     @Nullable
@@ -305,13 +324,15 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                 mViewModel.deleteAllEntries(checkList);
                 checkList = AuxiliaryData.loadFile(getArguments());
                 _checkList.setValue(checkList);
-                for(Entry entry : getCheckList()) mViewModel.loadEntry(entry);
-                updateIndexes();
 
-                subListManager.sanityCheckSubList();
-                subListManager.loadSubLists();
+                if(getCheckList() != null) {
+                    for (Entry entry : getCheckList()) mViewModel.loadEntry(entry);
+                    updateIndexes();
 
+                    subListManager.sanityCheckSubList();
+                    subListManager.loadSubLists();
 
+                }
 
 
             }

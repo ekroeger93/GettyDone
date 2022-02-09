@@ -10,4 +10,31 @@
     <color name="red"> #CF0076 </color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+
+    <color name="pale_blue_200">#5291cc</color>
+    <color name="pale_blue_300">#416c94</color>
+    <color name="pale_blue_700">#355778</color>
+    <color name="pale_blue_900">#4b5763</color>
+
+<!--    <color name="blue_300">#0084ff</color>-->
+    <color name="blue_300">#8ab8e0</color>
+<!--    <color name="blue_500">#004280</color>-->
+    <color name="blue_500">#2f6fa7</color>
+
+<!--    <color name="light_blue_200">#91b6d9</color>-->
+    <color name="light_blue_200">#b4ede0</color>
+
+
+<!--military colors-->
+    <color name="greys_green">#608d90</color>
+    <color name="bush_green">#0f2a3f</color>
+    <color name="ash_wood">#4e495f</color>
+
+    <color name="dark_tan">#997577</color>
+    <color name="woodland">#816271</color>
+    <color name="light_tan">#c3a38a</color>
+
+    <color name="patrick">#f6d6bd</color>
+
 </resources>

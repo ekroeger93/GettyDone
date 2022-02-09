@@ -10,7 +10,7 @@
     android:layout_marginTop="@dimen/entryMarginTop"
     android:layout_marginBottom="@dimen/entryMarginBottom"
 
-    android:background="@color/purple_200"
+    android:background="?colorAccent"
     >
 
 
@@ -22,7 +22,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:id="@+id/fileName"
-        android:background="@color/teal_200"
+        android:background="?colorSecondary"
         android:layout_height="match_parent"
         android:layout_width="240dp"
 

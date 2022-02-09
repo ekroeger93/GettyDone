@@ -68,6 +68,12 @@ public class ListTimerUtility {
                     entry.setTimeAcclimatedLastSub();
                 }
 
+                if(checkList.size()==3){
+                    entry.timeAccumulated = entry.numberValueTime;
+                    entry.subNumberTimeValue = entry.subLatestAccumulated;
+                }
+
+
                 Log.d("subListingTest"," Parent subNTV "+entry.subNumberTimeValue);
 
 
@@ -150,7 +156,12 @@ public class ListTimerUtility {
 
        Entry lastEntry = list.get(list.size()-2);
 
-        return new TimeState(lastEntry.timeAccumulated).timeTruncated();
+       if(list.size() >3) {
+           return new TimeState(lastEntry.timeAccumulated).timeTruncated();
+       }else{
+           return  new TimeState(lastEntry.subNumberTimeValue).timeTruncated();
+       }
+
     }
 
 

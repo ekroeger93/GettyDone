@@ -35,7 +35,7 @@
             android:id="@+id/windowBox"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/purple_200"
+            android:background="?colorPrimaryVariant"
             android:clickable="false"
             android:longClickable="false"
             android:orientation="vertical"
@@ -74,6 +74,7 @@
                         android:layout_height="wrap_content"
                        android:fontFamily="sans-serif-black"
                         android:text="00:00:00"
+                        android:textColor="?colorControlHighlight"
                         android:textAlignment="center"
                         android:textSize="36sp"
                         />
@@ -85,6 +86,7 @@
                         android:textAlignment="center"
                         android:textSize="16sp"
                         android:text="00:00:00"
+                        android:textColor="@color/light_blue_200"
                         />
 
 
@@ -98,7 +100,7 @@
                     android:layout_height="70dp"
                     android:cursorVisible="false"
                     android:drawableTop="@drawable/outline_autorenew_24"
-                    android:drawableTint="@color/purple_700"
+                    android:drawableTint="?colorPrimary"
                     android:inputType="number"
                     android:singleLine="true"
                     android:text="0"
@@ -118,7 +120,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/scrollSize"
                 android:layout_marginBottom="0dp"
-                android:background="@color/teal_700"
+                android:background="?colorSecondaryVariant"
                 android:clickable="false"
                 android:longClickable="false"
                 android:overScrollMode="always"
@@ -197,7 +199,7 @@
                     android:id="@+id/touchExpander"
                     android:layout_width="100dp"
                     android:layout_height="match_parent"
-                    android:background="@color/red"
+                    android:background="?colorControlHighlight"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/addDeleteBtn"
                     app:layout_constraintStart_toEndOf="@+id/editMoveBtn"

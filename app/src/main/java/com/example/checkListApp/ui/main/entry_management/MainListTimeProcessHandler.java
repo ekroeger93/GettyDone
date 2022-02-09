@@ -81,11 +81,6 @@ public class MainListTimeProcessHandler {
             setTimer();
 
 
-//            if(timerUtility.currentActiveTime.isSubEntry){
-////                setSubTextToParent();
-//            }
-
-
             if(timerViewModel.isToggled()) {
                 binding.timerExecuteBtn.setBackground(
                         ContextCompat.getDrawable(
@@ -266,13 +261,13 @@ public class MainListTimeProcessHandler {
 
     public void processTimerTask(int elapsedTime) {
 
-        Log.d("subListingTest",
-                timerUtility.currentActiveTime.textTemp +
-                        " elapse: " + elapsedTime +
-                        " acc:" + timerUtility.currentActiveTime.timeAccumulated +
-                        " index: " + timerUtility.activeProcessTimeIndex +
-                        " subIndex: " + timerUtility.subActiveProcessTimeIndex +
-                        " isSub: " + timerUtility.currentActiveTime.isSubEntry);
+//        Log.d("subListingTest",
+//                timerUtility.currentActiveTime.textTemp +
+//                        " elapse: " + elapsedTime +
+//                        " acc:" + timerUtility.currentActiveTime.timeAccumulated +
+//                        " index: " + timerUtility.activeProcessTimeIndex +
+//                        " subIndex: " + timerUtility.subActiveProcessTimeIndex +
+//                        " isSub: " + timerUtility.currentActiveTime.isSubEntry);
 
 
 

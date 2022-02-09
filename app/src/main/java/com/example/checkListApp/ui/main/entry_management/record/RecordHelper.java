@@ -99,15 +99,16 @@ public class RecordHelper {
         jsonCheckList.append("[");
 
 
-        for(Record record : recordArrayList){
+            for (Record record : recordArrayList) {
                 jsonCheckList.append(gson.toJson(record)).append(",");
-        }
-
-        jsonCheckList.deleteCharAt(jsonCheckList.length()-1);
-        jsonCheckList.append("]");
+            }
 
 
-        recordListJson = String.valueOf(jsonCheckList);
+            jsonCheckList.deleteCharAt(jsonCheckList.length() - 1);
+            jsonCheckList.append("]");
+
+
+            recordListJson = String.valueOf(jsonCheckList);
 
     }
 
