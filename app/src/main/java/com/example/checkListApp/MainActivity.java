@@ -6,6 +6,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -47,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
 
         navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.entryListFragment);
         mainFragment = (MainFragment) navHostFragment.getChildFragmentManager().getFragments().get(0);
-
 
 
         tabLayout = findViewById(R.id.tabs);

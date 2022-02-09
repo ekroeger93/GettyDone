@@ -3,6 +3,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string name="donation_page"> <a href="https://liberapay.com/ekroeger93/donate">contribute here</a></string>
+
     <string name="toggle_only">On Toggle</string>
 
     <string name="audio_blow_whistle">blow whistle</string>
@@ -14,5 +16,6 @@
     <string name="textEntryHint">hold to edit text \n swipe right to remove</string>
     <string name="entrySubTextNoLoaded">no sublist loaded</string>
     <string name="openfile">open</string>
+    <string name="support">I\'m keeping this app free from ads but being poor sucks. \n \nHelp support your fellow android developer.</string>
 
 </resources>

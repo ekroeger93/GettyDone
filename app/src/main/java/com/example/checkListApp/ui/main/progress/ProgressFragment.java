@@ -18,15 +18,18 @@ import android.view.ViewGroup;
 import android.widget.CalendarView;
 
 import com.example.checkListApp.R;
+import com.example.checkListApp.ui.main.ColorHelper;
 import com.example.checkListApp.ui.main.entry_management.record.ProgressProvider;
 import com.example.checkListApp.ui.main.entry_management.record.Record;
 import com.example.checkListApp.ui.main.entry_management.record.RecordHelper;
 import com.example.checkListApp.ui.main.data_management.JsonService;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
@@ -138,14 +141,14 @@ public class ProgressFragment extends Fragment {
 
         RecordHelper.buildRecordListJson();
 
-        Log.d("progressTest", ""+RecordHelper.recordListJson);
+//        Log.d("progressTest", ""+RecordHelper.recordListJson);
 
         mPaint.setColor(Color.BLACK);
         mPaint.setTextSize(100);
 
         barChart.setFitBars(true);
 
-        Log.d("progressListTest",""+RecordHelper.recordListJson);
+//        Log.d("progressListTest",""+RecordHelper.recordListJson);
 
 
 
@@ -155,19 +158,27 @@ public class ProgressFragment extends Fragment {
             WeekFields weekFields = WeekFields.of(Locale.getDefault());
             int week = LocalDate.of(year,month+1,day).get(weekFields.weekOfWeekBasedYear());
 
-            Log.d("progressTest"," "+year+" "+month+" "+day+" "+week);
+//            Log.d("progressTest"," "+year+" "+month+" "+day+" "+week);
 
             BarDataSet dataSet = new BarDataSet(generateEntriesByWeek(RecordHelper.recordArrayList,LocalDate.of(year,month+1,day)), "Label"); // add entries to dataset
-            dataSet.setColor(Color.RED);
+            dataSet.setColor(new ColorHelper(getContext()).Entry_ItemView);
             dataSet.setValueTextColor(Color.BLACK);
+
+            dataSet.setValueFormatter(barChart.getDefaultValueFormatter());
             dataSet.setLabel("entries submitted");
 
             BarData barData = new BarData(dataSet);
             barChart.setData(barData);
 //            barChart.setXAxisRenderer();
 
+            Description description = new Description();
+            description.setText("");
+
+            barChart.setDescription( description);
+
             barChart.invalidate();
         });
+
 
 
             barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {

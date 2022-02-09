@@ -101,11 +101,11 @@ TaDone Prototype
 - shake phone to toggle timer
 https://demonuts.com/android-shake-detection/
 
+-support page
 
 //TODO: DESIGN
 
 -set timer
-    -colors
     -the hint icon
     -sound list
 
@@ -115,8 +115,6 @@ https://demonuts.com/android-shake-detection/
     leaf buttons not hiding
     pause/resume button
     -> pause/resume on service notification
-
-- color and theme
 
 
 //TODO: Post production ideas:
