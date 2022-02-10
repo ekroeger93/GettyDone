@@ -213,6 +213,10 @@ public class FileListFragment extends Fragment {
         Navigation.findNavController(activity,R.id.entryListFragment).navigate( R.id.action_fileListFragment_to_donationFragment);
     }
 
+    public static void transitionFromFileToSettings(Activity activity){
+        Navigation.findNavController(activity,R.id.entryListFragment).navigate( R.id.action_fileListFragment_to_settingsFragment);
+    }
+
      void updateEditText(String fileNameTxt){
 
         editText.setText(fileNameTxt);

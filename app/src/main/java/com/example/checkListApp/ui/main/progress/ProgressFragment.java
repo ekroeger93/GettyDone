@@ -86,6 +86,10 @@ public class ProgressFragment extends Fragment {
         Navigation.findNavController(activity,R.id.entryListFragment).navigate( R.id.action_progressFragment_to_donationFragment);
     }
 
+    public static void transitionFromProgressToSetting(Activity activity){
+        Navigation.findNavController(activity,R.id.entryListFragment).navigate(ProgressFragmentDirections.actionProgressFragmentToSettingsFragment());
+    }
+
 
     /**
      * Use this factory method to create a new instance of

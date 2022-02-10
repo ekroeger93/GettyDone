@@ -117,7 +117,7 @@ bridge pattern? complications with DAO and Gson
 -settings
 https://developer.android.com/guide/topics/ui/settings
 https://www.geeksforgeeks.org/how-to-implement-preferences-settings-screen-in-android/
-
+https://developer.android.com/training/data-storage/shared-preferences
 
 //TODO: DESIGN
 
@@ -1069,6 +1069,11 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     public static void transitionFromMainToDonation(Activity activity){
         Navigation.findNavController(activity,R.id.entryListFragment).navigate( MainFragmentDirections.actionMainFragmentToDonationFragment());
+    }
+
+    public static void transitionFromMainToSettings(Activity activity){
+        Navigation.findNavController(activity,R.id.entryListFragment).navigate( MainFragmentDirections.actionMainFragmentToSettingsFragment());
+
     }
 
 

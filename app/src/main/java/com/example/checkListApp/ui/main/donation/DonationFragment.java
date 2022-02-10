@@ -62,6 +62,10 @@ public class DonationFragment extends Fragment {
 
     }
 
+    public static void transitionFromDonationToSettings(Activity activity){
+        Navigation.findNavController(activity,R.id.entryListFragment)
+                .navigate(DonationFragmentDirections.actionDonationFragmentToSettingsFragment());
+    }
 
 
 }
