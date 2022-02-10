@@ -8,6 +8,8 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Looper;
@@ -67,6 +69,7 @@ import com.example.checkListApp.ui.main.data_management.JsonService;
 import com.example.checkListApp.ui.main.data_management.ListUtility;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 import com.example.checkListApp.ui.main.entry_management.entries.Spacer;
+import com.example.checkListApp.ui.main.shake_detector.ShakeDetector;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -224,6 +227,9 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     private View fragmentView;
 
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
+    private ShakeDetector mShakeDetector;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -412,6 +418,23 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         entryItemManager.setButtonPanelToggle(buttonPanelToggle);
 
+    }
+
+    public void setUpShakeSensor(){
+        // ShakeDetector initialization
+        mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+        mAccelerometer = mSensorManager
+                .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mShakeDetector = new ShakeDetector();
+        mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
+
+            @Override
+            public void onShake(int count) {
+
+
+            }
+
+        });
     }
 
     public void initialize() {

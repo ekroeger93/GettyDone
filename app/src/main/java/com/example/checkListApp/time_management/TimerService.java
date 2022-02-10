@@ -7,6 +7,11 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -24,13 +29,14 @@ import com.example.checkListApp.timer.TimeState;
 import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.entry_management.MainListTimeProcessHandler;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
+import com.example.checkListApp.ui.main.shake_detector.ShakeDetector;
 
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-public final class TimerService extends LifecycleService {
+public final class TimerService extends LifecycleService implements SensorEventListener {
 
    public static int activeTimeIndex=0;
    private Intent serviceIntent;
@@ -41,6 +47,12 @@ public final class TimerService extends LifecycleService {
 
    public static MutableLiveData<Boolean> timerToggled = new MutableLiveData<>(false);
 
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
+    private float mAccel; // acceleration apart from gravity
+    private float mAccelCurrent; // current acceleration including gravity
+    private float mAccelLast; // last acceleration including gravit
+    private ShakeDetector mShakeDetector;
 
     @Override
     public void onCreate() {
@@ -83,6 +95,22 @@ public final class TimerService extends LifecycleService {
         int FOREGROUND_SERVICE_ID = 111;
 
 //      if(!parcelableList.globalSetTimer.equals("00:00:00"))
+
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mAccelerometer = mSensorManager
+                .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mSensorManager.registerListener(this, mAccelerometer,
+                SensorManager.SENSOR_DELAY_UI, new Handler());
+
+        mShakeDetector = new ShakeDetector();
+        mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
+
+            @Override
+            public void onShake(int count) {
+
+            }
+
+        });
 
 
         startForeground(FOREGROUND_SERVICE_ID,
@@ -128,6 +156,32 @@ public final class TimerService extends LifecycleService {
                 .setPriority(2)
                 .setCategory(Notification.CATEGORY_SERVICE)
                 .build(); // foregroundTimerService.createTimer(notification);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+
+        float x = event.values[0];
+        float y = event.values[1];
+        float z = event.values[2];
+        mAccelLast = mAccelCurrent;
+        mAccelCurrent = (float) Math.sqrt((double) (x * x + y * y + z * z));
+        float delta = mAccelCurrent - mAccelLast;
+        mAccel = mAccel * 0.9f + delta; // perform low-cut filter
+
+        if (mAccel > 11) {
+
+            //TODO ADD TWO OPTIONS, TOGGLE TIMER ONLY WHEN PAUSED/ TOGGLE TIMER
+            if(!MainListTimeProcessHandler.timerViewModel.isToggled())
+            MainListTimeProcessHandler.timerViewModel.toggleTime();
+
+        }
+
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
     }
 
 
