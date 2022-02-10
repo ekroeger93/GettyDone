@@ -119,6 +119,17 @@ https://developer.android.com/guide/topics/ui/settings
 https://www.geeksforgeeks.org/how-to-implement-preferences-settings-screen-in-android/
 https://developer.android.com/training/data-storage/shared-preferences
 
+-disable hint message execute timer
+-reset progress
+-toggle shake
+    - toggle only when timer is paused
+    - toggle enable
+    - toggle disabled (default)
+
+-delete all files (except progress)
+-theme color
+-email
+
 //TODO: DESIGN
 
 -set timer
