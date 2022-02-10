@@ -114,8 +114,9 @@ bridge pattern? complications with DAO and Gson
 
 //TODO: FEATURES
 
-- shake phone to toggle timer
-https://demonuts.com/android-shake-detection/
+-settings
+https://developer.android.com/guide/topics/ui/settings
+https://www.geeksforgeeks.org/how-to-implement-preferences-settings-screen-in-android/
 
 
 //TODO: DESIGN
@@ -131,8 +132,6 @@ https://demonuts.com/android-shake-detection/
     -design
     -pause resume
 
-https://developer.android.com/guide/topics/ui/settings
-https://www.geeksforgeeks.org/how-to-implement-preferences-settings-screen-in-android/
 
 //TODO: Post production ideas:
 -? save to google drive, share data

@@ -172,6 +172,8 @@ public final class TimerService extends LifecycleService implements SensorEventL
         if (mAccel > 11) {
 
             //TODO ADD TWO OPTIONS, TOGGLE TIMER ONLY WHEN PAUSED/ TOGGLE TIMER
+            //Preferences
+
             if(!MainListTimeProcessHandler.timerViewModel.isToggled())
             MainListTimeProcessHandler.timerViewModel.toggleTime();
 
