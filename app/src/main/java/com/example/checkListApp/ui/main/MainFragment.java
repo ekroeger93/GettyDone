@@ -67,6 +67,7 @@ import com.example.checkListApp.ui.main.data_management.JsonService;
 import com.example.checkListApp.ui.main.data_management.ListUtility;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 import com.example.checkListApp.ui.main.entry_management.entries.Spacer;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,8 +111,6 @@ bridge pattern? complications with DAO and Gson
 
 //TODO: FEATURES
 
-- undo button
-- duplicate
 - shake phone to toggle timer
 https://demonuts.com/android-shake-detection/
 
@@ -469,6 +468,22 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         return false;
     }
 
+    public void showUndoSnackBar(){
+
+        Snackbar snackbar = Snackbar.make(binding.main, "item deleted",
+                Snackbar.LENGTH_LONG).setAction(
+                        "UNDO", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                entryItemManager.undoLastDeletionSingle();
+            }
+        });
+
+        snackbar.show();
+
+    }
+
+
     public Intent getForegroundTimerServiceIntent(){
 
 
@@ -772,6 +787,11 @@ public class MainFragment extends Fragment implements ListItemClickListener {
             }
         });
 
+        binding.addDeleteBtn.setOnLongClickListener(view -> {
+
+            entryItemManager.addDuplicate();
+            return true;
+        });
 
         buttonPanel.addButtonWithLeaf(
                 binding.addDeleteBtn

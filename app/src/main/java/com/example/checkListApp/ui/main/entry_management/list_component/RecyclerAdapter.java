@@ -30,6 +30,7 @@ import com.example.checkListApp.databinding.EntryBinding;
 import com.example.checkListApp.time_management.parcel.TimeParcelBuilder;
 import com.example.checkListApp.ui.main.ColorHelper;
 import com.example.checkListApp.ui.main.MainFragment;
+import com.example.checkListApp.ui.main.entry_management.EntryItemManager;
 import com.example.checkListApp.ui.main.entry_management.list_component.item_touch_helper.ItemTouchHelperAdapter;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 import com.example.checkListApp.ui.main.entry_management.record.RecordHelper;
@@ -288,10 +289,15 @@ implements ItemTouchHelperAdapter {
 
 //        mList.remove(position);
 
+        EntryItemManager.lastDeletedEntry = mainFragment.getCheckList().get(position);
+        EntryItemManager.lastDeletedIndex = position;
+
         mainFragment.getmViewModel().deleteEntry(mainFragment.getCheckList().get(position));
         mainFragment.updateIndexes();
 
         notifyItemRemoved(position);
+
+        mainFragment.showUndoSnackBar();
 
     }
 

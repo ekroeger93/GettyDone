@@ -42,6 +42,11 @@ public class EntryItemManager {
     ButtonPanelToggle buttonPanelToggle;
 
 
+    static public Entry lastDeletedEntry = new Entry();
+    static public int lastDeletedIndex = 1;
+
+
+
     public EntryItemManager(MainFragment mainFragment){
 
         this.context = mainFragment.getContext();
@@ -115,7 +120,43 @@ public class EntryItemManager {
 
     }
 
+    public void undoLastDeletionSingle(){
 
+        mViewModel.insertEntry(lastDeletedEntry);
+        operator.adapter.notifyDataSetChanged();
+
+        // operator.adapter.notifyItemChanged(mainFragment.getCheckList().size());
+
+//        isAddingEntry = true;
+
+        operator.refreshSelection(false);
+
+        mainFragment.updateIndexes();
+
+    }
+
+    public void addDuplicate(){
+
+        Entry entry = new Entry(mainFragment.getCheckList().get(operator.selection-1));
+
+        mainFragment.getCheckList().add(operator.selection-1,entry);
+
+        Log.d("duplicateTest",
+                mainFragment.getCheckList().get(operator.selection-1).textEntry.getValue()
+                        +"  "+entry.textEntry.getValue());
+
+        mViewModel.insertEntry(entry);
+
+        operator.adapter.notifyDataSetChanged();
+
+        operator.refreshSelection(false);
+
+        //TODO BUG AFTER MOVING ITEM IT UNDOS THE NEW ARRANGEMENT
+        //NOTE: SOMETHING PROCEEDING THIS MAY BE EFFECTING IT
+
+        mainFragment.updateIndexes();
+
+    }
 
 //TODO: fix memory leak here:
 
@@ -292,6 +333,9 @@ public class EntryItemManager {
 
                             super.onAnimationStart(animation);
 
+                            lastDeletedEntry= mainFragment.getCheckList().get(operator.selection - 1);
+                            lastDeletedIndex =operator.selection -1;
+
                             mViewModel.deleteEntry(mainFragment.getCheckList().get(operator.selection - 1));
                             operator.adapter.notifyItemRemoved(operator.selection - 1);
                             operator.adapter.notifyItemChanged(mainFragment.getCheckList().size());
@@ -302,6 +346,7 @@ public class EntryItemManager {
 
             }).start();
 
+            mainFragment.showUndoSnackBar();
 
 
     }}

@@ -205,7 +205,6 @@ public class Operator {
 
     }
 
-
     public void swapSubLists(int swap1, int swap2){
 
         Entry entrySwapOne = mainFragment.getCheckList().get(swap1);
@@ -255,8 +254,6 @@ public class Operator {
 
     }
 
-
-
     public void moveItemUp(){
 
         int movingItemIndex = selection-1;
@@ -279,7 +276,6 @@ public class Operator {
 
 
     }
-
 
 
 

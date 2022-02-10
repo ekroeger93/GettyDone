@@ -85,13 +85,13 @@ public class Entry {
 
 
     public Entry(Entry entry) {
-        textEntry.postValue(entry.textEntry.getValue());
-        checked.postValue(entry.checked.getValue());
-        countDownTimer.postValue(entry.countDownTimer.getValue());
-        onTogglePrimer.postValue(entry.onTogglePrimer.getValue());
-        selectedAudio.postValue(entry.selectedAudio.getValue());
-        subListJson.postValue(entry.subListJson.getValue());
-        subListName.postValue(entry.subListName.getValue());
+        textEntry.setValue(entry.textEntry.getValue());
+        checked.setValue(entry.checked.getValue());
+        countDownTimer.setValue(entry.countDownTimer.getValue());
+        onTogglePrimer.setValue(entry.onTogglePrimer.getValue());
+        selectedAudio.setValue(entry.selectedAudio.getValue());
+        subListJson.setValue(entry.subListJson.getValue());
+        subListName.setValue(entry.subListName.getValue());
 
         isSubEntry = entry.isSubEntry;
         subCheckList = entry.subCheckList;
