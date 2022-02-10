@@ -16,6 +16,7 @@ import com.example.checkListApp.timer.CountDownTimerAsync;
 import com.example.checkListApp.timer.TimeState;
 import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
@@ -75,6 +76,16 @@ public class MainListTimeProcessHandler {
             //TODO: dont forget the move sublisting json is screwed up
             //this is a temp fix
 //            mainFragment.sanityCheckSubList();
+
+            if(!MainFragment.isTimerRunning()) {
+
+                Snackbar snackbar = Snackbar.make(binding.buttonPanel, "hold button to reset timer",
+                        Snackbar.LENGTH_SHORT)
+                        .setAnchorView(view);
+
+                snackbar.show();
+
+            }
 
             updateEntryUI();
 

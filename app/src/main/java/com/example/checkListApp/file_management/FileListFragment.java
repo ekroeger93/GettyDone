@@ -26,6 +26,7 @@ import com.example.checkListApp.databinding.FragmentFileListBinding;
 
 
 import com.example.checkListApp.R;
+import com.example.checkListApp.ui.main.MainFragmentDirections;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -199,14 +200,18 @@ public class FileListFragment extends Fragment {
 
 
 
-    public static void transitionToMainFromFile(Activity activity){
+    public static void transitionFromFileToMain(Activity activity){
         Navigation.findNavController(activity,R.id.entryListFragment).navigate(R.id.action_fileListFragment_to_mainFragment);
     }
 
-    public static void transitionToProgressFromFile(Activity activity){
+    public static void transitionFromFileToProgress(Activity activity){
         Navigation.findNavController(activity,R.id.entryListFragment).navigate(R.id.action_fileListFragment_to_progressFragment);
     }
 
+
+    public static void transitionFromFileToDonation(Activity activity){
+        Navigation.findNavController(activity,R.id.entryListFragment).navigate( R.id.action_fileListFragment_to_donationFragment);
+    }
 
      void updateEditText(String fileNameTxt){
 

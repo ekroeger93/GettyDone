@@ -6,7 +6,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.app.Fragment;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -14,8 +13,8 @@ import android.view.WindowManager;
 
 import com.example.checkListApp.file_management.FileListFragment;
 import com.example.checkListApp.databinding.MainActivityBinding;
-import com.example.checkListApp.ui.main.ColorHelper;
 import com.example.checkListApp.ui.main.MainFragment;
+import com.example.checkListApp.ui.main.donation.DonationFragment;
 import com.example.checkListApp.ui.main.progress.ProgressFragment;
 import com.google.android.material.tabs.TabLayout;
 
@@ -59,19 +58,24 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
 
                 //THIS WAS TOTALLY NOT CONFUSING AND MADE COMPLETE SENSE!
 
+                //refactor this to switch for gods sake man
+
                 if (!MainFragment.isTimerRunning()) {
 
                     if (!visualSelect) {
+
                         if (tab.getPosition() == 0 //CLICKS LIST
                                 && tab.getPosition() != navPosition
                         ) {
 
                             if (navPosition == 1)//IF IN FILE
-                                FileListFragment.transitionToMainFromFile(activityBinding.getMMainActivity());
+                                FileListFragment.transitionFromFileToMain(activityBinding.getMMainActivity());
 
                             if (navPosition == 2) //IF IN PROGRESS
                                 ProgressFragment.transitionFromProgressToMain(activityBinding.getMMainActivity());
 
+                            if(navPosition == 3)// IF IN DONATION
+                                DonationFragment.transitionFromDonationToMain(activityBinding.getMMainActivity());
                         }
 
 
@@ -80,11 +84,14 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
                         ) {
 
                             if (navPosition == 0)//IF In LIST
-                                MainFragment.transitionToFileFromMain(activityBinding.getMMainActivity());
+                                MainFragment.transitionFromMainToFile(activityBinding.getMMainActivity());
 
                             if (navPosition == 2)//IF in PROGRESS
                                 ProgressFragment.transitionFromProgressToFile(activityBinding.getMMainActivity());
                             //  FileListFragment.transitionToProgressFromFile(activityBinding.getMMainActivity());
+
+                            if(navPosition ==3)// IF IN DONATION
+                                DonationFragment.transitionFromDonationToFile(activityBinding.getMMainActivity());
 
                         }
 
@@ -93,13 +100,33 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
                                 && tab.getPosition() != navPosition) {
 
                             if (navPosition == 0)//IF IN LIST
-                                MainFragment.transitionToProgressFromMain(activityBinding.getMMainActivity());
+                                MainFragment.transitionFromMainToProgress(activityBinding.getMMainActivity());
 
                             if (navPosition == 1)//IF IN FILE
-                                FileListFragment.transitionToProgressFromFile(activityBinding.getMMainActivity());
+                                FileListFragment.transitionFromFileToProgress(activityBinding.getMMainActivity());
                             //  ProgressFragment.transitionFromProgressToFile(activityBinding.getMMainActivity());
 
+                            if (navPosition == 3)//IF IN DONATION
+                                DonationFragment.transitionFromDonationToProgress(activityBinding.getMMainActivity());
+
                         }
+
+
+                        if(tab.getPosition() == 3//CLICKS DONATION
+                        && tab.getPosition() != navPosition){
+
+                            if (navPosition == 0)//IF IN LIST
+                                MainFragment.transitionFromMainToDonation(activityBinding.getMMainActivity());
+
+                            if (navPosition == 1)//IF IN FILE
+                                FileListFragment.transitionFromFileToDonation(activityBinding.getMMainActivity());
+
+                            if (navPosition == 2)//IF in PROGRESS
+                                ProgressFragment.transitionFromProgressToDonation(activityBinding.getMMainActivity());
+
+                        }
+
+
 
 
                     } else {

@@ -205,7 +205,6 @@
                     app:layout_constraintStart_toEndOf="@+id/editMoveBtn"
                     app:layout_constraintTop_toTopOf="parent" />
 
-
                 <Button
                     android:id="@+id/addDeleteBtn"
                     android:layout_width="60dp"

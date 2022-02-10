@@ -42,6 +42,12 @@
             android:name="jsonData"
             app:argType="string"
          />
+        <action
+            android:id="@+id/action_mainFragment_to_donationFragment"
+            app:destination="@id/donationFragment"
+            app:enterAnim="@anim/slide_left_enter"
+            app:exitAnim="@anim/slide_right_exit"
+            />
 
 
     </fragment>
@@ -67,6 +73,12 @@
         <argument
             android:name="jsonData"
             app:argType="string" />
+        <action
+            android:id="@+id/action_fileListFragment_to_donationFragment"
+            app:destination="@id/donationFragment"
+            app:enterAnim="@anim/slide_left_enter"
+            app:exitAnim="@anim/slide_right_exit"
+            />
 
 
     </fragment>
@@ -88,6 +100,12 @@
             app:destination="@id/fileListFragment"
             app:enterAnim="@anim/slide_right_enter"
             app:exitAnim="@anim/slide_left_exit" />
+        <action
+            android:id="@+id/action_progressFragment_to_donationFragment"
+            app:destination="@id/donationFragment"
+            app:enterAnim="@anim/slide_left_enter"
+            app:exitAnim="@anim/slide_right_exit"
+            />
     </fragment>
 
 
@@ -107,6 +125,32 @@
             app:nullable="true"
             android:defaultValue="@null" />
 
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/donationFragment"
+        android:name="com.example.checkListApp.ui.main.donation.DonationFragment"
+        android:label="donation_page_fragment"
+        tools:layout="@layout/donation_page_fragment" >
+        <action
+            android:id="@+id/action_donationFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_left_exit"
+            />
+        <action
+            android:id="@+id/action_donationFragment_to_progressFragment"
+            app:destination="@id/progressFragment"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_left_exit"
+            />
+        <action
+            android:id="@+id/action_donationFragment_to_fileListFragment"
+            app:destination="@id/fileListFragment"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_left_exit"
+            />
     </fragment>
 
 

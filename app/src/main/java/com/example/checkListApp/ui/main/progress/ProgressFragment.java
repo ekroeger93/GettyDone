@@ -82,6 +82,11 @@ public class ProgressFragment extends Fragment {
 
     }
 
+    public static void transitionFromProgressToDonation(Activity activity){
+        Navigation.findNavController(activity,R.id.entryListFragment).navigate( R.id.action_progressFragment_to_donationFragment);
+    }
+
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -139,8 +144,11 @@ public class ProgressFragment extends Fragment {
 //               testDataProgress
                 );
 
-        RecordHelper.buildRecordListJson();
+        try {
+            RecordHelper.buildRecordListJson();
+        }catch (NullPointerException e){
 
+        }
 //        Log.d("progressTest", ""+RecordHelper.recordListJson);
 
         mPaint.setColor(Color.BLACK);
@@ -218,25 +226,30 @@ public class ProgressFragment extends Fragment {
             chartEntries.add( new BarEntry(i,0,""));
         }
 
-        for (Record record : listRecord) {
+        try {
+            for (Record record : listRecord) {
 
-            Log.d("progressTest","recWeek "+record.getCurrentWeekOfYear() + " # "+week);
+                Log.d("progressTest", "recWeek " + record.getCurrentWeekOfYear() + " # " + week);
 
-            int dayOfTheWeek = record.getLocalDate().getDayOfWeek().getValue();
-            dayOfTheWeek++;
-            if(dayOfTheWeek > 7) dayOfTheWeek =1; //who the hell made sunday 7!!!
-
-
-            if (record.getCurrentWeekOfYear() != week) continue;;
+                int dayOfTheWeek = record.getLocalDate().getDayOfWeek().getValue();
+                dayOfTheWeek++;
+                if (dayOfTheWeek > 7) dayOfTheWeek = 1; //who the hell made sunday 7!!!
 
 
-            Log.d("progressTest","dd = "+dayOfTheWeek);
+                if (record.getCurrentWeekOfYear() != week) continue;
+                ;
+
+
+                Log.d("progressTest", "dd = " + dayOfTheWeek);
 
 //                BarEntry barEntry = new BarEntry(index, record.getNumberOfGoals(), record.getCurrentDate());
                 BarEntry barEntry = new BarEntry(dayOfTheWeek, record.getNumberOfGoals(), record.getCurrentDate());
-                chartEntries.set(dayOfTheWeek-1,barEntry);
+                chartEntries.set(dayOfTheWeek - 1, barEntry);
 
 //            index++;
+            }
+        }catch (NullPointerException e){
+
         }
 
 

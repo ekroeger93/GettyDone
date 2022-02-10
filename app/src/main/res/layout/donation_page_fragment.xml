@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".ui.main.donation.DonationFragment"
+    >
 
     <TextView
         android:id="@+id/supportText"
@@ -22,12 +24,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.149" />
 
-    <TextView
+    <Button
         android:id="@+id/link_to_donation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="100dp"
         android:layout_marginEnd="100dp"
+        android:padding="20dp"
         android:background="@color/greys_green"
         android:textColor="@color/white"
         android:textColorLink="@color/white"

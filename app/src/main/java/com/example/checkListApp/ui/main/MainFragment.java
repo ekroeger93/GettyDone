@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -101,7 +102,6 @@ TaDone Prototype
 - shake phone to toggle timer
 https://demonuts.com/android-shake-detection/
 
--support page
 
 //TODO: DESIGN
 
@@ -111,11 +111,13 @@ https://demonuts.com/android-shake-detection/
 
 - show swiping hand icon for hint
 
-- various ui glitches
-    leaf buttons not hiding
-    pause/resume button
-    -> pause/resume on service notification
+- work on service notification
+    -needs to be able to cancel at the end
+    -design
+    -pause resume
 
+https://developer.android.com/guide/topics/ui/settings
+https://www.geeksforgeeks.org/how-to-implement-preferences-settings-screen-in-android/
 
 //TODO: Post production ideas:
 -? save to google drive, share data
@@ -995,7 +997,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     }
 
-    public static void transitionToFileFromMain(Activity activity){
+    public static void transitionFromMainToFile(Activity activity){
 
         MainFragmentDirections.ActionMainFragmentToFileListFragment action =
                 MainFragmentDirections.actionMainFragmentToFileListFragment(JsonService.getJsonCheckArrayList());
@@ -1004,11 +1006,16 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     }
 
-    public static void transitionToProgressFromMain(Activity activity){
+    public static void transitionFromMainToProgress(Activity activity){
 
         Navigation.findNavController(activity, R.id.entryListFragment).navigate(  MainFragmentDirections.actionMainFragmentToProgressFragment());
 
     }
+
+    public static void transitionFromMainToDonation(Activity activity){
+        Navigation.findNavController(activity,R.id.entryListFragment).navigate( MainFragmentDirections.actionMainFragmentToDonationFragment());
+    }
+
 
     @Override
     public void onPrimaryNavigationFragmentChanged(boolean isPrimaryNavigationFragment) {

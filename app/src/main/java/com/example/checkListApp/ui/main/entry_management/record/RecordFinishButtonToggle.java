@@ -33,10 +33,19 @@ public class RecordFinishButtonToggle {
 //                    RecordHelper.getJsonRecordGeneratedArray(
 //                            ProgressProvider.loadProgress(context));
 
+
+            //TODO: FIX THIS static class may be a problem
+
+          try{
                 RecordHelper.recordArrayList.add(
                         new Record(RecordHelper.numOfEntries)
                 );
+            }catch (NullPointerException e){
+              RecordHelper.recordArrayList = new ArrayList<>();
 
+              RecordHelper.recordArrayList.add(new Record(RecordHelper.numOfEntries));
+
+          }
                 RecordHelper.buildRecordListJson();
 
                 ProgressProvider.saveProgress(RecordHelper.recordListJson,context);
