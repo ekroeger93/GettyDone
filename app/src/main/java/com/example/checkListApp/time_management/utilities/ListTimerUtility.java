@@ -204,7 +204,7 @@ public class ListTimerUtility {
 
                 subActiveProcessTimeIndex = 0;
 
-//                parentEntry.getViewHolder().textView.setText(parentEntry.textTemp);
+                parentEntry.getViewHolder().textView.setText(parentEntry.textTemp);
                 parentEntry.getViewHolder().checkOff();
 
 
