@@ -90,6 +90,19 @@ TaDone Prototype
     -service
     -subListing
 
+//TODO: CODE OVERHAUL
+
+- entry needs a companion class to
+decouple data types (entry_data_complex)
+bridge pattern? complications with DAO and Gson
+
+- main fragment methods to a ui dynamics class
+
+- transitioning manager class for all navigation methods
+
+- defined enum state implementation:
+
+
 //TODO: BUGS
 
   -repeater time needs persistence
