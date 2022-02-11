@@ -135,6 +135,7 @@ public class FileListAdapter extends RecyclerView.Adapter {
 
 //                fileManager.deleteFile(getBindingAdapterPosition());
 //                fileListFragment.updateOnDelete();
+
                 fileName =
                         fileManager.getFileName(getBindingAdapterPosition()).replace(".json","");
 

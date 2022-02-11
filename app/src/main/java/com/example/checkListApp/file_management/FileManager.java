@@ -49,9 +49,7 @@ public class FileManager {
 
     public void deleteFile(int selection){
 
-
-         listOfFiles.remove(selection);
-
+         listOfFiles.get(selection).delete();
          update();
 
     }

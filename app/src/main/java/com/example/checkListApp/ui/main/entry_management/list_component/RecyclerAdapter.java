@@ -583,12 +583,13 @@ implements ItemTouchHelperAdapter {
 
                     try {
 
+                        if(getEntry() !=null) {
                             getEntry().textEntry.observe(owner, onChangeEntryText);
                             getEntry().checked.observe(owner, onChangeEntryChecked);
                             getEntry().countDownTimer.observe(owner, onChangeTimeValue);
                             getEntry().onTogglePrimer.observe(owner, onChangeTogglePrimer);
-                            getEntry().subListName.observe(owner,onChangeSubFileName);
-
+                            getEntry().subListName.observe(owner, onChangeSubFileName);
+                        }
 //                            getEntry().activeTimerLabel.observe(owner,onActiveTimeLabelChange);
 
 
