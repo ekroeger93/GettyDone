@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="ThemeOverlay.Alternative.One" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+
+<!--        <item name="preferenceTheme">@style/Theme.App.Preferences</item>-->
+<!--        <item name="preferenceTheme">@style/Theme.App.Preferences</item>-->
 
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/pale_blue_200</item>
@@ -16,5 +20,16 @@
 
         <item name="colorControlHighlight">@color/light_blue_200</item>
 
+
+        <item name="preferenceCategoryTitleTextColor">@color/white</item>
+        <item name="preferenceCategoryTitleTextAppearance">@color/white</item>
+
+
         </style>
+
+    <style name="Theme.App.Preferences" parent="PreferenceThemeOverlay">
+
+
+    </style>
+
 </resources>

@@ -114,5 +114,14 @@ public final class ProgressProvider {
 
     }
 
+    public static void resetProgress(Context context) {
 
+        try {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(RECORD_FILE, Context.MODE_PRIVATE));
+            outputStreamWriter.append("");
+            outputStreamWriter.close();
+        } catch (IOException e) {
+
+        }
+    }
 }

@@ -6,6 +6,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.app.Fragment;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -16,6 +17,7 @@ import com.example.checkListApp.databinding.MainActivityBinding;
 import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.donation.DonationFragment;
 import com.example.checkListApp.ui.main.progress.ProgressFragment;
+import com.example.checkListApp.ui.main.settings.PreferenceHelper;
 import com.example.checkListApp.ui.main.settings.SettingsFragment;
 import com.google.android.material.tabs.TabLayout;
 
@@ -27,12 +29,26 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
     int navPosition = 0;
 
     public static boolean visualSelect = false;
+    public static PreferenceHelper preferenceHelper;
 
     NavHostFragment navHostFragment;
 
     MainFragment mainFragment;
 
 
+    @Override
+    public Resources.Theme getTheme() {
+
+//        Resources.Theme theme = super.getTheme();
+//        if(useAlternativeTheme){
+//            theme.applyStyle(R.style., true);
+//        }
+//        // you could also use a switch if you have many themes that could apply
+//        return theme;
+//
+        return super.getTheme();
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
         //   setContentView(R.layout.main_activity);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
 
+        preferenceHelper = new PreferenceHelper(getApplicationContext());
 
         activityBinding = DataBindingUtil.setContentView(this, R.layout.main_activity);
         ///DataBindingUtil.inflate(inflater,R.layout.fragment_file_list, (ViewGroup) container, false);

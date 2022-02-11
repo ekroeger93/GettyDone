@@ -1,18 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="?colorAccent"
     >
 
     <SwitchPreferenceCompat
-        app:key="notifications"
-        app:title="Enable message notifications"/>
+        app:key="@string/hintMessagesResetTimerKey"
+        app:title="Show Hint Message Reset Timer"
+
+        />
+
+
+    <ListPreference
+        app:defaultValue="2"
+        app:dialogTitle="Shake Toggle"
+        app:entries="@array/pref_shake_toggle"
+        app:entryValues="@array/pref_shake_toggle_value"
+        app:key="@string/shakeToToggleTimerModeKey"
+        app:summary="Shake phone to toggle timer during execution phase"
+        app:title="Shake Toggle Timer" />
+
+    />
+
+    <Preference
+        app:key="@string/resetProgressKey"
+        app:summary="Reset your progress, all data records deleted"
+        app:title="Reset Progress" />
 
     <Preference
         app:key="feedback"
-        app:title="Send feedback"
-        app:summary="Report technical issues or suggest new features"/>
-
-
+        app:summary="Report technical issues or suggest new features"
+        app:title="Send feedback" />
 
 
 </PreferenceScreen>

@@ -10,18 +10,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class FileManager {
 
 
     private final Context context;
-    private File[] listOfFiles;
+    private List<File> listOfFiles;
 
 
    public FileManager(Context context){
 
         this.context = context;
-        listOfFiles = context.getFilesDir().listFiles();
+        listOfFiles =  Arrays.stream(context.getFilesDir().listFiles())
+                .filter(n -> !n.getName().equals("RECORD_FILE.json"))
+                .collect(Collectors.toList());
 
     }
 
@@ -45,7 +50,7 @@ public class FileManager {
     public void deleteFile(int selection){
 
 
-         listOfFiles[selection].delete();
+         listOfFiles.remove(selection);
 
          update();
 
@@ -63,9 +68,7 @@ public class FileManager {
 
 
     public String getFileName(int selection ){
-
-        return  listOfFiles[selection].getName();
-
+        return  listOfFiles.get(selection).getName();
     }
 
    public String loadFile(int selection){
@@ -80,7 +83,7 @@ public class FileManager {
 
 
         try {
-            inputStream = context.openFileInput(listOfFiles[selection].getName());
+            inputStream = context.openFileInput(listOfFiles.get(selection).getName());
 
 
             if ( inputStream != null ) {
@@ -153,13 +156,14 @@ public class FileManager {
 
 
     public File[] getListOfFiles() {
-        return listOfFiles;
+        return listOfFiles.toArray(new File[listOfFiles.size()]);
     }
 
     void update(){
 
-        listOfFiles = context.getFilesDir().listFiles();
-
+        listOfFiles = Arrays.stream(context.getFilesDir().listFiles())
+                .filter(n -> !n.getName().equals("RECORD_FILE.json"))
+                .collect(Collectors.toList());
     }
 
 

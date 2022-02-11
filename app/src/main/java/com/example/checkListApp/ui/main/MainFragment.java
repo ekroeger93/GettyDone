@@ -118,16 +118,14 @@ bridge pattern? complications with DAO and Gson
 https://developer.android.com/guide/topics/ui/settings
 https://www.geeksforgeeks.org/how-to-implement-preferences-settings-screen-in-android/
 https://developer.android.com/training/data-storage/shared-preferences
+https://stackoverflow.com/questions/11562051/change-activitys-theme-programmatically
 
--disable hint message execute timer
--reset progress
--toggle shake
-    - toggle only when timer is paused
-    - toggle enable
-    - toggle disabled (default)
+https://stackoverflow.com/questions/16108609/android-creating-custom-preference/33842737
+https://medium.com/@JakobUlbrich/building-a-settings-screen-for-android-part-3-ae9793fd31ec
 
--delete all files (except progress)
 -theme color
+-delete all files
+
 -email
 
 //TODO: DESIGN

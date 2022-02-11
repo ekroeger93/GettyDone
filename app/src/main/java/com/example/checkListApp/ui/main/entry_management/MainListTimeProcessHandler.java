@@ -1,13 +1,18 @@
 package com.example.checkListApp.ui.main.entry_management;
 
+import static android.provider.Settings.System.getString;
+
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
+import androidx.preference.PreferenceManager;
 
+import com.example.checkListApp.MainActivity;
 import com.example.checkListApp.R;
 import com.example.checkListApp.databinding.MainFragmentBinding;
 import com.example.checkListApp.time_management.TimerViewModel;
@@ -75,9 +80,16 @@ public class MainListTimeProcessHandler {
 
             //TODO: dont forget the move sublisting json is screwed up
             //this is a temp fix
-//            mainFragment.sanityCheckSubList();
 
-            if(!MainFragment.isTimerRunning()) {
+//            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+//            boolean hintMessageActive = preferences.getBoolean("hintMessagesResetTimer", false);
+//            Log.d("prefTest",""+hintMessageActive);
+
+
+            if(!MainFragment.isTimerRunning() && MainActivity.preferenceHelper.hintTimerMessageIsActive()) {
+
+//                SharedPreferences sharedPref = context.getSharedPreferences(
+//                        getString(R.string.hin), Context.MODE_PRIVATE);
 
                 Snackbar snackbar = Snackbar.make(binding.buttonPanel, "hold button to reset timer",
                         Snackbar.LENGTH_SHORT)
