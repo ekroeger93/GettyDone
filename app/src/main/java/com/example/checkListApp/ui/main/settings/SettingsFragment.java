@@ -4,13 +4,16 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -62,46 +65,118 @@ public class SettingsFragment  extends PreferenceFragmentCompat {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        //        LayoutInflater li = (LayoutInflater)getContext().getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-//        return li.inflate( R.layout.seekbar_preference, parent, false);
 
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
-        dialogBuilder.setView(
+
+        Preference dialogPreferenceResetProgress = getPreferenceScreen().findPreference("resetProgress");
+        Preference dialogPreferenceEmail = getPreferenceScreen().findPreference("feedback");
+
+        setupResetProgress(dialogPreferenceResetProgress,container);
+        setupEmail(dialogPreferenceEmail,container);
+
+
+
+
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+
+    public AlertDialog getResetProgressDialog(ViewGroup container){
+
+        AlertDialog.Builder dialogBuilderResetProgress = new AlertDialog.Builder(getContext());
+        dialogBuilderResetProgress.setView(
                 (LayoutInflater.from(getContext())
                         .inflate(
                                 R.layout.dialog_reset_progress,
                                 container,
                                 false))
         );
-        AlertDialog alertDialog = dialogBuilder.create();
+        return dialogBuilderResetProgress.create();
+
+    }
+
+    public AlertDialog getEmailDialog(ViewGroup container){
+
+        AlertDialog.Builder dialogBuilderResetProgress = new AlertDialog.Builder(getContext());
+        dialogBuilderResetProgress.setView(
+                (LayoutInflater.from(getContext())
+                        .inflate(
+                                R.layout.dialog_email,
+                                container,
+                                false))
+        );
+        return dialogBuilderResetProgress.create();
 
 
-        Preference dialogPreference = getPreferenceScreen().findPreference("resetProgress");
-        dialogPreference.setOnPreferenceClickListener(preference -> {
-            // dialog code here
+    }
 
-            alertDialog.show();
+    public void setupResetProgress(Preference preference, ViewGroup container){
 
-            Button resetCancel = alertDialog.findViewById(R.id.reset_progress_cancel_button);
-            Button resetConfirm = alertDialog.findViewById(R.id.reset_progress_confirm_button);
+        AlertDialog alertDialogResetProgress = getResetProgressDialog(container);
+
+        preference.setOnPreferenceClickListener( preference1 -> {
+
+            alertDialogResetProgress.show();
+
+            Button resetCancel = alertDialogResetProgress.findViewById(R.id.reset_progress_cancel_button);
+            Button resetConfirm = alertDialogResetProgress.findViewById(R.id.reset_progress_confirm_button);
 
             resetCancel.setOnClickListener(v ->{
-                alertDialog.dismiss();
+                alertDialogResetProgress.dismiss();
             });
 
             resetConfirm.setOnClickListener(v ->{
                 ProgressProvider.resetProgress(getContext());
-                alertDialog.dismiss();
+                alertDialogResetProgress.dismiss();
             });
-
-
 
             return true;
         });
 
-
-        return super.onCreateView(inflater, container, savedInstanceState);
     }
+
+    public void setupEmail(Preference preference, ViewGroup container){
+
+        AlertDialog alertDialogEmail = getEmailDialog(container);
+
+        preference.setOnPreferenceClickListener( preference1 -> {
+
+            alertDialogEmail.show();
+
+            Button emailCancel = alertDialogEmail.findViewById(R.id.email_cancel_button);
+            Button emailSend = alertDialogEmail.findViewById(R.id.email_submit_button);
+
+            EditText editText = alertDialogEmail.findViewById(R.id.email_message_text);
+
+            emailCancel.setOnClickListener(v ->{
+                alertDialogEmail.dismiss();
+            });
+
+            emailSend.setOnClickListener(v ->{
+
+                String[] address = new String[1];
+                address[0]="regoerkcire@gmail.com";
+
+                composeEmail(address,editText.getText().toString());
+
+                alertDialogEmail.dismiss();
+
+            });
+
+            return true;
+        });
+
+    }
+
+    public void composeEmail(String[] addresses, String subject) {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+        intent.putExtra(Intent.EXTRA_EMAIL, addresses);
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
 
 
 }
