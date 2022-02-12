@@ -59,22 +59,24 @@ public class ListTimerUtility {
                     n.timeAccumulated = entry.timeAccumulated + subAcc;
                     entry.subLatestAccumulated = n.timeAccumulated;
 
-                    Log.d("subListingTest","Sub acc:"+n.timeAccumulated);
+//                    Log.d("subListingTest","Sub acc:"+n.timeAccumulated);
                  }
 
                 entry.subNumberTimeValue = entry.numberValueTime + entry.subLatestAccumulated;
 
                 if(i == checkList.size()-2){
-                    entry.setTimeAcclimatedLastSub();
+                    entry.setTimeAcclimatedLastSub(checkList.get(i - 1));
                 }
+
 
                 if(checkList.size()==3){
                     entry.timeAccumulated = entry.numberValueTime;
                     entry.subNumberTimeValue = entry.subLatestAccumulated;
+
                 }
 
 
-                Log.d("subListingTest"," Parent subNTV "+entry.subNumberTimeValue);
+//                Log.d("subListingTest"," Parent subNTV "+entry.subNumberTimeValue);
 
 
             }
@@ -124,42 +126,23 @@ public class ListTimerUtility {
 
    public int getSummationTime(ArrayList<Entry> list){
 
-//        int sum = 0;
-//
-//        for(Entry entry:list){
-//
-//            if (!(entry instanceof Spacer)) {
-//
-//            entry.setNumberValueTime(entry.countDownTimer.getValue());
-//
-//            int value;
-//
-//
-//
-//            if (entry.subNumberTimeValue == 0) {
-//                value = entry.timeAccumulated;
-//                Log.d("summationTest"," parVal "+value);
-//            }else{
-//                value = new TimeState(entry.subNumberTimeValue).timeTruncated();
-//                Log.d("summationTest"," subVal "+value);
-//            }
-//
-//
-//
-//                sum =value;
-//
-//                Log.d("summationTest","sum: "+sum);
-//            }
-//
-//
-//        }
 
        Entry lastEntry = list.get(list.size()-2);
 
        if(list.size() >3) {
-           return new TimeState(lastEntry.timeAccumulated).timeTruncated();
+
+           if(lastEntry.isSubEntry){
+               //get the last entry of the sublist instead!
+               return new TimeState(lastEntry.subLatestAccumulated).timeTruncated();
+           }else {
+
+               return new TimeState(lastEntry.timeAccumulated).timeTruncated();
+           }
+
        }else{
+
            return  new TimeState(lastEntry.subNumberTimeValue).timeTruncated();
+
        }
 
     }
@@ -203,11 +186,7 @@ public class ListTimerUtility {
             }else{
 
                 subActiveProcessTimeIndex = 0;
-
-                parentEntry.getViewHolder().textView.setText(parentEntry.textTemp);
                 parentEntry.getViewHolder().checkOff();
-
-
 
                 activeProcessTimeIndex++;
 

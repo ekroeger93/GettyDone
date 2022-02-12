@@ -376,11 +376,13 @@ public class Entry {
 
     }
 
-    public void setTimeAcclimatedLastSub(){
+    public void setTimeAcclimatedLastSub(Entry lastEntryProcessed){
 
         if(!subCheckList.isEmpty()){
 
        int subAcc = 0;
+
+            subNumberTimeValue = numberValueTime + lastEntryProcessed.subLatestAccumulated;
 
             for(Entry n : subCheckList) {
 
@@ -395,7 +397,13 @@ public class Entry {
 
             subNumberTimeValue = numberValueTime + subLatestAccumulated;
 
-            timeAccumulated = subNumberTimeValue;
+
+//            subNumberTimeValue = subLatestAccumulated;
+
+//            timeAccumulated = subNumberTimeValue;
+
+            Log.d("subListingTest","parent: "+subAcc+" sL: "+subLatestAccumulated+" nV:"+numberValueTime+" acc: "+timeAccumulated);
+
 
         }
 

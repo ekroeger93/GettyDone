@@ -21,6 +21,7 @@ import com.example.checkListApp.timer.CountDownTimerAsync;
 import com.example.checkListApp.timer.TimeState;
 import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
+import com.example.checkListApp.ui.main.entry_management.entries.Spacer;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -99,10 +100,6 @@ public class MainListTimeProcessHandler {
 
             }
 
-            updateEntryUI();
-
-            setTimer();
-
 
             if(timerViewModel.isToggled()) {
                 binding.timerExecuteBtn.setBackground(
@@ -119,7 +116,12 @@ public class MainListTimeProcessHandler {
 
             }
 
+            updateEntryUI();
+            setTimer();
+            scrollToPosition(timerUtility.activeProcessTimeIndex);
+
             if( timerUtility.getSummationTime(checkList)  > 0 ) {
+
 
                 mainFragment.startService();
 
@@ -147,6 +149,7 @@ public class MainListTimeProcessHandler {
 //            mainFragment.getTimerRunning().postValue(false);
 
             MainFragment.resetTime();
+            revertEntryUI();
 
             mainFragment.getActivity().stopService(mainFragment.getServiceIntent());
 
@@ -284,13 +287,13 @@ public class MainListTimeProcessHandler {
 
     public void processTimerTask(int elapsedTime) {
 
-//        Log.d("subListingTest",
-//                timerUtility.currentActiveTime.textTemp +
-//                        " elapse: " + elapsedTime +
-//                        " acc:" + timerUtility.currentActiveTime.timeAccumulated +
-//                        " index: " + timerUtility.activeProcessTimeIndex +
-//                        " subIndex: " + timerUtility.subActiveProcessTimeIndex +
-//                        " isSub: " + timerUtility.currentActiveTime.isSubEntry);
+        Log.d("subListingTest",
+                timerUtility.currentActiveTime.textTemp +
+                        " elapse: " + elapsedTime +
+                        " acc:" + timerUtility.currentActiveTime.timeAccumulated +
+                        " index: " + timerUtility.activeProcessTimeIndex +
+                        " subIndex: " + timerUtility.subActiveProcessTimeIndex +
+                        " isSub: " + timerUtility.currentActiveTime.isSubEntry);
 
 
 
@@ -322,15 +325,19 @@ public class MainListTimeProcessHandler {
 
 
         else {
-
             updateEntryUI();
             scrollToPosition(timerUtility.activeProcessTimeIndex);
 
-            timerViewModel.toggleTime();
+            timerUtility.currentActiveTime = timerUtility.getNextActiveProcessTime(checkList);
+
+
 
             mainFragment.playAudio(timerUtility.currentActiveTime.getSelectAudio());
 
-            timerUtility.currentActiveTime = timerUtility.getNextActiveProcessTime(checkList);
+
+
+            timerViewModel.toggleTime();
+
 
 
 
@@ -356,6 +363,7 @@ public class MainListTimeProcessHandler {
 
             timerUtility.revertTimeIndex();
             timerUtility.revertSubTimeIndex();
+            revertEntryUI();
 
             timerUtility.currentActiveTime = checkList.get(1);
             timerViewModel.setTaskCustom(countDownTask);
@@ -363,6 +371,21 @@ public class MainListTimeProcessHandler {
 
     }
 
+    public void revertEntryUI(){
+
+        for(Entry n :checkList){
+
+            if(!(n instanceof Spacer)) {
+                n.getViewHolder().textView
+                        .setText(n.textEntry.getValue());
+
+                n.getViewHolder().timerLabelText
+                        .setText(n.getCountDownTimer().getValue());
+            }
+
+        }
+
+    }
 
     public void updateEntryUI(){
 
