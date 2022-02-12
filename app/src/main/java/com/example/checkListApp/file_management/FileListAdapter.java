@@ -22,7 +22,7 @@ public class FileListAdapter extends RecyclerView.Adapter {
 
     File[] listFiles;
 
-    private  int fileSelection = 0;
+    private  int fileSelection = -1;
 
     private final FileManager fileManager;
     private final FileListFragment fileListFragment;

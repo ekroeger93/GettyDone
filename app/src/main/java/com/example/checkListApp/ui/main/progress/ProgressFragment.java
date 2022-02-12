@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -32,6 +33,8 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.renderer.XAxisRenderer;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -133,6 +136,13 @@ public class ProgressFragment extends Fragment {
         BarChart barChart = (BarChart) view.findViewById(R.id.chart);
         calendarView = view.findViewById(R.id.calendar);
 
+
+        barChart.setNoDataText("select a date");
+        barChart.setNoDataTextColor(Color.BLACK);
+        barChart.setNoDataTextTypeface(Typeface.MONOSPACE);
+        barChart.getAxisLeft().setEnabled(false);
+        barChart.getAxisRight().setEnabled(false);
+
 //        String testDataProgress ="[" +
 //                "{\"goalCount\":3,\"dateFinished\":2022.01.06,\"currentWeekOfYear\":2}," +
 //                "{\"goalCount\":2,\"dateFinished\":2022.01.07,\"currentWeekOfYear\":2}," +
@@ -203,6 +213,8 @@ public class ProgressFragment extends Fragment {
 
                 @Override
                 public void onNothingSelected() {
+
+
 
                 }
             });

@@ -45,6 +45,8 @@
                 android:id="@+id/entryText"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
                 android:background="?colorSecondary"
                 android:textColor="?colorOnSecondary"
                 android:focusable="false"

@@ -12,6 +12,8 @@
     <string name="audio_long_bell">long bell</string>
     <string name="audio_short_bell">short bell</string>
 
+    <string name="info_pause_timer">pause timer until toggled</string>
+
     <string name="_submit">submit</string>
     <string name="textEntryHint">hold to edit text \n swipe right to remove</string>
     <string name="entrySubTextNoLoaded">no sublist loaded</string>

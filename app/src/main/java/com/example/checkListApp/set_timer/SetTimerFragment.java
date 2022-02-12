@@ -1,6 +1,7 @@
 package com.example.checkListApp.set_timer;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,6 +28,7 @@ import com.example.checkListApp.time_management.parcel.TimeParcel;
 import com.example.checkListApp.time_management.parcel.TimeParcelBuilder;
 import com.example.checkListApp.databinding.SettimerFragmentBinding;
 import com.example.checkListApp.ui.main.data_management.JsonService;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
@@ -39,6 +41,7 @@ public class SetTimerFragment extends Fragment {
     TextView setTimerText;
     Button submitTimeButton;
     Button onToggleOnlySubmit;
+    ImageButton infoButton;
 
     ImageButton soundSelection;
 
@@ -92,6 +95,8 @@ public class SetTimerFragment extends Fragment {
         submitTimeButton = binding.submitTime;
         onToggleOnlySubmit = binding.toggleOnlyBtn;
         soundSelection = binding.soundSelectBtn;
+
+        infoButton = binding.informationBtn;
 
 
         Log.d("TestJson",""+parcelable.getTimeStringVal());
@@ -207,6 +212,15 @@ public class SetTimerFragment extends Fragment {
             );
 
             Navigation.findNavController(view).navigate(action);
+
+        });
+
+
+        infoButton.setOnClickListener( v->{
+
+            Snackbar snackbar = Snackbar.make(v,R.string.info_pause_timer,Snackbar.LENGTH_SHORT);
+            snackbar.setAnchorView(v);
+            snackbar.show();
 
         });
 
