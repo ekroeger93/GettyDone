@@ -172,7 +172,6 @@ public class MainListTimeProcessHandler {
         //set a post execution after timer expires, proceeds to next Entry
         timerViewModel.setPostExecute(() -> {
 
-            displayEntryToast();
 
             if (timerViewModel.getRepeaterTime() <= -1) {
                 endOfTimerTask(countDownTask);
@@ -228,8 +227,14 @@ public class MainListTimeProcessHandler {
 
         if (mainFragment.getActivity() != null && getContext() !=null) {
             mainFragment.getActivity().runOnUiThread(() -> {
-                binding.timeTextSecondary.setText(
-                        timerUtility.currentActiveTime.getActiveTimeLabel(elapsedTime));
+
+                if(!timerUtility.currentActiveTime.onTogglePrimer.getValue()) {
+                    binding.timeTextSecondary.setText(
+                            timerUtility.previousActiveTime.getActiveTimeLabel(elapsedTime));
+                }else{
+                    binding.timeTextSecondary.setText("00:00:01");
+                }
+
             });
         }
     }
@@ -331,6 +336,7 @@ public class MainListTimeProcessHandler {
             updateEntryUI();
             scrollToPosition(timerUtility.activeProcessTimeIndex);
 
+            timerViewModel.toggleTime();
             timerUtility.currentActiveTime = timerUtility.getNextActiveProcessTime(checkList);
 
 
@@ -339,7 +345,7 @@ public class MainListTimeProcessHandler {
 
 
 
-            timerViewModel.toggleTime();
+
 
 
 

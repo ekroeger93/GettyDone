@@ -20,7 +20,6 @@ import androidx.core.app.NotificationCompat;
 import androidx.lifecycle.LifecycleService;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
-import androidx.preference.Preference;
 
 import com.example.checkListApp.MainActivity;
 import com.example.checkListApp.R;
@@ -28,7 +27,7 @@ import com.example.checkListApp.time_management.parcel.ListTimersParcel;
 import com.example.checkListApp.time_management.utilities.KeyHelperClass;
 import com.example.checkListApp.time_management.utilities.ListTimerUtility;
 import com.example.checkListApp.timer.TimeState;
-import com.example.checkListApp.ui.main.MainFragment;
+import com.example.checkListApp.ui.main.ColorHelper;
 import com.example.checkListApp.ui.main.entry_management.MainListTimeProcessHandler;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 import com.example.checkListApp.ui.main.settings.PreferenceHelper;
@@ -36,7 +35,6 @@ import com.example.checkListApp.ui.main.shake_detector.ShakeDetector;
 
 
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public final class TimerService extends LifecycleService implements SensorEventListener {
@@ -173,13 +171,10 @@ public final class TimerService extends LifecycleService implements SensorEventL
 
         Log.d("serviceTest",""+countTime + " "+ entry);
 
-//        if(countTime <= 1 && timeViewModel.getRepeaterTime() <= 0
-//        ) {
-//                mBuilder.set(builderDismissive(dataHelper, countTime));
-//        }
-//        else {
-                mBuilder.set(builderNormal(dataHelper, entry, elapsedTimeNV, countTime));
-//        }
+
+
+            mBuilder.set(builderNormal(dataHelper, entry, elapsedTimeNV, countTime));
+
 
 
         return mBuilder.get()
@@ -256,7 +251,7 @@ public final class TimerService extends LifecycleService implements SensorEventL
         String toggleButtonText = (dataHelper.timerViewModel.isToggled()) ? "Pause" : "Resume";
 
 
-        return dataHelper.builder  .setContentIntent(dataHelper.pendingIntent)
+        return dataHelper.builder.setContentIntent(dataHelper.pendingIntent)
                 .setSmallIcon(R.drawable.outline_timer_black_48)
                 .setOnlyAlertOnce(true)
                 .setContentTitle("Countdown Timer")
@@ -266,7 +261,6 @@ public final class TimerService extends LifecycleService implements SensorEventL
                         toggleTimePendingIntent)
                 .setProgress(entry.numberValueTime, Math.abs( decimalEntrySetTime - elapsedTimeNV) , false)
                 .setAutoCancel(true)
-                .setOngoing(true)
                 .setColor(Color.BLUE)
                 .setSubText(dataHelper.timerViewModel.getRepeaterTime() + " " + new TimeState(countTime).getTimeFormat())
                 .setContentText(entry.textEntry.getValue() + " " + textTimeRemainder);
@@ -274,27 +268,6 @@ public final class TimerService extends LifecycleService implements SensorEventL
     }
 
 
-    private NotificationCompat.Builder builderDismissive(BuilderDataHelper dataHelper){
-
-        Intent resetTimeIntent = new Intent(this, TimerBroadcastReceiver.class);
-        resetTimeIntent.setAction(KeyHelperClass.BROADCAST_ACTION_DISMISS);
-
-        PendingIntent resetTimePendingIntent =
-                PendingIntent.getBroadcast(this,0, resetTimeIntent,0);
-
-
-        return dataHelper.builder.setContentIntent(dataHelper.pendingIntent)
-                .setSmallIcon(R.drawable.outline_timer_black_48)
-                .setOnlyAlertOnce(true)
-                .addAction(R.drawable.outline_add_circle_black_48, "Dismiss",
-                        resetTimePendingIntent)
-                .setContentTitle("Countdown Timer")
-                .setAutoCancel(true)
-                .setOngoing(false)
-                .setColor(Color.BLUE)
-                .setContentText("completed");
-
-    }
 
 
 
@@ -332,12 +305,12 @@ public final class TimerService extends LifecycleService implements SensorEventL
     }
 
 
-    class ForegroundTimerService {
+    static class ForegroundTimerService {
 
         private final TimerService timerService;
         private final PendingIntent pendingIntent;
         private final TimerViewModel timeViewModel = MainListTimeProcessHandler.timerViewModel;
-        private   ArrayList<Entry> timerViewModelList;
+        private final ArrayList<Entry> timerViewModelList;
 
         private final int FOREGROUND_SERVICE_ID = 111;
 
@@ -349,13 +322,10 @@ public final class TimerService extends LifecycleService implements SensorEventL
 
             this.pendingIntent = pendingIntent;
 
-            timerViewModelList = (ArrayList<Entry>) timerUtility.generateEntryList(parcel);
+            timerViewModelList = timerUtility.generateEntryList(parcel);
 
         }
 
-        public ArrayList<Entry> getTimerViewModelList() {
-            return timerViewModelList;
-        }
 
         public Notification preSetNotification(int setTime, Entry entry) {
             return timerService.makeNotification(setTime, 0, timeViewModel, entry, pendingIntent);
@@ -364,21 +334,14 @@ public final class TimerService extends LifecycleService implements SensorEventL
 
         public Notification createTimer(NotificationManager mgr) {
 
-            AtomicInteger _setTime = new AtomicInteger(timeViewModel.getNumberValueTime());
+//            AtomicInteger _setTime = new AtomicInteger(timeViewModel.getNumberValueTime());
 
-            AtomicReference<Notification> notification =
-                    new AtomicReference<>(
-                            preSetNotification(_setTime.get() ,timerUtility.previousActiveTime));
+            AtomicReference<Notification> notification = new AtomicReference<>(preSetNotification(timeViewModel.getNumberValueTime(), timerUtility.previousActiveTime));
 
 
             timeViewModel.setServicePostExecute(() -> {
 
                 reset.postValue(true);
-//                String channel = createChannel();
-//                AtomicReference<NotificationCompat.Builder> mBuilder = new AtomicReference<>(new NotificationCompat.Builder(getBaseContext(), channel));
-//                BuilderDataHelper dataHelper = new BuilderDataHelper(mBuilder.get(), pendingIntent, timeViewModel);
-//
-//                notification.set(builderDismissive(dataHelper).build());
 
             });
 
@@ -387,11 +350,9 @@ public final class TimerService extends LifecycleService implements SensorEventL
             //TODO  FIRST ENTRY IS TOGGLE AND IS NOT GETTING NEXT INDEX
             //ON SECOND GO AROUND
 
-
-
                 timeViewModel.setServiceTask(((elapsedTimeVolatile, countTime, elapsedTimeN) -> {
 
-                    elapsedTime = _setTime.get() - countTime;
+//                    elapsedTime = _setTime.get() - countTime;
 
                     //rebuild notification here
                     notification.set(timerService.makeNotification(
@@ -432,3 +393,29 @@ public final class TimerService extends LifecycleService implements SensorEventL
 //        );
 
 //     new TimeState(entry.getTimeAccumulated()).timeTruncated();
+
+/*
+
+   private NotificationCompat.Builder builderDismissive(BuilderDataHelper dataHelper){
+
+        Intent resetTimeIntent = new Intent(this, TimerBroadcastReceiver.class);
+        resetTimeIntent.setAction(KeyHelperClass.BROADCAST_ACTION_DISMISS);
+
+        PendingIntent resetTimePendingIntent =
+                PendingIntent.getBroadcast(this,0, resetTimeIntent,0);
+
+
+        return dataHelper.builder.setContentIntent(dataHelper.pendingIntent)
+                .setSmallIcon(R.drawable.outline_timer_black_48)
+                .setOnlyAlertOnce(true)
+                .addAction(R.drawable.outline_add_circle_black_48, "Dismiss",
+                        resetTimePendingIntent)
+                .setContentTitle("Countdown Timer")
+                .setAutoCancel(true)
+                .setOngoing(false)
+                .setColor(Color.BLUE)
+                .setContentText("completed");
+
+    }
+
+ */

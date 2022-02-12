@@ -142,7 +142,8 @@ public class CountDownTimerAsync {
                     Locale locale = Locale.getDefault();
 //                    countDownTime = Duration.between(Instant.now(), Instant.from(futureTime));
 
-                    while (timeToggler.isToggleTimeON()) {
+
+                    do{
 
                         try {
 
@@ -202,7 +203,12 @@ public class CountDownTimerAsync {
                         countDownTask.execute(elapsedTimeVolatile);
                         serviceTask.execute(elapsedTimeVolatile, countTime, elapsedTime);
 
-                    }
+                    } while (timeToggler.isToggleTimeON());
+
+
+
+
+
                 }
 
 
