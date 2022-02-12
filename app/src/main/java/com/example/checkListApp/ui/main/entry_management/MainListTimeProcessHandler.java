@@ -69,8 +69,11 @@ public class MainListTimeProcessHandler {
 
                 if(timerUtility.currentActiveTime == null) timerUtility.currentActiveTime = checkList.get(1);
 
-                updateSecondaryTimer(time);
+                timerUtility.updatePreviousActiveProcess(checkList);
+
+                 updateSecondaryTimer(time);
                 processTimerTask(time);
+
 
             };
 

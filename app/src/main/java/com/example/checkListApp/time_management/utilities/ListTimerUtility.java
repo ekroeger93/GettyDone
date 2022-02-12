@@ -15,9 +15,11 @@ import java.util.logging.Logger;
 public class ListTimerUtility {
 
      public int activeProcessTimeIndex = 1;
-     public int subActiveProcessTimeIndex = 0 ;
+     public int subActiveProcessTimeIndex = -1 ;
 
     public volatile Entry currentActiveTime;
+    public Entry previousActiveTime;
+
     public  Entry parentEntry = null;
 
     public ListTimerUtility(){
@@ -148,12 +150,27 @@ public class ListTimerUtility {
     }
 
 
+    public void updatePreviousActiveProcess(ArrayList<Entry> list){
+
+
+        previousActiveTime= currentActiveTime;
+//        if(subActiveProcessTimeIndex != -1) {
+//            previousActiveTime = parentEntry.subCheckList.get(subActiveProcessTimeIndex);
+//        }else{
+//            if(activeProcessTimeIndex !=1)
+//            {previousActiveTime = list.get(activeProcessTimeIndex);}
+//            else {
+//                previousActiveTime = list.get(1);
+//            }
+//        }
+    }
 
     public  Entry getNextActiveProcessTime(ArrayList<Entry> list){
 
         int size = list.size()-1;
 
         currentActiveTime = list.get(activeProcessTimeIndex);
+
 
         if(currentActiveTime.subCheckList.isEmpty() && !currentActiveTime.isSubEntry
         ){
@@ -171,21 +188,20 @@ public class ListTimerUtility {
             if(parentEntry == null)
             parentEntry = list.get(activeProcessTimeIndex);
 
-            if(subActiveProcessTimeIndex < parentEntry.subCheckList.size()){
+            if(subActiveProcessTimeIndex < parentEntry.subCheckList.size()-1){
 
-                Entry subEntry = parentEntry.subCheckList.get(subActiveProcessTimeIndex);
 
-//                    parentEntry.getViewHolder().textView.setText(subEntry.textEntry.getValue());
+                //                    parentEntry.getViewHolder().textView.setText(subEntry.textEntry.getValue());
 //                    parentEntry.getViewHolder().timerLabelText.setText(subEntry.getCountDownTimer().getValue());
 
 
-                subActiveProcessTimeIndex++;
+//                subActiveProcessTimeIndex++;
 
-                return subEntry;
+                return parentEntry.subCheckList.get(++subActiveProcessTimeIndex);
 
             }else{
 
-                subActiveProcessTimeIndex = 0;
+                subActiveProcessTimeIndex = -1;
                 parentEntry.getViewHolder().checkOff();
 
                 activeProcessTimeIndex++;
@@ -217,12 +233,13 @@ public class ListTimerUtility {
 
     }
 
+
    public  void revertTimeIndex(){
        activeProcessTimeIndex = 1; }
 
    public  void revertSubTimeIndex(){
        parentEntry = null;
-        subActiveProcessTimeIndex = 0;}
+        subActiveProcessTimeIndex = -1;}
 
    public int getActiveProcessTimeIndex(){return  activeProcessTimeIndex;}
 

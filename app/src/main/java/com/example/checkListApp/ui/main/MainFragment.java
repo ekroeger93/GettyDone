@@ -130,10 +130,6 @@ https://medium.com/@JakobUlbrich/building-a-settings-screen-for-android-part-3-a
 
 //TODO: DESIGN
 
--set timer
-    -the hint icon
-    -sound list
-
 - work on service notification
     -needs to be able to cancel at the end
     -design

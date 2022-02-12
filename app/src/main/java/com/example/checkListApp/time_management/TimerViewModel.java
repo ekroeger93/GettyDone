@@ -19,7 +19,7 @@ public class TimerViewModel {
 
     private final TimeToggler timeToggler = new TimeToggler();//TimeToggler.getTimeToggler();
 //    private final CountDownTimerAsync countTimer = CountDownTimerAsync.getInstanceToToggle(timeToggler);
-    private final CountDownTimerAsync countTimer = new CountDownTimerAsync(timeToggler);
+    private  CountDownTimerAsync countTimer = new CountDownTimerAsync(timeToggler);
     private TimeState timeState = new TimeState(0);
 
 
@@ -173,6 +173,9 @@ public class TimerViewModel {
         countTimer.resetAll();
         countTimer.postTimeExpire();
         timeToggler.shutDown();
+        countTimer.shutdown();
+
+        countTimer = new CountDownTimerAsync(timeToggler);
 
 
     }

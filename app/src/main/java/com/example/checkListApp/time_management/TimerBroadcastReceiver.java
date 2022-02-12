@@ -21,9 +21,12 @@ public class TimerBroadcastReceiver extends BroadcastReceiver {
 
        if (intent.getAction().equals(KeyHelperClass.BROADCAST_ACTION_RESET_TIMER)){
            MainFragment.resetTime();
-           TimerService.reset.postValue(false);
+           TimerService.reset.postValue(true);
         }
 
+       if(intent.getAction().equals(KeyHelperClass.BROADCAST_ACTION_DISMISS)){
+           TimerService.reset.postValue(true);
+       }
 
 
 

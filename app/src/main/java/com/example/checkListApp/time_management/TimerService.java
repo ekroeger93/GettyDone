@@ -45,10 +45,11 @@ public final class TimerService extends LifecycleService implements SensorEventL
    private Intent serviceIntent;
    public static MutableLiveData<Boolean> reset = new MutableLiveData<>(false);
 
-   private final static ListTimerUtility timerUtility = MainListTimeProcessHandler.timerUtility;
+   NotificationManager notificationManager;
+   private final int FOREGROUND_SERVICE_ID = 111;
 
+    private final static ListTimerUtility timerUtility = MainListTimeProcessHandler.timerUtility;
 
-   public static MutableLiveData<Boolean> timerToggled = new MutableLiveData<>(false);
 
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
@@ -66,10 +67,14 @@ public final class TimerService extends LifecycleService implements SensorEventL
         Observer<Boolean> onReset = aBoolean -> {
 
             if(aBoolean) {
-                stopSelf();
+//                stopSelf();
+
                 stopService(serviceIntent);
-                onDestroy();
+                notificationManager.cancel(FOREGROUND_SERVICE_ID);
+                reset.postValue(false);
             }
+
+
         };
 
         reset.observe(this,onReset);
@@ -85,7 +90,6 @@ public final class TimerService extends LifecycleService implements SensorEventL
                 PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
-
         preferenceHelper = MainActivity.preferenceHelper;
 
         ListTimersParcel parcelableList = intent.getParcelableExtra(KeyHelperClass.TIME_PARCEL_DATA);
@@ -96,10 +100,11 @@ public final class TimerService extends LifecycleService implements SensorEventL
         ForegroundTimerService foregroundTimerService =
                 new ForegroundTimerService(this, parcelableList, pendingIntent);
 
-        NotificationManager notificationManager =
+         notificationManager =
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-        int FOREGROUND_SERVICE_ID = 111;
+
+
 
 //      if(!parcelableList.globalSetTimer.equals("00:00:00"))
 
@@ -168,23 +173,13 @@ public final class TimerService extends LifecycleService implements SensorEventL
 
         Log.d("serviceTest",""+countTime + " "+ entry);
 
-        if(
-                countTime <= 1 &&
-                        timeViewModel.getRepeaterTime() <= 0
-
-        ) {
-            mBuilder.set(builderDismissive(dataHelper, countTime));
-        }
-        else {
-
-
-
-//               mBuilder = builderToggleEntry(dataHelper,entry, countTime);
-
-
+//        if(countTime <= 1 && timeViewModel.getRepeaterTime() <= 0
+//        ) {
+//                mBuilder.set(builderDismissive(dataHelper, countTime));
+//        }
+//        else {
                 mBuilder.set(builderNormal(dataHelper, entry, elapsedTimeNV, countTime));
-
-        }
+//        }
 
 
         return mBuilder.get()
@@ -217,7 +212,7 @@ public final class TimerService extends LifecycleService implements SensorEventL
     }
 
 
-    private static class BuilderDataHelper{
+    private  class BuilderDataHelper{
 
         NotificationCompat.Builder builder;
         PendingIntent pendingIntent;
@@ -243,6 +238,7 @@ public final class TimerService extends LifecycleService implements SensorEventL
 
         Intent resetTimeIntent = new Intent(this, TimerBroadcastReceiver.class);
         resetTimeIntent.setAction(KeyHelperClass.BROADCAST_ACTION_RESET_TIMER);
+
         PendingIntent resetTimePendingIntent =
                 PendingIntent.getBroadcast(this,0, resetTimeIntent,0);
 
@@ -278,16 +274,24 @@ public final class TimerService extends LifecycleService implements SensorEventL
     }
 
 
-    private NotificationCompat.Builder builderDismissive(BuilderDataHelper dataHelper,int countTime){
+    private NotificationCompat.Builder builderDismissive(BuilderDataHelper dataHelper){
+
+        Intent resetTimeIntent = new Intent(this, TimerBroadcastReceiver.class);
+        resetTimeIntent.setAction(KeyHelperClass.BROADCAST_ACTION_DISMISS);
+
+        PendingIntent resetTimePendingIntent =
+                PendingIntent.getBroadcast(this,0, resetTimeIntent,0);
+
 
         return dataHelper.builder.setContentIntent(dataHelper.pendingIntent)
                 .setSmallIcon(R.drawable.outline_timer_black_48)
                 .setOnlyAlertOnce(true)
+                .addAction(R.drawable.outline_add_circle_black_48, "Dismiss",
+                        resetTimePendingIntent)
                 .setContentTitle("Countdown Timer")
                 .setAutoCancel(true)
-                .setOngoing(true)
+                .setOngoing(false)
                 .setColor(Color.BLUE)
-                .setSubText(dataHelper.timerViewModel.getRepeaterTime() + "  " + new TimeState(countTime).getTimeFormat())
                 .setContentText("completed");
 
     }
@@ -328,12 +332,12 @@ public final class TimerService extends LifecycleService implements SensorEventL
     }
 
 
-    static class ForegroundTimerService {
+    class ForegroundTimerService {
 
         private final TimerService timerService;
         private final PendingIntent pendingIntent;
         private final TimerViewModel timeViewModel = MainListTimeProcessHandler.timerViewModel;
-        private static  ArrayList<Entry> timerViewModelList;
+        private   ArrayList<Entry> timerViewModelList;
 
         private final int FOREGROUND_SERVICE_ID = 111;
 
@@ -360,34 +364,21 @@ public final class TimerService extends LifecycleService implements SensorEventL
 
         public Notification createTimer(NotificationManager mgr) {
 
-            AtomicInteger _setTime = new AtomicInteger(
-                    timerUtility.getSummationTime(timerViewModelList)
-//                    setTimer(timeViewModel)
-
-            );
-//            int setTime = _setTime.get();
-//            timerUtility.currentActiveTime = timerViewModelList.get(timerUtility.activeProcessTimeIndex);
+            AtomicInteger _setTime = new AtomicInteger(timeViewModel.getNumberValueTime());
 
             AtomicReference<Notification> notification =
                     new AtomicReference<>(
-                            preSetNotification(_setTime.get() ,timerUtility.currentActiveTime));
+                            preSetNotification(_setTime.get() ,timerUtility.previousActiveTime));
 
 
             timeViewModel.setServicePostExecute(() -> {
 
-                Log.d("serviceTest","here");
-
-//                if (timeViewModel.getRepeaterTime() <= -1) {
-////                    notification.set(timerService.makeNotificationDismiss(pendingIntent));
-////                    mgr.notify(FOREGROUND_SERVICE_ID, notification.get());
+                reset.postValue(true);
+//                String channel = createChannel();
+//                AtomicReference<NotificationCompat.Builder> mBuilder = new AtomicReference<>(new NotificationCompat.Builder(getBaseContext(), channel));
+//                BuilderDataHelper dataHelper = new BuilderDataHelper(mBuilder.get(), pendingIntent, timeViewModel);
 //
-//                }else {
-//                    _setTime.set(setTimer(timeViewModel));
-//                    currentActiveTime = timerViewModelList.get(activeProcessTimeIndex);
-//                }
-
-
-
+//                notification.set(builderDismissive(dataHelper).build());
 
             });
 
@@ -402,19 +393,14 @@ public final class TimerService extends LifecycleService implements SensorEventL
 
                     elapsedTime = _setTime.get() - countTime;
 
-
-//                     if (currentActiveTime.timeElapsed(elapsedTime))
-//                         currentActiveTime = getCurrentActiveTime();
-//                         currentActiveTime = getNextActiveProcessTime(timerViewModelList);
-
-
                     //rebuild notification here
                     notification.set(timerService.makeNotification(
                             countTime,
                             elapsedTimeN
                             , timeViewModel
-                            , timerUtility.currentActiveTime
+                            , timerUtility.previousActiveTime
                             , pendingIntent));
+
                     mgr.notify(FOREGROUND_SERVICE_ID, notification.get());
             }));
 
@@ -422,27 +408,7 @@ public final class TimerService extends LifecycleService implements SensorEventL
         }
 
 
-//        public int setTimer(TimerViewModel timerViewModel){
-//
-//            if(timerViewModel.getNumberValueTime() == 0) {
-//                int summationTime = getSummationTime(timerViewModelList);
-//                String setTime = new TimeState(summationTime).getTimeFormat();
-//                timerViewModel.setCountDownTimer(setTime);
-//
-//                accumulation(timerViewModelList);
-//
-//                revertTimeIndex();
-//                currentActiveTime = timerViewModelList.get(1);
-//
-//                return summationTime;
-//
-//            }else{
-//                accumulation(timerViewModelList);
-//                activeProcessTimeIndex = activeTimeIndex;
-//
-//                return getSummationTime(timerViewModelList);
-//            }
-//        }
+
 
 
 

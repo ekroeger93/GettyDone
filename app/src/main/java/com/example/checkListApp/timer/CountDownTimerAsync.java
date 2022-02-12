@@ -219,7 +219,7 @@ public class CountDownTimerAsync {
         public void shutdown(){
 
             timeToggler.shutDown();
-            executor.shutdownNow();
+            executor.shutdown();
 
         }
 
