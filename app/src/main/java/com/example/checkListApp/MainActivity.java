@@ -194,66 +194,6 @@ class RequestHandler {
 
                         }
 
-//                        if (tab.getPosition() == 0 //CLICKS LIST
-//                                && tab.getPosition() != navPosition
-//                        ) {
-//
-//                            if (navPosition == 1)//IF IN FILE
-//                                FileListFragment.transitionFromFileToMain(activityBinding.getMMainActivity());
-//
-//                            if (navPosition == 2) //IF IN PROGRESS
-//                                ProgressFragment.transitionFromProgressToMain(activityBinding.getMMainActivity());
-//
-//                            if(navPosition == 3)// IF IN DONATION
-//                                DonationFragment.transitionFromDonationToMain(activityBinding.getMMainActivity());
-//                        }
-//                        if (tab.getPosition() == 1 //CLICKS FILE
-//                                && tab.getPosition() != navPosition
-//                        ) {
-//
-//                            if (navPosition == 0)//IF In LIST
-//                                MainFragment.transitionFromMainToFile(activityBinding.getMMainActivity());
-//
-//                            if (navPosition == 2)//IF in PROGRESS
-//                                ProgressFragment.transitionFromProgressToFile(activityBinding.getMMainActivity());
-//                            //  FileListFragment.transitionToProgressFromFile(activityBinding.getMMainActivity());
-//
-//                            if(navPosition ==3)// IF IN DONATION
-//                                DonationFragment.transitionFromDonationToFile(activityBinding.getMMainActivity());
-//
-//                        }
-//
-//
-//                        if (tab.getPosition() == 2 //CLICKS PROGRESS
-//                                && tab.getPosition() != navPosition) {
-//
-//                            if (navPosition == 0)//IF IN LIST
-//                                MainFragment.transitionFromMainToProgress(activityBinding.getMMainActivity());
-//
-//                            if (navPosition == 1)//IF IN FILE
-//                                FileListFragment.transitionFromFileToProgress(activityBinding.getMMainActivity());
-//                            //  ProgressFragment.transitionFromProgressToFile(activityBinding.getMMainActivity());
-//
-//                            if (navPosition == 3)//IF IN DONATION
-//                                DonationFragment.transitionFromDonationToProgress(activityBinding.getMMainActivity());
-//
-//                        }
-//
-//
-//                        if(tab.getPosition() == 3//CLICKS DONATION
-//                        && tab.getPosition() != navPosition){
-//
-//                            if (navPosition == 0)//IF IN LIST
-//                                MainFragment.transitionFromMainToDonation(activityBinding.getMMainActivity());
-//
-//                            if (navPosition == 1)//IF IN FILE
-//                                FileListFragment.transitionFromFileToDonation(activityBinding.getMMainActivity());
-//
-//                            if (navPosition == 2)//IF in PROGRESS
-//                                ProgressFragment.transitionFromProgressToDonation(activityBinding.getMMainActivity());
-//
-//                        }
-//
 
 
 
