@@ -50,7 +50,10 @@
             />
         <action
             android:id="@+id/action_mainFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment" />
+            app:destination="@id/settingsFragment"
+            app:enterAnim="@anim/slide_left_enter"
+            app:exitAnim="@anim/slide_right_exit"
+            />
 
 
     </fragment>
@@ -84,7 +87,10 @@
             />
         <action
             android:id="@+id/action_fileListFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment" />
+            app:destination="@id/settingsFragment"
+            app:enterAnim="@anim/slide_left_enter"
+            app:exitAnim="@anim/slide_right_exit"
+            />
 
 
     </fragment>
@@ -114,7 +120,10 @@
             />
         <action
             android:id="@+id/action_progressFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment" />
+            app:destination="@id/settingsFragment"
+            app:enterAnim="@anim/slide_left_enter"
+            app:exitAnim="@anim/slide_right_exit"
+            />
     </fragment>
 
 
@@ -162,10 +171,14 @@
             />
         <action
             android:id="@+id/action_donationFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment" />
+            app:destination="@id/settingsFragment"
+            app:enterAnim="@anim/slide_left_enter"
+            app:exitAnim="@anim/slide_right_exit"
+            />
         <action
             android:id="@+id/action_donationFragment_to_settingsFragment2"
             app:destination="@id/settingsFragment" />
+
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -173,16 +186,28 @@
         android:label="SettingsFragment" >
         <action
             android:id="@+id/action_settingsFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
+            app:destination="@id/mainFragment"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_left_exit"
+            />
         <action
             android:id="@+id/action_settingsFragment_to_fileListFragment"
-            app:destination="@id/fileListFragment" />
+            app:destination="@id/fileListFragment"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_left_exit"
+            />
         <action
             android:id="@+id/action_settingsFragment_to_progressFragment"
-            app:destination="@id/progressFragment" />
+            app:destination="@id/progressFragment"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_left_exit"
+            />
         <action
             android:id="@+id/action_settingsFragment_to_donationFragment"
-            app:destination="@id/donationFragment" />
+            app:destination="@id/donationFragment"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_left_exit"
+            />
     </fragment>
 
 

@@ -115,7 +115,6 @@ bridge pattern? complications with DAO and Gson
   -repeater time needs persistence
     -still not in database, cant add statics?
 
-    -inconsistency when subtimer expires, checkoff
 
 //TODO: FEATURES
 
@@ -130,10 +129,6 @@ https://medium.com/@JakobUlbrich/building-a-settings-screen-for-android-part-3-a
 
 //TODO: DESIGN
 
-- work on service notification
-    -needs to be able to cancel at the end
-    -design
-    -pause resume
 
 
 //TODO: Post production ideas:
