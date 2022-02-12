@@ -124,8 +124,6 @@ https://stackoverflow.com/questions/16108609/android-creating-custom-preference/
 https://medium.com/@JakobUlbrich/building-a-settings-screen-for-android-part-3-ae9793fd31ec
 
 -theme color
--delete all files
-
 -email
 
 //TODO: DESIGN
