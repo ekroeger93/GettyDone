@@ -123,8 +123,6 @@ https://stackoverflow.com/questions/11562051/change-activitys-theme-programmatic
 https://stackoverflow.com/questions/16108609/android-creating-custom-preference/33842737
 https://medium.com/@JakobUlbrich/building-a-settings-screen-for-android-part-3-ae9793fd31ec
 
--theme color
--email
 
 //TODO: DESIGN
 
@@ -141,6 +139,7 @@ https://medium.com/@JakobUlbrich/building-a-settings-screen-for-android-part-3-a
 
 
 //TODO: Post production ideas:
+-theme color
 -? save to google drive, share data
 -? save as pdf/rich text file -> print appMobilityPrint
 -? schedule on calender, notification
