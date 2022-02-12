@@ -106,15 +106,19 @@ bridge pattern? complications with DAO and Gson
 
 - defined enum state implementation:
 
+- transition switch statement
+
+- test units
 
 //TODO: BUGS
 
   -repeater time needs persistence
     -still not in database, cant add statics?
 
+    -inconsistency when subtimer expires
+
 //TODO: FEATURES
 
--settings
 https://developer.android.com/guide/topics/ui/settings
 https://www.geeksforgeeks.org/how-to-implement-preferences-settings-screen-in-android/
 https://developer.android.com/training/data-storage/shared-preferences

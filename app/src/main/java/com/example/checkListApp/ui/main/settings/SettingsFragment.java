@@ -6,6 +6,7 @@ import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +25,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
 import com.example.checkListApp.R;
+import com.example.checkListApp.ui.main.ColorHelper;
 import com.example.checkListApp.ui.main.MainFragmentDirections;
 import com.example.checkListApp.ui.main.data_management.JsonService;
 import com.example.checkListApp.ui.main.donation.DonationFragmentDirections;
@@ -60,6 +62,14 @@ public class SettingsFragment  extends PreferenceFragmentCompat {
 
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+         getListView().setBackgroundColor(new ColorHelper(view.getContext()).Entry_ItemView_Selected);
+
+
+    }
 
     @NonNull
     @Override
