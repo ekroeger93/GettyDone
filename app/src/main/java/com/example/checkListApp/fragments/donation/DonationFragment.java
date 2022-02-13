@@ -1,4 +1,4 @@
-package com.example.checkListApp.donation;
+package com.example.checkListApp.fragments.donation;
 
 import android.app.Activity;
 import android.os.Bundle;

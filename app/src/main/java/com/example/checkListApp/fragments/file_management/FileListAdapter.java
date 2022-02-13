@@ -1,4 +1,4 @@
-package com.example.checkListApp.file_management;
+package com.example.checkListApp.fragments.file_management;
 
 import android.view.LayoutInflater;
 import android.view.View;

@@ -29,7 +29,7 @@ import com.example.checkListApp.time_management.utilities.ListTimerUtility;
 import com.example.checkListApp.timer.TimeState;
 import com.example.checkListApp.ui.main.entry_management.MainListTimeProcessHandler;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
-import com.example.checkListApp.settings.PreferenceHelper;
+import com.example.checkListApp.fragments.settings.PreferenceHelper;
 import com.example.checkListApp.input.shake_detector.ShakeDetector;
 
 

@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.checkListApp.R;
-import com.example.checkListApp.file_management.FileManager;
+import com.example.checkListApp.fragments.file_management.FileManager;
 import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.data_management.AuxiliaryData;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;

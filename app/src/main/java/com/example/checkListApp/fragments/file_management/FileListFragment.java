@@ -1,6 +1,5 @@
-package com.example.checkListApp.file_management;
+package com.example.checkListApp.fragments.file_management;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,6 +25,7 @@ import com.example.checkListApp.databinding.FragmentFileListBinding;
 
 
 import com.example.checkListApp.R;
+
 
 import org.jetbrains.annotations.NotNull;
 

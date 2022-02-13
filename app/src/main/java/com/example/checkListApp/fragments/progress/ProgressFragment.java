@@ -1,6 +1,5 @@
-package com.example.checkListApp.progress;
+package com.example.checkListApp.fragments.progress;
 
-import android.app.Activity;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -10,8 +9,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavDirections;
-import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,7 +21,6 @@ import com.example.checkListApp.ui.main.ColorHelper;
 import com.example.checkListApp.ui.main.entry_management.record.ProgressProvider;
 import com.example.checkListApp.ui.main.entry_management.record.Record;
 import com.example.checkListApp.ui.main.entry_management.record.RecordHelper;
-import com.example.checkListApp.ui.main.data_management.JsonService;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.BarData;
