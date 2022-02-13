@@ -1,10 +1,9 @@
-package com.example.checkListApp.ui.main.shake_detector;
+package com.example.checkListApp.input.shake_detector;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.FloatMath;
 
 public class ShakeDetector implements SensorEventListener {
 

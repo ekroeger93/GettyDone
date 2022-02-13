@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,12 +27,12 @@ import com.example.checkListApp.databinding.FragmentFileListBinding;
 
 
 import com.example.checkListApp.R;
-import com.example.checkListApp.ui.main.MainFragmentDirections;
+import com.example.checkListApp.fragments.FragmentTransitionManager;
 
 import org.jetbrains.annotations.NotNull;
 
 
-public class FileListFragment extends Fragment {
+public class FileListFragment extends Fragment implements FragmentTransitionManager {
 
 
     FileManager fileManager;
@@ -49,6 +50,13 @@ public class FileListFragment extends Fragment {
 
     }
 
+    @Override
+    public void transitionTo(Activity activity, int id, NavDirections navDirections) {
+
+        Log.d("testTransition",""+id);
+        Navigation.findNavController(activity, id).navigate(navDirections);
+
+    }
 
 
     public interface OnFragmentInteractionListener {

@@ -1,15 +1,10 @@
-package com.example.checkListApp.ui.main.settings;
+package com.example.checkListApp.settings;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,20 +13,18 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
-import androidx.preference.DialogPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceManager;
 
 import com.example.checkListApp.R;
+import com.example.checkListApp.fragments.FragmentTransitionManager;
 import com.example.checkListApp.ui.main.ColorHelper;
-import com.example.checkListApp.ui.main.MainFragmentDirections;
 import com.example.checkListApp.ui.main.data_management.JsonService;
-import com.example.checkListApp.ui.main.donation.DonationFragmentDirections;
 import com.example.checkListApp.ui.main.entry_management.record.ProgressProvider;
 
-public class SettingsFragment  extends PreferenceFragmentCompat {
+public class SettingsFragment  extends PreferenceFragmentCompat implements FragmentTransitionManager {
 
     static public void transitionFromSettingsToMain(Activity activity){
         Navigation.findNavController(activity, R.id.entryListFragment).navigate(R.id.action_settingsFragment_to_mainFragment);
@@ -188,5 +181,8 @@ public class SettingsFragment  extends PreferenceFragmentCompat {
     }
 
 
-
+    @Override
+    public void transitionTo(Activity activity, int id, NavDirections navDirections) {
+        Navigation.findNavController(activity, id).navigate(navDirections);
+    }
 }

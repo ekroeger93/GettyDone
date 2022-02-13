@@ -1,4 +1,4 @@
-package com.example.checkListApp.ui.main.progress;
+package com.example.checkListApp.progress;
 
 import android.app.Activity;
 import android.graphics.Canvas;
@@ -10,6 +10,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
 import android.util.Log;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.CalendarView;
 
 import com.example.checkListApp.R;
+import com.example.checkListApp.fragments.FragmentTransitionManager;
 import com.example.checkListApp.ui.main.ColorHelper;
 import com.example.checkListApp.ui.main.entry_management.record.ProgressProvider;
 import com.example.checkListApp.ui.main.entry_management.record.Record;
@@ -30,11 +32,8 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.renderer.XAxisRenderer;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -50,7 +49,7 @@ import java.util.Locale;
  * Use the {@link ProgressFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProgressFragment extends Fragment {
+public class ProgressFragment extends Fragment implements FragmentTransitionManager {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -321,7 +320,12 @@ public class ProgressFragment extends Fragment {
     }
 
 
+    @Override
+    public void transitionTo(Activity activity, int id, NavDirections navDirections) {
 
+        Navigation.findNavController(activity, id).navigate(navDirections);
+
+    }
 
 }
 

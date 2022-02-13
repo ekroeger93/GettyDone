@@ -99,7 +99,7 @@
 
     <fragment
         android:id="@+id/progressFragment"
-        android:name="com.example.checkListApp.ui.main.progress.ProgressFragment"
+        android:name="com.example.checkListApp.progress.ProgressFragment"
         android:label="FragmentProgress"
         tools:layout="@layout/fragment_progress">
         <action
@@ -148,7 +148,7 @@
 
     <fragment
         android:id="@+id/donationFragment"
-        android:name="com.example.checkListApp.ui.main.donation.DonationFragment"
+        android:name="com.example.checkListApp.donation.DonationFragment"
         android:label="donation_page_fragment"
         tools:layout="@layout/donation_page_fragment" >
         <action
@@ -182,7 +182,7 @@
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.checkListApp.ui.main.settings.SettingsFragment"
+        android:name="com.example.checkListApp.settings.SettingsFragment"
         android:label="SettingsFragment" >
         <action
             android:id="@+id/action_settingsFragment_to_mainFragment"

@@ -1,10 +1,8 @@
-package com.example.checkListApp.ui.main.settings;
+package com.example.checkListApp.settings;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import androidx.preference.DialogPreference;
-import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
 
 public class PreferenceHelper {

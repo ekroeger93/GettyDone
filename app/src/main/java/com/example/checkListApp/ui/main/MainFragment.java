@@ -3,8 +3,6 @@ package com.example.checkListApp.ui.main;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.AlertDialog;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -23,7 +21,6 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,17 +29,18 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.selection.SelectionTracker;
 import androidx.recyclerview.selection.StorageStrategy;
 import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.checkListApp.MainActivity;
 import com.example.checkListApp.R;
 import com.example.checkListApp.databinding.MainFragmentBinding;
+import com.example.checkListApp.fragments.FragmentTransitionManager;
 import com.example.checkListApp.file_management.FileManager;
 import com.example.checkListApp.input.CustomEditText;
 import com.example.checkListApp.input.DetectKeyboardBack;
@@ -50,7 +48,6 @@ import com.example.checkListApp.time_management.TimerService;
 import com.example.checkListApp.time_management.parcel.ListTimersParcel;
 import com.example.checkListApp.time_management.parcel.ListTimersParcelBuilder;
 import com.example.checkListApp.time_management.utilities.KeyHelperClass;
-import com.example.checkListApp.ui.main.entry_management.SubListFileRecyclerAdapter;
 import com.example.checkListApp.ui.main.entry_management.SubListManager;
 import com.example.checkListApp.ui.main.entry_management.button_panel.ButtonPanel;
 import com.example.checkListApp.ui.main.entry_management.button_panel.ButtonPanelToggle;
@@ -62,14 +59,13 @@ import com.example.checkListApp.ui.main.entry_management.list_component.ListItem
 import com.example.checkListApp.ui.main.entry_management.list_component.RecyclerAdapter;
 import com.example.checkListApp.ui.main.entry_management.list_component.item_touch_helper.ItemTouchCallback;
 import com.example.checkListApp.ui.main.entry_management.Operator;
-import com.example.checkListApp.ui.main.entry_management.record.ProgressProvider;
 import com.example.checkListApp.ui.main.entry_management.record.RecordHelper;
 import com.example.checkListApp.ui.main.data_management.AuxiliaryData;
 import com.example.checkListApp.ui.main.data_management.JsonService;
 import com.example.checkListApp.ui.main.data_management.ListUtility;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 import com.example.checkListApp.ui.main.entry_management.entries.Spacer;
-import com.example.checkListApp.ui.main.shake_detector.ShakeDetector;
+import com.example.checkListApp.input.shake_detector.ShakeDetector;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -160,7 +156,7 @@ https://github.com/PhilJay/MPAndroidChart
  */
 
 
-public class MainFragment extends Fragment implements ListItemClickListener {
+public class MainFragment extends Fragment implements ListItemClickListener, FragmentTransitionManager {
 
     public MainFragmentBinding binding;
 
@@ -225,10 +221,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     private View fragmentView;
 
-    private SensorManager mSensorManager;
-    private Sensor mAccelerometer;
-    private ShakeDetector mShakeDetector;
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -248,29 +240,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     activity = getActivity();
 
-
-//       String testDataProgress ="[" +
-//                "{\"goalCount\":3,\"dateFinished\":2022.01.06,\"currentWeekOfYear\":2}," +
-//                "{\"goalCount\":2,\"dateFinished\":2022.01.07,\"currentWeekOfYear\":2}," +
-//                "{\"goalCount\":1,\"dateFinished\":2022.01.09,\"currentWeekOfYear\":3}," +
-//                "{\"goalCount\":5,\"dateFinished\":2022.01.10,\"currentWeekOfYear\":3}," +
-//                "{\"goalCount\":7,\"dateFinished\":2022.01.12,\"currentWeekOfYear\":3}" +
-//                "]";
-
-//        String testDataProgress ="[" +
-//                "{\"goalCount\":3,\"dateFinished\":2022.02.06,\"currentWeekOfYear\":6}," +
-//                "{\"goalCount\":2,\"dateFinished\":2022.02.07,\"currentWeekOfYear\":6}," +
-//                "{\"goalCount\":1,\"dateFinished\":2022.02.09,\"currentWeekOfYear\":6}," +
-//                "{\"goalCount\":5,\"dateFinished\":2022.02.10,\"currentWeekOfYear\":6}," +
-//                "{\"goalCount\":7,\"dateFinished\":2022.02.12,\"currentWeekOfYear\":6}" +
-//                "]";
-//
-//        ProgressProvider.saveProgress(testDataProgress,getContext());
-//
-//        RecordHelper.recordArrayList = RecordHelper
-//                .getJsonRecordGeneratedArray(
-//                        ProgressProvider.loadProgress(getContext()));
-//
 
 
     }
@@ -420,10 +389,10 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     public void setUpShakeSensor(){
         // ShakeDetector initialization
-        mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
-        mAccelerometer = mSensorManager
+        SensorManager mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+        Sensor mAccelerometer = mSensorManager
                 .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        mShakeDetector = new ShakeDetector();
+        ShakeDetector mShakeDetector = new ShakeDetector();
         mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
 
             @Override
@@ -1108,6 +1077,16 @@ public class MainFragment extends Fragment implements ListItemClickListener {
             binding.timerExecuteBtn.setVisibility(View.VISIBLE);
         }
     }
+
+
+    @Override
+    public void transitionTo(Activity activity, int id, NavDirections navDirections) {
+
+        Navigation.findNavController(activity, id).navigate(navDirections);
+
+
+    }
+
 
 
 

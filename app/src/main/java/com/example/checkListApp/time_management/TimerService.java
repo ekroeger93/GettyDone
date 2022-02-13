@@ -27,11 +27,10 @@ import com.example.checkListApp.time_management.parcel.ListTimersParcel;
 import com.example.checkListApp.time_management.utilities.KeyHelperClass;
 import com.example.checkListApp.time_management.utilities.ListTimerUtility;
 import com.example.checkListApp.timer.TimeState;
-import com.example.checkListApp.ui.main.ColorHelper;
 import com.example.checkListApp.ui.main.entry_management.MainListTimeProcessHandler;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
-import com.example.checkListApp.ui.main.settings.PreferenceHelper;
-import com.example.checkListApp.ui.main.shake_detector.ShakeDetector;
+import com.example.checkListApp.settings.PreferenceHelper;
+import com.example.checkListApp.input.shake_detector.ShakeDetector;
 
 
 import java.util.ArrayList;

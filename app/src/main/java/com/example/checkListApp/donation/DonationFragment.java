@@ -1,4 +1,4 @@
-package com.example.checkListApp.ui.main.donation;
+package com.example.checkListApp.donation;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -7,18 +7,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
 import com.example.checkListApp.R;
+import com.example.checkListApp.fragments.FragmentTransitionManager;
 import com.example.checkListApp.ui.main.data_management.JsonService;
-import com.example.checkListApp.ui.main.progress.ProgressFragmentDirections;
 
-public class DonationFragment extends Fragment {
+public class DonationFragment extends Fragment implements FragmentTransitionManager {
 
 
     public DonationFragment() {
@@ -68,4 +68,9 @@ public class DonationFragment extends Fragment {
     }
 
 
+    @Override
+    public void transitionTo(Activity activity, int id, NavDirections navDirections) {
+        Navigation.findNavController(activity, id).navigate(navDirections);
+
+    }
 }
