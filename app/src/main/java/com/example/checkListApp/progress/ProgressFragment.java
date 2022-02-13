@@ -71,27 +71,6 @@ public class ProgressFragment extends Fragment implements FragmentTransitionMana
     }
 
 
-    public static void transitionFromProgressToMain(Activity activity){
-        Navigation.findNavController(activity,R.id.entryListFragment).navigate(R.id.action_progressFragment_to_mainFragment);
-    }
-    public static void transitionFromProgressToFile(Activity activity){
-
-        Navigation.findNavController(activity,R.id.entryListFragment)
-                .navigate(ProgressFragmentDirections
-                                .actionProgressFragmentToFileListFragment
-                                        (JsonService.getJsonCheckArrayList()));
-
-
-    }
-
-    public static void transitionFromProgressToDonation(Activity activity){
-        Navigation.findNavController(activity,R.id.entryListFragment).navigate( R.id.action_progressFragment_to_donationFragment);
-    }
-
-    public static void transitionFromProgressToSetting(Activity activity){
-        Navigation.findNavController(activity,R.id.entryListFragment).navigate(ProgressFragmentDirections.actionProgressFragmentToSettingsFragment());
-    }
-
 
     /**
      * Use this factory method to create a new instance of
@@ -329,3 +308,24 @@ public class ProgressFragment extends Fragment implements FragmentTransitionMana
 
 }
 
+//
+//    public static void transitionFromProgressToMain(Activity activity){
+//        Navigation.findNavController(activity,R.id.entryListFragment).navigate(R.id.action_progressFragment_to_mainFragment);
+//    }
+//    public static void transitionFromProgressToFile(Activity activity){
+//
+//        Navigation.findNavController(activity,R.id.entryListFragment)
+//                .navigate(ProgressFragmentDirections
+//                        .actionProgressFragmentToFileListFragment
+//                                (JsonService.getJsonCheckArrayList()));
+//
+//
+//    }
+//
+//    public static void transitionFromProgressToDonation(Activity activity){
+//        Navigation.findNavController(activity,R.id.entryListFragment).navigate( R.id.action_progressFragment_to_donationFragment);
+//    }
+//
+//    public static void transitionFromProgressToSetting(Activity activity){
+//        Navigation.findNavController(activity,R.id.entryListFragment).navigate(ProgressFragmentDirections.actionProgressFragmentToSettingsFragment());
+//    }

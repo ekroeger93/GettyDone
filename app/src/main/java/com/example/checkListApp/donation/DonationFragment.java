@@ -43,34 +43,34 @@ public class DonationFragment extends Fragment implements FragmentTransitionMana
 
     }
 
-
-    public static void transitionFromDonationToMain(Activity activity){
-        Navigation.findNavController(activity, R.id.entryListFragment).navigate(R.id.action_donationFragment_to_mainFragment);
-    }
-
-    public static void transitionFromDonationToProgress(Activity activity){
-        Navigation.findNavController(activity,R.id.entryListFragment)
-                .navigate(DonationFragmentDirections.actionDonationFragmentToProgressFragment());
-
-    }
-
-
-    public static void transitionFromDonationToFile(Activity activity){
-
-        Navigation.findNavController(activity,R.id.entryListFragment)
-                .navigate(DonationFragmentDirections.actionDonationFragmentToFileListFragment(JsonService.getJsonCheckArrayList()));
-
-    }
-
-    public static void transitionFromDonationToSettings(Activity activity){
-        Navigation.findNavController(activity,R.id.entryListFragment)
-                .navigate(DonationFragmentDirections.actionDonationFragmentToSettingsFragment());
-    }
-
-
     @Override
     public void transitionTo(Activity activity, int id, NavDirections navDirections) {
         Navigation.findNavController(activity, id).navigate(navDirections);
 
     }
 }
+
+//
+//    public static void transitionFromDonationToMain(Activity activity){
+//        Navigation.findNavController(activity, R.id.entryListFragment).navigate(R.id.action_donationFragment_to_mainFragment);
+//    }
+//
+//    public static void transitionFromDonationToProgress(Activity activity){
+//        Navigation.findNavController(activity,R.id.entryListFragment)
+//                .navigate(DonationFragmentDirections.actionDonationFragmentToProgressFragment());
+//
+//    }
+//
+//
+//    public static void transitionFromDonationToFile(Activity activity){
+//
+//        Navigation.findNavController(activity,R.id.entryListFragment)
+//                .navigate(DonationFragmentDirections.actionDonationFragmentToFileListFragment(JsonService.getJsonCheckArrayList()));
+//
+//    }
+//
+//    public static void transitionFromDonationToSettings(Activity activity){
+//        Navigation.findNavController(activity,R.id.entryListFragment)
+//                .navigate(DonationFragmentDirections.actionDonationFragmentToSettingsFragment());
+//    }
+

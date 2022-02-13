@@ -206,25 +206,6 @@ public class FileListFragment extends Fragment implements FragmentTransitionMana
     }
 
 
-
-
-    public static void transitionFromFileToMain(Activity activity){
-        Navigation.findNavController(activity,R.id.entryListFragment).navigate(R.id.action_fileListFragment_to_mainFragment);
-    }
-
-    public static void transitionFromFileToProgress(Activity activity){
-        Navigation.findNavController(activity,R.id.entryListFragment).navigate(R.id.action_fileListFragment_to_progressFragment);
-    }
-
-
-    public static void transitionFromFileToDonation(Activity activity){
-        Navigation.findNavController(activity,R.id.entryListFragment).navigate( R.id.action_fileListFragment_to_donationFragment);
-    }
-
-    public static void transitionFromFileToSettings(Activity activity){
-        Navigation.findNavController(activity,R.id.entryListFragment).navigate( R.id.action_fileListFragment_to_settingsFragment);
-    }
-
      void updateEditText(String fileNameTxt){
 
         editText.setText(fileNameTxt);
@@ -249,3 +230,22 @@ public class FileListFragment extends Fragment implements FragmentTransitionMana
 
     }
 }
+
+
+//
+//    public static void transitionFromFileToMain(Activity activity){
+//        Navigation.findNavController(activity,R.id.entryListFragment).navigate(R.id.action_fileListFragment_to_mainFragment);
+//    }
+//
+//    public static void transitionFromFileToProgress(Activity activity){
+//        Navigation.findNavController(activity,R.id.entryListFragment).navigate(R.id.action_fileListFragment_to_progressFragment);
+//    }
+//
+//
+//    public static void transitionFromFileToDonation(Activity activity){
+//        Navigation.findNavController(activity,R.id.entryListFragment).navigate( R.id.action_fileListFragment_to_donationFragment);
+//    }
+//
+//    public static void transitionFromFileToSettings(Activity activity){
+//        Navigation.findNavController(activity,R.id.entryListFragment).navigate( R.id.action_fileListFragment_to_settingsFragment);
+//    }

@@ -26,23 +26,7 @@ import com.example.checkListApp.ui.main.entry_management.record.ProgressProvider
 
 public class SettingsFragment  extends PreferenceFragmentCompat implements FragmentTransitionManager {
 
-    static public void transitionFromSettingsToMain(Activity activity){
-        Navigation.findNavController(activity, R.id.entryListFragment).navigate(R.id.action_settingsFragment_to_mainFragment);
-    }
-    static public void transitionFromSettingsToFile(Activity activity){
 
-        Navigation.findNavController(activity,R.id.entryListFragment)
-                .navigate(SettingsFragmentDirections.actionSettingsFragmentToFileListFragment(JsonService.getJsonCheckArrayList()));
-
-    }
-    static public void transitionFromSettingsToProgress(Activity activity){
-        Navigation.findNavController(activity, R.id.entryListFragment).navigate(R.id.action_settingsFragment_to_progressFragment);
-
-    }
-    static public void transitionFromSettingsToDonation(Activity activity){
-        Navigation.findNavController(activity, R.id.entryListFragment).navigate(R.id.action_settingsFragment_to_donationFragment);
-
-    }
 
     @Override
     public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
@@ -186,3 +170,22 @@ public class SettingsFragment  extends PreferenceFragmentCompat implements Fragm
         Navigation.findNavController(activity, id).navigate(navDirections);
     }
 }
+
+
+//    static public void transitionFromSettingsToMain(Activity activity){
+//        Navigation.findNavController(activity, R.id.entryListFragment).navigate(R.id.action_settingsFragment_to_mainFragment);
+//    }
+//    static public void transitionFromSettingsToFile(Activity activity){
+//
+//        Navigation.findNavController(activity,R.id.entryListFragment)
+//                .navigate(SettingsFragmentDirections.actionSettingsFragmentToFileListFragment(JsonService.getJsonCheckArrayList()));
+//
+//    }
+//    static public void transitionFromSettingsToProgress(Activity activity){
+//        Navigation.findNavController(activity, R.id.entryListFragment).navigate(R.id.action_settingsFragment_to_progressFragment);
+//
+//    }
+//    static public void transitionFromSettingsToDonation(Activity activity){
+//        Navigation.findNavController(activity, R.id.entryListFragment).navigate(R.id.action_settingsFragment_to_donationFragment);
+//
+//    }

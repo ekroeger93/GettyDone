@@ -1020,31 +1020,6 @@ public class MainFragment extends Fragment implements ListItemClickListener, Fra
 
     }
 
-    public static void transitionFromMainToFile(Activity activity){
-
-        MainFragmentDirections.ActionMainFragmentToFileListFragment action =
-                MainFragmentDirections.actionMainFragmentToFileListFragment(JsonService.getJsonCheckArrayList());
-
-        Navigation.findNavController(activity, R.id.entryListFragment).navigate(action);
-
-    }
-
-    public static void transitionFromMainToProgress(Activity activity){
-
-        Navigation.findNavController(activity, R.id.entryListFragment).navigate(  MainFragmentDirections.actionMainFragmentToProgressFragment());
-
-    }
-
-    public static void transitionFromMainToDonation(Activity activity){
-        Navigation.findNavController(activity,R.id.entryListFragment).navigate( MainFragmentDirections.actionMainFragmentToDonationFragment());
-    }
-
-    public static void transitionFromMainToSettings(Activity activity){
-        Navigation.findNavController(activity,R.id.entryListFragment).navigate( MainFragmentDirections.actionMainFragmentToSettingsFragment());
-
-    }
-
-
     @Override
     public void onPrimaryNavigationFragmentChanged(boolean isPrimaryNavigationFragment) {
         super.onPrimaryNavigationFragmentChanged(isPrimaryNavigationFragment);
@@ -1081,9 +1056,7 @@ public class MainFragment extends Fragment implements ListItemClickListener, Fra
 
     @Override
     public void transitionTo(Activity activity, int id, NavDirections navDirections) {
-
         Navigation.findNavController(activity, id).navigate(navDirections);
-
 
     }
 
@@ -1091,3 +1064,28 @@ public class MainFragment extends Fragment implements ListItemClickListener, Fra
 
 
 }
+
+//    public static void transitionFromMainToFile(Activity activity){
+//
+//        MainFragmentDirections.ActionMainFragmentToFileListFragment action =
+//                MainFragmentDirections.actionMainFragmentToFileListFragment(JsonService.getJsonCheckArrayList());
+//
+//        Navigation.findNavController(activity, R.id.entryListFragment).navigate(action);
+//
+//    }
+//
+//    public static void transitionFromMainToProgress(Activity activity){
+//
+//        Navigation.findNavController(activity, R.id.entryListFragment).navigate(  MainFragmentDirections.actionMainFragmentToProgressFragment());
+//
+//    }
+//
+//    public static void transitionFromMainToDonation(Activity activity){
+//        Navigation.findNavController(activity,R.id.entryListFragment).navigate( MainFragmentDirections.actionMainFragmentToDonationFragment());
+//    }
+//
+//    public static void transitionFromMainToSettings(Activity activity){
+//        Navigation.findNavController(activity,R.id.entryListFragment).navigate( MainFragmentDirections.actionMainFragmentToSettingsFragment());
+//
+//    }
+//
