@@ -67,13 +67,14 @@ import java.util.List;
 
 /*
 
-TaDone Prototype
 --------------------------------------------------------------
 -------------------------------------------------------------
 
  Context.startForegroundService() did not then call Service.startForeground()
  https://medium.com/geekculture/context-startforegroundservice-did-not-then-call-service-startforeground-solved-7640d5ba394a
 
+icon
+a rabbit inside a timer dial
 
 
 //TODO: TESTING
