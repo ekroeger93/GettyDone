@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.CalendarView;
 
 import com.example.checkListApp.R;
-import com.example.checkListApp.fragments.FragmentTransitionManager;
 import com.example.checkListApp.ui.main.ColorHelper;
 import com.example.checkListApp.ui.main.entry_management.record.ProgressProvider;
 import com.example.checkListApp.ui.main.entry_management.record.Record;
@@ -49,7 +48,7 @@ import java.util.Locale;
  * Use the {@link ProgressFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProgressFragment extends Fragment implements FragmentTransitionManager {
+public class ProgressFragment extends Fragment  {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -299,12 +298,7 @@ public class ProgressFragment extends Fragment implements FragmentTransitionMana
     }
 
 
-    @Override
-    public void transitionTo(Activity activity, int id, NavDirections navDirections) {
 
-        Navigation.findNavController(activity, id).navigate(navDirections);
-
-    }
 
 }
 

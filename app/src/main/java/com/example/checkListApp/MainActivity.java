@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
     static public TabLayout tabLayout;
     Integer navPosition = 0;
 
-    public static boolean visualSelect = false;
+
     public static PreferenceHelper preferenceHelper;
 
     NavHostFragment navHostFragment;
@@ -72,14 +72,13 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
         preferenceHelper = new PreferenceHelper(getApplicationContext());
 
         activityBinding = DataBindingUtil.setContentView(this, R.layout.main_activity);
-        ///DataBindingUtil.inflate(inflater,R.layout.fragment_file_list, (ViewGroup) container, false);
 
         activityBinding.setMMainActivity(this);
+
 
         navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.entryListFragment);
 
         mainFragment = (MainFragment) navHostFragment.getChildFragmentManager().getFragments().get(0);
-
 
         tabLayout = findViewById(R.id.tabs);
 
@@ -90,40 +89,18 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
                 handler = new RequestHandler(activityBinding.getMMainActivity());
 
 
-                Map<Integer, Integer> indexToFragmentId = new HashMap<>();
-
-                indexToFragmentId.put(0,R.id.mainFragment);
-                indexToFragmentId.put(1,R.id.fileListFragment);
-                indexToFragmentId.put(2,R.id.progressFragment);
-                indexToFragmentId.put(3,R.id.donationFragment);
-                indexToFragmentId.put(4,R.id.settingsFragment);
-
-                //THIS WAS TOTALLY NOT CONFUSING AND MADE COMPLETE SENSE!
-
+                int destinationTab = tab.getPosition()+1;
+                int currentTab = navPosition+1;
+                int tabSize = 5;
+                int transitionIndex = (destinationTab)+(tabSize*(currentTab));
 
 
                 if (!MainFragment.isTimerRunning()) {
 
-                    if (!visualSelect) {
-
-                        if(tab.getPosition() != navPosition) {
-
-                            int destinationTab = tab.getPosition()+1;
-                            int currentTab = navPosition+1;
-                            int tabSize = 5;
-                            int transitionIndex = (destinationTab)+(tabSize*(currentTab));
-
-                            handler.handleRequest(indexToFragmentId.get(navPosition),transitionIndex);
-
-
-                        }
-
-                    } else {
-                        visualSelect = false;
-                    }
+                        if(tab.getPosition() != navPosition)
+                            handler.handleRequest(transitionIndex);
 
                     navPosition = tab.getPosition();
-
                 }
 
             }
@@ -158,8 +135,6 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
     @Override
     public void onAttachFragment(Fragment fragment) {
         super.onAttachFragment(fragment);
-
-        Log.d("fragTest",""+fragment.getClass());
 
     }
 
@@ -238,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
         }
 
         @SuppressLint("NonConstantResourceId")
-        public void handleRequest(int id, int action_id) {
+        public void handleRequest( int action_id) {
 
             NavDirections navAction ;
 

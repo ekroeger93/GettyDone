@@ -40,7 +40,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.checkListApp.MainActivity;
 import com.example.checkListApp.R;
 import com.example.checkListApp.databinding.MainFragmentBinding;
-import com.example.checkListApp.fragments.FragmentTransitionManager;
 import com.example.checkListApp.file_management.FileManager;
 import com.example.checkListApp.input.CustomEditText;
 import com.example.checkListApp.input.DetectKeyboardBack;
@@ -98,11 +97,7 @@ bridge pattern? complications with DAO and Gson
 
 - main fragment methods to a ui dynamics class
 
-- transitioning manager class for all navigation methods
-
 - defined enum state implementation:
-
-- transition switch statement
 
 - test units
 
@@ -156,7 +151,7 @@ https://github.com/PhilJay/MPAndroidChart
  */
 
 
-public class MainFragment extends Fragment implements ListItemClickListener, FragmentTransitionManager {
+public class MainFragment extends Fragment implements ListItemClickListener {
 
     public MainFragmentBinding binding;
 
@@ -302,8 +297,7 @@ public class MainFragment extends Fragment implements ListItemClickListener, Fra
         if(!getArguments().isEmpty()) {
 
             if(
-                    //AuxiliaryData.loadFile(getArguments()) != null
-                    !MainFragmentArgs.fromBundle(getArguments()).getJsonData().isEmpty()
+                      !MainFragmentArgs.fromBundle(getArguments()).getJsonData().isEmpty()
             ){
 
                 mViewModel.deleteAllEntries(checkList);
@@ -349,7 +343,6 @@ public class MainFragment extends Fragment implements ListItemClickListener, Fra
 
         tempArray.add( new Spacer());
         tempArray.add( new Entry("a",false,"00:00:00"));
-        tempArray.add( new Entry("a",false,"00:00:00"));
 
         adapter.setList(tempArray);
 
@@ -387,22 +380,6 @@ public class MainFragment extends Fragment implements ListItemClickListener, Fra
 
     }
 
-    public void setUpShakeSensor(){
-        // ShakeDetector initialization
-        SensorManager mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
-        Sensor mAccelerometer = mSensorManager
-                .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        ShakeDetector mShakeDetector = new ShakeDetector();
-        mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
-
-            @Override
-            public void onShake(int count) {
-
-
-            }
-
-        });
-    }
 
     public void initialize() {
 
@@ -456,21 +433,6 @@ public class MainFragment extends Fragment implements ListItemClickListener, Fra
         }
 
         return false;
-    }
-
-    public void showUndoSnackBar(){
-
-        Snackbar snackbar = Snackbar.make(binding.main, "item deleted",
-                Snackbar.LENGTH_LONG).setAction(
-                        "UNDO", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                entryItemManager.undoLastDeletionSingle();
-            }
-        });
-
-        snackbar.show();
-
     }
 
 
@@ -561,13 +523,6 @@ public class MainFragment extends Fragment implements ListItemClickListener, Fra
 
                 checkList = (ArrayList<Entry>) entries;
 
-//                for(Entry n :checkList)
-//                {
-////                    if(n.orderIndex.getValue() == -1)
-//                        n.orderIndex.setValue( checkList.indexOf(n));
-//
-//                }
-
                 checkList.add(0, new Spacer());
                 checkList.add(checkList.size(), new Spacer());
 
@@ -586,13 +541,8 @@ public class MainFragment extends Fragment implements ListItemClickListener, Fra
                 }
 
 
-//                RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(getContext());
-//                smoothScroller.setTargetPosition(checkList.size()-1);
-//                customLayoutManager.startSmoothScroll(smoothScroller);
 
                 if(EntryItemManager.isAddingEntry){
-//                scrollPosition(checkList.size()-2);
-
 
                     RecyclerView.SmoothScroller smoothScroller =
                             new LinearSmoothScroller(getContext()){
@@ -618,11 +568,6 @@ public class MainFragment extends Fragment implements ListItemClickListener, Fra
                 }
 
                 _checkList.setValue(checkList);
-
-                //maintenance code
-//                for(Entry entry : checkList) {
-//                    Log.d("checkListTest", "..." + entry);
-//                }
 
 
                 JsonService.buildJson(checkList);
@@ -657,7 +602,7 @@ public class MainFragment extends Fragment implements ListItemClickListener, Fra
 
             for (Entry entry : checkList) {
                 try {
-                    if (entry instanceof Spacer) {} else {
+                    if (!(entry instanceof Spacer)) {
 
                         if (key.equals(entry.getViewHolder().getKey())) {
 
@@ -684,32 +629,13 @@ public class MainFragment extends Fragment implements ListItemClickListener, Fra
                             listUtility.updateAllSelection(checkList);
 
                            break;
-                                }
+                                } }
 
-                            }
+                        } catch (NullPointerException  | IndexOutOfBoundsException a) { }
 
-                        } catch (NullPointerException  | IndexOutOfBoundsException a) {
-                        }
+
                     }
 
-
-
-
-
-            try {
-
-                    for(Entry entry : checkList){
-                        //   entry.getViewHolder().selectionUpdate();
-                        RecyclerAdapter.ViewHolder viewHolder = entry.getViewHolder();
-                        if(entry instanceof Spacer){}else{
-                            if(viewHolder.isSelected.getValue()) {
-                                System.out.print("{" + viewHolder.orderInt.getValue() + "}");
-                            }else{
-                                System.out.print("{'" + viewHolder.orderInt.getValue() + "'}");
-                            }}
-                    }
-
-                    }catch(NullPointerException e){ }
 
 
 
@@ -734,7 +660,22 @@ public class MainFragment extends Fragment implements ListItemClickListener, Fra
         timerRunning.postValue(false);
     }
 
-    //UI dynamics class
+    //UI dynamics class/////////////////////////////////////////
+
+    public void showUndoSnackBar(){
+
+        Snackbar snackbar = Snackbar.make(binding.main, "item deleted",
+                Snackbar.LENGTH_LONG).setAction(
+                "UNDO", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        entryItemManager.undoLastDeletionSingle();
+                    }
+                });
+
+        snackbar.show();
+
+    }
 
     @SuppressLint("ClickableViewAccessibility")
     public void assignButtonListeners(){
@@ -1053,12 +994,9 @@ public class MainFragment extends Fragment implements ListItemClickListener, Fra
         }
     }
 
+///////////////////////////////////////////
 
-    @Override
-    public void transitionTo(Activity activity, int id, NavDirections navDirections) {
-        Navigation.findNavController(activity, id).navigate(navDirections);
 
-    }
 
 
 

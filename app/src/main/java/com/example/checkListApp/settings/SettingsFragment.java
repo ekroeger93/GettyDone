@@ -19,12 +19,11 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.example.checkListApp.R;
-import com.example.checkListApp.fragments.FragmentTransitionManager;
 import com.example.checkListApp.ui.main.ColorHelper;
 import com.example.checkListApp.ui.main.data_management.JsonService;
 import com.example.checkListApp.ui.main.entry_management.record.ProgressProvider;
 
-public class SettingsFragment  extends PreferenceFragmentCompat implements FragmentTransitionManager {
+public class SettingsFragment  extends PreferenceFragmentCompat  {
 
 
 
@@ -165,10 +164,7 @@ public class SettingsFragment  extends PreferenceFragmentCompat implements Fragm
     }
 
 
-    @Override
-    public void transitionTo(Activity activity, int id, NavDirections navDirections) {
-        Navigation.findNavController(activity, id).navigate(navDirections);
-    }
+
 }
 
 

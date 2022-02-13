@@ -15,10 +15,9 @@ import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
 import com.example.checkListApp.R;
-import com.example.checkListApp.fragments.FragmentTransitionManager;
 import com.example.checkListApp.ui.main.data_management.JsonService;
 
-public class DonationFragment extends Fragment implements FragmentTransitionManager {
+public class DonationFragment extends Fragment {
 
 
     public DonationFragment() {
@@ -43,11 +42,7 @@ public class DonationFragment extends Fragment implements FragmentTransitionMana
 
     }
 
-    @Override
-    public void transitionTo(Activity activity, int id, NavDirections navDirections) {
-        Navigation.findNavController(activity, id).navigate(navDirections);
 
-    }
 }
 
 //

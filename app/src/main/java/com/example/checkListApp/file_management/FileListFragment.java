@@ -27,12 +27,11 @@ import com.example.checkListApp.databinding.FragmentFileListBinding;
 
 
 import com.example.checkListApp.R;
-import com.example.checkListApp.fragments.FragmentTransitionManager;
 
 import org.jetbrains.annotations.NotNull;
 
 
-public class FileListFragment extends Fragment implements FragmentTransitionManager {
+public class FileListFragment extends Fragment {
 
 
     FileManager fileManager;
@@ -50,13 +49,7 @@ public class FileListFragment extends Fragment implements FragmentTransitionMana
 
     }
 
-    @Override
-    public void transitionTo(Activity activity, int id, NavDirections navDirections) {
 
-        Log.d("testTransition",""+id);
-        Navigation.findNavController(activity, id).navigate(navDirections);
-
-    }
 
 
     public interface OnFragmentInteractionListener {
@@ -150,7 +143,7 @@ public class FileListFragment extends Fragment implements FragmentTransitionMana
             Navigation.findNavController(view).navigate(action);
 
 
-            MainActivity.visualSelect = true;
+//            MainActivity.visualSelect = true;
             MainActivity.tabLayout.getTabAt(0).select();
                   //  (MainActivity.activityBinding.tabs.getTabAt(0));
 
