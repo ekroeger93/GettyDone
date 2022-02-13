@@ -385,11 +385,17 @@ public class MainListTimeProcessHandler {
         for(Entry n :checkList){
 
             if(!(n instanceof Spacer)) {
-                n.getViewHolder().textView
-                        .setText(n.textEntry.getValue());
 
-                n.getViewHolder().timerLabelText
-                        .setText(n.getCountDownTimer().getValue());
+                try {//can't have nice things can we
+                    n.getViewHolder().textView
+                            .setText(n.textEntry.getValue());
+
+                    n.getViewHolder().timerLabelText
+                            .setText(n.getCountDownTimer().getValue());
+                }catch (NullPointerException e){
+
+                }
+
             }
 
         }
@@ -402,7 +408,7 @@ public class MainListTimeProcessHandler {
             if (timerUtility.parentEntry != null) {
 
                 timerUtility.parentEntry.getViewHolder().textView
-                        .setText(timerUtility.currentActiveTime.textEntry.getValue());
+                        .setText(timerUtility.currentActiveTime.textTemp);
 
                 timerUtility.parentEntry.getViewHolder().timerLabelText
                         .setText(timerUtility.currentActiveTime.getCountDownTimer().getValue());

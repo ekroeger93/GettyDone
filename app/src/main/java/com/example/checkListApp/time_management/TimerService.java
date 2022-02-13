@@ -253,7 +253,6 @@ public final class TimerService extends LifecycleService implements SensorEventL
         return dataHelper.builder.setContentIntent(dataHelper.pendingIntent)
                 .setSmallIcon(R.drawable.outline_timer_black_48)
                 .setOnlyAlertOnce(true)
-                .setContentTitle("Countdown Timer")
                 .addAction(R.drawable.outline_add_circle_black_48, "Reset",
                         resetTimePendingIntent)
                 .addAction(android.R.drawable.btn_star, toggleButtonText,
@@ -263,6 +262,7 @@ public final class TimerService extends LifecycleService implements SensorEventL
                 .setColor(Color.BLUE)
                 .setSubText(dataHelper.timerViewModel.getRepeaterTime() + " " + new TimeState(countTime).getTimeFormat())
                 .setContentText(entry.textEntry.getValue() + " " + textTimeRemainder);
+
 
     }
 
