@@ -17,7 +17,7 @@
     <string name="textEntryHint">hold to edit text \n swipe right to remove</string>
     <string name="entrySubTextNoLoaded">no sublist loaded</string>
     <string name="openfile">open</string>
-    <string name="support">I know this app ain\'t much but I could use a cup of coffee</string>
+    <string name="support">I\'m a lone developer and could use some finical help or a better job</string>
 
     <string name="hintMessagesResetTimerKey">hintMessagesResetTimer</string>
     <string name="shakeToToggleTimerModeKey">shakeToToggleTimerMode</string>
