@@ -1,5 +1,6 @@
 package com.example.checkListApp.time_management;
 
+import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -34,6 +35,7 @@ import com.example.checkListApp.input.shake_detector.ShakeDetector;
 
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public final class TimerService extends LifecycleService implements SensorEventListener {
@@ -333,7 +335,7 @@ public final class TimerService extends LifecycleService implements SensorEventL
 
         public Notification createTimer(NotificationManager mgr) {
 
-//            AtomicInteger _setTime = new AtomicInteger(timeViewModel.getNumberValueTime());
+            AtomicInteger _setTime = new AtomicInteger(timeViewModel.getNumberValueTime());
 
             AtomicReference<Notification> notification = new AtomicReference<>(preSetNotification(timeViewModel.getNumberValueTime(), timerUtility.previousActiveTime));
 
@@ -351,7 +353,23 @@ public final class TimerService extends LifecycleService implements SensorEventL
 
                 timeViewModel.setServiceTask(((elapsedTimeVolatile, countTime, elapsedTimeN) -> {
 
-//                    elapsedTime = _setTime.get() - countTime;
+
+                    elapsedTime = _setTime.get() - countTime;
+
+//                    KeyguardManager myKM = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+//                    if( myKM.inKeyguardRestrictedInputMode()) {
+//                        //it is locked
+//                    } else {
+//                        //it is not locked
+//                    }
+
+                    /*
+                    entry (accumulation) wont register with countdown timer while
+                    the phone is locked, that's why this is here.
+                     */
+                    if(timerUtility.currentActiveTime.timeElapsed(elapsedTimeN)){
+                        timerUtility.getNextActiveProcessTime(timerViewModelList);
+                    }
 
                     //rebuild notification here
                     notification.set(timerService.makeNotification(
