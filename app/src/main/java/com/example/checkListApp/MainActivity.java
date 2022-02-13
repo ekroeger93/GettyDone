@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
 
 
     public static PreferenceHelper preferenceHelper;
+    public static boolean isLoadingData =false;
 
     NavHostFragment navHostFragment;
 
@@ -241,6 +242,9 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
                 case R.id.action_fileListFragment_to_mainFragment:{
 //                    navAction = FileListFragmentDirections.actionFileListFragmentToMainFragment(JsonService.getJsonCheckArrayList());
 //                    Navigation.findNavController(activity,R.id.entryListFragment).navigate(navAction);
+
+                    if(!isLoadingData)
+                    Navigation.findNavController(activity, R.id.entryListFragment).navigate(command);
 //do nothing cus its already do something
                 }break;
 

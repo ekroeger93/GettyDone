@@ -74,7 +74,7 @@ import java.util.List;
  https://medium.com/geekculture/context-startforegroundservice-did-not-then-call-service-startforeground-solved-7640d5ba394a
 
 icon
-a rabbit inside a timer dial
+a running rabbit inside a timer dial
 
 
 //TODO: TESTING
@@ -291,6 +291,8 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
 
+
+        MainActivity.isLoadingData=false;
 
         if(!getArguments().isEmpty()) {
 

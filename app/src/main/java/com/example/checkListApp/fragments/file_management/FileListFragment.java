@@ -142,8 +142,11 @@ public class FileListFragment extends Fragment {
             Navigation.findNavController(view).navigate(action);
 
 
+            MainActivity.isLoadingData=true;
+
 //            MainActivity.visualSelect = true;
             MainActivity.tabLayout.getTabAt(0).select();
+
                   //  (MainActivity.activityBinding.tabs.getTabAt(0));
 
         });
