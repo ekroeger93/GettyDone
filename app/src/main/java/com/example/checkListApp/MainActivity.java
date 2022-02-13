@@ -20,6 +20,7 @@ import android.view.WindowManager;
 import com.example.checkListApp.fragments.donation.DonationFragmentDirections;
 import com.example.checkListApp.fragments.file_management.FileListFragment;
 import com.example.checkListApp.databinding.MainActivityBinding;
+import com.example.checkListApp.fragments.file_management.FileListFragmentDirections;
 import com.example.checkListApp.fragments.progress.ProgressFragmentDirections;
 import com.example.checkListApp.fragments.settings.SettingsFragmentDirections;
 import com.example.checkListApp.ui.main.MainFragment;
@@ -235,6 +236,12 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
                 case  R.id.action_settingsFragment_to_fileListFragment :{
                     navAction  = SettingsFragmentDirections.actionSettingsFragmentToFileListFragment(JsonService.getJsonCheckArrayList());
                     Navigation.findNavController(activity, R.id.entryListFragment).navigate(navAction);
+                }break;
+
+                case R.id.action_fileListFragment_to_mainFragment:{
+//                    navAction = FileListFragmentDirections.actionFileListFragmentToMainFragment(JsonService.getJsonCheckArrayList());
+//                    Navigation.findNavController(activity,R.id.entryListFragment).navigate(navAction);
+//do nothing cus its already do something
                 }break;
 
                 default:{

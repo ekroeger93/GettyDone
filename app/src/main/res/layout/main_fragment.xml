@@ -34,12 +34,12 @@
         <LinearLayout
             android:id="@+id/windowBox"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="match_parent"
             android:background="?colorPrimaryVariant"
             android:clickable="false"
             android:longClickable="false"
             android:orientation="vertical"
-            app:layout_constraintBottom_toTopOf="@+id/guideline"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -176,11 +176,9 @@
 
                 android:id="@+id/buttonPanel"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="60dp"
                 android:layout_gravity="bottom"
-                android:layout_marginTop="0dp"
-                android:layout_marginBottom="10dp"
-                android:layout_weight="8"
+
 
                 >
 

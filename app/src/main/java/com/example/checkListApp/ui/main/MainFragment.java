@@ -96,6 +96,8 @@ bridge pattern? complications with DAO and Gson
 
 - test units
 
+- audio list to recycler view
+
 //TODO: BUGS
 
   -repeater time needs persistence
