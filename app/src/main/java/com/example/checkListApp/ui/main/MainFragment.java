@@ -118,6 +118,8 @@ https://medium.com/@JakobUlbrich/building-a-settings-screen-for-android-part-3-a
 
 //TODO: DESIGN
 
+-once we get selected themes set up
+can also change the app icon colors along with it!
 
 
 //TODO: Post production ideas:
