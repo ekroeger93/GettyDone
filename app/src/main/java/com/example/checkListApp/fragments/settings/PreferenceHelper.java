@@ -19,6 +19,10 @@ public class PreferenceHelper {
         return preferences.getBoolean("hintMessagesResetTimer", false);
     }
 
+    public boolean hintDuplicateMessageIsActive(){
+        return preferences.getBoolean("hintDuplicateEntry",false);
+    }
+
     public int shakeToggleTimerMode(){
         //dumb as hell
         return Integer.parseInt(preferences.getString("shakeToToggleTimerMode","2"));

@@ -3,14 +3,17 @@ package com.example.checkListApp.ui.main.entry_management;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.TextView;
 
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.selection.SelectionTracker;
 
+import com.example.checkListApp.MainActivity;
 import com.example.checkListApp.R;
 import com.example.checkListApp.input.CustomEditText;
 import com.example.checkListApp.input.DetectKeyboardBack;
@@ -21,6 +24,7 @@ import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.MainViewModel;
 import com.example.checkListApp.ui.main.entry_management.list_component.ToggleSwitchOrdering;
 import com.example.checkListApp.ui.main.data_management.ListUtility;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.concurrent.Executor;
@@ -66,6 +70,28 @@ public class EntryItemManager {
     public void add(){
 //(String text, boolean isChecked, String timeText, int orderIndex) {
 
+
+        if(MainActivity.preferenceHelper.hintDuplicateMessageIsActive()) {
+            Snackbar snackbar = Snackbar.make(mainFragment.binding.main, "hold to duplicate entry",
+                    Snackbar.LENGTH_INDEFINITE);
+
+            snackbar.setAction(
+                    "Got it!", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putBoolean("hintDuplicateEntry", false);
+                            editor.commit();
+
+
+                            snackbar.dismiss();
+                        }
+                    });
+
+            snackbar.show();
+        }
         Entry entry = new Entry(
                 "",
                 false,

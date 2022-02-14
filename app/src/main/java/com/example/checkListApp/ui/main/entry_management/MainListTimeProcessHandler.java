@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
@@ -96,8 +97,23 @@ public class MainListTimeProcessHandler {
 //                        getString(R.string.hin), Context.MODE_PRIVATE);
 
                 Snackbar snackbar = Snackbar.make(binding.buttonPanel, "hold button to reset timer",
-                        Snackbar.LENGTH_SHORT)
+                        Snackbar.LENGTH_INDEFINITE)
                         .setAnchorView(view);
+
+                snackbar.setAction(
+                        "Got it!", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+                                SharedPreferences.Editor editor = preferences.edit();
+                                editor.putBoolean("hintMessagesResetTimer", false);
+                                editor.commit();
+
+
+                                snackbar.dismiss();
+                            }
+                        });
 
                 snackbar.show();
 

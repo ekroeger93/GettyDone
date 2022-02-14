@@ -20,6 +20,8 @@
     <string name="support">I\'m a lone developer and could use some finical help or a better job</string>
 
     <string name="hintMessagesResetTimerKey">hintMessagesResetTimer</string>
+    <string name="hintDuplicateEntries">hintDuplicateEntry</string>
+
     <string name="shakeToToggleTimerModeKey">shakeToToggleTimerMode</string>
     <string name="resetProgressKey">resetProgress</string>
 

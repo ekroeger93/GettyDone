@@ -8,7 +8,13 @@
     <SwitchPreferenceCompat
         app:key="@string/hintMessagesResetTimerKey"
         app:title="Show Hint Message Reset Timer"
+        app:defaultValue="true"
+        />
 
+    <SwitchPreferenceCompat
+        app:key="@string/hintDuplicateEntries"
+        app:title="Show Hint Duplicate Entries"
+        app:defaultValue="true"
         />
 
 
