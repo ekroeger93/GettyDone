@@ -413,8 +413,8 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         serviceIntent = getForegroundTimerServiceIntent();
 
         try {
-//            activity.startForegroundService(getForegroundTimerServiceIntent());
-            activity.startService(serviceIntent);
+            activity.startForegroundService(getForegroundTimerServiceIntent());
+//            activity.startService(serviceIntent);
         }catch ( Exception i){
 
             Log.d("_BUG",""+i.getLocalizedMessage());
