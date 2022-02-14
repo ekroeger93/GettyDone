@@ -167,12 +167,16 @@ public class MainListTimeProcessHandler {
 //            timerViewModel.resetAbsolutely();
 //            mainFragment.getTimerRunning().postValue(false);
 
-            MainFragment.resetTime();
-            revertEntryUI();
+            if(MainFragment.isTimerRunning()) {
+                MainFragment.resetTime();
+                revertEntryUI();
 
-            mainFragment.getActivity().stopService(mainFragment.getServiceIntent());
+                mainFragment.getActivity().stopService(mainFragment.getServiceIntent());
 
-            return  true;
+                return true;
+            }else{
+                return false;
+            }
         });
 
 
