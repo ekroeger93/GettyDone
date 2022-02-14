@@ -2,6 +2,7 @@ package com.example.checkListApp.time_management;
 
 import android.app.KeyguardManager;
 import android.app.Notification;
+import android.app.Notification.Builder;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -28,6 +29,8 @@ import com.example.checkListApp.time_management.parcel.ListTimersParcel;
 import com.example.checkListApp.time_management.utilities.KeyHelperClass;
 import com.example.checkListApp.time_management.utilities.ListTimerUtility;
 import com.example.checkListApp.timer.TimeState;
+import com.example.checkListApp.ui.main.ColorHelper;
+import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.entry_management.MainListTimeProcessHandler;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 import com.example.checkListApp.fragments.settings.PreferenceHelper;
@@ -44,8 +47,9 @@ public final class TimerService extends LifecycleService implements SensorEventL
    private Intent serviceIntent;
    public static MutableLiveData<Boolean> reset = new MutableLiveData<>(false);
 
-   NotificationManager notificationManager;
-   private final int FOREGROUND_SERVICE_ID = 111;
+   static NotificationManager notificationManager;
+   private static final int FOREGROUND_SERVICE_ID = 111;
+   public static boolean  timerPaused = false;
 
     private final static ListTimerUtility timerUtility = MainListTimeProcessHandler.timerUtility;
 
@@ -105,6 +109,7 @@ public final class TimerService extends LifecycleService implements SensorEventL
 
 
 
+
 //      if(!parcelableList.globalSetTimer.equals("00:00:00"))
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -156,6 +161,7 @@ public final class TimerService extends LifecycleService implements SensorEventL
                 foregroundTimerService.createTimer(notificationManager));
 
 
+
         return (START_NOT_STICKY);
     }
 
@@ -183,6 +189,8 @@ public final class TimerService extends LifecycleService implements SensorEventL
                 .setCategory(Notification.CATEGORY_SERVICE)
                 .build(); // foregroundTimerService.createTimer(notification);
     }
+
+
 
     @Override
     public void onSensorChanged(SensorEvent event) {
@@ -247,21 +255,25 @@ public final class TimerService extends LifecycleService implements SensorEventL
         int timeRemainder = new TimeState().getValueAsTimeTruncated(decimalEntrySetTime - elapsedTimeNV);
 
 
-        String textTimeRemainder = (entry.onTogglePrimer.getValue()) ? "paused" :  new TimeState(timeRemainder).getTimeFormat() ;
+        String textTimeRemainder = (entry.onTogglePrimer.getValue() ) ? "paused" :  new TimeState(timeRemainder).getTimeFormat() ;
 
-        String toggleButtonText = (dataHelper.timerViewModel.isToggled()) ? "Pause" : "Resume";
+//        String toggleButtonText = (dataHelper.timerViewModel.isToggled()) ? "Pause" : "Resume";
+
+        String toggleButtonText="Toggle";
 
 
         return dataHelper.builder.setContentIntent(dataHelper.pendingIntent)
                 .setSmallIcon(R.drawable.outline_timer_black_48)
                 .setOnlyAlertOnce(true)
-                .addAction(R.drawable.outline_add_circle_black_48, "Reset",
+                .setPriority(2)
+                .setColorized(true)
+                .addAction(R.drawable.outline_add_circle_black_48, "Dismiss",
                         resetTimePendingIntent)
                 .addAction(android.R.drawable.btn_star, toggleButtonText,
                         toggleTimePendingIntent)
                 .setProgress(entry.numberValueTime, Math.abs( decimalEntrySetTime - elapsedTimeNV) , false)
                 .setAutoCancel(true)
-                .setColor(Color.BLUE)
+                .setColor(Color.parseColor("#5291cc"))
                 .setSubText(dataHelper.timerViewModel.getRepeaterTime() + " " + new TimeState(countTime).getTimeFormat())
                 .setContentText(entry.textEntry.getValue() + " " + textTimeRemainder);
 
@@ -353,7 +365,6 @@ public final class TimerService extends LifecycleService implements SensorEventL
 
                 timeViewModel.setServiceTask(((elapsedTimeVolatile, countTime, elapsedTimeN) -> {
 
-
                     elapsedTime = _setTime.get() - countTime;
 
 //                    KeyguardManager myKM = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
@@ -380,6 +391,8 @@ public final class TimerService extends LifecycleService implements SensorEventL
                             , pendingIntent));
 
                     mgr.notify(FOREGROUND_SERVICE_ID, notification.get());
+
+
             }));
 
             return notification.get();
