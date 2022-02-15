@@ -15,6 +15,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -28,6 +29,7 @@ import com.example.checkListApp.R;
 import com.example.checkListApp.time_management.parcel.ListTimersParcel;
 import com.example.checkListApp.time_management.utilities.KeyHelperClass;
 import com.example.checkListApp.time_management.utilities.ListTimerUtility;
+import com.example.checkListApp.timer.CountDownTimerAsync;
 import com.example.checkListApp.timer.TimeState;
 import com.example.checkListApp.ui.main.ColorHelper;
 import com.example.checkListApp.ui.main.MainFragment;
@@ -53,6 +55,10 @@ public final class TimerService extends LifecycleService implements SensorEventL
 
     private final static ListTimerUtility timerUtility = MainListTimeProcessHandler.timerUtility;
 
+    //https://developer.android.com/training/scheduling/wakelock
+
+    PowerManager powerManager;
+    PowerManager.WakeLock wakeLock;
 
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
@@ -99,6 +105,12 @@ public final class TimerService extends LifecycleService implements SensorEventL
 
         activeTimeIndex = parcelableList.getActiveTimeIndex();
 
+        powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+       wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+                "MyApp::MyWakelockTag");
+
+
+        wakeLock.acquire();
 
         ForegroundTimerService foregroundTimerService =
                 new ForegroundTimerService(this, parcelableList, pendingIntent);
@@ -216,7 +228,7 @@ public final class TimerService extends LifecycleService implements SensorEventL
     }
 
 
-    private  class BuilderDataHelper{
+    private static class BuilderDataHelper{
 
         NotificationCompat.Builder builder;
         PendingIntent pendingIntent;
@@ -257,9 +269,9 @@ public final class TimerService extends LifecycleService implements SensorEventL
 
         String textTimeRemainder = (entry.onTogglePrimer.getValue() ) ? "paused" :  new TimeState(timeRemainder).getTimeFormat() ;
 
-//        String toggleButtonText = (dataHelper.timerViewModel.isToggled()) ? "Pause" : "Resume";
+        String toggleButtonText = (dataHelper.timerViewModel.isToggled()) ? "Pause" : "Resume";
 
-        String toggleButtonText="Toggle";
+//        String toggleButtonText="Toggle";
 
 
         return dataHelper.builder.setContentIntent(dataHelper.pendingIntent)
@@ -280,10 +292,11 @@ public final class TimerService extends LifecycleService implements SensorEventL
 
     }
 
-
-
-
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        wakeLock.release();
+    }
 
     //synchronized
     private String createChannel() {
@@ -323,7 +336,7 @@ public final class TimerService extends LifecycleService implements SensorEventL
         private final TimerService timerService;
         private final PendingIntent pendingIntent;
         private final TimerViewModel timeViewModel = MainListTimeProcessHandler.timerViewModel;
-        private final ArrayList<Entry> timerViewModelList;
+//        private final ArrayList<Entry> timerViewModelList;
 
         private final int FOREGROUND_SERVICE_ID = 111;
 
@@ -335,7 +348,8 @@ public final class TimerService extends LifecycleService implements SensorEventL
 
             this.pendingIntent = pendingIntent;
 
-            timerViewModelList = timerUtility.generateEntryList(parcel);
+
+//            timerViewModelList = timerUtility.generateEntryList(parcel);
 
         }
 
@@ -363,6 +377,7 @@ public final class TimerService extends LifecycleService implements SensorEventL
             //TODO  FIRST ENTRY IS TOGGLE AND IS NOT GETTING NEXT INDEX
             //ON SECOND GO AROUND
 
+
                 timeViewModel.setServiceTask(((elapsedTimeVolatile, countTime, elapsedTimeN) -> {
 
                     elapsedTime = _setTime.get() - countTime;
@@ -374,13 +389,7 @@ public final class TimerService extends LifecycleService implements SensorEventL
 //                        //it is not locked
 //                    }
 
-                    /*
-                    entry (accumulation) wont register with countdown timer while
-                    the phone is locked, that's why this is here.
-                     */
-                    if(timerUtility.currentActiveTime.timeElapsed(elapsedTimeN)){
-                        timerUtility.getNextActiveProcessTime(timerViewModelList);
-                    }
+
 
                     //rebuild notification here
                     notification.set(timerService.makeNotification(

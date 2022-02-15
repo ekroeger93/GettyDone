@@ -33,6 +33,7 @@ public class MainListTimeProcessHandler {
 
     public final static TimerViewModel timerViewModel = new TimerViewModel();
     public final static ListTimerUtility timerUtility = new ListTimerUtility();
+    public  static CountDownTimerAsync.CountDownTask countDownTask;
 
 
     public int getActiveProcessTimeIndex(){
@@ -65,7 +66,7 @@ public class MainListTimeProcessHandler {
 
         //update text timer based on current scroll selected position
 
-        CountDownTimerAsync.CountDownTask countDownTask = time -> {
+      countDownTask = time -> {
             {
 
                 if(timerUtility.currentActiveTime == null) timerUtility.currentActiveTime = checkList.get(1);
@@ -77,6 +78,7 @@ public class MainListTimeProcessHandler {
 
 
             };
+
 
         };
 
@@ -296,8 +298,6 @@ public class MainListTimeProcessHandler {
 
 
     }
-
-
 
     public void setSubTextToParent(){
 
