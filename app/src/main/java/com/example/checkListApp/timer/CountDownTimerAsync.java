@@ -252,6 +252,11 @@ public class CountDownTimerAsync {
 
         public int getCountDownTime() { return countDownTime; }
 
+
+        public void executeService(){
+            serviceTask.execute(elapsedTimeVolatile, countTime, elapsedTime);
+        }
+
     @FunctionalInterface
         public interface PostExecute{
             void execute();

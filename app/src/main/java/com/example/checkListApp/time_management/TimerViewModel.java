@@ -108,6 +108,10 @@ public class TimerViewModel {
 
     }
 
+    public void executeServiceTask(){
+        countTimer.executeService();
+    }
+
     public void toggleTime(){
 
         timeToggler.toggleTime(countTimer,

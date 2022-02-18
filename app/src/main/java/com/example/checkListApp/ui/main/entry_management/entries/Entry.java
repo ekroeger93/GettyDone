@@ -23,9 +23,9 @@ public class Entry {
     @ColumnInfo(name = "entryID")
     private int entryID = 0;
     @ColumnInfo(name = "textEntry")
-    public MutableLiveData<String> textEntry = new MutableLiveData<>("") ;
+    public  MutableLiveData<String> textEntry = new MutableLiveData<>("") ;
     @ColumnInfo(name = "isChecked")
-    public MutableLiveData<Boolean> checked = new MutableLiveData<>(false);
+    public  MutableLiveData<Boolean> checked = new MutableLiveData<>(false);
     @ColumnInfo(name = "timerLabel")
     public MutableLiveData<String> countDownTimer = new MutableLiveData<>("00:00:00");
 
@@ -305,7 +305,7 @@ public class Entry {
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
     public void postEntryOptimized(String text, Boolean check, String time){
 
         textEntry.postValue(text);

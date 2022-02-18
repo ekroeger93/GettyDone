@@ -16,6 +16,8 @@ import android.hardware.SensorManager;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -40,8 +42,11 @@ import com.example.checkListApp.input.shake_detector.ShakeDetector;
 
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Logger;
 
 public final class TimerService extends LifecycleService implements SensorEventListener {
 
@@ -49,9 +54,10 @@ public final class TimerService extends LifecycleService implements SensorEventL
    private Intent serviceIntent;
    public static MutableLiveData<Boolean> reset = new MutableLiveData<>(false);
 
-   static NotificationManager notificationManager;
-   private static final int FOREGROUND_SERVICE_ID = 111;
-   public static boolean  timerPaused = false;
+   private   NotificationManager notificationManager;
+   public static final int FOREGROUND_SERVICE_ID = 111;
+
+    public static boolean isPaused = false;
 
     private final static ListTimerUtility timerUtility = MainListTimeProcessHandler.timerUtility;
 
@@ -87,6 +93,8 @@ public final class TimerService extends LifecycleService implements SensorEventL
         };
 
         reset.observe(this,onReset);
+
+
 
     }
 
@@ -143,12 +151,35 @@ public final class TimerService extends LifecycleService implements SensorEventL
                 switch(MODE){
 
                     case 0 :{
-                        if(!MainListTimeProcessHandler.timerViewModel.isToggled())
+                        if(!MainListTimeProcessHandler.timerViewModel.isToggled()) {
+
                             MainListTimeProcessHandler.timerViewModel.toggleTime();
+                            Vibrator vibrator = (Vibrator) getBaseContext().getSystemService(getBaseContext().getSystemServiceName(Vibrator.class));
+                            vibrator.vibrate(VibrationEffect.createOneShot(100, 1));
+
+                            new Timer().schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    MainListTimeProcessHandler.timerViewModel.executeServiceTask();
+                                }
+                            },700);
+
+                        }
                     }break;
 
                     case 1 : {
                         MainListTimeProcessHandler.timerViewModel.toggleTime();
+
+                        Vibrator vibrator = (Vibrator) getBaseContext().getSystemService(getBaseContext().getSystemServiceName(Vibrator.class));
+                        vibrator.vibrate(  VibrationEffect.createOneShot(100,1));
+
+                        new Timer().schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                MainListTimeProcessHandler.timerViewModel.executeServiceTask();
+                            }
+                        },700);
+
                     }break;
 
                     case 2 : {
@@ -190,9 +221,7 @@ public final class TimerService extends LifecycleService implements SensorEventL
 
         Log.d("serviceTest",""+countTime + " "+ entry);
 
-
-
-            mBuilder.set(builderNormal(dataHelper, entry, elapsedTimeNV, countTime));
+        mBuilder.set(builderNormal(dataHelper, entry, elapsedTimeNV, countTime));
 
 
 
@@ -228,7 +257,7 @@ public final class TimerService extends LifecycleService implements SensorEventL
     }
 
 
-    private static class BuilderDataHelper{
+    public static class BuilderDataHelper{
 
         NotificationCompat.Builder builder;
         PendingIntent pendingIntent;
@@ -270,7 +299,12 @@ public final class TimerService extends LifecycleService implements SensorEventL
         String textTimeRemainder = (entry.onTogglePrimer.getValue() ) ? "paused" :  new TimeState(timeRemainder).getTimeFormat() ;
 
         String toggleButtonText = (dataHelper.timerViewModel.isToggled()) ? "Pause" : "Resume";
+//        String toggleButtonText = (isPaused) ? "Pause" : "Resume";
 
+//         String toggleButtonText = "Pause";
+
+
+        Log.d("notifyTest",""+isPaused);
 //        String toggleButtonText="Toggle";
 
 
@@ -284,13 +318,17 @@ public final class TimerService extends LifecycleService implements SensorEventL
                 .addAction(android.R.drawable.btn_star, toggleButtonText,
                         toggleTimePendingIntent)
                 .setProgress(entry.numberValueTime, Math.abs( decimalEntrySetTime - elapsedTimeNV) , false)
-                .setAutoCancel(true)
+                .setAutoCancel(false)
+                .setOngoing(true)
                 .setColor(Color.parseColor("#5291cc"))
                 .setSubText(dataHelper.timerViewModel.getRepeaterTime() + " " + new TimeState(countTime).getTimeFormat())
                 .setContentText(entry.textEntry.getValue() + " " + textTimeRemainder);
 
 
     }
+
+
+
 
     @Override
     public void onDestroy() {
@@ -310,8 +348,6 @@ public final class TimerService extends LifecycleService implements SensorEventL
 
         NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, channelName, importance);
 
-        mChannel.enableLights(true);
-        mChannel.setLightColor(Color.BLUE);
         if (mNotificationManager != null) {
             mNotificationManager.createNotificationChannel(mChannel);
         } else {
@@ -389,7 +425,7 @@ public final class TimerService extends LifecycleService implements SensorEventL
 //                        //it is not locked
 //                    }
 
-
+                    Log.d("notifyTest",""+isPaused);
 
                     //rebuild notification here
                     notification.set(timerService.makeNotification(
@@ -403,6 +439,8 @@ public final class TimerService extends LifecycleService implements SensorEventL
 
 
             }));
+
+
 
             return notification.get();
         }
