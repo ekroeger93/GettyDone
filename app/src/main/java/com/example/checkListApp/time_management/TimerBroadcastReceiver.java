@@ -29,12 +29,14 @@ public class TimerBroadcastReceiver extends BroadcastReceiver {
            vibrator.vibrate(  VibrationEffect.createOneShot(100,1));
 
            //TODO: THIS IS A CRAP SOLUTION BUT I'VE TRIED BOUT EVERYTHING ELSE SO FAR
-           new Timer().schedule(new TimerTask() {
-               @Override
-               public void run() {
-                   MainListTimeProcessHandler.timerViewModel.executeServiceTask();
-               }
-           },700);
+//           if(MainFragment.isTimerRunning())
+//           new Timer().schedule(new TimerTask() {
+//               @Override
+//               public void run() {
+//
+//                   MainListTimeProcessHandler.timerViewModel.executeServiceTask();
+//               }
+//           },700);
 
 
        }

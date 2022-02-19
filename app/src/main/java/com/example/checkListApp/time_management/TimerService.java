@@ -62,6 +62,7 @@ public final class TimerService extends LifecycleService implements SensorEventL
     private final static ListTimerUtility timerUtility = MainListTimeProcessHandler.timerUtility;
 
     //https://developer.android.com/training/scheduling/wakelock
+    //https://stackoverflow.com/questions/22789588/how-to-update-notification-with-remoteviews
 
     PowerManager powerManager;
     PowerManager.WakeLock wakeLock;
@@ -82,10 +83,10 @@ public final class TimerService extends LifecycleService implements SensorEventL
         Observer<Boolean> onReset = aBoolean -> {
 
             if(aBoolean) {
-//                stopSelf();
-
+                stopSelf();
                 stopService(serviceIntent);
-                notificationManager.cancel(FOREGROUND_SERVICE_ID);
+//                notificationManager.cancel(FOREGROUND_SERVICE_ID);
+                notificationManager.cancelAll();
                 reset.postValue(false);
             }
 
@@ -157,12 +158,12 @@ public final class TimerService extends LifecycleService implements SensorEventL
                             Vibrator vibrator = (Vibrator) getBaseContext().getSystemService(getBaseContext().getSystemServiceName(Vibrator.class));
                             vibrator.vibrate(VibrationEffect.createOneShot(100, 1));
 
-                            new Timer().schedule(new TimerTask() {
-                                @Override
-                                public void run() {
-                                    MainListTimeProcessHandler.timerViewModel.executeServiceTask();
-                                }
-                            },700);
+//                            new Timer().schedule(new TimerTask() {
+//                                @Override
+//                                public void run() {
+//                                    MainListTimeProcessHandler.timerViewModel.executeServiceTask();
+//                                }
+//                            },700);
 
                         }
                     }break;
@@ -173,12 +174,12 @@ public final class TimerService extends LifecycleService implements SensorEventL
                         Vibrator vibrator = (Vibrator) getBaseContext().getSystemService(getBaseContext().getSystemServiceName(Vibrator.class));
                         vibrator.vibrate(  VibrationEffect.createOneShot(100,1));
 
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                MainListTimeProcessHandler.timerViewModel.executeServiceTask();
-                            }
-                        },700);
+//                        new Timer().schedule(new TimerTask() {
+//                            @Override
+//                            public void run() {
+//                                MainListTimeProcessHandler.timerViewModel.executeServiceTask();
+//                            }
+//                        },700);
 
                     }break;
 
@@ -404,6 +405,7 @@ public final class TimerService extends LifecycleService implements SensorEventL
 
             timeViewModel.setServicePostExecute(() -> {
 
+
                 reset.postValue(true);
 
             });
@@ -435,10 +437,18 @@ public final class TimerService extends LifecycleService implements SensorEventL
                             , timerUtility.previousActiveTime
                             , pendingIntent));
 
-                    mgr.notify(FOREGROUND_SERVICE_ID, notification.get());
 
 
-            }));
+                        new Timer().schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                if(MainFragment.isTimerRunning()) {
+                                    mgr.notify(FOREGROUND_SERVICE_ID, notification.get());
+                                }else{
+                                    mgr.cancelAll();
+                                }
+                            }},500);
+                }));
 
 
 
