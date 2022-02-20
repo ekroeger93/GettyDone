@@ -1,14 +1,11 @@
 package com.example.checkListApp.time_management;
 
-import android.app.KeyguardManager;
 import android.app.Notification;
-import android.app.Notification.Builder;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -19,6 +16,7 @@ import android.os.PowerManager;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -31,22 +29,15 @@ import com.example.checkListApp.R;
 import com.example.checkListApp.time_management.parcel.ListTimersParcel;
 import com.example.checkListApp.time_management.utilities.KeyHelperClass;
 import com.example.checkListApp.time_management.utilities.ListTimerUtility;
-import com.example.checkListApp.timer.CountDownTimerAsync;
 import com.example.checkListApp.timer.TimeState;
-import com.example.checkListApp.ui.main.ColorHelper;
-import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.entry_management.MainListTimeProcessHandler;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 import com.example.checkListApp.fragments.settings.PreferenceHelper;
 import com.example.checkListApp.input.shake_detector.ShakeDetector;
 
 
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.logging.Logger;
 
 public final class TimerService extends LifecycleService implements SensorEventListener {
 
@@ -64,6 +55,12 @@ public final class TimerService extends LifecycleService implements SensorEventL
     //https://developer.android.com/training/scheduling/wakelock
     //https://stackoverflow.com/questions/22789588/how-to-update-notification-with-remoteviews
 
+    //TODO: Group notification solution
+    //https://developer.android.com/training/notify-user/group
+    //have two separate notifications
+    //timer and button panel
+    //timer (updates continuously) button panel (updates on user interaction)
+
     PowerManager powerManager;
     PowerManager.WakeLock wakeLock;
 
@@ -75,6 +72,7 @@ public final class TimerService extends LifecycleService implements SensorEventL
     private ShakeDetector mShakeDetector;
 
     private PreferenceHelper preferenceHelper;
+    private RemoteViews mRemoteViews;
 
     @Override
     public void onCreate() {
@@ -300,29 +298,45 @@ public final class TimerService extends LifecycleService implements SensorEventL
         String textTimeRemainder = (entry.onTogglePrimer.getValue() ) ? "paused" :  new TimeState(timeRemainder).getTimeFormat() ;
 
         String toggleButtonText = (dataHelper.timerViewModel.isToggled()) ? "Pause" : "Resume";
-//        String toggleButtonText = (isPaused) ? "Pause" : "Resume";
 
-//         String toggleButtonText = "Pause";
+        // notification's layout
+        mRemoteViews = new RemoteViews(getPackageName(), R.layout.custom_notification_small);
+        // notification's title
+        mRemoteViews.setTextViewText(R.id.notif_title,dataHelper.timerViewModel.getRepeaterTime() + " " + new TimeState(countTime).getTimeFormat());
+        // notification's content
+        mRemoteViews.setTextViewText(R.id.notif_timer_text,textTimeRemainder);
+
+        mRemoteViews.setTextViewText(R.id.notif_description,entry.textEntry.getValue());
 
 
-        Log.d("notifyTest",""+isPaused);
-//        String toggleButtonText="Toggle";
+        mRemoteViews.setOnClickPendingIntent(R.id.toggleDismiss,resetTimePendingIntent);
+        mRemoteViews.setOnClickPendingIntent(R.id.toggleTimerBtn,toggleTimePendingIntent);
+
+        mRemoteViews.setProgressBar(R.id.timeProgress,entry.numberValueTime, Math.abs( decimalEntrySetTime - elapsedTimeNV) ,false);
 
 
-        return dataHelper.builder.setContentIntent(dataHelper.pendingIntent)
-                .setSmallIcon(R.drawable.outline_timer_black_48)
-                .setPriority(2)
-                .setColorized(true)
-                .addAction(R.drawable.outline_add_circle_black_48, "Dismiss",
-                        resetTimePendingIntent)
-                .addAction(android.R.drawable.btn_star, toggleButtonText,
-                        toggleTimePendingIntent)
-//                .setProgress(entry.numberValueTime, Math.abs( decimalEntrySetTime - elapsedTimeNV) , false)
+        return dataHelper.builder
                 .setAutoCancel(false)
-                .setOngoing(false)
-                .setColor(Color.parseColor("#5291cc"))
-                .setSubText(dataHelper.timerViewModel.getRepeaterTime() + " " + new TimeState(countTime).getTimeFormat())
-                .setContentText(entry.textEntry.getValue() + " " + textTimeRemainder);
+                .setPriority(2)
+                .setProgress(entry.numberValueTime, Math.abs( decimalEntrySetTime - elapsedTimeNV) , false)
+                .setContentIntent(dataHelper.pendingIntent)
+                .setContent(mRemoteViews)
+                .setSmallIcon(R.drawable.outline_timer_black_48);
+
+//        return dataHelper.builder.setContentIntent(dataHelper.pendingIntent)
+//                .setSmallIcon(R.drawable.outline_timer_black_48)
+//                .setPriority(2)
+//                .setColorized(true)
+//                .addAction(R.drawable.outline_add_circle_black_48, "Dismiss",
+//                        resetTimePendingIntent)
+//                .addAction(android.R.drawable.btn_star, toggleButtonText,
+//                        toggleTimePendingIntent)
+////                .setProgress(entry.numberValueTime, Math.abs( decimalEntrySetTime - elapsedTimeNV) , false)
+//                .setAutoCancel(false)
+//                .setOngoing(false)
+//                .setColor(Color.parseColor("#5291cc"))
+//                .setSubText(dataHelper.timerViewModel.getRepeaterTime() + " " + new TimeState(countTime).getTimeFormat())
+//                .setContentText(entry.textEntry.getValue() + " " + textTimeRemainder);
 
 
     }
@@ -450,6 +464,7 @@ public final class TimerService extends LifecycleService implements SensorEventL
 //                                    mgr.cancelAll();
 //                                }
 //                            }},1000);
+
                 }));
 
 

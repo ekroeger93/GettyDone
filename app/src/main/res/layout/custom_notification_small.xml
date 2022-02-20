@@ -3,10 +3,11 @@
     <!-- We have to set the height to 64dp, this is the rule of the small notification -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="64dp"
+    android:layout_height="128dp"
     android:orientation="horizontal"
     android:id="@+id/notif_small"
-    android:background="@color/white">
+    android:clickable="false"
+    android:background="@color/blue_500">
 
     <ImageView
         android:id="@+id/notif_icon"
@@ -23,50 +24,92 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@id/notif_icon"
-        android:layout_toStartOf="@id/toggleDismiss"
+        android:layout_toStartOf="@id/buttonPanelNotification"
         android:layout_marginEnd="5dp"
         android:singleLine="true"
         android:paddingTop="4dp"
-        android:textSize="15sp"
-        android:textColor="#000000"
-        android:textAlignment="center"
-        android:text="placeHolder"
+        android:textSize="12sp"
+        android:textAlignment="viewStart"
+        android:textColor="@color/light_blue_200"
+        android:text="000000"
         />
 
+
     <TextView
-        android:id="@+id/notif_content"
+        android:id="@+id/notif_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/notif_icon"
         android:layout_below="@id/notif_title"
-        android:singleLine="true"
-        android:textSize="15sp"
-        android:textColor="#575757"
-        android:text="Content" />
+        android:layout_toEndOf="@id/notif_icon"
+        android:layout_toStartOf="@id/buttonPanelNotification"
+        android:textColor="#000000"
+        android:background="@color/blue_300"
+        android:textSize="12sp"
+        android:maxLines="1"
+        android:layout_marginTop="10dp"
+        android:text="placeHolder"
+        android:layout_marginEnd="10dp"
+        />
 
     <ProgressBar
         android:id="@+id/timeProgress"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:alpha=".5"
-        android:indeterminate="false" />
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginEnd="10dp"
+        android:layout_alignBottom="@id/notif_timer_text"
+        android:layout_centerInParent="true"
+        android:layout_toStartOf="@id/buttonPanelNotification"
+        android:layout_toEndOf="@id/notif_icon"
+        android:progressDrawable="@drawable/progress_gradient_color_custom" />
+
+
+
+
+
+    <TextView
+        android:id="@+id/notif_timer_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/notif_description"
+        android:layout_toStartOf="@id/buttonPanelNotification"
+        android:layout_toEndOf="@id/notif_icon"
+        android:layout_marginTop="15dp"
+
+        android:paddingBottom="10dp"
+        android:singleLine="true"
+        android:text="00000"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="15sp" />
+
+
+    <LinearLayout
+        android:background="@color/blue_300"
+        android:clickable="true"
+        android:id="@+id/buttonPanelNotification"
+        android:layout_alignParentEnd="true"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
 
     <Button
         android:id="@+id/toggleDismiss"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_toStartOf="@id/toggleTimerBtn"
-        android:layout_marginEnd="30dp"
-        />
+        android:layout_gravity="center"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginStart="15dp"
+         android:background="@drawable/outline_remove_circle_outline_black_48" />
 
     <Button
         android:id="@+id/toggleTimerBtn"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginEnd="40dp"
-        android:layout_alignParentEnd="true"
-        />
+        android:layout_gravity="center"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginEnd="15dp"
+        android:paddingHorizontal="15dp"
+        android:background="@drawable/ic_ontogglecustom3" />
+
+    </LinearLayout>
 
 </RelativeLayout>
