@@ -91,6 +91,38 @@ public class Operator {
         return selection - 1;
     }
 
+    public void setSelection(int selection){
+
+        for (Entry e : mainFragment.getCheckList()) {
+
+            try {
+                //     if(!e.checked.getValue()){
+                if (!adapter.toggleTracker) {
+
+                    ColorHelper colorHelper = new ColorHelper(mainFragment.getContext());
+
+                    if (e.getViewHolder().getBindingAdapterPosition() == selection - 1) {
+                        e.getViewHolder().itemView.setBackgroundColor(colorHelper.Entry_ItemView_Selected);
+                        listUtility.updateAllSelection(mainFragment.getCheckList());
+                    } else {
+                        e.getViewHolder().itemView.setBackgroundColor(colorHelper.Entry_ItemView);
+                    }
+                } else {
+                    listUtility.updateAllSelection(mainFragment.getCheckList());
+                }
+                //    }
+
+
+//     if (e.getViewHolder().getBindingAdapterPosition() == selection - 1)
+//         listUtility.updateAllSelection(mainFragment.getCheckList());
+
+
+            } catch (NullPointerException a) {
+                a.printStackTrace();
+            }
+        }
+    }
+
     public void refreshSelection(boolean decremented){
 
          final float recyclerScrollCompute = MainFragment.recyclerScrollCompute;
@@ -191,6 +223,7 @@ public class Operator {
         mainFragment.getSubListManager().loadSubLists();
 
 //        adapter.notifyItemRangeChanged(movingItemIndex, placeIndex);
+
         adapter.notifyItemChanged(movingItemIndex,movingItem);
         adapter.notifyItemChanged(placeIndex,entrySwap);
 
@@ -202,6 +235,7 @@ public class Operator {
         MainFragment.scrollPosition(placeIndex);
 
         mainFragment.updateIndexes();
+        mainFragment.getSubListManager().sanityCheckSubList();
 
     }
 
@@ -259,9 +293,9 @@ public class Operator {
         int movingItemIndex = selection-1;
         int placeIndex = movingItemIndex - 1;
 
-
         if (movingItemIndex - 1 >= 1)
             moveEntry(movingItemIndex,placeIndex);
+
 
 
     }
@@ -271,8 +305,11 @@ public class Operator {
         int movingItemIndex = selection-1;
         int placeIndex = movingItemIndex + 1;
 
-        if (movingItemIndex + 1 < mainFragment.getCheckList().size()-1)
+        if (movingItemIndex + 1 < mainFragment.getCheckList().size()-1) {
             moveEntry(movingItemIndex, placeIndex);
+
+
+        }
 
 
     }

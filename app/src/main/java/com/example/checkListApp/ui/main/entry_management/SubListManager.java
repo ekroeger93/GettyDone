@@ -93,15 +93,14 @@ public class SubListManager {
 
         unLoadSub.setOnClickListener(view -> {
             checkList.get(index).unSetSubList();
-            alertDialog.dismiss();
 
-//            checkList.get(index).subListName.postValue("");
+            checkList.get(index).subListName.postValue("");
 
             checkList.get(index).getViewHolder()
                     .subTextView.setText(
                     R.string.entrySubTextNoLoaded);
 
-
+            alertDialog.dismiss();
         });
 
     }
@@ -165,14 +164,19 @@ public class SubListManager {
 
         ArrayList<Entry> checkList = mainFragment.getCheckList();
 
-        //if a name is there but no sublist what the hell?!
+
         for(Entry entry : checkList){
 
             entry.subListJson.setValue(fileManager.loadFile(entry.subListName.getValue()));
 
+            //if a name is there but no sublist what the hell?!
             if( entry.subListJson.getValue() != null || !entry.subListJson.getValue().isEmpty())
                 setSubList(checkList.indexOf(entry),entry.subListJson.getValue());
 
+            //if there is no name why the hell is there a sublist?
+            if( entry.subListName.getValue() == null || entry.subListName.getValue().isEmpty() ){
+                entry.unSetSubList();
+            }
 
 
 

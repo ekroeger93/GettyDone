@@ -89,6 +89,8 @@ public class MainListTimeProcessHandler {
             //TODO: dont forget the move sublisting json is screwed up
             //this is a temp fix
 
+            mainFragment.getSubListManager().sanityCheckSubList();
+
 //            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 //            boolean hintMessageActive = preferences.getBoolean("hintMessagesResetTimer", false);
 //            Log.d("prefTest",""+hintMessageActive);

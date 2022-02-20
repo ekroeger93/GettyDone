@@ -131,7 +131,7 @@ public class ListTimerUtility {
 
        Entry lastEntry = list.get(list.size()-2);
 
-       if(list.size() >3) {
+//       if(list.size() >3) {
 
            if(lastEntry.isSubEntry){
                //get the last entry of the sublist instead!
@@ -141,11 +141,11 @@ public class ListTimerUtility {
                return new TimeState(lastEntry.timeAccumulated).timeTruncated();
            }
 
-       }else{
-
-           return  new TimeState(lastEntry.subNumberTimeValue).timeTruncated();
-
-       }
+//       }else{
+//
+//           return  new TimeState(lastEntry.timeAccumulated).timeTruncated();
+//
+//       }
 
     }
 
