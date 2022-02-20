@@ -311,16 +311,15 @@ public final class TimerService extends LifecycleService implements SensorEventL
 
         return dataHelper.builder.setContentIntent(dataHelper.pendingIntent)
                 .setSmallIcon(R.drawable.outline_timer_black_48)
-                .setOnlyAlertOnce(true)
                 .setPriority(2)
                 .setColorized(true)
                 .addAction(R.drawable.outline_add_circle_black_48, "Dismiss",
                         resetTimePendingIntent)
                 .addAction(android.R.drawable.btn_star, toggleButtonText,
                         toggleTimePendingIntent)
-                .setProgress(entry.numberValueTime, Math.abs( decimalEntrySetTime - elapsedTimeNV) , false)
+//                .setProgress(entry.numberValueTime, Math.abs( decimalEntrySetTime - elapsedTimeNV) , false)
                 .setAutoCancel(false)
-                .setOngoing(true)
+                .setOngoing(false)
                 .setColor(Color.parseColor("#5291cc"))
                 .setSubText(dataHelper.timerViewModel.getRepeaterTime() + " " + new TimeState(countTime).getTimeFormat())
                 .setContentText(entry.textEntry.getValue() + " " + textTimeRemainder);
@@ -430,6 +429,7 @@ public final class TimerService extends LifecycleService implements SensorEventL
                     Log.d("notifyTest",""+isPaused);
 
                     //rebuild notification here
+
                     notification.set(timerService.makeNotification(
                             countTime,
                             elapsedTimeN
@@ -438,16 +438,18 @@ public final class TimerService extends LifecycleService implements SensorEventL
                             , pendingIntent));
 
 
+                    mgr.notify(FOREGROUND_SERVICE_ID, notification.get());
 
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                if(MainFragment.isTimerRunning()) {
-                                    mgr.notify(FOREGROUND_SERVICE_ID, notification.get());
-                                }else{
-                                    mgr.cancelAll();
-                                }
-                            }},500);
+
+//                    new Timer().schedule(new TimerTask() {
+//                            @Override
+//                            public void run() {
+//                                if(MainFragment.isTimerRunning()) {
+//                                    mgr.notify(FOREGROUND_SERVICE_ID, notification.get());
+//                                }else{
+//                                    mgr.cancelAll();
+//                                }
+//                            }},1000);
                 }));
 
 
