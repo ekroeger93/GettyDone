@@ -160,6 +160,7 @@ public class SubListManager {
 
     }
 
+    //because its damn hard to maintain integrity while moving items
     public void sanityCheckSubList(){
 
         ArrayList<Entry> checkList = mainFragment.getCheckList();

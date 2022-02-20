@@ -104,6 +104,9 @@ bridge pattern? complications with DAO and Gson
   -repeater time needs persistence
     -still not in database, cant add statics?
 
+    -moving items to the last entry, selection does not proceed to it
+    -on toggle execution button does not change accordingly when toggling timer on notification
+    -
 
 //TODO: FEATURES
 
@@ -389,6 +392,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                 () -> {
 
                     ratioOffset = 1.75f;
+//                    ratioOffset = 1.85f;
 
                     //adjusted so that selection is in middle of recyclerList
                     recyclerScrollCompute = recyclerView.getHeight() / ratioOffset;

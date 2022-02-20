@@ -36,6 +36,8 @@ import com.example.checkListApp.fragments.settings.PreferenceHelper;
 import com.example.checkListApp.input.shake_detector.ShakeDetector;
 
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -45,8 +47,10 @@ public final class TimerService extends LifecycleService implements SensorEventL
    private Intent serviceIntent;
    public static MutableLiveData<Boolean> reset = new MutableLiveData<>(false);
 
-   private   NotificationManager notificationManager;
+   private NotificationManager notificationManager;
    public static final int FOREGROUND_SERVICE_ID = 111;
+
+   private  boolean shakeDelayPrimer = true;
 
     public static boolean isPaused = false;
 
@@ -64,15 +68,10 @@ public final class TimerService extends LifecycleService implements SensorEventL
     PowerManager powerManager;
     PowerManager.WakeLock wakeLock;
 
-    private SensorManager mSensorManager;
-    private Sensor mAccelerometer;
     private float mAccel; // acceleration apart from gravity
     private float mAccelCurrent; // current acceleration including gravity
-    private float mAccelLast; // last acceleration including gravit
-    private ShakeDetector mShakeDetector;
 
     private PreferenceHelper preferenceHelper;
-    private RemoteViews mRemoteViews;
 
     @Override
     public void onCreate() {
@@ -126,72 +125,73 @@ public final class TimerService extends LifecycleService implements SensorEventL
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
 
-
-
-
-//      if(!parcelableList.globalSetTimer.equals("00:00:00"))
-
-        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        mAccelerometer = mSensorManager
+        SensorManager mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        Sensor mAccelerometer = mSensorManager
                 .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
+        ShakeDetector mShakeDetector = ShakeDetector.getInstance;
 
-        mShakeDetector = new ShakeDetector();
 
         mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
 
             @Override
             public void onShake(int count) {
 
-                Log.d("shakeTest","shake");
+                Log.d("shakeTest", "shake "+count);
 
                 int MODE = preferenceHelper.shakeToggleTimerMode();
 
-                switch(MODE){
+                if (shakeDelayPrimer) {
+                    shakeDelayPrimer = false;
 
-                    case 0 :{
-                        if(!MainListTimeProcessHandler.timerViewModel.isToggled()) {
+                        new Timer().schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    shakeDelayPrimer = true;
+                                    mShakeDetector.activeShake = true;
+                                    Log.d("shakeTest","shakePrimed!");
+                                }
+                            },2000);
 
+                    switch (MODE) {
+
+
+                        case 0: {
+                            if (!MainListTimeProcessHandler.timerViewModel.isToggled()) {
+
+
+                                MainListTimeProcessHandler.timerViewModel.toggleTime();
+                                Vibrator vibrator = (Vibrator) getBaseContext().getSystemService(getBaseContext().getSystemServiceName(Vibrator.class));
+                                vibrator.vibrate(VibrationEffect.createOneShot(100, 1));
+
+
+                            }
+                        }
+                        break;
+
+                        case 1: {
                             MainListTimeProcessHandler.timerViewModel.toggleTime();
+
                             Vibrator vibrator = (Vibrator) getBaseContext().getSystemService(getBaseContext().getSystemServiceName(Vibrator.class));
                             vibrator.vibrate(VibrationEffect.createOneShot(100, 1));
 
-//                            new Timer().schedule(new TimerTask() {
-//                                @Override
-//                                public void run() {
-//                                    MainListTimeProcessHandler.timerViewModel.executeServiceTask();
-//                                }
-//                            },700);
 
                         }
-                    }break;
+                        break;
 
-                    case 1 : {
-                        MainListTimeProcessHandler.timerViewModel.toggleTime();
+                        case 2: {
 
-                        Vibrator vibrator = (Vibrator) getBaseContext().getSystemService(getBaseContext().getSystemServiceName(Vibrator.class));
-                        vibrator.vibrate(  VibrationEffect.createOneShot(100,1));
+                        }
+                        break;
 
-//                        new Timer().schedule(new TimerTask() {
-//                            @Override
-//                            public void run() {
-//                                MainListTimeProcessHandler.timerViewModel.executeServiceTask();
-//                            }
-//                        },700);
+                        default:
+                            break;
 
-                    }break;
+                    }
 
-                    case 2 : {
-
-                    }break;
-
-                    default:break;
 
                 }
-
-
             }
-
         });
 
         mSensorManager.registerListener(mShakeDetector, mAccelerometer,
@@ -238,7 +238,8 @@ public final class TimerService extends LifecycleService implements SensorEventL
         float x = event.values[0];
         float y = event.values[1];
         float z = event.values[2];
-        mAccelLast = mAccelCurrent;
+        // last acceleration including gravit
+        float mAccelLast = mAccelCurrent;
         mAccelCurrent = (float) Math.sqrt((double) (x * x + y * y + z * z));
         float delta = mAccelCurrent - mAccelLast;
         mAccel = mAccel * 0.9f + delta; // perform low-cut filter
@@ -300,7 +301,7 @@ public final class TimerService extends LifecycleService implements SensorEventL
         String toggleButtonText = (dataHelper.timerViewModel.isToggled()) ? "Pause" : "Resume";
 
         // notification's layout
-        mRemoteViews = new RemoteViews(getPackageName(), R.layout.custom_notification_small);
+        RemoteViews mRemoteViews = new RemoteViews(getPackageName(), R.layout.custom_notification_small);
         // notification's title
         mRemoteViews.setTextViewText(R.id.notif_title,dataHelper.timerViewModel.getRepeaterTime() + " " + new TimeState(countTime).getTimeFormat());
         // notification's content

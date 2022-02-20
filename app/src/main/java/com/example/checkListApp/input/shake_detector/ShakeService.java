@@ -34,17 +34,6 @@ public class ShakeService extends Service implements SensorEventListener {
         mSensorManager.registerListener(this, mAccelerometer,
                 SensorManager.SENSOR_DELAY_UI, new Handler());
 
-        mShakeDetector = new ShakeDetector();
-        mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
-
-            @Override
-            public void onShake(int count) {
-
-
-            }
-
-        });
-
         return START_STICKY;
     }
 
