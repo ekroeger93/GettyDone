@@ -104,8 +104,12 @@ bridge pattern? complications with DAO and Gson
   -repeater time needs persistence
     -still not in database, cant add statics?
 
+    (left for future reference)
     -moving items to the last entry, selection does not proceed to it
+        -this has something to do with dimension of recycler scroll
+
     -on toggle execution button does not change accordingly when toggling timer on notification
+
     -
 
 //TODO: FEATURES
@@ -133,9 +137,8 @@ can also change the app icon colors along with it!
 -? make timelabel editText instead, /w custom keyboard
 -? pictures and gifs, thumbnails
 
--add in pull down/up to extender, change the recycler view Y size
-    -use anchor points when dragging
-    or fullscreen mode
+-tag files as sublists to cleanup file list fragment
+
 
 https://medium.com/@ipaulpro/drag-and-swipe-with-recyclerview-b9456d2b1aaf
 i can get rid of touch expander completely
@@ -506,11 +509,11 @@ public class MainFragment extends Fragment implements ListItemClickListener {
             if(!aBoolean){//timer not running
 
                 MainActivity.tabLayout.setVisibility(View.VISIBLE);
-                hideButtons(false);
+                hideButtonPanel(false);
             }else{
 
                 MainActivity.tabLayout.setVisibility(View.GONE);
-                hideButtons(true);
+                hideButtonPanel(true);
             }
 
         };
@@ -589,9 +592,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     });
 
 
-
-
-    selectionTracker.addObserver( new SelectionTracker.SelectionObserver<Long>(){
+        selectionTracker.addObserver( new SelectionTracker.SelectionObserver<Long>(){
 
         @Override
         public void onSelectionRefresh() {
@@ -739,12 +740,15 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                         //assign a onClickListener for leaf button
                         .assignListener(view -> {
 
+                            hideTimeExecuteBtn(true);
+
                             //listener for the button panel
                             buttonPanelToggle.setSubmitBtnOnClickListener(
                                     view1 -> { //deletes selected Entries
                                         entryItemManager.deleteSelected(selectionTracker);
                                         buttonPanelToggle.toggleDisableToButton();
                                         adapter.trackerOn(false);
+                                        hideTimeExecuteBtn(false);
                                     });
 
                             updateIndexes();
@@ -769,6 +773,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
                             recyclerView.scrollToPosition(0);
                             recyclerView.setHasFixedSize(true);
+                            hideTimeExecuteBtn(true);
 
                             buttonPanelToggle.setSubmitBtnOnClickListener(view1 -> {
 
@@ -780,7 +785,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                                 selectionTracker.clearSelection();
                                 listUtility.reInitializeAllSelection(checkList);
                                 adapter.trackerOn(false);
-
+                                hideTimeExecuteBtn(false);
                             });
 
                             //thread may still be running!!!
@@ -814,7 +819,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                             .animatePopIn();
                 }
 
-            } catch (NullPointerException e) {
+            } catch (NullPointerException | IndexOutOfBoundsException e) {
                 e.printStackTrace();
             }
 
@@ -981,7 +986,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
         customLayoutManager.scrollToPositionWithOffset(position,100);
     }
 
-    public void hideButtons(boolean hide){
+    public void hideButtonPanel(boolean hide){
 
         if(hide){
             binding.buttonPanel.setVisibility(View.GONE);
