@@ -22,6 +22,7 @@ import com.example.checkListApp.time_management.utilities.ListTimerUtility;
 import com.example.checkListApp.timer.CountDownTimerAsync;
 import com.example.checkListApp.timer.TimeState;
 import com.example.checkListApp.ui.main.MainFragment;
+import com.example.checkListApp.ui.main.MainUIDynamics;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 import com.example.checkListApp.ui.main.entry_management.entries.Spacer;
 import com.google.android.material.snackbar.Snackbar;
@@ -287,7 +288,7 @@ public class MainListTimeProcessHandler {
         try {
             mainFragment.getActivity().runOnUiThread(() -> {
 
-                MainFragment.scrollPosition(scroll);
+                MainUIDynamics.scrollPosition(scroll);
 
             });
         }catch (NullPointerException e){
@@ -335,7 +336,7 @@ public class MainListTimeProcessHandler {
 
                 updateEntryUI();
 
-                mainFragment.playAudio(timerUtility.currentActiveTime.getSelectAudio());
+                mainFragment.getMainUIDynamics().playAudio(timerUtility.currentActiveTime.getSelectAudio());
 
 
 
@@ -364,7 +365,7 @@ public class MainListTimeProcessHandler {
 
 
 
-            mainFragment.playAudio(timerUtility.currentActiveTime.getSelectAudio());
+            mainFragment.getMainUIDynamics().playAudio(timerUtility.currentActiveTime.getSelectAudio());
 
 
 
@@ -384,7 +385,7 @@ public class MainListTimeProcessHandler {
 
     public void endOfTimerTask( CountDownTimerAsync.CountDownTask countDownTask){
 
-        mainFragment.playAudio(timerUtility.currentActiveTime.getSelectAudio());
+        mainFragment.getMainUIDynamics().playAudio(timerUtility.currentActiveTime.getSelectAudio());
 
         try {
             timerUtility.currentActiveTime.getViewHolder().checkOff();

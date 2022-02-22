@@ -85,6 +85,8 @@ public final class TimerService extends LifecycleService implements SensorEventL
 //                notificationManager.cancel(FOREGROUND_SERVICE_ID);
                 notificationManager.cancelAll();
                 reset.postValue(false);
+
+                Log.d("testReset","reset");
             }
 
 
@@ -418,7 +420,6 @@ public final class TimerService extends LifecycleService implements SensorEventL
 
 
             timeViewModel.setServicePostExecute(() -> {
-
 
                 reset.postValue(true);
 

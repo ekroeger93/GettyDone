@@ -114,7 +114,7 @@ public class EntryItemManager {
         //TODO BUG AFTER MOVING ITEM IT UNDOS THE NEW ARRANGEMENT
         //NOTE: SOMETHING PROCEEDING THIS MAY BE EFFECTING IT
 
-        mainFragment.updateIndexes();
+        operator.updateIndexes();
     }
 
     public void deleteSelected(SelectionTracker<Long> tracker){
@@ -142,7 +142,7 @@ public class EntryItemManager {
         }
         tracker.clearSelection();
 
-        mainFragment.updateIndexes();
+        operator.updateIndexes();
 
     }
 
@@ -157,7 +157,7 @@ public class EntryItemManager {
 
         operator.refreshSelection(false);
 
-        mainFragment.updateIndexes();
+        operator.updateIndexes();
 
     }
 
@@ -180,7 +180,7 @@ public class EntryItemManager {
         //TODO BUG AFTER MOVING ITEM IT UNDOS THE NEW ARRANGEMENT
         //NOTE: SOMETHING PROCEEDING THIS MAY BE EFFECTING IT
 
-        mainFragment.updateIndexes();
+        operator.updateIndexes();
 
     }
 
@@ -327,7 +327,7 @@ public class EntryItemManager {
         }
 
 //        mainFragment.mainListTimeProcessHandler.subAccumulation();
-         mainFragment.updateIndexes();
+         operator.updateIndexes();
 
     }
 
@@ -366,13 +366,13 @@ public class EntryItemManager {
                             operator.adapter.notifyItemRemoved(operator.selection - 1);
                             operator.adapter.notifyItemChanged(mainFragment.getCheckList().size());
 
-                            mainFragment.updateIndexes();
+                            operator.updateIndexes();
                             buttonPanelToggle.toggleDisable();
                         }
 
             }).start();
 
-            mainFragment.showUndoSnackBar();
+            mainFragment.getMainUIDynamics().showUndoSnackBar();
 
 
     }}
@@ -410,7 +410,7 @@ public class EntryItemManager {
 
         if (!isMovingItem) {
 
-            mainFragment.hideTimeExecuteBtn(true);
+            mainFragment.getMainUIDynamics().hideTimeExecuteBtn(true);
 
             operator.movingItem = mainFragment.getCheckList().get(selection - 1);
             operator.oldMovePosition = selection - 1;
@@ -420,13 +420,13 @@ public class EntryItemManager {
 
 
 
-            mainFragment.updateIndexes();
+            operator.updateIndexes();
 
          //   buttonPanelToggle.toggleDisableToButton();
 
         }else{
 
-            mainFragment.hideTimeExecuteBtn(false);
+            mainFragment.getMainUIDynamics().hideTimeExecuteBtn(false);
             operator.movingItem = null;
         }
 

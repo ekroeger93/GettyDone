@@ -1,6 +1,7 @@
 package com.example.checkListApp.ui.main.entry_management;
 
 import android.graphics.Color;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.core.content.ContextCompat;
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.checkListApp.R;
 import com.example.checkListApp.ui.main.ColorHelper;
+import com.example.checkListApp.ui.main.MainUIDynamics;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.entry_management.list_component.RecyclerAdapter;
@@ -191,7 +193,7 @@ public class Operator {
                 adapter.notifyItemChanged(selection-1);
 
 
-                mainFragment.updateIndexes();
+                updateIndexes();
 
                 oldMovePosition = selection-1;
 
@@ -232,9 +234,9 @@ public class Operator {
 
 
 
-        MainFragment.scrollPosition(placeIndex);
+        MainUIDynamics.scrollPosition(placeIndex);
 
-        mainFragment.updateIndexes();
+        updateIndexes();
         mainFragment.getSubListManager().sanityCheckSubList();
 
     }
@@ -312,6 +314,23 @@ public class Operator {
         }
 
 
+    }
+
+    public void updateIndexes(){
+
+        for(Entry n :mainFragment.getCheckList()) {
+
+            if(Thread.currentThread() == Looper.getMainLooper().getThread()) {
+                n.orderIndex.setValue(mainFragment.getCheckList().indexOf(n));
+            }else{
+                n.orderIndex.postValue(mainFragment.getCheckList().indexOf(n));
+            }
+            mainFragment.getmViewModel().updateIndex(n, mainFragment.getCheckList().indexOf(n));
+//            Log.d("orderingTest", ""+n.orderIndex.getValue());
+        }
+
+
+        mainFragment.getmViewModel().sortIndexes();
     }
 
 

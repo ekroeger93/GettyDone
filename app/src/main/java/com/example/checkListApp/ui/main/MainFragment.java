@@ -157,18 +157,40 @@ https://github.com/PhilJay/MPAndroidChart
  */
 
 
-public class MainFragment extends Fragment implements ListItemClickListener {
+public class MainFragment extends Fragment {
 
     public MainFragmentBinding binding;
 
     public static float recyclerScrollCompute,itemHeightPx, ratioOffset;
 
     private EntryItemManager entryItemManager;
+
+    public EntryItemManager getEntryItemManager() {
+        return entryItemManager;
+    }
+
     private SelectionTracker<Long> selectionTracker;
 
+    public SelectionTracker<Long> getSelectionTracker() {
+        return selectionTracker;
+    }
+
+
     private Operator operator;
+
     private ButtonPanel buttonPanel;
+
+    public ButtonPanel getButtonPanel() {
+        return buttonPanel;
+    }
+
+
     private ButtonPanelToggle buttonPanelToggle;
+
+    public ButtonPanelToggle getButtonPanelToggle() {
+        return buttonPanelToggle;
+    }
+
 
     private final RecordHelper recordHelper = new RecordHelper();
     private final ListUtility listUtility = new ListUtility();
@@ -177,7 +199,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     private MainViewModel mViewModel;
     private RecyclerView recyclerView;
 
-    private static CustomLayoutManager customLayoutManager;
+    public static CustomLayoutManager customLayoutManager;
     ListTimersParcel listTimersParcel;
 
     private MainListTimeProcessHandler mainListTimeProcessHandler;
@@ -207,20 +229,28 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     private Intent serviceIntent;
 
-    private boolean isSorting = false;
+    public boolean isSorting = false;
 
     private static final MutableLiveData<Boolean> timerRunning = new MutableLiveData<>(false);
     public MutableLiveData<Boolean> getTimerRunning() { return timerRunning; }
 
     public static Boolean isTimerRunning()   { return timerRunning.getValue();}
 
-    private MediaPlayer[] selectedAudio;
+    public MediaPlayer[] selectedAudio;
 
     private Activity activity;
 
     private ItemTouchCallback callback;
 
     private View fragmentView;
+
+    public View getFragmentView(){ return fragmentView; }
+
+    private MainUIDynamics mainUIDynamics;
+
+    public MainUIDynamics getMainUIDynamics() {
+        return mainUIDynamics;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -268,15 +298,19 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         fileManager = new FileManager(view.getContext());
 
-
         fragmentView = view;
+
+        mainUIDynamics = new MainUIDynamics(this);
 
         setUpAdapter();
 
+        mainUIDynamics.resetUIDynamics(this);
+
         initialize();
 
+
         //TODO: selectionTracker interference with onClick!!!
-        assignButtonListeners();
+        mainUIDynamics.assignButtonListeners();
 
         assignObservers();
 
@@ -314,7 +348,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
                 if(getCheckList() != null) {
                     for (Entry entry : getCheckList()) mViewModel.loadEntry(entry);
-                    updateIndexes();
+                    operator.updateIndexes();
 
                     subListManager.sanityCheckSubList();
                     subListManager.loadSubLists();
@@ -482,22 +516,6 @@ public class MainFragment extends Fragment implements ListItemClickListener {
     }
 
     //move to operator?
-    public void updateIndexes(){
-
-        for(Entry n :checkList) {
-
-            if(Thread.currentThread() == Looper.getMainLooper().getThread()) {
-                n.orderIndex.setValue(checkList.indexOf(n));
-            }else{
-                n.orderIndex.postValue(checkList.indexOf(n));
-            }
-            mViewModel.updateIndex(n, checkList.indexOf(n));
-//            Log.d("orderingTest", ""+n.orderIndex.getValue());
-        }
-
-
-        mViewModel.sortIndexes();
-    }
 
     //may move part to ui dynamics
     public void assignObservers(){
@@ -509,11 +527,11 @@ public class MainFragment extends Fragment implements ListItemClickListener {
             if(!aBoolean){//timer not running
 
                 MainActivity.tabLayout.setVisibility(View.VISIBLE);
-                hideButtonPanel(false);
+                mainUIDynamics.hideButtonPanel(false);
             }else{
 
                 MainActivity.tabLayout.setVisibility(View.GONE);
-                hideButtonPanel(true);
+                mainUIDynamics.hideButtonPanel(true);
             }
 
         };
@@ -536,7 +554,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
                 checkList.add(checkList.size(), new Spacer());
 
 
-                updateIndexes();
+                operator.updateIndexes();
                 subListManager.sanityCheckSubList();
 
                 subListManager.loadSubLists();
@@ -581,6 +599,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
                 JsonService.buildJson(checkList);
 
+                mainUIDynamics.updateCheckList(checkList);
 
             }
 
@@ -669,341 +688,335 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
     //UI dynamics class/////////////////////////////////////////
 
-    public void showUndoSnackBar(){
-
-        Snackbar snackbar = Snackbar.make(binding.main, "item deleted",
-                Snackbar.LENGTH_LONG).setAction(
-                "UNDO", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        entryItemManager.undoLastDeletionSingle();
-                    }
-                });
-
-        snackbar.show();
-
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    public void assignButtonListeners(){
-
-
-        binding.repeatTimer.setOnClickListener(view -> {
-            binding.repeatTimer.setSelection(0);
-        });
-
-//        binding.repeatTimer.onKeyPreIme(KeyEvent.KEYCODE_ENTER,new KeyEvent(KeyEvent.KEYCODE_ENTER,KeyEvent.ACTION_DOWN));
-
-        binding.repeatTimer.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                binding.repeatTimer.setSelection(0);
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                binding.repeatTimer.setSelection(0);
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-                if(binding.repeatTimer.getText().length()>1){
-                    String text = binding.repeatTimer.getText().toString();
-                    binding.repeatTimer.setText(text.substring(0,text.length()-1));
-
-
-                }
-                int value = 0;
-
-                if(!binding.repeatTimer.getText().toString().isEmpty())
-                    value = Integer.parseInt(binding.repeatTimer.getText().toString());
-
-                Entry.globalCycle = value;
-                JsonService.buildJson(checkList);
-
-            }
-        });
-
-        binding.addDeleteBtn.setOnLongClickListener(view -> {
-
-            entryItemManager.addDuplicate();
-            return true;
-        });
-
-        buttonPanel.addButtonWithLeaf(
-                binding.addDeleteBtn
-                , view -> entryItemManager.add()
-                , view -> entryItemManager.delete(),
-
-                new LeafButton(binding, binding.addDeleteBtn)
-                        //assign a onClickListener for leaf button
-                        .assignListener(view -> {
-
-                            hideTimeExecuteBtn(true);
-
-                            //listener for the button panel
-                            buttonPanelToggle.setSubmitBtnOnClickListener(
-                                    view1 -> { //deletes selected Entries
-                                        entryItemManager.deleteSelected(selectionTracker);
-                                        buttonPanelToggle.toggleDisableToButton();
-                                        adapter.trackerOn(false);
-                                        hideTimeExecuteBtn(false);
-                                    });
-
-                            updateIndexes();
-                            adapter.trackerOn(true);
-                            buttonPanelToggle.toggleDisableToButton();
-
-                        }).create()
-
-        );
-
-        buttonPanel.addButtonWithLeaf(
-                binding.editMoveBtn,
-                view -> entryItemManager.edit(),
-                view -> entryItemManager.move(),
-                new LeafButton(binding,binding.editMoveBtn)
-                        .assignListener(view ->{
-
-                            //I'm having a tough time with the recyclerView
-                            //for some reason the object references (viewHolders) are disorganized
-                            //until you scroll the entirety of the list so
-                            //I'm starting it on 0 and setting setHasFixedSize here
-
-                            recyclerView.scrollToPosition(0);
-                            recyclerView.setHasFixedSize(true);
-                            hideTimeExecuteBtn(true);
-
-                            buttonPanelToggle.setSubmitBtnOnClickListener(view1 -> {
-
-                                isSorting = true;
-                                entryItemManager.sortSelected(selectionTracker);
-                                buttonPanelToggle.toggleDisableToButton();
-                                adapter.notifyDataSetChanged();
-
-                                selectionTracker.clearSelection();
-                                listUtility.reInitializeAllSelection(checkList);
-                                adapter.trackerOn(false);
-                                hideTimeExecuteBtn(false);
-                            });
-
-                            //thread may still be running!!!
-                            selectionTracker.clearSelection();
-                            listUtility.reInitializeAllSelection(checkList);
-                            updateIndexes();
-
-                            isSorting = false;
-
-                            adapter.trackerOn(true);
-                            buttonPanelToggle.toggleDisableToButton();
-
-
-                        }).create()
-        );
-
-
-
-
-        binding.ScrollView.setOnScrollChangeListener((v, i, i1, i2, i3) -> {
-
-            try {
-                selectedEntry.postValue(operator.getSelection());
-
-
-//                   TODO: TEMP FIX FOR BUG, ANIMATION STUCK SCALE 0 WHEN VIEW IS CREATED
-                if (checkList.get(selectedEntry.getValue()).getViewHolder().itemView.getScaleX() < 1){
-
-                    checkList.get(selectedEntry.getValue())
-                            .getViewHolder()
-                            .animatePopIn();
-                }
-
-            } catch (NullPointerException | IndexOutOfBoundsException e) {
-                e.printStackTrace();
-            }
-
-//               if (operator.isMovingItem) {
-////                   operator.moveItem(operator.movingItem);
-//               }
-
-
-        });
-
-        binding.windowBox.setOnTouchListener((view, motionEvent) -> {
-            float touch_X = motionEvent.getRawX();
-            float touch_Y = motionEvent.getRawY();
-            buttonPanel.checkWithinButtonBoundary(touch_X,touch_Y);
-
-            return true;
-        });
-
-
-
-
-
-        binding.touchExpander.setOnTouchListener((view, motionEvent) -> {
-
-            float touch_X = motionEvent.getRawX();
-            float touch_Y = motionEvent.getRawY();
-
-            buttonPanel.setButtons();
-            boolean onButton= buttonPanel.checkWithinButtonBoundary(touch_X,touch_Y);
-
-
-            VelocityTracker velocityTracker = VelocityTracker.obtain();
-            velocityTracker.addMovement(motionEvent);
-            velocityTracker.computeCurrentVelocity(1);
-            operator.refreshSelection(false);
-
-            float xMove = operator.currentViewHolder.itemView.getX() + (velocityTracker.getXVelocity()*40);
-
-            float width = (float) operator.currentViewHolder.itemView.getWidth();
-            float alpha = 1.0f - Math.abs(xMove) / width;
-            operator.currentViewHolder.itemView.setAlpha(alpha);
-
-
-
-            if(touch_X > binding.touchExpander.getX()+ (binding.touchExpander.getWidth()/1.5) ) {
-                operator.currentViewHolder.itemView.setTranslationX(xMove);
-            }else{
-                operator.currentViewHolder.itemView.setTranslationX(0);
-            }
-
-
-            checkList.get(operator.getSelection())
-                    .getViewHolder()
-                    .isGonnaShakeCauseImMovingIt
-                    .postValue(
-                            (touch_X < binding.touchExpander.getX() -
-                                    (binding.touchExpander.getWidth()/3f)
-                                    && onButton)
-                    );
-
-
-
-
-            velocityTracker.recycle();
-
-
-            if (motionEvent.getAction() == MotionEvent.ACTION_UP ||
-                    motionEvent.getAction() == MotionEvent.ACTION_CANCEL
-            ){
-
-                checkList.get(operator.getSelection()).getViewHolder().hasAnimateMove = false;
-
-                if(!onButton){
-
-                    // operator.currentViewHolder.itemView.setTranslationX(0);
-                    operator.currentViewHolder.itemView.animate()
-                            .translationX(0)
-                            .setDuration(500)
-                            .setInterpolator( new OvershootInterpolator())
-                            .start();
-
-                }}
-
-//------------------------------
-            //We only need to check this once so lets do it on UP
-
-            if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                buttonPanel.executeAlternative();
-            }
-
-            buttonPanel.animationHandler(motionEvent.getAction(),touch_X,binding);
-
-            return  true;
-
-        });
-
-    }
-
-    public void playAudio(int audio){
-        selectedAudio[audio].start();
-    }
-
-    @Override
-    public void clickPosition(RecyclerAdapter.ViewHolder viewHolder,View view, int position) {
-
-
-            if (view.getId() == R.id.checkBtn) {
-
-                viewHolder.getEntry().checked.postValue(!viewHolder.getEntry().checked.getValue());
-
-            }
-
-        if(!isTimerRunning()) {
-            if (view.getId() == R.id.setEntryTimeBtn) {
-
-                viewHolder.transitionToSetTimer();
-
-            }
-
-
-            if (view.getId() == R.id.entryText) {
-
-                View itemView = viewHolder.itemView;
-                Entry entry = checkList.get(position);
-
-                scrollPosition(position);
-
-                CustomEditText editHolderText = itemView.findViewById(R.id.entryEditTxt);
-
-                new DetectKeyboardBack(
-                        itemView.getContext(),
-                        editHolderText,
-                        viewHolder.textView,
-                        entry
-                );
-
-                selectionTracker.clearSelection();
-
-
-            }
-
-
-            if(view.getId() == R.id.subListBtn){
-
-                subListManager.showSubListSelection(fragmentView, position);
-
-            }
-
-        }
-
-    }
-
-    @Override
-    public void onPrimaryNavigationFragmentChanged(boolean isPrimaryNavigationFragment) {
-        super.onPrimaryNavigationFragmentChanged(isPrimaryNavigationFragment);
-
-    }
-
-    public static void scrollPosition(int position, int offset){
-        customLayoutManager.scrollToPositionWithOffset(position,offset);
-    }
-
-    public static void scrollPosition(int position){
-        customLayoutManager.scrollToPositionWithOffset(position,100);
-    }
-
-    public void hideButtonPanel(boolean hide){
-
-        if(hide){
-            binding.buttonPanel.setVisibility(View.GONE);
-        }else {
-            binding.buttonPanel.setVisibility(View.VISIBLE);
-        }
-
-    }
-
-    public void hideTimeExecuteBtn(boolean hide){
-
-        if(hide){
-            binding.timerExecuteBtn.setVisibility(View.GONE);
-        }else{
-            binding.timerExecuteBtn.setVisibility(View.VISIBLE);
-        }
-    }
+//    public void showUndoSnackBar(){
+//
+//        Snackbar snackbar = Snackbar.make(binding.main, "item deleted",
+//                Snackbar.LENGTH_LONG).setAction(
+//                "UNDO", new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        entryItemManager.undoLastDeletionSingle();
+//                    }
+//                });
+//
+//        snackbar.show();
+//
+//    }
+//
+//    @SuppressLint("ClickableViewAccessibility")
+//    public void assignButtonListeners(){
+//
+//
+//        binding.repeatTimer.setOnClickListener(view -> {
+//            binding.repeatTimer.setSelection(0);
+//        });
+//
+////        binding.repeatTimer.onKeyPreIme(KeyEvent.KEYCODE_ENTER,new KeyEvent(KeyEvent.KEYCODE_ENTER,KeyEvent.ACTION_DOWN));
+//
+//        binding.repeatTimer.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//                binding.repeatTimer.setSelection(0);
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//                binding.repeatTimer.setSelection(0);
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//
+//                if(binding.repeatTimer.getText().length()>1){
+//                    String text = binding.repeatTimer.getText().toString();
+//                    binding.repeatTimer.setText(text.substring(0,text.length()-1));
+//
+//
+//                }
+//                int value = 0;
+//
+//                if(!binding.repeatTimer.getText().toString().isEmpty())
+//                    value = Integer.parseInt(binding.repeatTimer.getText().toString());
+//
+//                Entry.globalCycle = value;
+//                JsonService.buildJson(checkList);
+//
+//            }
+//        });
+//
+//        binding.addDeleteBtn.setOnLongClickListener(view -> {
+//
+//            entryItemManager.addDuplicate();
+//            return true;
+//        });
+//
+//        buttonPanel.addButtonWithLeaf(
+//                binding.addDeleteBtn
+//                , view -> entryItemManager.add()
+//                , view -> entryItemManager.delete(),
+//
+//                new LeafButton(binding, binding.addDeleteBtn)
+//                        //assign a onClickListener for leaf button
+//                        .assignListener(view -> {
+//
+//                            hideTimeExecuteBtn(true);
+//
+//                            //listener for the button panel
+//                            buttonPanelToggle.setSubmitBtnOnClickListener(
+//                                    view1 -> { //deletes selected Entries
+//                                        entryItemManager.deleteSelected(selectionTracker);
+//                                        buttonPanelToggle.toggleDisableToButton();
+//                                        adapter.trackerOn(false);
+//                                        hideTimeExecuteBtn(false);
+//                                    });
+//
+//                            operator.updateIndexes();
+//                            adapter.trackerOn(true);
+//                            buttonPanelToggle.toggleDisableToButton();
+//
+//                        }).create()
+//
+//        );
+//
+//        buttonPanel.addButtonWithLeaf(
+//                binding.editMoveBtn,
+//                view -> entryItemManager.edit(),
+//                view -> entryItemManager.move(),
+//                new LeafButton(binding,binding.editMoveBtn)
+//                        .assignListener(view ->{
+//
+//                            //I'm having a tough time with the recyclerView
+//                            //for some reason the object references (viewHolders) are disorganized
+//                            //until you scroll the entirety of the list so
+//                            //I'm starting it on 0 and setting setHasFixedSize here
+//
+//                            recyclerView.scrollToPosition(0);
+//                            recyclerView.setHasFixedSize(true);
+//                            hideTimeExecuteBtn(true);
+//
+//                            buttonPanelToggle.setSubmitBtnOnClickListener(view1 -> {
+//
+//                                isSorting = true;
+//                                entryItemManager.sortSelected(selectionTracker);
+//                                buttonPanelToggle.toggleDisableToButton();
+//                                adapter.notifyDataSetChanged();
+//
+//                                selectionTracker.clearSelection();
+//                                listUtility.reInitializeAllSelection(checkList);
+//                                adapter.trackerOn(false);
+//                                hideTimeExecuteBtn(false);
+//                            });
+//
+//                            //thread may still be running!!!
+//                            selectionTracker.clearSelection();
+//                            listUtility.reInitializeAllSelection(checkList);
+//                            operator.updateIndexes();
+//
+//                            isSorting = false;
+//
+//                            adapter.trackerOn(true);
+//                            buttonPanelToggle.toggleDisableToButton();
+//
+//
+//                        }).create()
+//        );
+//
+//
+//
+//
+//        binding.ScrollView.setOnScrollChangeListener((v, i, i1, i2, i3) -> {
+//
+//            try {
+//                selectedEntry.postValue(operator.getSelection());
+//
+//
+////                   TODO: TEMP FIX FOR BUG, ANIMATION STUCK SCALE 0 WHEN VIEW IS CREATED
+//                if (checkList.get(selectedEntry.getValue()).getViewHolder().itemView.getScaleX() < 1){
+//
+//                    checkList.get(selectedEntry.getValue())
+//                            .getViewHolder()
+//                            .animatePopIn();
+//                }
+//
+//            } catch (NullPointerException | IndexOutOfBoundsException e) {
+//                e.printStackTrace();
+//            }
+//
+////               if (operator.isMovingItem) {
+//////                   operator.moveItem(operator.movingItem);
+////               }
+//
+//
+//        });
+//
+//        binding.windowBox.setOnTouchListener((view, motionEvent) -> {
+//            float touch_X = motionEvent.getRawX();
+//            float touch_Y = motionEvent.getRawY();
+//            buttonPanel.checkWithinButtonBoundary(touch_X,touch_Y);
+//
+//            return true;
+//        });
+//
+//
+//
+//
+//
+//        binding.touchExpander.setOnTouchListener((view, motionEvent) -> {
+//
+//            float touch_X = motionEvent.getRawX();
+//            float touch_Y = motionEvent.getRawY();
+//
+//            buttonPanel.setButtons();
+//            boolean onButton= buttonPanel.checkWithinButtonBoundary(touch_X,touch_Y);
+//
+//
+//            VelocityTracker velocityTracker = VelocityTracker.obtain();
+//            velocityTracker.addMovement(motionEvent);
+//            velocityTracker.computeCurrentVelocity(1);
+//            operator.refreshSelection(false);
+//
+//            float xMove = operator.currentViewHolder.itemView.getX() + (velocityTracker.getXVelocity()*40);
+//
+//            float width = (float) operator.currentViewHolder.itemView.getWidth();
+//            float alpha = 1.0f - Math.abs(xMove) / width;
+//            operator.currentViewHolder.itemView.setAlpha(alpha);
+//
+//
+//
+//            if(touch_X > binding.touchExpander.getX()+ (binding.touchExpander.getWidth()/1.5) ) {
+//                operator.currentViewHolder.itemView.setTranslationX(xMove);
+//            }else{
+//                operator.currentViewHolder.itemView.setTranslationX(0);
+//            }
+//
+//
+//            checkList.get(operator.getSelection())
+//                    .getViewHolder()
+//                    .isGonnaShakeCauseImMovingIt
+//                    .postValue(
+//                            (touch_X < binding.touchExpander.getX() -
+//                                    (binding.touchExpander.getWidth()/3f)
+//                                    && onButton)
+//                    );
+//
+//
+//
+//
+//            velocityTracker.recycle();
+//
+//
+//            if (motionEvent.getAction() == MotionEvent.ACTION_UP ||
+//                    motionEvent.getAction() == MotionEvent.ACTION_CANCEL
+//            ){
+//
+//                checkList.get(operator.getSelection()).getViewHolder().hasAnimateMove = false;
+//
+//                if(!onButton){
+//
+//                    // operator.currentViewHolder.itemView.setTranslationX(0);
+//                    operator.currentViewHolder.itemView.animate()
+//                            .translationX(0)
+//                            .setDuration(500)
+//                            .setInterpolator( new OvershootInterpolator())
+//                            .start();
+//
+//                }}
+//
+////------------------------------
+//            //We only need to check this once so lets do it on UP
+//
+//            if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+//                buttonPanel.executeAlternative();
+//            }
+//
+//            buttonPanel.animationHandler(motionEvent.getAction(),touch_X,binding);
+//
+//            return  true;
+//
+//        });
+//
+//    }
+//
+//    public void playAudio(int audio){
+//        selectedAudio[audio].start();
+//    }
+//
+//    @Override
+//    public void clickPosition(RecyclerAdapter.ViewHolder viewHolder,View view, int position) {
+//
+//
+//            if (view.getId() == R.id.checkBtn) {
+//
+//                viewHolder.getEntry().checked.postValue(!viewHolder.getEntry().checked.getValue());
+//
+//            }
+//
+//        if(!isTimerRunning()) {
+//            if (view.getId() == R.id.setEntryTimeBtn) {
+//
+//                viewHolder.transitionToSetTimer();
+//
+//            }
+//
+//
+//            if (view.getId() == R.id.entryText) {
+//
+//                View itemView = viewHolder.itemView;
+//                Entry entry = checkList.get(position);
+//
+//                scrollPosition(position);
+//
+//                CustomEditText editHolderText = itemView.findViewById(R.id.entryEditTxt);
+//
+//                new DetectKeyboardBack(
+//                        itemView.getContext(),
+//                        editHolderText,
+//                        viewHolder.textView,
+//                        entry
+//                );
+//
+//                selectionTracker.clearSelection();
+//
+//
+//            }
+//
+//
+//            if(view.getId() == R.id.subListBtn){
+//
+//                subListManager.showSubListSelection(fragmentView, position);
+//
+//            }
+//
+//        }
+//
+//    }
+//
+//    public static void scrollPosition(int position, int offset){
+//        customLayoutManager.scrollToPositionWithOffset(position,offset);
+//    }
+//
+//    public static void scrollPosition(int position){
+//        customLayoutManager.scrollToPositionWithOffset(position,100);
+//    }
+//
+//    public void hideButtonPanel(boolean hide){
+//
+//        if(hide){
+//            binding.buttonPanel.setVisibility(View.GONE);
+//        }else {
+//            binding.buttonPanel.setVisibility(View.VISIBLE);
+//        }
+//
+//    }
+//
+//    public void hideTimeExecuteBtn(boolean hide){
+//
+//        if(hide){
+//            binding.timerExecuteBtn.setVisibility(View.GONE);
+//        }else{
+//            binding.timerExecuteBtn.setVisibility(View.VISIBLE);
+//        }
+//    }
 
 ///////////////////////////////////////////
 
