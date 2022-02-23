@@ -107,11 +107,11 @@ implements ItemTouchHelperAdapter {
         this.activity = fragment.getActivity();
         this.recordHelper = fragment.getRecordHelper();
 
-
-        this.listItemClickListener = mainFragment.getMainUIDynamics();
-
     }
 
+    public void setListItemClickListener(ListItemClickListener listItemClickListener) {
+        this.listItemClickListener = listItemClickListener;
+    }
 
     public TrackerHelper trackerHelper(){
 
@@ -293,7 +293,7 @@ implements ItemTouchHelperAdapter {
         EntryItemManager.lastDeletedIndex = position;
 
         mainFragment.getmViewModel().deleteEntry(mainFragment.getCheckList().get(position));
-        mainFragment.getOperator().updateIndexes();
+        mainFragment.getMainUIDynamics().getOperator().updateIndexes();
 
         notifyItemRemoved(position);
 

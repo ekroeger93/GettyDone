@@ -30,6 +30,8 @@ import com.example.checkListApp.time_management.parcel.ListTimersParcel;
 import com.example.checkListApp.time_management.utilities.KeyHelperClass;
 import com.example.checkListApp.time_management.utilities.ListTimerUtility;
 import com.example.checkListApp.timer.TimeState;
+import com.example.checkListApp.ui.main.MainFragment;
+import com.example.checkListApp.ui.main.MainUIDynamics;
 import com.example.checkListApp.ui.main.entry_management.MainListTimeProcessHandler;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
 import com.example.checkListApp.fragments.settings.PreferenceHelper;
@@ -83,7 +85,8 @@ public final class TimerService extends LifecycleService implements SensorEventL
                 stopSelf();
                 stopService(serviceIntent);
 //                notificationManager.cancel(FOREGROUND_SERVICE_ID);
-                notificationManager.cancelAll();
+                  notificationManager.cancelAll();
+                MainFragment.resetTime();
                 reset.postValue(false);
 
                 Log.d("testReset","reset");

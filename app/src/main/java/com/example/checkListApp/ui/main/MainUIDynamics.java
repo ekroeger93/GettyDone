@@ -8,10 +8,14 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.selection.SelectionTracker;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.checkListApp.MainActivity;
 import com.example.checkListApp.R;
 import com.example.checkListApp.databinding.MainFragmentBinding;
 import com.example.checkListApp.input.CustomEditText;
@@ -23,14 +27,28 @@ import com.example.checkListApp.ui.main.entry_management.button_panel.ButtonPane
 import com.example.checkListApp.ui.main.entry_management.button_panel.ButtonPanelToggle;
 import com.example.checkListApp.ui.main.entry_management.button_panel.LeafButton;
 import com.example.checkListApp.ui.main.entry_management.entries.Entry;
+import com.example.checkListApp.ui.main.entry_management.entries.Spacer;
 import com.example.checkListApp.ui.main.entry_management.list_component.CustomLayoutManager;
 import com.example.checkListApp.ui.main.entry_management.list_component.ListItemClickListener;
 import com.example.checkListApp.ui.main.entry_management.list_component.RecyclerAdapter;
+import com.example.checkListApp.ui.main.entry_management.list_component.item_touch_helper.ItemTouchCallback;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
 public class MainUIDynamics implements ListItemClickListener {
+
+    /*
+    responsible for various ui dynamics such as
+    scrolling
+    hiding elements
+    setting listeners
+    audio
+    snackbar
+    selection tracker
+    button panel
+    */
+
 
     MainFragment mainFragment;
     MainFragmentBinding binding;
@@ -40,6 +58,10 @@ public class MainUIDynamics implements ListItemClickListener {
     ButtonPanelToggle buttonPanelToggle;
     Operator operator;
 
+    public Operator getOperator() { return operator; }
+
+    public
+
     RecyclerAdapter adapter;
     RecyclerView recyclerView;
     SelectionTracker<Long> selectionTracker;
@@ -48,10 +70,10 @@ public class MainUIDynamics implements ListItemClickListener {
 
     ArrayList<Entry> checkList = new ArrayList<>();
 
-
     MutableLiveData<Integer> selectedEntry = new MutableLiveData<>(1);
 
     View fragmentView;
+    private final ItemTouchCallback callback;
 
     public View getFragmentView(){
         return fragmentView;
@@ -62,11 +84,6 @@ public class MainUIDynamics implements ListItemClickListener {
         this.mainFragment = mainFragment;
         binding = mainFragment.binding;
 
-        entryItemManager = mainFragment.getEntryItemManager();
-        buttonPanel = mainFragment.getButtonPanel();
-        buttonPanelToggle = mainFragment.getButtonPanelToggle();
-        operator = mainFragment.getOperator();
-
         adapter = mainFragment.getAdapter();
         recyclerView = mainFragment.getRecyclerView();
         selectionTracker = mainFragment.getSelectionTracker();
@@ -74,25 +91,111 @@ public class MainUIDynamics implements ListItemClickListener {
         customLayoutManager = MainFragment.customLayoutManager;
 
         fragmentView = mainFragment.getFragmentView();
+
+        operator = new Operator(mainFragment);
+
+        entryItemManager = new EntryItemManager( mainFragment,operator);
+        buttonPanel = new ButtonPanel(mainFragment.getContext(), binding);
+        buttonPanelToggle  = buttonPanel.buttonPanelToggle;
+
+        callback = new ItemTouchCallback(adapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(recyclerView);
+
+        entryItemManager.setButtonPanelToggle(buttonPanelToggle);
+
+
     }
 
-    public void resetUIDynamics(MainFragment mainFragment){
+    public void selectionTrackerObserver(){
 
-        this.mainFragment = mainFragment;
-        binding = mainFragment.binding;
+        selectionTracker.addObserver( new SelectionTracker.SelectionObserver<Long>(){
 
-        entryItemManager = mainFragment.getEntryItemManager();
-        buttonPanel = mainFragment.getButtonPanel();
-        buttonPanelToggle = mainFragment.getButtonPanelToggle();
-        operator = mainFragment.getOperator();
+            @Override
+            public void onSelectionRefresh() {
+                super.onSelectionRefresh();
+            }
 
-        adapter = mainFragment.getAdapter();
-        recyclerView = mainFragment.getRecyclerView();
-        selectionTracker = mainFragment.getSelectionTracker();
+            @Override
+            public void onItemStateChanged(@NonNull Long key, boolean selected) {
+                super.onItemStateChanged(key, selected);
 
-        customLayoutManager = MainFragment.customLayoutManager;
+                if(adapter.toggleTracker && !mainFragment.isSorting) {
+                    RecyclerAdapter.ViewHolder entryCurrent;
+                    int index;
 
-        fragmentView = mainFragment.getFragmentView();
+                    for (Entry entry : checkList) {
+                        try {
+                            if (!(entry instanceof Spacer)) {
+
+                                if (key.equals(entry.getViewHolder().getKey())) {
+
+                                    entryCurrent = entry.getViewHolder();
+                                    index = checkList.indexOf(entry) - 1;
+
+                                    //I need the adapter to re-realize the list size
+                                    //due to the adapter erroneous size prior to cleaning
+                                    adapter.getItemCount();//this is why its called
+
+                                    // entryCurrent.isSelected.setValue(!entryCurrent.isSelected.getValue());
+
+                            /*
+                            ultimately the holder.orderInt should reflect the toggleSwitchOrdering.list
+                            * */
+
+                                    mainFragment.getListUtility().toggleSwitchOrdering.toggleNum(index);
+
+                                    entryCurrent.isSelected.setValue( mainFragment.getListUtility().toggleSwitchOrdering.listToOrder.get(index).toggle);
+                                    entryCurrent.orderInt.setValue( mainFragment.getListUtility().toggleSwitchOrdering.listToOrder.get(index).number);
+
+                                    entryCurrent.selectOrder =  mainFragment.getListUtility().toggleSwitchOrdering.listToOrder.get(index).number;
+
+                                    mainFragment.getListUtility().updateAllSelection(checkList);
+
+                                    break;
+                                } }
+
+                        } catch (NullPointerException  | IndexOutOfBoundsException a) { }
+
+
+                    }
+
+
+
+
+
+                }
+
+            }
+
+            @Override
+            public void onSelectionChanged() {
+                super.onSelectionChanged();
+
+            }
+
+        });
+
+    }
+
+    public Observer<Boolean> getOnTimerRunningObs(){
+
+
+        return aBoolean -> {
+
+            callback.setEnableSwipe(!aBoolean);
+
+            if(!aBoolean){//timer not running
+
+                MainActivity.tabLayout.setVisibility(View.VISIBLE);
+                hideButtonPanel(false);
+            }else{
+
+                MainActivity.tabLayout.setVisibility(View.GONE);
+                hideButtonPanel(true);
+            }
+
+        };
     }
 
     public void updateCheckList(ArrayList<Entry> newCheckList){

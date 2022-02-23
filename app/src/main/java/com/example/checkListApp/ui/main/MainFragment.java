@@ -161,96 +161,77 @@ public class MainFragment extends Fragment {
 
     public MainFragmentBinding binding;
 
-    public static float recyclerScrollCompute,itemHeightPx, ratioOffset;
+    public static float recyclerScrollCompute,itemHeightPx;
 
-    private EntryItemManager entryItemManager;
+    private ArrayList<Entry> checkList = new ArrayList<>();
+    private final MutableLiveData< ArrayList<Entry>> _checkList = new MutableLiveData<>();
+    public ArrayList<Entry> getCheckList(){ return checkList;}
 
-    public EntryItemManager getEntryItemManager() {
-        return entryItemManager;
-    }
+    private MainViewModel mViewModel;
+    public MainViewModel    getmViewModel(){ return mViewModel;}
+
+    //// RECYCLER VIEW
+    private RecyclerView recyclerView;
+    public RecyclerView     getRecyclerView(){ return recyclerView;}
+
+    private RecyclerAdapter adapter;
+    public RecyclerAdapter  getAdapter() {return adapter;}
 
     private SelectionTracker<Long> selectionTracker;
-
     public SelectionTracker<Long> getSelectionTracker() {
         return selectionTracker;
     }
+    ///
 
 
-    private Operator operator;
+/// UTILITY
+    private MainListTimeProcessHandler mainListTimeProcessHandler;
+    public MainListTimeProcessHandler getMainListTimeProcessHandler() { return mainListTimeProcessHandler; }
 
-    private ButtonPanel buttonPanel;
+    private FileManager fileManager;
+    public FileManager getFileManager() { return fileManager; }
 
-    public ButtonPanel getButtonPanel() {
-        return buttonPanel;
-    }
-
-
-    private ButtonPanelToggle buttonPanelToggle;
-
-    public ButtonPanelToggle getButtonPanelToggle() {
-        return buttonPanelToggle;
-    }
-
+    private SubListManager subListManager;
+    public SubListManager getSubListManager() { return subListManager; }
 
     private final RecordHelper recordHelper = new RecordHelper();
-    private final ListUtility listUtility = new ListUtility();
+    public RecordHelper     getRecordHelper() {return recordHelper;}
 
-    private RecyclerAdapter adapter;
-    private MainViewModel mViewModel;
-    private RecyclerView recyclerView;
+    private final ListUtility listUtility = new ListUtility();
+    public ListUtility      getListUtility() { return listUtility;}
+
+    private MainUIDynamics mainUIDynamics;
+    public MainUIDynamics getMainUIDynamics() {
+        return mainUIDynamics;
+    }
+
+    ///
+
+
+//// EVENT
+
+    public boolean isSorting = false;
+
+    //Has executed and not initialized disregarding pause or resume
+    private static final MutableLiveData<Boolean> timerRunning = new MutableLiveData<>(false);
+    public MutableLiveData<Boolean> getTimerRunning() { return timerRunning; }
+    public static Boolean isTimerRunning()   { return timerRunning.getValue();}
+
+
+/////
+
+    private Intent serviceIntent;
+    public Intent  getServiceIntent() { return serviceIntent; }
+
+
+    public MediaPlayer[] selectedAudio;
+
+    private View fragmentView;
+    public View getFragmentView(){ return fragmentView; }
 
     public static CustomLayoutManager customLayoutManager;
     ListTimersParcel listTimersParcel;
 
-    private MainListTimeProcessHandler mainListTimeProcessHandler;
-    private FileManager fileManager;
-    private SubListManager subListManager;
-
-    private ArrayList<Entry> checkList = new ArrayList<>();
-    private final MutableLiveData< ArrayList<Entry>> _checkList = new MutableLiveData<>();
-
-    private final MutableLiveData<Integer> selectedEntry = new MutableLiveData<>();
-
-    public ArrayList<Entry> getCheckList(){ return checkList;}
-    public Operator         getOperator (){ return operator;}
-    public MainViewModel    getmViewModel(){ return mViewModel;}
-
-    public RecyclerView     getRecyclerView(){ return recyclerView;}
-    public RecyclerAdapter  getAdapter() {return adapter;}
-
-    public RecordHelper     getRecordHelper() {return recordHelper;}
-    public ListUtility      getListUtility() { return listUtility;}
-
-    public Intent           getServiceIntent() { return serviceIntent; }
-
-    public MainListTimeProcessHandler getMainListTimeProcessHandler() { return mainListTimeProcessHandler; }
-    public FileManager getFileManager() { return fileManager; }
-    public SubListManager getSubListManager() { return subListManager; }
-
-    private Intent serviceIntent;
-
-    public boolean isSorting = false;
-
-    private static final MutableLiveData<Boolean> timerRunning = new MutableLiveData<>(false);
-    public MutableLiveData<Boolean> getTimerRunning() { return timerRunning; }
-
-    public static Boolean isTimerRunning()   { return timerRunning.getValue();}
-
-    public MediaPlayer[] selectedAudio;
-
-    private Activity activity;
-
-    private ItemTouchCallback callback;
-
-    private View fragmentView;
-
-    public View getFragmentView(){ return fragmentView; }
-
-    private MainUIDynamics mainUIDynamics;
-
-    public MainUIDynamics getMainUIDynamics() {
-        return mainUIDynamics;
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -268,8 +249,6 @@ public class MainFragment extends Fragment {
     selectedAudio[2] = blowWhistle;
     selectedAudio[3] = doubleClap;
 
-
-    activity = getActivity();
 
 
 
@@ -300,20 +279,18 @@ public class MainFragment extends Fragment {
 
         fragmentView = view;
 
-        mainUIDynamics = new MainUIDynamics(this);
-
         setUpAdapter();
 
-        mainUIDynamics.resetUIDynamics(this);
+        mainUIDynamics = new MainUIDynamics(this);
+
+        adapter.setListItemClickListener(mainUIDynamics);
 
         initialize();
-
 
         //TODO: selectionTracker interference with onClick!!!
         mainUIDynamics.assignButtonListeners();
 
         assignObservers();
-
 
         mainListTimeProcessHandler = new MainListTimeProcessHandler(this);
 
@@ -348,7 +325,7 @@ public class MainFragment extends Fragment {
 
                 if(getCheckList() != null) {
                     for (Entry entry : getCheckList()) mViewModel.loadEntry(entry);
-                    operator.updateIndexes();
+                    mainUIDynamics.operator.updateIndexes();
 
                     subListManager.sanityCheckSubList();
                     subListManager.loadSubLists();
@@ -392,7 +369,8 @@ public class MainFragment extends Fragment {
 
         recyclerView.setLongClickable(false);
 
-//        //TODO: DISABLE SELECTION TRACKER
+
+        ///////////
         selectionTracker = new SelectionTracker.Builder<>(
                 "selection",
                 recyclerView,
@@ -405,20 +383,8 @@ public class MainFragment extends Fragment {
 
         adapter.setTracker(selectionTracker);
         adapter.trackerOn(false);
+///////
 
-        operator = new Operator(this);
-        entryItemManager = new EntryItemManager( this);
-        buttonPanel = new ButtonPanel(getContext(), binding);
-        buttonPanelToggle  = buttonPanel.buttonPanelToggle;
-
-        callback = new ItemTouchCallback(adapter);
-        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-        touchHelper.attachToRecyclerView(recyclerView);
-
-
-//        adapter.registerAdapterDataObserver();
-
-        entryItemManager.setButtonPanelToggle(buttonPanelToggle);
 
     }
 
@@ -428,7 +394,7 @@ public class MainFragment extends Fragment {
         recyclerView.getViewTreeObserver().addOnGlobalLayoutListener(
                 () -> {
 
-                    ratioOffset = 1.75f;
+                    float ratioOffset = 1.75f;
 //                    ratioOffset = 1.85f;
 
                     //adjusted so that selection is in middle of recyclerList
@@ -454,7 +420,7 @@ public class MainFragment extends Fragment {
         serviceIntent = getForegroundTimerServiceIntent();
 
         try {
-            activity.startForegroundService(getForegroundTimerServiceIntent());
+            getActivity().startForegroundService(getForegroundTimerServiceIntent());
 //            activity.startService(serviceIntent);
         }catch ( Exception i){
 
@@ -515,29 +481,7 @@ public class MainFragment extends Fragment {
 
     }
 
-    //move to operator?
-
-    //may move part to ui dynamics
     public void assignObservers(){
-
-        Observer<Boolean> onTimerRunning = aBoolean -> {
-
-            callback.setEnableSwipe(!aBoolean);
-
-            if(!aBoolean){//timer not running
-
-                MainActivity.tabLayout.setVisibility(View.VISIBLE);
-                mainUIDynamics.hideButtonPanel(false);
-            }else{
-
-                MainActivity.tabLayout.setVisibility(View.GONE);
-                mainUIDynamics.hideButtonPanel(true);
-            }
-
-        };
-
-        timerRunning.observe(getViewLifecycleOwner(), onTimerRunning);
-
 
         mViewModel.getAllEntries().observe(getViewLifecycleOwner(),new Observer<List<Entry>>() {
 
@@ -554,7 +498,7 @@ public class MainFragment extends Fragment {
                 checkList.add(checkList.size(), new Spacer());
 
 
-                operator.updateIndexes();
+                mainUIDynamics.operator.updateIndexes();
                 subListManager.sanityCheckSubList();
 
                 subListManager.loadSubLists();
@@ -607,447 +551,20 @@ public class MainFragment extends Fragment {
 
 
         }
-
     });
 
+        mainUIDynamics.selectionTrackerObserver();
 
-        selectionTracker.addObserver( new SelectionTracker.SelectionObserver<Long>(){
-
-        @Override
-        public void onSelectionRefresh() {
-            super.onSelectionRefresh();
-        }
-
-        @Override
-        public void onItemStateChanged(@NonNull Long key, boolean selected) {
-            super.onItemStateChanged(key, selected);
-
-            if(adapter.toggleTracker && !isSorting) {
-                RecyclerAdapter.ViewHolder entryCurrent;
-                int index;
-
-            for (Entry entry : checkList) {
-                try {
-                    if (!(entry instanceof Spacer)) {
-
-                        if (key.equals(entry.getViewHolder().getKey())) {
-
-                            entryCurrent = entry.getViewHolder();
-                            index = checkList.indexOf(entry) - 1;
-
-                            //I need the adapter to re-realize the list size
-                            //due to the adapter erroneous size prior to cleaning
-                            adapter.getItemCount();//this is why its called
-
-                           // entryCurrent.isSelected.setValue(!entryCurrent.isSelected.getValue());
-
-                            /*
-                            ultimately the holder.orderInt should reflect the toggleSwitchOrdering.list
-                            * */
-
-                            listUtility.toggleSwitchOrdering.toggleNum(index);
-
-                            entryCurrent.isSelected.setValue(listUtility.toggleSwitchOrdering.listToOrder.get(index).toggle);
-                            entryCurrent.orderInt.setValue(listUtility.toggleSwitchOrdering.listToOrder.get(index).number);
-
-                            entryCurrent.selectOrder = listUtility.toggleSwitchOrdering.listToOrder.get(index).number;
-
-                            listUtility.updateAllSelection(checkList);
-
-                           break;
-                                } }
-
-                        } catch (NullPointerException  | IndexOutOfBoundsException a) { }
+        timerRunning.observe(getViewLifecycleOwner(), mainUIDynamics.getOnTimerRunningObs());
 
 
-                    }
-
-
-
-
-
-                }
-
-        }
-
-        @Override
-        public void onSelectionChanged() {
-            super.onSelectionChanged();
-
-        }
-
-    });
-
-
-}
+    }
 
     public static void resetTime(){
         MainListTimeProcessHandler.timerViewModel.resetAbsolutely();
         timerRunning.postValue(false);
     }
 
-    //UI dynamics class/////////////////////////////////////////
-
-//    public void showUndoSnackBar(){
-//
-//        Snackbar snackbar = Snackbar.make(binding.main, "item deleted",
-//                Snackbar.LENGTH_LONG).setAction(
-//                "UNDO", new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        entryItemManager.undoLastDeletionSingle();
-//                    }
-//                });
-//
-//        snackbar.show();
-//
-//    }
-//
-//    @SuppressLint("ClickableViewAccessibility")
-//    public void assignButtonListeners(){
-//
-//
-//        binding.repeatTimer.setOnClickListener(view -> {
-//            binding.repeatTimer.setSelection(0);
-//        });
-//
-////        binding.repeatTimer.onKeyPreIme(KeyEvent.KEYCODE_ENTER,new KeyEvent(KeyEvent.KEYCODE_ENTER,KeyEvent.ACTION_DOWN));
-//
-//        binding.repeatTimer.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//                binding.repeatTimer.setSelection(0);
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//                binding.repeatTimer.setSelection(0);
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable editable) {
-//
-//                if(binding.repeatTimer.getText().length()>1){
-//                    String text = binding.repeatTimer.getText().toString();
-//                    binding.repeatTimer.setText(text.substring(0,text.length()-1));
-//
-//
-//                }
-//                int value = 0;
-//
-//                if(!binding.repeatTimer.getText().toString().isEmpty())
-//                    value = Integer.parseInt(binding.repeatTimer.getText().toString());
-//
-//                Entry.globalCycle = value;
-//                JsonService.buildJson(checkList);
-//
-//            }
-//        });
-//
-//        binding.addDeleteBtn.setOnLongClickListener(view -> {
-//
-//            entryItemManager.addDuplicate();
-//            return true;
-//        });
-//
-//        buttonPanel.addButtonWithLeaf(
-//                binding.addDeleteBtn
-//                , view -> entryItemManager.add()
-//                , view -> entryItemManager.delete(),
-//
-//                new LeafButton(binding, binding.addDeleteBtn)
-//                        //assign a onClickListener for leaf button
-//                        .assignListener(view -> {
-//
-//                            hideTimeExecuteBtn(true);
-//
-//                            //listener for the button panel
-//                            buttonPanelToggle.setSubmitBtnOnClickListener(
-//                                    view1 -> { //deletes selected Entries
-//                                        entryItemManager.deleteSelected(selectionTracker);
-//                                        buttonPanelToggle.toggleDisableToButton();
-//                                        adapter.trackerOn(false);
-//                                        hideTimeExecuteBtn(false);
-//                                    });
-//
-//                            operator.updateIndexes();
-//                            adapter.trackerOn(true);
-//                            buttonPanelToggle.toggleDisableToButton();
-//
-//                        }).create()
-//
-//        );
-//
-//        buttonPanel.addButtonWithLeaf(
-//                binding.editMoveBtn,
-//                view -> entryItemManager.edit(),
-//                view -> entryItemManager.move(),
-//                new LeafButton(binding,binding.editMoveBtn)
-//                        .assignListener(view ->{
-//
-//                            //I'm having a tough time with the recyclerView
-//                            //for some reason the object references (viewHolders) are disorganized
-//                            //until you scroll the entirety of the list so
-//                            //I'm starting it on 0 and setting setHasFixedSize here
-//
-//                            recyclerView.scrollToPosition(0);
-//                            recyclerView.setHasFixedSize(true);
-//                            hideTimeExecuteBtn(true);
-//
-//                            buttonPanelToggle.setSubmitBtnOnClickListener(view1 -> {
-//
-//                                isSorting = true;
-//                                entryItemManager.sortSelected(selectionTracker);
-//                                buttonPanelToggle.toggleDisableToButton();
-//                                adapter.notifyDataSetChanged();
-//
-//                                selectionTracker.clearSelection();
-//                                listUtility.reInitializeAllSelection(checkList);
-//                                adapter.trackerOn(false);
-//                                hideTimeExecuteBtn(false);
-//                            });
-//
-//                            //thread may still be running!!!
-//                            selectionTracker.clearSelection();
-//                            listUtility.reInitializeAllSelection(checkList);
-//                            operator.updateIndexes();
-//
-//                            isSorting = false;
-//
-//                            adapter.trackerOn(true);
-//                            buttonPanelToggle.toggleDisableToButton();
-//
-//
-//                        }).create()
-//        );
-//
-//
-//
-//
-//        binding.ScrollView.setOnScrollChangeListener((v, i, i1, i2, i3) -> {
-//
-//            try {
-//                selectedEntry.postValue(operator.getSelection());
-//
-//
-////                   TODO: TEMP FIX FOR BUG, ANIMATION STUCK SCALE 0 WHEN VIEW IS CREATED
-//                if (checkList.get(selectedEntry.getValue()).getViewHolder().itemView.getScaleX() < 1){
-//
-//                    checkList.get(selectedEntry.getValue())
-//                            .getViewHolder()
-//                            .animatePopIn();
-//                }
-//
-//            } catch (NullPointerException | IndexOutOfBoundsException e) {
-//                e.printStackTrace();
-//            }
-//
-////               if (operator.isMovingItem) {
-//////                   operator.moveItem(operator.movingItem);
-////               }
-//
-//
-//        });
-//
-//        binding.windowBox.setOnTouchListener((view, motionEvent) -> {
-//            float touch_X = motionEvent.getRawX();
-//            float touch_Y = motionEvent.getRawY();
-//            buttonPanel.checkWithinButtonBoundary(touch_X,touch_Y);
-//
-//            return true;
-//        });
-//
-//
-//
-//
-//
-//        binding.touchExpander.setOnTouchListener((view, motionEvent) -> {
-//
-//            float touch_X = motionEvent.getRawX();
-//            float touch_Y = motionEvent.getRawY();
-//
-//            buttonPanel.setButtons();
-//            boolean onButton= buttonPanel.checkWithinButtonBoundary(touch_X,touch_Y);
-//
-//
-//            VelocityTracker velocityTracker = VelocityTracker.obtain();
-//            velocityTracker.addMovement(motionEvent);
-//            velocityTracker.computeCurrentVelocity(1);
-//            operator.refreshSelection(false);
-//
-//            float xMove = operator.currentViewHolder.itemView.getX() + (velocityTracker.getXVelocity()*40);
-//
-//            float width = (float) operator.currentViewHolder.itemView.getWidth();
-//            float alpha = 1.0f - Math.abs(xMove) / width;
-//            operator.currentViewHolder.itemView.setAlpha(alpha);
-//
-//
-//
-//            if(touch_X > binding.touchExpander.getX()+ (binding.touchExpander.getWidth()/1.5) ) {
-//                operator.currentViewHolder.itemView.setTranslationX(xMove);
-//            }else{
-//                operator.currentViewHolder.itemView.setTranslationX(0);
-//            }
-//
-//
-//            checkList.get(operator.getSelection())
-//                    .getViewHolder()
-//                    .isGonnaShakeCauseImMovingIt
-//                    .postValue(
-//                            (touch_X < binding.touchExpander.getX() -
-//                                    (binding.touchExpander.getWidth()/3f)
-//                                    && onButton)
-//                    );
-//
-//
-//
-//
-//            velocityTracker.recycle();
-//
-//
-//            if (motionEvent.getAction() == MotionEvent.ACTION_UP ||
-//                    motionEvent.getAction() == MotionEvent.ACTION_CANCEL
-//            ){
-//
-//                checkList.get(operator.getSelection()).getViewHolder().hasAnimateMove = false;
-//
-//                if(!onButton){
-//
-//                    // operator.currentViewHolder.itemView.setTranslationX(0);
-//                    operator.currentViewHolder.itemView.animate()
-//                            .translationX(0)
-//                            .setDuration(500)
-//                            .setInterpolator( new OvershootInterpolator())
-//                            .start();
-//
-//                }}
-//
-////------------------------------
-//            //We only need to check this once so lets do it on UP
-//
-//            if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
-//                buttonPanel.executeAlternative();
-//            }
-//
-//            buttonPanel.animationHandler(motionEvent.getAction(),touch_X,binding);
-//
-//            return  true;
-//
-//        });
-//
-//    }
-//
-//    public void playAudio(int audio){
-//        selectedAudio[audio].start();
-//    }
-//
-//    @Override
-//    public void clickPosition(RecyclerAdapter.ViewHolder viewHolder,View view, int position) {
-//
-//
-//            if (view.getId() == R.id.checkBtn) {
-//
-//                viewHolder.getEntry().checked.postValue(!viewHolder.getEntry().checked.getValue());
-//
-//            }
-//
-//        if(!isTimerRunning()) {
-//            if (view.getId() == R.id.setEntryTimeBtn) {
-//
-//                viewHolder.transitionToSetTimer();
-//
-//            }
-//
-//
-//            if (view.getId() == R.id.entryText) {
-//
-//                View itemView = viewHolder.itemView;
-//                Entry entry = checkList.get(position);
-//
-//                scrollPosition(position);
-//
-//                CustomEditText editHolderText = itemView.findViewById(R.id.entryEditTxt);
-//
-//                new DetectKeyboardBack(
-//                        itemView.getContext(),
-//                        editHolderText,
-//                        viewHolder.textView,
-//                        entry
-//                );
-//
-//                selectionTracker.clearSelection();
-//
-//
-//            }
-//
-//
-//            if(view.getId() == R.id.subListBtn){
-//
-//                subListManager.showSubListSelection(fragmentView, position);
-//
-//            }
-//
-//        }
-//
-//    }
-//
-//    public static void scrollPosition(int position, int offset){
-//        customLayoutManager.scrollToPositionWithOffset(position,offset);
-//    }
-//
-//    public static void scrollPosition(int position){
-//        customLayoutManager.scrollToPositionWithOffset(position,100);
-//    }
-//
-//    public void hideButtonPanel(boolean hide){
-//
-//        if(hide){
-//            binding.buttonPanel.setVisibility(View.GONE);
-//        }else {
-//            binding.buttonPanel.setVisibility(View.VISIBLE);
-//        }
-//
-//    }
-//
-//    public void hideTimeExecuteBtn(boolean hide){
-//
-//        if(hide){
-//            binding.timerExecuteBtn.setVisibility(View.GONE);
-//        }else{
-//            binding.timerExecuteBtn.setVisibility(View.VISIBLE);
-//        }
-//    }
-
-///////////////////////////////////////////
-
-
-
-
 
 
 }
-
-//    public static void transitionFromMainToFile(Activity activity){
-//
-//        MainFragmentDirections.ActionMainFragmentToFileListFragment action =
-//                MainFragmentDirections.actionMainFragmentToFileListFragment(JsonService.getJsonCheckArrayList());
-//
-//        Navigation.findNavController(activity, R.id.entryListFragment).navigate(action);
-//
-//    }
-//
-//    public static void transitionFromMainToProgress(Activity activity){
-//
-//        Navigation.findNavController(activity, R.id.entryListFragment).navigate(  MainFragmentDirections.actionMainFragmentToProgressFragment());
-//
-//    }
-//
-//    public static void transitionFromMainToDonation(Activity activity){
-//        Navigation.findNavController(activity,R.id.entryListFragment).navigate( MainFragmentDirections.actionMainFragmentToDonationFragment());
-//    }
-//
-//    public static void transitionFromMainToSettings(Activity activity){
-//        Navigation.findNavController(activity,R.id.entryListFragment).navigate( MainFragmentDirections.actionMainFragmentToSettingsFragment());
-//
-//    }
-//

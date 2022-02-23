@@ -51,11 +51,11 @@ public class EntryItemManager {
 
 
 
-    public EntryItemManager(MainFragment mainFragment){
+    public EntryItemManager(MainFragment mainFragment, Operator operator){
 
         this.context = mainFragment.getContext();
         this.mViewModel = mainFragment.getmViewModel();
-        this.operator = mainFragment.getOperator();
+        this.operator = operator;
         listUtility = operator.listUtility;
 
         this.mainFragment = mainFragment;
