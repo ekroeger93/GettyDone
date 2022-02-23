@@ -1,12 +1,16 @@
 package com.example.checkListApp.time_management;
 
+import android.content.Context;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
+import com.example.checkListApp.R;
+import com.example.checkListApp.databinding.MainFragmentBinding;
 import com.example.checkListApp.timer.CountDownTimerAsync;
 import com.example.checkListApp.timer.TimeState;
 import com.example.checkListApp.timer.TimeToggler;
@@ -23,11 +27,52 @@ public class TimerViewModel {
     private TimeState timeState = new TimeState(0);
 
 
-    private  boolean toggled = false;
+    private MutableLiveData<Boolean> toggled = new MutableLiveData<>(false);
 
-    public boolean isToggled(){
-        return toggled;
+
+    public void setObserverToggle(LifecycleOwner owner, MainFragmentBinding binding, Context context) {
+
+
+        Observer<Boolean> observer = aBoolean -> {
+
+            if(!aBoolean){
+
+                binding.timerExecuteBtn.setBackground(
+                        ContextCompat.getDrawable(
+                                context,
+                                R.drawable.outline_play_circle_filled_black_48
+                        ));
+
+            }else{
+
+                binding.timerExecuteBtn.setBackground(
+                        ContextCompat.getDrawable(
+                                context,
+                                R.drawable.outline_pause_circle_filled_black_48
+                        ));
+            }
+
+        };
+
+
+        toggled.observe(owner,observer);
+
     }
+
+
+    public boolean isToggled () {
+
+            try {//dont give me this bs just go!
+                return toggled.getValue();
+            } catch (NullPointerException e) {
+                return false;
+            }
+
+        }
+
+
+
+
 
     public void setRepeaterTime(int repeaterTime){
         countTimer.setRepeater(repeaterTime);
@@ -63,19 +108,6 @@ public class TimerViewModel {
 
     public int getNumberValueTime() {return  new TimeState(_countDownTimer.getValue()).getTimeNumberValue();}
 
-    public void setTimeState(TimeState timeState) {
-        this.timeState = timeState;
-    }
-
-    public MutableLiveData<String> get_countDownTimer() {
-        return _countDownTimer;
-    }
-
-    public void setTask(){
-        countTimer.setCountDownTask((n) -> {
-            _countDownTimer.postValue(countTimer.getRunTime());
-        });
-    }
 
     public void setTaskCustom(CountDownTimerAsync.CountDownTask countDownTask){
 
@@ -90,16 +122,6 @@ public class TimerViewModel {
         _countDownTimer.observe(owner, observer);
     }
 
-     class ExecuteToggleAsync {
-
-        private final Executor executorService = Executors.newSingleThreadExecutor();
-
-        @RequiresApi(api = Build.VERSION_CODES.O)
-        public void execute() {
-            executorService.execute(TimerViewModel.this::toggleTime);
-        }
-
-    }
 
     public void setServiceTask(CountDownTimerAsync.ServiceTask serviceTask){
         countTimer.setServiceTask((n , nt, ntVn) ->{
@@ -108,14 +130,12 @@ public class TimerViewModel {
 
     }
 
-    public void executeServiceTask(){
-        countTimer.executeService();
-    }
+
 
     public void toggleTime(){
 
         timeToggler.toggleTime(countTimer,
-                (toggle) -> { toggled = toggle;
+                (toggle) -> { toggled.postValue(toggle);
                     if(toggle){
 
                         if(countTimer.getCountTime() == 0){
@@ -135,32 +155,6 @@ public class TimerViewModel {
 
     }
 
-
-//
-//    @RequiresApi(api = Build.VERSION_CODES.O)
-//    public void toggleTimeWithCustomTask(){
-//
-//
-//        timeToggler.toggleTime(countTimer,
-//                (toggle) -> {
-//                    toggled = toggle;
-//                    if(toggle){
-//
-//                        if(countTimer.getNumberTime() == 0){
-//                            countTimer.setTimer(timeState);
-//                        }else{
-//                            countTimer.setTimer( new TimeState(countTimer.getNumberTime()));
-//                        }
-//
-//
-//                    }else {
-//                        timeState = new TimeState(countTimer.getNumberTime());
-//                        _countDownTimer.postValue(timeState.getTimeFormat());
-//                    }
-//                }
-//        );
-//
-//    }
 
 
     public void resetTimeState(){

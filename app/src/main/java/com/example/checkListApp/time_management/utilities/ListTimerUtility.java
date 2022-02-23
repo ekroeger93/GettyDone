@@ -175,6 +175,10 @@ public class ListTimerUtility {
         if(currentActiveTime.subCheckList.isEmpty() && !currentActiveTime.isSubEntry
         ){
             if(activeProcessTimeIndex < size) {
+
+
+                list.get(activeProcessTimeIndex).getViewHolder().checkOff();
+
                 activeProcessTimeIndex++;
                 return list.get(activeProcessTimeIndex);
 

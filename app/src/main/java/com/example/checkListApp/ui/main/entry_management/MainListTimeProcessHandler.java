@@ -126,20 +126,22 @@ public class MainListTimeProcessHandler {
             }
 
 
-            if(timerViewModel.isToggled()) {
-                binding.timerExecuteBtn.setBackground(
-                        ContextCompat.getDrawable(
-                                getContext(),
-                                R.drawable.outline_play_circle_filled_black_48
-                        ));
-            }else{
-                binding.timerExecuteBtn.setBackground(
-                        ContextCompat.getDrawable(
-                                getContext(),
-                                R.drawable.outline_pause_circle_filled_black_48
-                        ));
+            timerViewModel.setObserverToggle(binding.getLifecycleOwner(),binding,getContext());
 
-            }
+//            if(timerViewModel.isToggled()) {
+//                binding.timerExecuteBtn.setBackground(
+//                        ContextCompat.getDrawable(
+//                                getContext(),
+//                                R.drawable.outline_play_circle_filled_black_48
+//                        ));
+//            }else{
+//                binding.timerExecuteBtn.setBackground(
+//                        ContextCompat.getDrawable(
+//                                getContext(),
+//                                R.drawable.outline_pause_circle_filled_black_48
+//                        ));
+//
+//            }
 
             updateEntryUI();
             setTimer();
@@ -265,22 +267,6 @@ public class MainListTimeProcessHandler {
         }
     }
 
-    public void displayEntryToast(){
-
-        if (mainFragment.getActivity() != null && getContext() !=null) {
-            mainFragment.getActivity().runOnUiThread(() -> {
-
-                String message = timerUtility.currentActiveTime.textEntry.getValue();
-
-                Toast toast = Toast.makeText(getContext(), message + " done!", Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.TOP, 0, 0);
-                toast.show();
-
-
-            });
-        }
-
-    }
 
     public void scrollToPosition(int scroll){
 
@@ -300,19 +286,6 @@ public class MainListTimeProcessHandler {
 
         }
 
-
-    }
-
-    public void setSubTextToParent(){
-
-        if(timerUtility.currentActiveTime.isSubEntry){
-
-            String subText = timerUtility.currentActiveTime.textTemp;
-
-            checkList.get(timerUtility.activeProcessTimeIndex)
-                    .getViewHolder().textView.setText(
-                    subText);
-        }
 
     }
 
@@ -363,16 +336,7 @@ public class MainListTimeProcessHandler {
             timerViewModel.toggleTime();
             timerUtility.currentActiveTime = timerUtility.getNextActiveProcessTime(checkList);
 
-
-
             mainFragment.getMainUIDynamics().playAudio(timerUtility.currentActiveTime.getSelectAudio());
-
-
-
-
-
-
-
 
 
 
@@ -445,8 +409,8 @@ public class MainListTimeProcessHandler {
                 timerUtility.currentActiveTime.getViewHolder().timerLabelText
                         .setText(timerUtility.currentActiveTime.getCountDownTimer().getValue());
 
-                if(!timerUtility.currentActiveTime.isSubEntry)
-                timerUtility.currentActiveTime.getViewHolder().checkOff();
+//                if(!timerUtility.currentActiveTime.isSubEntry)
+//                timerUtility.currentActiveTime.getViewHolder().checkOff();
 
             }
         }catch (NullPointerException e){

@@ -86,7 +86,7 @@ public final class TimerService extends LifecycleService implements SensorEventL
                 stopService(serviceIntent);
 //                notificationManager.cancel(FOREGROUND_SERVICE_ID);
                   notificationManager.cancelAll();
-                MainFragment.resetTime();
+//                MainFragment.resetTime();
                 reset.postValue(false);
 
                 Log.d("testReset","reset");

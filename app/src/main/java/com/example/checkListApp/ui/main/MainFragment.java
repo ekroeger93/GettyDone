@@ -385,7 +385,7 @@ public class MainFragment extends Fragment {
 
         adapter.setTracker(selectionTracker);
         adapter.trackerOn(false);
-///////
+        ///////
 
 
     }
