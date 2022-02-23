@@ -1,49 +1,17 @@
 package com.example.checkListApp;
 
-import android.os.Bundle;
-import android.view.View;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.SavedStateHandle;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.test.espresso.ViewAssertion;
-import androidx.test.espresso.action.ViewActions;
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
-import androidx.test.rule.ActivityTestRule;
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.contrib.RecyclerViewActions;
-
-import org.hamcrest.Matcher;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestRule;
-import org.junit.runner.Description;
-import org.junit.runners.model.Statement;
-
-
-import static androidx.test.espresso.Espresso.onData;
-import static androidx.test.espresso.Espresso.onIdle;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.swipeRight;
-import static androidx.test.espresso.action.ViewActions.swipeUp;
-import static androidx.test.espresso.action.ViewActions.typeText;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.hasFocus;
-import static androidx.test.espresso.matcher.ViewMatchers.hasImeAction;
-import static androidx.test.espresso.matcher.ViewMatchers.withChild;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withParentIndex;
-import static androidx.test.espresso.matcher.ViewMatchers.withSpinnerText;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import androidx.test.espresso.action.ViewActions;
+import androidx.test.espresso.contrib.RecyclerViewActions;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
-import static org.junit.Assert.*;
+import org.junit.Rule;
+import org.junit.Test;
 
 public class MainActivityTest  {
 

@@ -27,12 +27,7 @@ public class ColorHelper {
 
     private int getThemeAccentColor(Context context) {
         int colorAttr;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            colorAttr = R.attr.colorAccent;
-        } else {
-            //Get colorAccent defined for AppCompat
-            colorAttr = context.getResources().getIdentifier("colorAccent", "attr", context.getPackageName());
-        }
+        colorAttr = R.attr.colorAccent;
         TypedValue outValue = new TypedValue();
         context.getTheme().resolveAttribute(colorAttr, outValue, true);
 
@@ -45,12 +40,7 @@ public class ColorHelper {
     private int getThemeControlHighlightColor(Context context){
 
         int colorAttr;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            colorAttr = R.attr.colorControlHighlight;
-        } else {
-            //Get colorAccent defined for AppCompat
-            colorAttr = context.getResources().getIdentifier("colorControlHighlight", "attr", context.getPackageName());
-        }
+        colorAttr = R.attr.colorControlHighlight;
         TypedValue outValue = new TypedValue();
         context.getTheme().resolveAttribute(colorAttr, outValue, true);
 

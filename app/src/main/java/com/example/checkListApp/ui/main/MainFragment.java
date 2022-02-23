@@ -110,9 +110,7 @@ bridge pattern? complications with DAO and Gson
     -moving items to the last entry, selection does not proceed to it
         -this has something to do with dimension of recycler scroll
 
-    -on toggle execution button does not change accordingly when toggling timer on notification
 
-    -
 
 //TODO: FEATURES
 
