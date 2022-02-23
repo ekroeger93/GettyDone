@@ -91,9 +91,11 @@ a running rabbit inside a timer dial
 decouple data types (entry_data_complex)
 bridge pattern? complications with DAO and Gson
 
-- main fragment methods to a ui dynamics class
-
 - defined enum state implementation:
+    -execution phase
+    -is timer paused
+    -is sorting
+    -moving items
 
 - test units
 
@@ -104,7 +106,7 @@ bridge pattern? complications with DAO and Gson
   -repeater time needs persistence
     -still not in database, cant add statics?
 
-    (left for future reference)
+    (sorta fixed left for future reference)
     -moving items to the last entry, selection does not proceed to it
         -this has something to do with dimension of recycler scroll
 
@@ -443,7 +445,6 @@ public class MainFragment extends Fragment {
 
         return false;
     }
-
 
     public Intent getForegroundTimerServiceIntent(){
 
