@@ -4,6 +4,8 @@ import static android.provider.Settings.System.getString;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -77,6 +79,7 @@ public class MainListTimeProcessHandler {
 
                  updateSecondaryTimer(time);
                 processTimerTask(time);
+
 
 
             };
@@ -202,6 +205,9 @@ public class MainListTimeProcessHandler {
 
 
             if (timerViewModel.getRepeaterTime() <= -1) {
+
+                //TODO:BUG TRACKED DOWN HERE
+                // java.lang.NullPointerException CANVAS REDRAW!
                 endOfTimerTask(countDownTask);
 
                 timerViewModel.resetTimeState();
@@ -392,31 +398,30 @@ public class MainListTimeProcessHandler {
 
     public void updateEntryUI(){
 
-        try {
-            if (timerUtility.parentEntry != null) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                if (timerUtility.parentEntry != null) {
 
-                timerUtility.parentEntry.getViewHolder().textView
-                        .setText(timerUtility.currentActiveTime.textTemp);
+                    timerUtility.parentEntry.getViewHolder().textView
+                            .setText(timerUtility.currentActiveTime.textEntry.getValue());
 
-                timerUtility.parentEntry.getViewHolder().timerLabelText
-                        .setText(timerUtility.currentActiveTime.getCountDownTimer().getValue());
+                    timerUtility.parentEntry.getViewHolder().timerLabelText
+                            .setText(timerUtility.currentActiveTime.getCountDownTimer().getValue());
 
-            } else {
+                } else {
 
-                timerUtility.currentActiveTime.getViewHolder().textView
-                        .setText(timerUtility.currentActiveTime.textEntry.getValue());
+                    timerUtility.currentActiveTime.getViewHolder().textView
+                            .setText(timerUtility.currentActiveTime.textEntry.getValue());
 
-                timerUtility.currentActiveTime.getViewHolder().timerLabelText
-                        .setText(timerUtility.currentActiveTime.getCountDownTimer().getValue());
+                    timerUtility.currentActiveTime.getViewHolder().timerLabelText
+                            .setText(timerUtility.currentActiveTime.getCountDownTimer().getValue());
 
-//                if(!timerUtility.currentActiveTime.isSubEntry)
-//                timerUtility.currentActiveTime.getViewHolder().checkOff();
+                }
 
             }
-        }catch (NullPointerException e){
+        });
 
-
-        }
 
     }
 

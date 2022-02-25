@@ -87,6 +87,7 @@ public final class TimerService extends LifecycleService implements SensorEventL
 //                notificationManager.cancel(FOREGROUND_SERVICE_ID);
                   notificationManager.cancelAll();
 //                MainFragment.resetTime();
+
                 reset.postValue(false);
 
                 Log.d("testReset","reset");
@@ -227,7 +228,7 @@ public final class TimerService extends LifecycleService implements SensorEventL
 
         mBuilder.set(builderNormal(dataHelper, entry, elapsedTimeNV, countTime));
 
-
+        //TODO: BUG DOESN'T COMPLETELY RETURN TO NORMAL STATE AFTER TIME EXPIRE
 
         return mBuilder.get()
                 .setPriority(2)
@@ -425,6 +426,9 @@ public final class TimerService extends LifecycleService implements SensorEventL
             timeViewModel.setServicePostExecute(() -> {
 
                 reset.postValue(true);
+
+//                timeViewModel.resetTimeState();
+                MainFragment.timerRunningAsFalse();
 
             });
 

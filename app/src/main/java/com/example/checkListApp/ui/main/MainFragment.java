@@ -564,6 +564,10 @@ public class MainFragment extends Fragment {
         timerRunning.postValue(false);
     }
 
+    public static void timerRunningAsFalse(){
+        timerRunning.postValue(false);
+    }
+
 
 
 }

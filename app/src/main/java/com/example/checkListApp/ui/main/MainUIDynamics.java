@@ -95,7 +95,7 @@ public class MainUIDynamics implements ListItemClickListener {
         operator = new Operator(mainFragment);
 
         entryItemManager = new EntryItemManager( mainFragment,operator);
-        buttonPanel = new ButtonPanel(mainFragment.getContext(), binding);
+        buttonPanel = new ButtonPanel(binding.getRoot().getContext(), binding);
         buttonPanelToggle  = buttonPanel.buttonPanelToggle;
 
         callback = new ItemTouchCallback(adapter);
