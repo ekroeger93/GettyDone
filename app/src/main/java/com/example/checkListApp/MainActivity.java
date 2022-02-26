@@ -1,10 +1,15 @@
 package com.example.checkListApp;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.OnBackPressedDispatcher;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.NavDirections;
+import androidx.navigation.NavHost;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -25,6 +30,8 @@ import com.example.checkListApp.databinding.MainActivityBinding;
 import com.example.checkListApp.fragments.file_management.FileListFragmentDirections;
 import com.example.checkListApp.fragments.progress.ProgressFragmentDirections;
 import com.example.checkListApp.fragments.settings.SettingsFragmentDirections;
+import com.example.checkListApp.set_timer.SetTimerFragment;
+import com.example.checkListApp.set_timer.SetTimerFragmentDirections;
 import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.fragments.settings.PreferenceHelper;
 import com.example.checkListApp.ui.main.MainFragmentDirections;
@@ -33,6 +40,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class MainActivity extends AppCompatActivity implements FileListFragment.OnFragmentInteractionListener {
 
@@ -40,10 +48,12 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
 
     static public TabLayout tabLayout;
     Integer navPosition = 0;
+    Integer prevNavPosition = 0;
 
 
     public static PreferenceHelper preferenceHelper;
     public static boolean isLoadingData =false;
+    public static boolean transitionFromSetTime=false;
 
     NavHostFragment navHostFragment;
 
@@ -85,14 +95,16 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
 
         mainFragment = (MainFragment) navHostFragment.getChildFragmentManager().getFragments().get(0);
 
+
         tabLayout = findViewById(R.id.tabs);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-
                 handler = new RequestHandler(activityBinding.getMMainActivity());
 
+
+                prevNavPosition = navPosition;
 
                 int destinationTab = tab.getPosition()+1;
                 int currentTab = navPosition+1;
@@ -107,6 +119,8 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
 
                     navPosition = tab.getPosition();
                 }
+
+                Log.d("navigationTest","prev: "+prevNavPosition+" current: "+navPosition);
 
             }
 
@@ -123,6 +137,24 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
 
 
         });
+
+
+//        OnBackPressedDispatcher onBackPressedDispatcher = new OnBackPressedDispatcher();
+//
+//        onBackPressedDispatcher.addCallback(this, new OnBackPressedCallback(true) {
+//            @Override
+//            public void handleOnBackPressed() {
+//
+//                int destinationTab = prevNavPosition+1;
+//                int currentTab = navPosition+1;
+//                int tabSize = 5;
+//                int transitionIndex = (destinationTab)+(tabSize*(currentTab));
+//
+//
+//                handler.handleRequest(transitionIndex);
+//
+//            }
+//        });
 
 
     }
@@ -144,25 +176,52 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
          navController = Navigation.findNavController(this, R.id.entryListFragment);
 
 
+
+
     }
 
     @Override
     public void onAttachFragment(Fragment fragment) {
         super.onAttachFragment(fragment);
 
+
+
     }
-
-
 
     @Override
     public void onFragmentInteraction(Uri uri) {
 
     }
 
+
+
+
     @Override
     public void onBackPressed() {
 
-//        super.onBackPressed();
+        int destinationTab = prevNavPosition+1;
+        int currentTab = navPosition+1;
+        int tabSize = 5;
+        int transitionIndex = (destinationTab)+(tabSize*(currentTab));
+
+        handler = new RequestHandler(activityBinding.getMMainActivity());
+
+
+        if(!prevNavPosition.equals(navPosition) &&
+        !MainActivity.transitionFromSetTime
+        ) {
+            handler.handleRequest(transitionIndex);
+
+            navPosition = prevNavPosition;
+            tabLayout.getTabAt(navPosition).select();
+
+        }
+
+        if(MainActivity.transitionFromSetTime){
+            handler.handleRequest(30);
+        }
+
+//       super.onBackPressed();
 
     }
 
@@ -223,6 +282,8 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
             commandMap.put(28, R.id.action_settingsFragment_to_progressFragment);
             commandMap.put(29, R.id.action_settingsFragment_to_donationFragment);
 
+            commandMap.put(30,R.id.action_setTimerFragment_to_mainFragment);
+
 
         }
 
@@ -231,7 +292,9 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
 
             NavDirections navAction ;
 
-            Integer command = commandMap.get(action_id);
+            Log.d("navigationTest",""+action_id);
+
+            int command = commandMap.get(action_id);
 
             switch (command){
 
@@ -261,7 +324,22 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
 //do nothing cus its already do something
                 }break;
 
+                case R.id.action_setTimerFragment_to_mainFragment:{
+
+                    SetTimerFragmentDirections.ActionSetTimerFragmentToMainFragment action =
+                            SetTimerFragmentDirections.actionSetTimerFragmentToMainFragment(JsonService.getJsonCheckArrayList());
+
+                    Navigation.findNavController(activity, R.id.entryListFragment).navigate(action);
+
+                    MainActivity.transitionFromSetTime= false;
+                }break;
+
                 default:{
+
+                    Log.d("navigationTest",""+action_id);
+//                    SetTimerFragmentDirections.ActionSetTimerFragmentToMainFragment action =
+//                            SetTimerFragmentDirections.actionSetTimerFragmentToMainFragment(JsonService.getJsonCheckArrayList());
+
                     Navigation.findNavController(activity, R.id.entryListFragment).navigate(command);
                 }break;
 

@@ -27,6 +27,7 @@ import com.example.checkListApp.R;
 import com.example.checkListApp.time_management.parcel.TimeParcel;
 import com.example.checkListApp.time_management.parcel.TimeParcelBuilder;
 import com.example.checkListApp.databinding.SettimerFragmentBinding;
+import com.example.checkListApp.ui.main.MainFragment;
 import com.example.checkListApp.ui.main.data_management.JsonService;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -97,6 +98,8 @@ public class SetTimerFragment extends Fragment {
         soundSelection = binding.soundSelectBtn;
 
         infoButton = binding.informationBtn;
+
+        MainActivity.transitionFromSetTime = true;
 
 
         Log.d("TestJson",""+parcelable.getTimeStringVal());
@@ -178,6 +181,7 @@ public class SetTimerFragment extends Fragment {
 
             Navigation.findNavController(view).navigate(action);
 
+            MainActivity.transitionFromSetTime=false;
 
 //            Intent intent = new Intent(getContext(), MainActivity.class);
 //
