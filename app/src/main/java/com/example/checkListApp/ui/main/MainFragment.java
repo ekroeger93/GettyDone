@@ -164,7 +164,7 @@ public class MainFragment extends Fragment {
     public static float recyclerScrollCompute,itemHeightPx;
 
     private ArrayList<Entry> checkList = new ArrayList<>();
-    private final MutableLiveData< ArrayList<Entry>> _checkList = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<Entry>> _checkList = new MutableLiveData<>();
     public ArrayList<Entry> getCheckList(){ return checkList;}
 
     private MainViewModel mViewModel;

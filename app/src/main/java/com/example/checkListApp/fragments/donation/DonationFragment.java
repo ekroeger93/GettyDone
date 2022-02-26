@@ -3,6 +3,7 @@ package com.example.checkListApp.fragments.donation;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import androidx.navigation.Navigation;
 
 import com.example.checkListApp.R;
 import com.example.checkListApp.ui.main.data_management.JsonService;
+
+import java.util.regex.Pattern;
 
 public class DonationFragment extends Fragment {
 
@@ -39,6 +42,16 @@ public class DonationFragment extends Fragment {
         Button linkButton = view.findViewById(R.id.link_to_donation);
         linkButton.setMovementMethod(LinkMovementMethod.getInstance());
 
+
+//        String supportUkraine = getResources().getString(R.string.support_ukraine);
+
+        Button linkButton2 = view.findViewById(R.id.Ukraine);
+        linkButton2.setMovementMethod(LinkMovementMethod.getInstance());
+
+//        linkButton2.setText(supportUkraine);
+//
+//        Pattern linkSupportUkraine = Pattern.compile(supportUkraine);
+//        Linkify.addLinks(linkButton2, linkSupportUkraine, "ukrainelink");
 
     }
 

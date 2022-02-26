@@ -31,7 +31,15 @@
                 <data
                     android:scheme="https"
                     android:host="liberapay.com"
-                    android:pathPattern="/ekroeger93/donate" />
+                    android:pathPattern="/ekroeger93/donate"
+                    />
+
+                <data
+                    android:port="443"
+                    android:host="timeout.com"
+                    android:path="/news/8-ways-you-can-help-the-people-of-ukraine-right-now-022422"
+                    />
+
             </intent-filter>
 
             <intent-filter>

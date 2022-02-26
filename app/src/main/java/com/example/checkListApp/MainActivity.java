@@ -11,10 +11,12 @@ import androidx.navigation.fragment.NavHostFragment;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.util.Log;
 import android.view.WindowManager;
 
 import com.example.checkListApp.fragments.donation.DonationFragmentDirections;
@@ -63,6 +65,8 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
         return super.getTheme();
 
     }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +127,15 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
 
     }
 
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+
+        Log.d("schemeTest",intent.getScheme());
+
+    }
 
     @Override
     public void onPostCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {

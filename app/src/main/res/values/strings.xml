@@ -2,7 +2,8 @@
     <string name="app_name">GettyDone</string>
     <!-- TODO: Remove or change this placeholder text -->
 
-    <string name="donation_page"> <a href="https://liberapay.com/ekroeger93/donate">contribute here</a></string>
+    <string name="donation_page"> <a href="https://liberapay.com/ekroeger93/donate">buy me coffee?</a></string>
+    <string name="support_ukraine"> <a href="https://www.timeout.com/news/8-ways-you-can-help-the-people-of-ukraine-right-now-022422"> support Ukraine </a></string>
 
     <string name="toggle_only">On Toggle</string>
 
@@ -12,18 +13,21 @@
     <string name="audio_short_bell">short bell</string>
 
     <string name="info_pause_timer">pause timer until toggled</string>
+    <string name="entrySubTextNoLoaded">no sublist loaded</string>
 
     <string name="_submit">submit</string>
-    <string name="textEntryHint">hold to edit text \n swipe right to remove</string>
-    <string name="entrySubTextNoLoaded">no sublist loaded</string>
     <string name="openfile">open</string>
-    <string name="support">I\'m a lone developer and could use some finical help or a better job</string>
+
+    <string name="support">Hi! Did you find this app useful? I could use some financial help (or recognition). </string>
+    <string name="ukraineSupportText">Times maybe dire but I am proud of people giving Ukrainians support in their desperate hour of need. I wish to do my part and provide a link, to a list of humanitarian services. </string>
 
     <string name="hintMessagesResetTimerKey">hintMessagesResetTimer</string>
     <string name="hintDuplicateEntries">hintDuplicateEntry</string>
 
     <string name="shakeToToggleTimerModeKey">shakeToToggleTimerMode</string>
     <string name="resetProgressKey">resetProgress</string>
+    <string name="textEntryHint">hold to edit text \n swipe right to remove</string>
+
 
     <string-array name="pref_shake_toggle">
         <item>toggle on pause only</item>

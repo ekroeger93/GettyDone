@@ -1,24 +1,17 @@
 package com.example.checkListApp.ui.main.entry_management;
 
-import static android.provider.Settings.System.getString;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.widget.Toast;
 
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.preference.PreferenceManager;
 
 import com.example.checkListApp.MainActivity;
-import com.example.checkListApp.R;
 import com.example.checkListApp.databinding.MainFragmentBinding;
-import com.example.checkListApp.time_management.TimerService;
 import com.example.checkListApp.time_management.TimerViewModel;
 import com.example.checkListApp.time_management.utilities.ListTimerUtility;
 import com.example.checkListApp.timer.CountDownTimerAsync;
@@ -37,7 +30,7 @@ public class MainListTimeProcessHandler {
 
     public final static TimerViewModel timerViewModel = new TimerViewModel();
     public final static ListTimerUtility timerUtility = new ListTimerUtility();
-    public  static CountDownTimerAsync.CountDownTask countDownTask;
+    private   CountDownTimerAsync.CountDownTask countDownTask;
 
 
     public int getActiveProcessTimeIndex(){
@@ -77,8 +70,11 @@ public class MainListTimeProcessHandler {
 
                 timerUtility.updatePreviousActiveProcess(checkList);
 
+
                  updateSecondaryTimer(time);
-                processTimerTask(time);
+                 processTimerTask(time);
+
+                 updateEntryUI();
 
 
 
@@ -131,22 +127,7 @@ public class MainListTimeProcessHandler {
 
             timerViewModel.setObserverToggle(binding.getLifecycleOwner(),binding,getContext());
 
-//            if(timerViewModel.isToggled()) {
-//                binding.timerExecuteBtn.setBackground(
-//                        ContextCompat.getDrawable(
-//                                getContext(),
-//                                R.drawable.outline_play_circle_filled_black_48
-//                        ));
-//            }else{
-//                binding.timerExecuteBtn.setBackground(
-//                        ContextCompat.getDrawable(
-//                                getContext(),
-//                                R.drawable.outline_pause_circle_filled_black_48
-//                        ));
-//
-//            }
 
-            updateEntryUI();
             setTimer();
             scrollToPosition(timerUtility.activeProcessTimeIndex);
 
@@ -310,10 +291,7 @@ public class MainListTimeProcessHandler {
 
         if (!timerUtility.currentActiveTime.onTogglePrimer.getValue()) {
 
-
             if (timerUtility.currentActiveTime.timeElapsed(elapsedTime)) {
-
-                updateEntryUI();
 
                 mainFragment.getMainUIDynamics().playAudio(timerUtility.currentActiveTime.getSelectAudio());
 
@@ -334,17 +312,15 @@ public class MainListTimeProcessHandler {
 
         }
 
-
         else {
-            updateEntryUI();
+
             scrollToPosition(timerUtility.activeProcessTimeIndex);
 
             timerViewModel.toggleTime();
+
             timerUtility.currentActiveTime = timerUtility.getNextActiveProcessTime(checkList);
 
             mainFragment.getMainUIDynamics().playAudio(timerUtility.currentActiveTime.getSelectAudio());
-
-
 
         }
 
@@ -403,19 +379,24 @@ public class MainListTimeProcessHandler {
             public void run() {
                 if (timerUtility.parentEntry != null) {
 
+                    Log.d("subListing",""+timerUtility.currentActiveTime.onTogglePrimer.getValue());
+
+                    if(!timerUtility.currentActiveTime.onTogglePrimer.getValue()) {
                     timerUtility.parentEntry.getViewHolder().textView
-                            .setText(timerUtility.currentActiveTime.textEntry.getValue());
+                            .setText(timerUtility.previousActiveTime.textTemp);
 
                     timerUtility.parentEntry.getViewHolder().timerLabelText
-                            .setText(timerUtility.currentActiveTime.getCountDownTimer().getValue());
+                            .setText(timerUtility.previousActiveTime.getCountDownTimer().getValue());
+                    }
 
                 } else {
 
-                    timerUtility.currentActiveTime.getViewHolder().textView
-                            .setText(timerUtility.currentActiveTime.textEntry.getValue());
 
-                    timerUtility.currentActiveTime.getViewHolder().timerLabelText
-                            .setText(timerUtility.currentActiveTime.getCountDownTimer().getValue());
+                        timerUtility.currentActiveTime.getViewHolder().textView
+                                .setText(timerUtility.currentActiveTime.textTemp);
+
+                        timerUtility.currentActiveTime.getViewHolder().timerLabelText
+                                .setText(timerUtility.currentActiveTime.getCountDownTimer().getValue());
 
                 }
 
