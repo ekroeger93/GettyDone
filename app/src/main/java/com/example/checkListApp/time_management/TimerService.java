@@ -147,7 +147,7 @@ public final class TimerService extends LifecycleService implements SensorEventL
 
                 int MODE = preferenceHelper.shakeToggleTimerMode();
 
-                if (shakeDelayPrimer) {
+                if (shakeDelayPrimer && MainFragment.isTimerRunning()) {
                     shakeDelayPrimer = false;
 
                         new Timer().schedule(new TimerTask() {
