@@ -85,9 +85,11 @@ public class SubListManager {
             setSubList(index, subListAdapter.getFileSelection());
             alertDialog.dismiss();
 
-            checkList.get(index).subListName.postValue(
+            checkList.get(index).subListName.setValue(
                     fileManager.getFileName(
                             subListAdapter.getFileSelection()));
+
+            mainFragment.getmViewModel().updateEntry( checkList.get(index));
 
         });
 
@@ -155,6 +157,8 @@ public class SubListManager {
             mainListTimeProcessHandler.subAccumulation(checkList);
         }
 
+
+        mainFragment.getmViewModel().updateEntry(entry);
 
 
 

@@ -12,7 +12,6 @@ public class PreferenceHelper {
     public PreferenceHelper(Context context){
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
-
      }
 
     public boolean hintTimerMessageIsActive(){

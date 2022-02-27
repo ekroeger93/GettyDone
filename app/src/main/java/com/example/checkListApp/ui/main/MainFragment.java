@@ -110,6 +110,12 @@ bridge pattern? complications with DAO and Gson
     -moving items to the last entry, selection does not proceed to it
         -this has something to do with dimension of recycler scroll
 
+    -moving duplicated items copies the previous entry (moving Index position)
+
+    -subList not persisting when moving to different fragment once assgined
+    -losing onToggle when reassigning setTimer,
+
+    -unknown crash from long term usage, no error presented
 
 
 //TODO: FEATURES
@@ -492,6 +498,7 @@ public class MainFragment extends Fragment {
             ) {
 
                 checkList = (ArrayList<Entry>) entries;
+                Log.d("checkListTest","updated!");
 
                 checkList.add(0, new Spacer());
                 checkList.add(checkList.size(), new Spacer());
@@ -550,12 +557,34 @@ public class MainFragment extends Fragment {
 
 
         }
+
+
     });
 
         mainUIDynamics.selectionTrackerObserver();
 
         timerRunning.observe(getViewLifecycleOwner(), mainUIDynamics.getOnTimerRunningObs());
 
+
+    }
+
+
+    public void enforceUpdateCheckList(){
+
+        checkList = (ArrayList<Entry>) mViewModel.getAllEntries().getValue();
+        checkList.add(0, new Spacer());
+        checkList.add(checkList.size(), new Spacer());
+
+        mainUIDynamics.operator.updateIndexes();
+        subListManager.sanityCheckSubList();
+
+        subListManager.loadSubLists();
+        adapter.setList(checkList);
+        recordHelper.update(checkList);
+
+        _checkList.setValue(checkList);
+        JsonService.buildJson(checkList);
+        mainUIDynamics.updateCheckList(checkList);
 
     }
 

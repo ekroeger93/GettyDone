@@ -38,6 +38,7 @@ public interface EntryDao {
     void updateEntry(Entry entry);
 
 
+
     @Query("UPDATE entries SET orderIndex = :index WHERE entryID = :id")
     void updateEntryIndex(int id, int index);
 
