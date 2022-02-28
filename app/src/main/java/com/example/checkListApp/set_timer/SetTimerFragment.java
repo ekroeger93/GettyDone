@@ -110,7 +110,7 @@ public class SetTimerFragment extends Fragment {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
         AlertDialog alertDialog = dialogBuilder.create();
 
-        alertDialog.setMessage("select alert sound");
+        alertDialog.setMessage("alert sound when time expires");
         alertDialog.setView(LayoutInflater.from(getContext())
                 .inflate(
                         R.layout.dialog_sound_selection,
@@ -162,11 +162,7 @@ public class SetTimerFragment extends Fragment {
             SetTimerFragmentDirections.ActionSetTimerFragmentToMainFragment action =
                     SetTimerFragmentDirections.actionSetTimerFragmentToMainFragment(JsonService.getJsonCheckArrayList());
 
-//            SetTimerFragmentDirections.ActionSetTimerFragmentToMainFragment action =
-//                    SetTimerFragmentDirections.actionSetTimerFragmentToMainFragment("");
 
-
-            Log.d("timerTest",":: " +action.getJsonData());
 
             action.setTimeParcel(
                     new TimeParcelBuilder()
@@ -183,17 +179,6 @@ public class SetTimerFragment extends Fragment {
 
             MainActivity.transitionFromSetTime=false;
 
-//            Intent intent = new Intent(getContext(), MainActivity.class);
-//
-//            intent.putExtra(KeyHelperClass.TIME_PARCEL_DATA,
-//                     new TimeParcelBuilder()
-//                    .setTimeIndexValue(timeIndexPosition)
-//                    .setTimeStringValue(setTimerText.getText().toString())
-//                    .setTimeNumberValue(mViewModel.getTimerValue())
-//                    .build()
-//            );
-//
-//            startActivity(intent);
         });
 
 

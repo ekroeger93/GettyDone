@@ -110,11 +110,6 @@ bridge pattern? complications with DAO and Gson
     -moving items to the last entry, selection does not proceed to it
         -this has something to do with dimension of recycler scroll
 
-    -moving duplicated items copies the previous entry (moving Index position)
-
-    -subList not persisting when moving to different fragment once assgined
-    -losing onToggle when reassigning setTimer,
-
     -unknown crash from long term usage, no error presented
 
 
