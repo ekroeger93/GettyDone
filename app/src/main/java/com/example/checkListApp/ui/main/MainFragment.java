@@ -136,7 +136,27 @@ can also change the app icon colors along with it!
 -? save as pdf/rich text file -> print appMobilityPrint
 -? schedule on calender, notification
 -? make timelabel editText instead, /w custom keyboard
--? pictures and gifs, thumbnails
+-? pictures and gifs, thumbnails via checkButton
+
+Entry overhaul
+
+-Basic data
+    -check
+    -text
+    -orderIndex
+
+-TYPE
+        -simple
+        -timer
+        -?counter
+        -toggle
+        -?schedule
+
+-Complex data
+    -audio
+    -image
+    -sublist
+
 
 -tag files as sublists to cleanup file list fragment
 
