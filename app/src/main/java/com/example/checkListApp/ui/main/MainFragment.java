@@ -138,6 +138,8 @@ can also change the app icon colors along with it!
 -? make timelabel editText instead, /w custom keyboard
 -? pictures and gifs, thumbnails via checkButton
 
+-skip forwards and backwards
+
 Entry overhaul
 
 -Basic data
