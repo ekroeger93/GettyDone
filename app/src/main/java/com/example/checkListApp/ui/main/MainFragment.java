@@ -150,7 +150,6 @@ Entry overhaul
 -TYPE
         -simple
         -timer
-        -?counter
         -toggle
         -?schedule
 
