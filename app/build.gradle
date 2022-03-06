@@ -12,7 +12,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.example.gettyDone"
+        applicationId "com.gettydone.app"
         minSdkVersion 26
         targetSdkVersion 31
         versionCode 1
