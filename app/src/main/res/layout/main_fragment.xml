@@ -10,11 +10,11 @@
     <data>
         <variable
             name="mViewModel"
-            type="com.example.checkListApp.ui.main.MainViewModel" />
+            type="com.gettydone.app.ui.main.MainViewModel" />
 
         <variable
             name="mActivity"
-            type="com.example.checkListApp.MainActivity" />
+            type="com.gettydone.app.MainActivity" />
 
     </data>
 

@@ -8,7 +8,7 @@
 <data>
     <variable
         name="mMainActivity"
-        type="com.example.checkListApp.MainActivity" />
+        type="com.gettydone.app.MainActivity" />
 </data>
 
 <androidx.constraintlayout.widget.ConstraintLayout

@@ -10,7 +10,7 @@
     <data>
         <variable
             name="mFileListFragment"
-            type="com.example.checkListApp.fragments.file_management.FileListFragment" />
+            type="com.gettydone.app.fragments.file_management.FileListFragment" />
 
     </data>
 
@@ -29,7 +29,7 @@
     <androidx.recyclerview.widget.RecyclerView
 
         android:id="@+id/fileListView"
-        android:name="com.example.checkListApp.ItemFragment"
+        android:name="com.gettydone.app.ItemFragment"
         android:layout_width="379dp"
         android:layout_height="304dp"
         app:layoutManager="LinearLayoutManager"

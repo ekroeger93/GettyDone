@@ -8,7 +8,7 @@
     <data>
         <variable
             name="myViewModel"
-            type="com.example.checkListApp.ui.main.MainViewModel" />
+            type="com.gettydone.app.ui.main.MainViewModel" />
 
     </data>
 
@@ -57,7 +57,7 @@
 
 
 
-            <com.example.checkListApp.input.CustomEditText
+            <com.gettydone.app.input.CustomEditText
                 android:id="@+id/entryEditTxt"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

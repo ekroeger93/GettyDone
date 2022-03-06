@@ -3,13 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.countdowntimer.settimer.SetTimerFragment"
+    tools:context="com.gettydone.countdowntimer.settimer.SetTimerFragment"
     >
 
     <data>
         <variable
             name="viewModel"
-            type="com.example.checkListApp.set_timer.SetTimerViewModel" />
+            type="com.gettydone.app.set_timer.SetTimerViewModel" />
     </data>
 
 

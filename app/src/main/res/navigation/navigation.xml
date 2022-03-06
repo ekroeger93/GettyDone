@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.example.checkListApp.ui.main.MainFragment"
+        android:name="com.gettydone.app.ui.main.MainFragment"
         android:label="MainFragment" >
 
         <action
@@ -35,7 +35,7 @@
         </action>
         <argument
             android:name="timeParcel"
-            app:argType="com.example.checkListApp.time_management.parcel.TimeParcel"
+            app:argType="com.gettydone.app.time_management.parcel.TimeParcel"
             app:nullable="true"
             android:defaultValue="@null" />
         <argument
@@ -60,7 +60,7 @@
 
     <fragment
         android:id="@+id/fileListFragment"
-        android:name="com.example.checkListApp.fragments.file_management.FileListFragment"
+        android:name="com.gettydone.app.fragments.file_management.FileListFragment"
         android:label="FileListFragment"
         >
 
@@ -99,7 +99,7 @@
 
     <fragment
         android:id="@+id/progressFragment"
-        android:name="com.example.checkListApp.fragments.progress.ProgressFragment"
+        android:name="com.gettydone.app.fragments.progress.ProgressFragment"
         android:label="FragmentProgress"
         tools:layout="@layout/fragment_progress">
         <action
@@ -130,7 +130,7 @@
 
     <fragment
         android:id="@+id/setTimerFragment"
-        android:name="com.example.checkListApp.set_timer.SetTimerFragment"
+        android:name="com.gettydone.app.set_timer.SetTimerFragment"
         android:label="SetTimerFragment" >
         <action
             android:id="@+id/action_setTimerFragment_to_mainFragment"
@@ -139,7 +139,7 @@
             app:exitAnim="@android:anim/fade_out" />
         <argument
             android:name="timeParcel"
-            app:argType="com.example.checkListApp.time_management.parcel.TimeParcel"
+            app:argType="com.gettydone.app.time_management.parcel.TimeParcel"
             app:nullable="true"
             android:defaultValue="@null" />
 
@@ -148,7 +148,7 @@
 
     <fragment
         android:id="@+id/donationFragment"
-        android:name="com.example.checkListApp.fragments.donation.DonationFragment"
+        android:name="com.gettydone.app.fragments.donation.DonationFragment"
         android:label="donation_page_fragment"
         tools:layout="@layout/donation_page_fragment" >
         <action
@@ -182,7 +182,7 @@
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.checkListApp.fragments.settings.SettingsFragment"
+        android:name="com.gettydone.app.fragments.settings.SettingsFragment"
         android:label="SettingsFragment" >
         <action
             android:id="@+id/action_settingsFragment_to_mainFragment"
