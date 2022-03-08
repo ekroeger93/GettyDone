@@ -17,7 +17,7 @@ public class SubListFileRecyclerAdapter extends RecyclerView.Adapter {
 
 
     private final File[] listOfFiles;
-    private int fileSelection = 1;
+    private int fileSelection = 0;
 
     public int getFileSelection() {
         return fileSelection;

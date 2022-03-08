@@ -20,6 +20,9 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+-keepnames class com.gettydone.app.time_management.parcel.TimeParcel
+-keepnames class com.gettydone.app.time_management.parcel.ListTimersParcel
+
 -assumenosideeffects class android.util.Log {
     public static boolean isLoggable(java.lang.String, int);
     public static int v(...);

@@ -82,14 +82,18 @@ public class SubListManager {
         Button unLoadSub = alertDialog.findViewById(R.id.unsetSubListBtn);
 
         loadSub.setOnClickListener(view -> {
-            setSubList(index, subListAdapter.getFileSelection());
-            alertDialog.dismiss();
 
-            checkList.get(index).subListName.setValue(
-                    fileManager.getFileName(
-                            subListAdapter.getFileSelection()));
+            if(fileManager.getListOfFiles().length >= 1) {
+                setSubList(index, subListAdapter.getFileSelection());
+                alertDialog.dismiss();
 
-            mainFragment.getmViewModel().updateEntry( checkList.get(index));
+                checkList.get(index).subListName.setValue(
+                        fileManager.getFileName(
+                                subListAdapter.getFileSelection()));
+
+                mainFragment.getmViewModel().updateEntry(checkList.get(index));
+            }
+
 
         });
 

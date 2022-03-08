@@ -132,22 +132,24 @@ public class FileListFragment extends Fragment {
         binding.loadFileBtn.setOnClickListener(view1 -> {
 
 
-            FileListFragmentDirections.ActionFileListFragmentToMainFragment action  =
-                    FileListFragmentDirections
-                            .actionFileListFragmentToMainFragment
-                                    (fileManager.loadFile(fileListAdapter.getFileSelection()));
+            if (fileListAdapter.getFileSelection() != -1) {
+                FileListFragmentDirections.ActionFileListFragmentToMainFragment action =
+                        FileListFragmentDirections
+                                .actionFileListFragmentToMainFragment
+                                        (fileManager.loadFile(fileListAdapter.getFileSelection()));
 
-              Log.d("checkListTest", fileManager.loadFile(fileListAdapter.getFileSelection()));
+                Log.d("checkListTest", fileManager.loadFile(fileListAdapter.getFileSelection()));
 
-            Navigation.findNavController(view).navigate(action);
+                Navigation.findNavController(view).navigate(action);
 
 
-            MainActivity.isLoadingData=true;
+                MainActivity.isLoadingData = true;
 
 //            MainActivity.visualSelect = true;
-            MainActivity.tabLayout.getTabAt(0).select();
+                MainActivity.tabLayout.getTabAt(0).select();
 
-                  //  (MainActivity.activityBinding.tabs.getTabAt(0));
+                //  (MainActivity.activityBinding.tabs.getTabAt(0));
+            }
 
         });
 
