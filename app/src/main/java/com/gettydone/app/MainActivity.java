@@ -47,11 +47,6 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
     public static boolean isLoadingData =false;
     public static boolean transitionFromSetTime=false;
 
-    NavHostFragment navHostFragment;
-
-    MainFragment mainFragment;
-
-    NavController navController;
     RequestHandler handler;
 
     @Override
@@ -81,11 +76,6 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
         activityBinding = DataBindingUtil.setContentView(this, R.layout.main_activity);
 
         activityBinding.setMMainActivity(this);
-
-
-        navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.entryListFragment);
-
-        mainFragment = (MainFragment) navHostFragment.getChildFragmentManager().getFragments().get(0);
 
 
         tabLayout = findViewById(R.id.tabs);
@@ -164,8 +154,6 @@ public class MainActivity extends AppCompatActivity implements FileListFragment.
     @Override
     public void onPostCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
         super.onPostCreate(savedInstanceState, persistentState);
-
-         navController = Navigation.findNavController(this, R.id.entryListFragment);
 
 
 
