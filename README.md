@@ -3,6 +3,42 @@ timer/check list app
 
 Getty Done is a list of timed entries for general use which is avaialable via app store.
 
+<html>
+<body>
+
+<h2>Usage and Features Brefing</h2>
+<ul>
+<li>manage entries
+	<ul> 
+	<li> timed or toggled (that is the main timer will only continued once resumed by user) </li>
+	<li> add, duplicate, text edit, delete, move, order </li>
+	<li> sound selection </li>
+	<li> sublisting* (see details below) </li>
+	</ul>
+</li>
+<li> track user progress (weekly)</li>
+<li> basic file mangement </li>
+<li> gesture shake toggle </li>
+<li> runs as background service </li>
+<li> notifiaction controls </li>
+
+</ul>
+
+<br>
+
+<h4> sublisting </h4>
+<p> Adds a additional list of entries within an entry; 
+example usage would be an excerise with list of sets and rest breaks for an entry like pushups 
+</p>
+
+<br> 
+<h2>Note to Users</h2>
+<p> you will notice some akwards design choices particularly the bottom gesture bar below the list (recylerView), this was intentional for experimentation or learning purposes. This was not intended as a full fledge product but serves as a personal portfollio/learning experience </p>
+<p> I would very much like to add additional features but this is admittedly a rough project due to inexperience</p>
+
+</body>
+</html>
+
 
 <html>
 <body>
